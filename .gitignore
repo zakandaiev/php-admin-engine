@@ -1,0 +1,10 @@
+/log/
+/upload/
+/vendor/
+/composer.lock
+/config.php
+/robots.txt
+/sitemap.xml
+node_modules/
+/theme/**/_o*.css
+/theme/**/_o*.js

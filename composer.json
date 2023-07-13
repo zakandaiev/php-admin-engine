@@ -1,0 +1,21 @@
+{
+	"name": "zakandaiev/php-admin-engine",
+	"authors": [
+		{
+			"name": "Oleksadr Zakandaiev",
+			"email": "zakandaiev@gmail.com"
+		}
+	],
+	"require": {},
+	"autoload": {
+		"psr-4": {
+			"Engine\\": "engine",
+			"Module\\": "module",
+			"Theme\\": "theme"
+		},
+		"files": [
+			"config.php",
+			"engine/functions.php"
+		]
+	}
+}
