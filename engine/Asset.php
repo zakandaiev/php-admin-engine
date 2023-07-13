@@ -1,12 +1,6 @@
 <?php
-
+// TODO
 namespace Engine;
-
-use Engine\Engine;
-use Engine\Module;
-use Engine\Path;
-use Engine\Router;
-use Engine\Setting;
 
 class Asset {
 	const EXTENSION_MASK = [
@@ -32,7 +26,7 @@ class Asset {
 		if(is_file($file_path)) {
 			self::$container[$extension][] = [
 				'module' => Module::getName(),
-				'file' => $file_name . '.' . $extension,
+				'file' => "$file_name.$extension",
 				'attributes' => $attributes,
 				'routes' => $routes
 			];
@@ -65,16 +59,17 @@ class Asset {
 			return false;
 		}
 
-		$group_setting = @Setting::get('optimization')->{'group_' . $extension};
-		if(Module::getName() === 'public' && $group_setting != 'false' && !empty($group_setting)) {
-			$assets = [
-				[
-					'file' => $extension . '/' . $group_setting . '.' . $extension,
-					'attributes' => self::$optimization[$extension]['attributes'],
-					'routes' => self::$optimization[$extension]['routes']
-				]
-			];
-		}
+		// TODO
+		// $group_setting = @Setting::get('optimization')->{'group_' . $extension};
+		// if(Module::getName() === 'public' && $group_setting != 'false' && !empty($group_setting)) {
+		// 	$assets = [
+		// 		[
+		// 			'file' => $extension . '/' . $group_setting . '.' . $extension,
+		// 			'attributes' => self::$optimization[$extension]['attributes'],
+		// 			'routes' => self::$optimization[$extension]['routes']
+		// 		]
+		// 	];
+		// }
 
 		$output = '';
 

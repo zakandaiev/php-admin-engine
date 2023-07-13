@@ -1,0 +1,86 @@
+$breakpoints: (
+	xs: 0,
+	sm: 576px,
+	md: 768px,
+	lg: 992px,
+	xl: 1200px,
+	xxl: 1400px
+);
+
+$breakpoints_reverse: (
+	xs: 575px,
+	sm: 767px,
+	md: 991px,
+	lg: 1199px,
+	xl: 1399px
+);
+
+.row {
+	display: flex;
+	flex-wrap: wrap;
+
+	// .row.fill
+	&.fill > .col {
+		flex: 1 0 auto;
+
+		&-auto {
+			flex: initial;
+		}
+	}
+}
+
+.col, [class^="col-"] {
+	display: block;
+}
+
+@each $bp, $val in $breakpoints {
+	@media (min-width: $val) {
+		// COLUMNS - GENERAL CLASS FOR .row
+		@for $i from 1 through 12 {
+			.row.cols-#{$bp}-#{$i} > .col {
+				width: calc(100% / $i);
+			}
+		}
+
+		// COLUMNS - SINGLE CLASS FOR .col
+		@for $i from 1 through 12 {
+			.col-#{$bp}-#{$i} {
+				width: calc(100% / 12) * $i;
+			}
+		}
+
+		// OFFSETS
+		@for $i from 1 through 12 {
+			.offset-#{$bp}-#{$i} {
+				margin-left: calc(100% / 12) * $i;
+			}
+		}
+
+		// GAPS - XY
+		.row.gap-#{$bp} {
+			margin: calc(-1 * var(--gap) / 2);
+		}
+		.row.gap-#{$bp} > .col,
+		.row.gap-#{$bp} > [class^="col-"] {
+			padding: calc(var(--gap) / 2);
+		}
+
+		// GAPS - X
+		.row.gap-#{$bp}-x {
+			margin: 0 calc(-1 * var(--gap) / 2);
+		}
+		.row.gap-#{$bp}-x > .col,
+		.row.gap-#{$bp}-x > [class^="col-"] {
+			padding: 0 calc(var(--gap) / 2);
+		}
+
+		// GAPS - Y
+		.row.gap-#{$bp}-y {
+			margin: calc(-1 * var(--gap) / 2) 0;
+		}
+		.row.gap-#{$bp}-y > .col,
+		.row.gap-#{$bp}-y > [class^="col-"] {
+			padding: calc(var(--gap) / 2) 0;
+		}
+	}
+}

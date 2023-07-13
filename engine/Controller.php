@@ -28,14 +28,15 @@ abstract class Controller {
 
 		// $this->user = User::get();
 
-		// $this->page = new \stdClass();
-		// $this->page->title = Engine::NAME;
-		// $this->page->seo_description = '';
-		// $this->page->seo_keywords = '';
+		$this->page = new \stdClass();
+		$this->page->title = Engine::NAME;
+		$this->page->seo_description = '';
+		$this->page->seo_keywords = '';
+		// TODO
 		// $this->page->seo_image = $this->setting->site->logo_public;
-		// $this->page->no_index_no_follow = false;
+		$this->page->no_index_no_follow = false;
 
-		// $this->view->setData(['page' => $this->page]);
+		$this->view->setData(['page' => $this->page]);
 	}
 
 	protected function loadModel($model_name, $module = null) {

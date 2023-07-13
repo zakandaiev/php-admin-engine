@@ -1,0 +1,16 @@
+.breadcrumb {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5em;
+	margin: 0 0 1em;
+
+	// .breadcrumb__item
+	&__item {
+		color: var(--color-text-muted);
+
+		&:not(:first-child)::before {
+			content: "/";
+			margin-right: 0.5em;
+		}
+	}
+}
