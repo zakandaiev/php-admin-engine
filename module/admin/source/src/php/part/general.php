@@ -11,15 +11,15 @@
 					</div>
 
 					<div class="col">
-						<?php Theme::block('box-pagination'); ?>
-					</div>
-
-					<div class="col">
-						<?php Theme::block('box-loader'); ?>
+						<?php Theme::block('box-tooltip'); ?>
 					</div>
 
 					<div class="col">
 						<?php Theme::block('box-popover'); ?>
+					</div>
+
+					<div class="col">
+						<?php Theme::block('box-loader'); ?>
 					</div>
 
 				</div>
@@ -41,7 +41,7 @@
 				</div>
 
 				<div class="col">
-					<?php Theme::block('box-tooltip'); ?>
+					<?php Theme::block('box-pagination'); ?>
 				</div>
 
 			</div>

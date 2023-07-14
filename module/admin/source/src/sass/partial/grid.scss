@@ -1,4 +1,4 @@
-$breakpoints: (
+$breakpoints_for_min_width: (
 	xs: 0,
 	sm: 576px,
 	md: 768px,
@@ -7,7 +7,7 @@ $breakpoints: (
 	xxl: 1400px
 );
 
-$breakpoints_reverse: (
+$breakpoints_for_max_width: (
 	xs: 575px,
 	sm: 767px,
 	md: 991px,
@@ -33,7 +33,7 @@ $breakpoints_reverse: (
 	display: block;
 }
 
-@each $bp, $val in $breakpoints {
+@each $bp, $val in $breakpoints_for_min_width {
 	@media (min-width: $val) {
 		// COLUMNS - GENERAL CLASS FOR .row
 		@for $i from 1 through 12 {

@@ -6,7 +6,7 @@
 	<div class="box__body">
 
 		<nav class="breadcrumb">
-			<span>Home</span>
+			<span class="breadcrumb__item">Home</span>
 		</nav>
 
 		<nav class="breadcrumb">

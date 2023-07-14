@@ -1,5 +1,5 @@
 // TOOLTIP
-document.addEventListener('mouseover', async (event) => {
+document.addEventListener('mouseover', event => {
 	const tooltip = event.target.closest('[data-tooltip]');
 
 	if (!tooltip) {
@@ -9,7 +9,7 @@ document.addEventListener('mouseover', async (event) => {
 	const placement = tooltip.getAttribute('data-tooltip') || 'top';
 	const content = tooltip.getAttribute('data-title');
 
-	if(tooltip.parentElement.classList.contains('tooltip-wrapper')) {
+	if (tooltip.parentElement.classList.contains('tooltip-wrapper')) {
 		return false;
 	}
 
@@ -18,9 +18,13 @@ document.addEventListener('mouseover', async (event) => {
 	wrapper.style.display = getComputedStyle(tooltip).getPropertyValue('display');
 
 	const tip = document.createElement('span');
-	tip.classList.add('tooltip');
-	tip.classList.add(`tooltip_${placement}`);
-	tip.textContent = content;
+	tip.classList.add('tooltip', `tooltip_${placement}`);
+
+	const tip_content = document.createElement('span');
+	tip_content.classList.add('tooltip__content');
+	tip_content.textContent = content;
+
+  tip.appendChild(tip_content);
 
 	tooltip.parentNode.insertBefore(wrapper, tooltip);
   wrapper.appendChild(tooltip);

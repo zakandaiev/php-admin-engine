@@ -1,7 +1,8 @@
 document.addEventListener('click', event => {
 	const accordion = event.target.closest('.accordion');
+	const is_body_click = event.target.closest('.accordion__body');
 
-	if (!accordion) {
+	if (!accordion || is_body_click) {
 		return false;
 	}
 
@@ -39,4 +40,16 @@ document.addEventListener('click', event => {
 		body.style.height = `${body_height}px`;
 		accordion.classList.add('active');
 	}
+});
+
+document.querySelectorAll('.accordion').forEach(accordion => {
+	const body = accordion.querySelector('.accordion__body');
+
+	if (!body || !accordion.hasAttribute('data-active')) {
+		return false;
+	}
+
+	const body_height = body.scrollHeight;
+	body.style.height = `${body_height}px`;
+	accordion.classList.add('active');
 });

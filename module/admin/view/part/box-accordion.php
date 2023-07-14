@@ -1,16 +1,10 @@
 <div class="box">
 	<div class="box__header">
 		<h4 class="box__title">Accordion</h4>
-		<h5 class="box__subtitle">
-			<ul>
-				<li>Collapse effect controls by <span class="label">data-collapse</span> data attribute for parent container with <div class="label">.accordions</div> class.</li>
-				<li>Underline decoration on hover+focus+click controls by <span class="label">.accordion_underline</span> class.</li>
-			</ul>
-		</h5>
 	</div>
 	<div class="accordions" data-collapse>
 
-		<div class="accordion accordion_underline">
+		<div class="accordion accordion_underline" data-active>
 			<button type="button" class="accordion__header">
 				<span>Accordion</span>
 				<i class="icon icon-chevron-right"></i>
