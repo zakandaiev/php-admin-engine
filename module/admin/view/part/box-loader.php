@@ -6,6 +6,7 @@
 
 		<span class="loader loader_lg"></span>
 		<span class="loader loader_lg loader_heading"></span>
+		<span class="loader loader_lg loader_subheading"></span>
 		<span class="loader loader_lg loader_muted"></span>
 		<span class="loader loader_lg loader_default"></span>
 		<span class="loader loader_lg loader_cancel"></span>
@@ -20,6 +21,7 @@
 
 		<span class="loader"></span>
 		<span class="loader loader_heading"></span>
+		<span class="loader loader_subheading"></span>
 		<span class="loader loader_muted"></span>
 		<span class="loader loader_default"></span>
 		<span class="loader loader_cancel"></span>
@@ -34,6 +36,7 @@
 
 		<span class="loader loader_sm"></span>
 		<span class="loader loader_sm loader_heading"></span>
+		<span class="loader loader_sm loader_subheading"></span>
 		<span class="loader loader_sm loader_muted"></span>
 		<span class="loader loader_sm loader_default"></span>
 		<span class="loader loader_sm loader_cancel"></span>

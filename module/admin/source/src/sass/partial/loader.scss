@@ -27,6 +27,12 @@
 		border-bottom-color: transparent;
 	}
 
+	// .loader_subheading
+	&_subheading {
+		border-color: var(--color-subheading);
+		border-bottom-color: transparent;
+	}
+
 	// .loader_muted
 	&_muted {
 		border-color: var(--color-text-muted);

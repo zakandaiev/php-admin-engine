@@ -12,6 +12,8 @@ document.addEventListener('click', event => {
 		return false;
 	}
 
+	event.preventDefault();
+
 	document.querySelectorAll('.dropdown').forEach(dd => {
 		if ( dropdown_header || dropdown_text || dropdown_separator || (dd.hasAttribute('data-keep-open') && dropdown_item) ) {
 			return false;

@@ -6,6 +6,8 @@ document.addEventListener('mouseover', event => {
 		return false;
 	}
 
+	event.preventDefault();
+
 	const placement = tooltip.getAttribute('data-tooltip') || 'top';
 	const content = tooltip.getAttribute('data-title');
 

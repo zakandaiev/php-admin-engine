@@ -8,6 +8,8 @@ document.addEventListener('click', event => {
 		return false;
 	}
 
+	event.preventDefault();
+
 	const placement = popover.getAttribute('data-popover') || 'top';
 	const title = popover.getAttribute('data-title');
 	const content = popover.getAttribute('data-content');
