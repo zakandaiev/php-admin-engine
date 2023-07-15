@@ -1,7 +1,6 @@
 <div class="box">
 	<div class="box__header">
 		<h4 class="box__title">Loaders</h4>
-		<h5 class="box__subtitle">Indicate the loading state of a component with loader.</h5>
 	</div>
 	<div class="box__body">
 

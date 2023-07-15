@@ -72,7 +72,7 @@ a {
 	transition: var(--transition);
 
 	&:hover, &:focus, &:active {
-		color: var(--color-link-hover) !important;
+		color: var(--color-link-hover);
 		text-decoration: underline;
 	}
 
@@ -295,6 +295,7 @@ hr {
 @import "partial/accordion";
 @import "partial/button";
 @import "partial/breadcrumb";
+@import "partial/dropdown";
 @import "partial/grid";
 @import "partial/helper";
 @import "partial/icon";

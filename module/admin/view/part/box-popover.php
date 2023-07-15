@@ -1,7 +1,6 @@
 <div class="box">
 	<div class="box__header">
 		<h4 class="box__title">Popovers</h4>
-		<h5 class="box__subtitle">Examples for adding popovers.</h5>
 	</div>
 	<div class="box__body text-center">
 

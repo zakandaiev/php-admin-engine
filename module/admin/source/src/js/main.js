@@ -16,6 +16,7 @@ const GET_PARAM = (key) => {
 document.addEventListener('DOMContentLoaded', () => {
 	// PARTIALS
 	@@include('partial/accrodion.js')
+	@@include('partial/dropdown.js')
 	@@include('partial/format-tel-link.js')
 	@@include('partial/external-link-norefer.js')
 	@@include('partial/protect-image.js')

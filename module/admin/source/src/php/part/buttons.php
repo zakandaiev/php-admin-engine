@@ -65,8 +65,8 @@
 			<div class="col">
 				<div class="box h-100">
 					<div class="box__header">
-						<h4 class="box__title">Outline Buttons</h4>
-						<h5 class="box__subtitle">Buttons without background color.</h5>
+						<h4 class="box__title">Icon Buttons</h4>
+						<h5 class="box__subtitle">Buttons with icons.</h5>
 					</div>
 					<div class="box__body text-center">
 						<div class="m-b-6">
@@ -117,7 +117,6 @@
 				<div class="box h-100">
 					<div class="box__header">
 						<h4 class="box__title">Button Group</h4>
-						<h5 class="box__subtitle">Button group components.</h5>
 					</div>
 					<div class="box__body">
 						<p>Horizontal button group</p>
