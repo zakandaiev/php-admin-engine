@@ -1,0 +1,78 @@
+.wysiwyg {
+	display: block;
+	width: 100%;
+	min-height: 2.543em;
+	position: relative;
+
+	.codex-editor__loader {
+		height: 2.5em;
+	}
+
+	.ce-toolbar__content,
+	.ce-block__content {
+		max-width: 100%;
+	}
+
+	.codex-editor {
+		margin-left: 5em;
+	}
+
+	.ce-toolbar {
+		margin-top: -2px;
+	}
+
+	.codex-editor__redactor {
+		padding: 0 !important;
+		padding-left: 1em !important;
+		border-left: var(--border);
+	}
+
+	.ce-inline-toolbar {
+		background: var(--color-box);
+		border: var(--border);
+		box-shadow: var(--shadow);
+	}
+
+	.ce-toolbar__plus,
+	.ce-toolbar__settings-btn {
+		color: var(--color-text);
+
+		&:hover, &:focus, &:active {
+			background: var(--color-border);
+			color: var(--color-text);
+			box-shadow: none;
+		}
+	}
+
+	.ce-inline-toolbar__dropdown,
+	.ce-inline-tool,
+	.ce-conversion-tool {
+		&:hover, &:focus, &:active {
+			background: var(--color-border);
+			color: var(--color-text);
+			box-shadow: none;
+		}
+	}
+
+	.ce-conversion-toolbar,
+	.ce-popover {
+		background: var(--color-box);
+		border: var(--border);
+		box-shadow: var(--shadow);
+	}
+
+	.ce-conversion-tool__icon {
+		background: var(--color-secondary);
+		border: var(--border-width) solid var(--color-secondary);
+		box-shadow: none;
+	}
+
+	.ce-conversion-toolbar__label {
+		color: var(--color-text-muted);
+	}
+
+	.ce-popover-item {
+		background: var(--color-box);
+		box-shadow: none;
+	}
+}

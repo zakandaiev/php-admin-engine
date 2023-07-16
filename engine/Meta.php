@@ -72,9 +72,11 @@ class Meta {
 	// private static function setting() {
 	// 	return '
 	// 		<script>
-	// 			const BASE_URL = "' . site('url') . '";
-	// 			const SETTING = {
-	// 				language: "' . site('language_current') . '",
+	// 			const ENGINE = {
+	// 				language: {
+	// 					key: "' . site('language_current') . '",
+	// 					region: "' . site('language_current_region') . '",
+	// 				},
 	// 				csrf: {
 	// 					key: "' . COOKIE_KEY['csrf'] . '",
 	// 					token: "' . Request::$csrf . '"

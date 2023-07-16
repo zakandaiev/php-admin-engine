@@ -1,6 +1,7 @@
 .tab {
 	display: flex;
 	flex-direction: column;
+	filter: var(--drop-shadow);
 
 	// .tab_vertical
 	&_vertical {
@@ -25,7 +26,7 @@
 		flex-wrap: wrap;
 
 		// .tab__nav_icon
-		&_icon .tab__nav-item {
+		&_icon > .tab__nav-item {
 			font-size: 1.5em;
 			padding: 0.5em 1em;
 		}
@@ -68,7 +69,6 @@
 		display: none;
 		padding: 1.5em;
 		border-radius: 0 var(--radius) var(--radius) var(--radius);
-		box-shadow: var(--shadow);
 		background: var(--color-box);
 
 		&.active {

@@ -1,0 +1,231 @@
+form, .form {
+	display: block;
+	width: 100%;
+	position: relative;
+
+	&::before {
+		content: "";
+		position: absolute;
+		z-index: -1;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		background: var(--color-box);
+		transition: var(--transition);
+		opacity: 0;
+		visibility: hidden;
+	}
+
+	& > .loader {
+		position: absolute;
+		z-index: -1;
+		top: calc(50% - 1.5em);
+		left: calc(50% - 1.5em);
+		transition: var(--transition);
+		opacity: 0;
+		visibility: hidden;
+	}
+
+	&.submitting {
+		&::before {
+			z-index: 10;
+			opacity: 0.3;
+			visibility: visible;
+		}
+
+		& > .loader {
+			z-index: 11;
+			opacity: 1;
+			visibility: visible;
+		}
+	}
+}
+
+label {
+	display: inline-block;
+	max-width: 100%;
+	margin: 0 0 0.5em 0;
+	font-size: 1em;
+	font-weight: var(--font-normal);
+	line-height: 1.2;
+	position: relative;
+	overflow: hidden;
+
+	&[for] {
+		cursor: pointer;
+	}
+}
+
+input, textarea, select, .input {
+	@extend %reset-btn;
+	display: block;
+	width: 100%;
+	padding: 0.5em 1em;
+	font-size: 1em;
+	font-weight: var(--font-normal);
+	line-height: 1.4;
+	border-radius: var(--radius);
+	border: var(--border);
+	background: var(--color-box);
+	color: var(--color-text);
+	margin: 0 0 1em;
+
+	&:disabled, &.disabled {
+		background: var(--color-border);
+	}
+}
+
+form {
+	input, textarea, select {
+		&:invalid:not(:placeholder-shown) {
+			border-color: var(--color-error);
+		}
+		&:not(:invalid):not(:placeholder-shown) {
+			border-color: var(--color-success);
+		}
+	}
+	&.highlight-errors {
+		input, textarea, select {
+			&:invalid {
+				border-color: var(--color-error);
+			}
+		}
+	}
+}
+
+textarea {
+	min-height: 2.543em;
+	max-height: 20em;
+	resize: vertical;
+	overflow: hidden auto;
+}
+
+label:not(.switch) {
+	input[type="checkbox"],
+	input[type="radio"] {
+		display: none;
+
+		& + * {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.5em;
+			font-size: 1em;
+			font-weight: var(--font-normal);
+			line-height: 1.2;
+			color: var(--color-text);
+			margin: 0;
+			padding: 0;
+			position: relative;
+			cursor: pointer;
+
+			&::before {
+				flex-shrink: 0;
+				font-family: "icon";
+				content: "_";
+				display: inline-flex;
+				justify-content: center;
+				align-items: center;
+				width: 1.6rem;
+				height: 1.6rem;
+				font-size: 1.3rem;
+				border-radius: var(--radius);
+				background: var(--color-box);
+				color: var(--color-box);
+				border: var(--border);
+				transition: background-color var(--transition-time), border-color var(--transition-time);
+			}
+		}
+
+		&:checked + *::before {
+			@extend .icon-check;
+			background-color: var(--color-primary);
+			border-color: var(--color-primary);
+			color: #fff;
+		}
+
+		&:disabled, &.disabled {
+			& ~ * {
+				opacity: 0.5;
+				cursor: default;
+			}
+		}
+	}
+
+	input[type="radio"] {
+		& + *::before {
+			border-radius: 50%;
+		}
+
+		&:checked + *::before {
+			@extend .icon-circle-filled;
+			background: transparent;
+			border-width: 0.5rem;
+			color: transparent;
+		}
+	}
+}
+
+.switch {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5em;
+
+	// .switch__slider
+	&__slider {
+		display: inline-block;
+		width: 3.2rem;
+		height: 1.6rem;
+		border-radius: 1.6rem;
+		background: var(--color-box);
+		border: var(--border);
+		position: relative;
+		transition: var(--transition);
+		cursor: pointer;
+
+		&::before {
+			content: "";
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			left: 0.3rem;
+			display: inline-block;
+			width: 1rem;
+			height: 1rem;
+			border-radius: 50%;
+			background: var(--color-border-hover);
+			transition: var(--transition);
+		}
+	}
+
+	& > *:not([class]) {
+		font-size: 1em;
+		font-weight: var(--font-normal);
+		line-height: 1.2;
+		color: var(--color-text);
+		margin: 0;
+		padding: 0;
+		cursor: pointer;
+	}
+
+	input {
+		display: none;
+
+		&:checked + .switch__slider {
+			background: var(--color-primary);
+			border-color: var(--color-primary);
+
+			&::before {
+				left: 1.7rem;
+				background: #fff;
+			}
+		}
+
+		&:disabled, &.disabled {
+			& ~ * {
+				opacity: 0.5;
+				cursor: default;
+			}
+		}
+	}
+}

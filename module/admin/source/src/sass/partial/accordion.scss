@@ -47,11 +47,11 @@
 	}
 
 	&.active {
-		.accordion__header > .icon {
+		& > .accordion__header > .icon {
 			transform: rotate(90deg);
 		}
 
-		.accordion__body {
+		& > .accordion__body {
 			visibility: visible;
 		}
 	}

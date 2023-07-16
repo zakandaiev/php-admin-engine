@@ -44,7 +44,7 @@
 	--radius: 4px;
 
 	--shadow: 0 0 14px 0 rgba(33, 37, 41, 0.05);
-	--drop-shadow: drop-shadow(0 0 14px 0 rgba(33, 37, 41, 0.05));
+	--drop-shadow: drop-shadow(0 0 14px rgba(33, 37, 41, 0.05));
 
 	--transition-time: 0.3s;
 	--transition: all var(--transition-time);
@@ -76,6 +76,8 @@
 }
 
 %reset-btn {
+	font: inherit;
+	appearance: none;
 	outline: none;
 	border: none;
 	background: none;
@@ -84,9 +86,15 @@
 	text-decoration: none;
 	margin: 0;
 	padding: 0;
-	font: inherit;
 
 	&:hover, &:focus, &:active {
 		text-decoration: none;
+	}
+
+	&::-webkit-search-decoration,
+	&::-webkit-search-cancel-button,
+	&::-webkit-search-results-button,
+	&::-webkit-search-results-decoration {
+		appearance: none;
 	}
 }

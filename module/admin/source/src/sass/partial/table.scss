@@ -29,8 +29,8 @@ table {
 .table {
 
 	// .table_striped
-	&_striped tbody tr:nth-child(odd) {
-		th, td {
+	&_striped > tbody > tr:nth-child(odd) {
+		& > th, td {
 			background: #f8f9fa;
 		}
 	}
@@ -60,8 +60,8 @@ table {
 }
 
 :root[data-theme="dark"] {
-	.table_striped tbody tr:nth-child(odd) {
-		th, td {
+	.table_striped > tbody > tr:nth-child(odd) {
+		& > th, td {
 			background: #2d3846;
 		}
 	}

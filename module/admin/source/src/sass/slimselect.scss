@@ -1,0 +1,98 @@
+@import "slim-select/dist/slimselect";
+
+:root {
+	--ss-primary-color: var(--color-primary);
+  --ss-bg-color: var(--color-box);
+  --ss-font-color: var(--color-text);
+  --ss-font-placeholder-color: var(--color-text-muted);
+  --ss-disabled-color: var(--color-border);
+  --ss-border-color: var(--color-border);
+  --ss-highlight-color: #fef1d5;
+  --ss-success-color: var(--color-success);
+  --ss-error-color: var(--color-error);
+  --ss-main-height: 2.543em;
+  --ss-content-height: 20em;
+  --ss-spacing-l: 0.5em;
+  --ss-spacing-m: 0.5em;
+  --ss-spacing-s: 0.5em;
+  --ss-animation-timing: var(--transition-time);
+  --ss-border-radius: var(--radius);
+}
+
+.ss-main {
+	margin: 0 0 1em;
+	padding: 0.5em 1em;
+
+	&:hover, &:focus, &:active {
+		box-shadow: none;
+	}
+
+	.ss-values {
+		.ss-single {
+			margin: 0;
+		}
+
+		.ss-placeholder {
+			padding: 0;
+			line-height: inherit;
+		}
+
+		.ss-value {
+			.ss-value-text {
+				padding: 0.45em;
+				font-size: 0.8em;
+				font-weight: var(--font-medium);
+				line-height: 1;
+				cursor: default;
+			}
+
+			.ss-value-delete {
+				padding: 0.45em;
+				border: none;
+			}
+		}
+	}
+}
+
+.ss-content {
+	.ss-list {
+		.ss-option {
+			&:hover {
+				background: var(--color-border);
+				color: var(--color-text);
+			}
+
+			&.ss-disabled {
+				color: var(--color-text-muted);
+
+				&:hover, &:focus, &:active {
+					color: var(--color-text-muted);
+				}
+			}
+		}
+	}
+
+	.ss-search {
+		input {
+			display: block;
+			width: 100%;
+			padding: 0.5em 1em;
+			font-size: 1em;
+			font-weight: var(--font-normal);
+			line-height: 1.4;
+			border-radius: var(--radius);
+			border: var(--border);
+			background: var(--color-box);
+			color: var(--color-text);
+			margin: 0;
+
+			&:disabled, &.disabled {
+				background: var(--color-border);
+			}
+
+			&:hover, &:focus, &:active {
+				box-shadow: none;
+			}
+		}
+	}
+}

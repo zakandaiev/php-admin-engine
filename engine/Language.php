@@ -118,7 +118,8 @@ class Language {
 
 		if(!empty($language_from_cookie) && Language::has($language_from_cookie)) {
 			$language = Session::getCookie(COOKIE_KEY['language']);
-		} else {
+		}
+		else {
 			$language = Setting::get('main')->language ?? null;
 		}
 

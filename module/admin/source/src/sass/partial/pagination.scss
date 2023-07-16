@@ -8,6 +8,9 @@
 		@extend .btn;
 		@extend .btn_icon;
 		@extend .btn_default;
+		padding: 0.9rem;
+		min-width: 3.4rem;
+    min-height: 3.4rem;
 		border-radius: 0;
 		cursor: pointer;
 
@@ -37,5 +40,19 @@
 			@extend .btn_primary;
 			color: #fff;
 		}
+	}
+
+	// .pagination_sm > .pagination__item
+	&_sm > .pagination__item {
+		padding: 0.5rem;
+		min-width: 3rem;
+    min-height: 3rem;
+	}
+
+	// .pagination_lg > .pagination__item
+	&_lg > .pagination__item {
+		padding: 1.2rem;
+		min-width: 4rem;
+    min-height: 4rem;
 	}
 }

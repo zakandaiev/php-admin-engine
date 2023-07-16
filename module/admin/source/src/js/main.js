@@ -23,5 +23,12 @@ document.addEventListener('DOMContentLoaded', () => {
 	@@include('partial/responsive-table.js')
 	@@include('partial/popover.js')
 	@@include('partial/tab.js')
+	@@include('partial/textarea.js')
 	@@include('partial/tooltip.js')
+
+	// PLUGINS
+	@@include("plugin/air-datepicker.js")
+	@@include("plugin/maska.js")
+	@@include("plugin/slimselect.js")
+	@@include("plugin/wysiwyg.js")
 });

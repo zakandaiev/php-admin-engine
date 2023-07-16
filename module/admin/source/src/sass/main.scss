@@ -95,7 +95,9 @@ b, strong {
 }
 
 mark, .mark {
-	padding: 0.1875em;
+	display: inline;
+	margin: 0;
+	padding: 0;
 	background-color: #fef1d5;
 }
 
@@ -274,6 +276,7 @@ code, kbd, pre, samp {
 @import "partial/button";
 @import "partial/breadcrumb";
 @import "partial/dropdown";
+@import "partial/form";
 @import "partial/grid";
 @import "partial/helper";
 @import "partial/icon";

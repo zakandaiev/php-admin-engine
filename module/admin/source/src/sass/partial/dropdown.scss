@@ -49,7 +49,7 @@
 			color: #fff;
 		}
 
-		&.disabled, [disabled] {
+		&:disabled, &.disabled {
 			color: var(--color-text-muted);
 			cursor: default;
 		}

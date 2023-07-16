@@ -1,26 +1,31 @@
 <?php
 
 ############################# ASSETS #############################
-Asset::css('css/adminkit');
-Asset::css('css/fancybox');
-Asset::css('css/filepond');
-Asset::css('css/quill');
+Asset::css('css/air-datepicker');
+Asset::css('css/data-copy');
+// Asset::css('css/fancybox');
+// Asset::css('css/filepond');
 Asset::css('css/slimselect');
+// Asset::css('css/quill');
+Asset::css('css/toast');
+Asset::css('css/wysiwyg');
 Asset::css('css/main');
 
+Asset::js('js/air-datepicker', 'defer');
 Asset::js('js/cyr-to-lat', 'defer');
-Asset::js('js/toast', 'defer');
-Asset::js('js/adminkit', 'defer');
-Asset::js('js/fancybox', 'defer');
-Asset::js('js/filepond', 'defer');
-Asset::js('js/imask', 'defer');
-Asset::js('js/quill', 'defer');
+Asset::js('js/data-copy', 'defer');
+// Asset::js('js/fancybox', 'defer');
+// Asset::js('js/filepond', 'defer');
+Asset::js('js/maska', 'defer');
+// Asset::js('js/quill', 'defer');
 Asset::js('js/slimselect', 'defer');
-Asset::js('js/sortable', 'defer');
-Asset::js('js/load-more', 'defer');
-Asset::js('js/custom-fields', 'defer', ['/admin/page/edit/$id', '/admin/page/edit/$id/translation/edit/$language']);
-Asset::js('js/menu', 'defer', ['/admin/menu', '/admin/menu/$id']);
-Asset::js('js/translations', 'defer', '//admin/translation/$module/$language');
+// Asset::js('js/sortable', 'defer');
+Asset::js('js/toast', 'defer');
+Asset::js('js/wysiwyg', 'defer');
+// Asset::js('js/load-more', 'defer');
+// Asset::js('js/custom-fields', 'defer', ['/admin/page/edit/$id', '/admin/page/edit/$id/translation/edit/$language']);
+// Asset::js('js/menu', 'defer', ['/admin/menu', '/admin/menu/$id']);
+// Asset::js('js/translations', 'defer', '//admin/translation/$module/$language');
 Asset::js('js/main', 'defer');
 
 // TODO

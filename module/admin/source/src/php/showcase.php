@@ -1,5 +1,7 @@
 <?php Theme::header(); ?>
 
+<?php Theme::block('form-editor'); ?>
+<?php Theme::block('forms'); ?>
 <?php Theme::block('general'); ?>
 <?php Theme::block('buttons'); ?>
 <?php Theme::block('tabs'); ?>

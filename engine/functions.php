@@ -343,6 +343,10 @@ function site($key) {
 			$value = Language::current();
 			break;
 		}
+		case 'language_current_region': {
+			$value = Language::get('region');
+			break;
+		}
 		case 'url': {
 			$value = Request::$base;
 			break;
@@ -434,6 +438,10 @@ function sort_link($key, $text) {
 	}
 
 	return '<a href="' . $link . '">' . $text . '</a>';
+}
+
+function format_tel_link($tel = '') {
+	return preg_replace('/[^\d+]+/m', '', $tel ?? '');
 }
 
 function numerical_noun_form($number) {
