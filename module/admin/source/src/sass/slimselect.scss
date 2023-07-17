@@ -20,8 +20,8 @@
 }
 
 .ss-main {
-	margin: 0 0 1em;
-	padding: 0.5em 1em;
+	margin: 0;
+	padding: 0.5em 0.5em 0.5em 1em;
 
 	&:hover, &:focus, &:active {
 		box-shadow: none;
@@ -44,19 +44,39 @@
 				font-weight: var(--font-medium);
 				line-height: 1;
 				cursor: default;
+				color: #fff;
 			}
 
 			.ss-value-delete {
 				padding: 0.45em;
 				border: none;
+
+				& > svg > path {
+					stroke: #fff;
+				}
 			}
 		}
 	}
 }
 
 .ss-content {
+	position: absolute;
+	z-index: 10;
+	left: 0;
+	right: 0;
+	height: auto;
+
+	&.ss-relative {
+		position: absolute;
+		height: auto;
+	}
+
 	.ss-list {
 		.ss-option {
+			&:empty {
+				display: none;
+			}
+
 			&:hover {
 				background: var(--color-border);
 				color: var(--color-text);
@@ -68,6 +88,10 @@
 				&:hover, &:focus, &:active {
 					color: var(--color-text-muted);
 				}
+			}
+
+			&:not(.ss-disabled).ss-selected {
+				color: #fff;
 			}
 		}
 	}
@@ -94,5 +118,31 @@
 				box-shadow: none;
 			}
 		}
+	}
+}
+
+.select_custom {
+	& > select.valid ~ .ss-main,
+	& > select.valid ~ .ss-content {
+		border-color: var(--color-success);
+	}
+
+	& > select.invalid ~ .ss-main,
+	& > select.invalid ~ .ss-content {
+		border-color: var(--color-error);
+	}
+}
+
+.input-group {
+	& > .select_custom:first-child > .ss-main {
+		border-radius: var(--radius) 0 0 var(--radius);
+	}
+
+	& > .select_custom:last-child > .ss-main {
+		border-radius: 0 var(--radius) var(--radius) 0;
+	}
+
+	& > .select_custom:not(:first-child):not(:last-child) > .ss-main {
+		border-radius: 0;
 	}
 }

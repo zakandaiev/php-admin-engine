@@ -35,6 +35,8 @@ document.querySelectorAll('input[data-picker]').forEach(input => {
 		}
 	}
 
+	options.onSelect = () => input.dispatchEvent(new CustomEvent('change', { bubbles: true }));
+
 	const datepicker = new AirDatepicker(input, options);
 
 	input.instance = datepicker;

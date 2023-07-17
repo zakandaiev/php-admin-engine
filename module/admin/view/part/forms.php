@@ -153,6 +153,48 @@
 						</div>
 					</div>
 
+					<div class="col">
+						<div class="box">
+							<div class="box__header">
+								<h5 class="box__title">Groups</h5>
+							</div>
+							<div class="box__body">
+
+								<div class="input-group">
+									<span>@</span>
+									<input type="text" placeholder="Username">
+								</div>
+
+								<div class="input-group">
+									<input type="text" placeholder="Email">
+									<span>@example.com</span>
+								</div>
+
+								<div class="input-group">
+									<input type="text" placeholder="Search">
+									<a href="#">Go!</a>
+								</div>
+
+								<div class="input-group">
+									<select data-placeholder="Select...">
+										<option data-placeholder="true"><option>
+										<option>One</option>
+										<option>Two</option>
+										<option>Three</option>
+									</select>
+									<button type="button" class="cursor-pointer">Go!</button>
+								</div>
+
+								<div class="input-group">
+									<button type="button" class="cursor-pointer"><i class="icon icon-minus"></i></button>
+									<input type="number" placeholder="Amount">
+									<button type="button" class="cursor-pointer"><i class="icon icon-plus"></i></button>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
 				</div>
 			</div>
 

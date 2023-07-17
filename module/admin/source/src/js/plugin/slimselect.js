@@ -3,9 +3,18 @@ document.querySelectorAll('select').forEach(select => {
 		return false;
 	}
 
+	const wrapper = document.createElement('div');
+	wrapper.classList.add('select', 'select_custom');
+
+	select.after(wrapper);
+
+	wrapper.appendChild(select);
+
 	const s = new SlimSelect({
 		select: select,
 		settings: {
+			contentLocation: wrapper,
+			contentPosition: 'relative',
 			alwaysOpen: select.hasAttribute('data-always-open') ? true : false,
 			placeholderText: select.hasAttribute('data-placeholder') ? select.getAttribute('data-placeholder') : null,
 			allowDeselect: select.querySelector('option[data-placeholder]') ? true : false,
@@ -39,9 +48,12 @@ document.querySelectorAll('select').forEach(select => {
 				val = val.replaceAll(/[\s]+/g, ' ').trim();
 
 				return val;
-			}
+			},
+			afterChange: () => select.dispatchEvent(new CustomEvent('change', { bubbles:true }))
 		}
 	});
 
 	select.instance = s;
+	select.removeAttribute('style');
+	wrapper.instance = s;
 });

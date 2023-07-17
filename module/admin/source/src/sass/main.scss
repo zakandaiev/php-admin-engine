@@ -163,6 +163,7 @@ code, kbd, pre, samp {
 
 ::placeholder {
 	color: var(--color-text-muted);
+	opacity: 1;
 }
 
 /* ==========  Custom  ========== */
@@ -194,7 +195,7 @@ code, kbd, pre, samp {
 	&__content {
 		display: block;
 
-		*:last-child {
+		& > *:last-child {
 			margin-bottom: 0;
 		}
 	}
@@ -261,6 +262,10 @@ code, kbd, pre, samp {
 	&__body {
 		display: block;
 		padding: 1.5em;
+
+		& > *:last-child {
+			margin-bottom: 0;
+		}
 	}
 
 	.box__header + .box__body {

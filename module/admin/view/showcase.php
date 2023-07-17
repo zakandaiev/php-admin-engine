@@ -1,6 +1,8 @@
 <?php Theme::header(); ?>
 
-<?php Theme::block('form-editor'); ?>
+<?php Theme::block('toast'); ?>
+<?php Theme::block('forms-validation'); ?>
+<?php Theme::block('wysiwyg'); ?>
 <?php Theme::block('forms'); ?>
 <?php Theme::block('general'); ?>
 <?php Theme::block('buttons'); ?>

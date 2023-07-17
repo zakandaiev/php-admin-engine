@@ -30,7 +30,7 @@ form, .form {
 	&.submitting {
 		&::before {
 			z-index: 10;
-			opacity: 0.3;
+			opacity: 0.7;
 			visibility: visible;
 		}
 
@@ -57,7 +57,8 @@ label {
 	}
 }
 
-input, textarea, select, .input {
+input, textarea, select,
+.input, .textarea, .select {
 	@extend %reset-btn;
 	display: block;
 	width: 100%;
@@ -70,27 +71,18 @@ input, textarea, select, .input {
 	background: var(--color-box);
 	color: var(--color-text);
 	margin: 0 0 1em;
+	position: relative;
 
 	&:disabled, &.disabled {
 		background: var(--color-border);
 	}
-}
 
-form {
-	input, textarea, select {
-		&:invalid:not(:placeholder-shown) {
-			border-color: var(--color-error);
-		}
-		&:not(:invalid):not(:placeholder-shown) {
-			border-color: var(--color-success);
-		}
+	&.valid {
+		border-color: var(--color-success);
 	}
-	&.highlight-errors {
-		input, textarea, select {
-			&:invalid {
-				border-color: var(--color-error);
-			}
-		}
+
+	&.invalid {
+		border-color: var(--color-error);
 	}
 }
 
@@ -104,7 +96,16 @@ textarea {
 label:not(.switch) {
 	input[type="checkbox"],
 	input[type="radio"] {
-		display: none;
+		position: absolute;
+		z-index: -1;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		opacity: 0;
+		width: 0;
+		height: 100%;
+		margin: 0;
+		padding: 0;
 
 		& + * {
 			display: inline-flex;
@@ -149,6 +150,14 @@ label:not(.switch) {
 				opacity: 0.5;
 				cursor: default;
 			}
+		}
+
+		&.valid + * {
+			color: var(--color-success);
+		}
+
+		&.invalid + * {
+			color: var(--color-error);
 		}
 	}
 
@@ -228,4 +237,76 @@ label:not(.switch) {
 			}
 		}
 	}
+}
+
+.select_custom {
+	display: block;
+	width: auto;
+	padding: 0;
+	background: none;
+	border: none;
+
+	select {
+		position: absolute;
+		z-index: -1;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		opacity: 0;
+		width: 0;
+		height: 100%;
+		margin: 0;
+		padding: 0;
+	}
+}
+
+.input-group {
+	display: flex;
+	margin: 0 0 1em;
+	position: relative;
+
+	& > *:not(input):not(textarea):not(select):not(.input):not(.textarea):not(.select) {
+		@extend %reset-btn;
+		flex-shrink: 0;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0.5em 1em;
+		background: var(--color-border);
+		border: var(--border);
+		color: var(--color-text);
+
+		&:first-child {
+			border-right-width: 0;
+			border-radius: var(--radius) 0 0 var(--radius);
+		}
+
+		&:last-child {
+			border-left-width: 0;
+			border-radius: 0 var(--radius) var(--radius) 0;
+		}
+	}
+
+	& > input, & > textarea, & > select, & > .input, & > .textarea, & > .select {
+		flex-grow: 1;
+		width: auto;
+		margin: 0;
+		border-radius: 0 var(--radius) var(--radius) 0;
+
+		&:first-child {
+			border-radius: var(--radius) 0 0 var(--radius);
+		}
+
+		&:last-child {
+			border-radius: 0 var(--radius) var(--radius) 0;
+		}
+
+		&:not(:first-child):not(:last-child) {
+			border-radius: 0;
+		}
+	}
+}
+
+:root[data-theme="dark"] .input-group > *:not(input):not(textarea):not(select):not(.input):not(.textarea):not(.select) {
+	background: var(--color-border-hover);
 }

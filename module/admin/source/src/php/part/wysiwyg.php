@@ -4,7 +4,7 @@
 
 		<div class="box">
 			<div class="box__header">
-				<h4 class="box__title">TOAST UI Editor</h4>
+				<h4 class="box__title">Wysiwyg</h4>
 			</div>
 			<div class="box__body">
 				<textarea data-wysiwyg placeholder="Type something"></textarea>

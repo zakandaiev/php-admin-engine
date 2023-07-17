@@ -1,51 +1,115 @@
 document.querySelectorAll('textarea[data-wysiwyg]').forEach(textarea => {
-	const wrapper = document.createElement('div');
-	wrapper.classList.add('wysiwyg');
+	const wysiwyg = document.createElement('div');
+	wysiwyg.classList.add('wysiwyg');
 
-	textarea.after(wrapper);
+	const quill = document.createElement('div');
+	quill.innerHTML = textarea.value;
 
-	const editor = new EditorJS({
-		holder: wrapper,
-		logLevel: 'ERROR',
-		autofocus: textarea.hasAttribute('data-focus') ? true : false,
-		placeholder: textarea.placeholder || '',
-		readOnly: false,
-		tools: {
-			header: {
-				class: Header,
-				shortcut: 'CMD+SHIFT+H',
-				placeholder: 'Enter a header',
-				levels: [2, 3, 4, 5, 6],
-        defaultLevel: 2
-			},
-			quote: Quote,
-			list: NestedList,
-			embed: Embed,
-			table: Table,
-			delimiter: Delimiter,
-			code: CodeTool,
-			raw: RawTool,
-			Marker: {
-				class: Marker,
-				shortcut: 'CMD+SHIFT+M',
-			},
-			inlineCode: {
-				class: InlineCode,
-				shortcut: 'CMD+SHIFT+C',
-			},
+	wysiwyg.appendChild(quill);
+
+	textarea.after(wysiwyg);
+
+	wysiwyg.appendChild(textarea);
+
+	const quill_icons = Quill.import('ui/icons');
+	quill_icons['expand'] = `<i class="icon icon-maximize"></i><i class="icon icon-minimize"></i>`;
+
+	const editor = new Quill(quill, {
+		modules: {
+			toolbar: {
+					container: [
+						[{ header: [false, 3, 2] }],
+						['bold', 'italic', 'underline', 'strike'],
+						[{'align': []}, {'list': 'ordered'}, {'list': 'bullet'}],
+						[{'color': []}, {'background': []}],
+						['link', 'image', 'video', 'blockquote', 'code'],
+						[{'indent': '-1'}, {'indent': '+1'}],
+						[{'script': 'sub'}, {'script': 'super'}],
+						['clean'], ['expand']
+					],
+					handlers: {
+						'image': () => handleImage(),
+						'expand': () => handleExpand()
+					}
+			}
 		},
-		onChange: async (api, event) => {
-			const { blocks } = await api.saver.save();
-			if (blocks.length) {
-				textarea.value = JSON.stringify(blocks);
-			}
-			else {
-				textarea.value = '';
-			}
-		}
+		placeholder: textarea.placeholder || '',
+		readOnly: textarea.disabled ? true : false,
+		theme: 'snow'
 	});
 
-	wrapper.instance = editor;
+	// POPULATE
+	// editor.setContents(JSON.parse(textarea.value).ops);
+
+	// UPDATE TEXTAREA VALUE
+	editor.on('editor-change', event => {
+		// textarea.value = JSON.stringify(editor.getContents());
+		textarea.value = editor.root.innerHTML;
+	});
+
+	// EXPAND
+	function handleExpand() {
+		const expand = wysiwyg.querySelector('.ql-expand');
+
+		function maximize() {
+			wysiwyg.classList.add('wysiwyg_fullscreen');
+			if (expand) expand.classList.add('active');
+		}
+
+		function minimize() {
+			wysiwyg.classList.remove('wysiwyg_fullscreen');
+			if (expand) expand.classList.remove('active');
+		}
+
+		wysiwyg.classList.contains('wysiwyg_fullscreen') ?  minimize() : maximize();
+	}
+
+	// IMAGE UPLOAD
+	// const Image = editor.import('formats/image');
+	// Image.className = 'image-fluid';
+	// editor.register(Image, true);
+
+	// function handleImage() {
+	// 	const input = document.createElement('input');
+	// 	input.setAttribute('type', 'file');
+	// 	input.setAttribute('accept', 'image/*');
+	// 	input.click();
+
+	// 	input.onchange = () => {
+	// 		const file = input.files[0];
+
+	// 		if(file) {
+	// 			let formData = new FormData();
+	// 			formData.append('file', file);
+	// 			formData.append(SETTING.csrf.key, SETTING.csrf.token);
+
+	// 			editor.enable(false);
+
+	// 			fetch(BASE_URL + '/upload/', {method: 'POST', body: formData})
+	// 			.then(response => response.text())
+	// 			.then(data => {
+	// 				const selection = editor.getSelection().index;
+	// 				const image_url = BASE_URL + '/' + data;
+
+	// 				editor.insertEmbed(selection, 'image', image_url);
+	// 				editor.setSelection(selection + 1);
+	// 			})
+	// 			.catch(error => {
+	// 				if (toast instanceof Function) {
+	// 					toast('error', error);
+	// 				}
+	// 				else {
+	// 					console.log(error);
+	// 				}
+	// 			})
+	// 			.finally(() => {
+	// 				editor.enable(true);
+	// 			});
+	// 		}
+	// 	};
+	// }
+
+	wysiwyg.instance = editor;
 	textarea.instance = editor;
 	textarea.setAttribute('readonly', true);
 	textarea.classList.add('hidden');
