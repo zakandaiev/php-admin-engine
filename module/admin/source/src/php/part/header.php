@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="TODO">
+<html lang="en">
 
 <head>
-	<?= Meta::all($page) ?>
+	<?= Page::meta() ?>
 	<?= Asset::render('css') ?>
 	<?= Asset::render('js') ?>
 </head>

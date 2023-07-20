@@ -6,7 +6,6 @@ class Dashboard extends AdminController {
 	public function getDashboard() {
 		// TODO
 		// $this->page->title = __('Dashboard');
-		// $this->view->render('dashboard');
-		$this->view->render('showcase');
+		$this->view->render('dashboard');
 	}
 }

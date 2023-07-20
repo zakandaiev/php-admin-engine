@@ -114,6 +114,9 @@ $indent-step: 0.5;
 		margin-top: #{$i * $indent-step}rem !important;
 		margin-bottom: #{$i * $indent-step}rem !important;
 	}
+	.m-#{$i} {
+		margin: #{$i * $indent-step}rem !important;
+	}
 }
 
 .m-t-auto {
@@ -142,6 +145,10 @@ $indent-step: 0.5;
 	margin-bottom: auto !important;
 }
 
+.m-auto {
+	margin: auto !important;
+}
+
 /* ==========  Paddings  ========== */
 .p-0 {
 	padding: 0 !important;
@@ -160,6 +167,17 @@ $indent-step: 0.5;
 	}
 	.p-l-#{$i} {
 		padding-left: #{$i * $indent-step}rem !important;
+	}
+	.p-x-#{$i} {
+		padding-left: #{$i * $indent-step}rem !important;
+		padding-right: #{$i * $indent-step}rem !important;
+	}
+	.p-y-#{$i} {
+		padding-top: #{$i * $indent-step}rem !important;
+		padding-bottom: #{$i * $indent-step}rem !important;
+	}
+	.p-#{$i} {
+		padding: #{$i * $indent-step}rem !important;
 	}
 }
 

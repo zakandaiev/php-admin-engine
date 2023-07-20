@@ -1,3 +1,5 @@
+<?php Theme::header(); ?>
+
 <section class="section section_offset">
 	<div class="container">
 		<h2 class="section__title">Tabs</h2>
@@ -151,3 +153,5 @@
 		</div>
 	</div>
 </section>
+
+<?php Theme::footer(); ?>

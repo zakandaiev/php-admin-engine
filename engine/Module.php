@@ -38,7 +38,7 @@ class Module {
 		return isset(self::$list[$name]);
 	}
 
-	public static function set($key, $data, $name = null) {
+	public static function set($key, $data = null, $name = null) {
 		$name = $name ?? self::$name;
 
 		if(!isset($name) || !self::has($name)) {

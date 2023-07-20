@@ -76,7 +76,7 @@ a {
 	text-decoration: none;
 	transition: var(--transition);
 
-	&:hover, &:focus, &:active {
+	&:not([class]):hover, &:not([class]):focus, &:not([class]):active {
 		color: var(--color-link-hover);
 		text-decoration: underline;
 	}
@@ -233,6 +233,18 @@ code, kbd, pre, samp {
 	box-shadow: var(--shadow);
 	background: var(--color-box);
 
+	// .box__image
+	&__image {
+		display: block;
+
+		& > * {
+			display: block;
+			width: 100%;
+			height: auto;
+			border-radius: var(--radius) var(--radius) 0 0;
+		}
+	}
+
 	// .box__header
 	&__header {
 		display: block;
@@ -268,7 +280,19 @@ code, kbd, pre, samp {
 		}
 	}
 
+	// .box__footer
+	&__footer {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1em;
+		padding:  1.5em;
+	}
+
 	.box__header + .box__body {
+		padding-top: 0.5em;
+	}
+
+	.box__body + .box__footer {
 		padding-top: 0.5em;
 	}
 
@@ -276,6 +300,41 @@ code, kbd, pre, samp {
 		margin: -0.5em 0 0;
 	}
 }
+
+.list-group {
+	display: flex;
+	flex-direction: column;
+
+	// .list-group__item
+	&__item {
+		display: block;
+		padding: 1em 1.5em;
+		background-color: transparent;
+		border-bottom: var(--border);
+		color: var(--color-text);
+
+		&:first-child {
+			border-radius: var(--radius) var(--radius) 0 0;
+		}
+
+		&:last-child {
+			border-bottom-width: 0;
+			border-radius: 0 0 var(--radius) var(--radius);
+		}
+	}
+
+	& > a.list-group__item {
+		&:hover, &:focus, &:active {
+			background-color: var(--color-border);
+		}
+
+		&.active {
+			background-color: var(--color-primary);
+			color: #fff;
+		}
+	}
+}
+
 
 @import "partial/accordion";
 @import "partial/button";

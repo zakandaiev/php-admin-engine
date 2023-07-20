@@ -1,3 +1,5 @@
+<?php Theme::header(); ?>
+
 <section class="section section_offset">
 	<div class="container">
 		<h2 class="section__title">Notifications</h2>
@@ -10,7 +12,7 @@
 				<form id="notification-form" class="row gap-xs" data-native>
 					<div class="col-xs-12 col-md-4">
 						<label>Message</label>
-						<input type="text" name="message" placeholder="Message" required>
+						<input type="text" name="message" placeholder="Message">
 					</div>
 					<div class="col-xs-12 col-md-4">
 						<label>Type</label>
@@ -41,13 +43,15 @@
 	</div>
 </section>
 
+<?php Theme::footer(); ?>
+
 <script>
 const notificationForm = document.getElementById('notification-form');
 
 notificationForm.addEventListener('submit', event => {
   event.preventDefault();
 
-	const message = notificationForm.querySelector('[name="message"]').value;
+	const message = notificationForm.querySelector('[name="message"]').value || 'Lorem ipsum dolor sit amet consectetur adipisicing elit.';
 	const type = notificationForm.querySelector('[name="type"]').value;
 	const duration = notificationForm.querySelector('[name="duration"]').value;
 

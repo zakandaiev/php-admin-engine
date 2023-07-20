@@ -1,12 +1,15 @@
+<?php Theme::header(); ?>
+
 <section class="section section_offset">
 	<div class="container">
 		<h2 class="section__title">Buttons</h2>
 		<div class="row cols-xs-1 cols-md-2 gap-xs">
+
 			<div class="col">
 				<div class="box h-100">
 					<div class="box__header">
 						<h4 class="box__title">Basic Buttons</h4>
-						<h5 class="box__subtitle">Default buttons style.</h5>
+						<h5 class="box__subtitle">Default buttons style</h5>
 					</div>
 					<div class="box__body text-center">
 						<div class="m-b-6">
@@ -32,11 +35,12 @@
 					</div>
 				</div>
 			</div>
+
 			<div class="col">
 				<div class="box h-100">
 					<div class="box__header">
 						<h4 class="box__title">Outline Buttons</h4>
-						<h5 class="box__subtitle">Buttons without background color.</h5>
+						<h5 class="box__subtitle">Buttons without background color</h5>
 					</div>
 					<div class="box__body text-center">
 						<div class="m-b-6">
@@ -62,11 +66,12 @@
 					</div>
 				</div>
 			</div>
+
 			<div class="col">
 				<div class="box h-100">
 					<div class="box__header">
 						<h4 class="box__title">Icon Buttons</h4>
-						<h5 class="box__subtitle">Buttons with icons.</h5>
+						<h5 class="box__subtitle">Buttons with icons</h5>
 					</div>
 					<div class="box__body text-center">
 						<div class="m-b-6">
@@ -93,11 +98,12 @@
 					</div>
 				</div>
 			</div>
+
 			<div class="col">
 				<div class="box h-100">
 					<div class="box__header">
 						<h4 class="box__title">Button Sizes</h4>
-						<h5 class="box__subtitle">Fancy larger or smaller buttons.</h5>
+						<h5 class="box__subtitle">Fancy larger or smaller buttons</h5>
 					</div>
 					<div class="box__body text-center">
 						<div class="m-b-6">
@@ -113,6 +119,7 @@
 					</div>
 				</div>
 			</div>
+
 			<div class="col">
 				<div class="box h-100">
 					<div class="box__header">
@@ -173,6 +180,9 @@
 					</div>
 				</div>
 			</div>
+
 		</div>
 	</div>
 </section>
+
+<?php Theme::footer(); ?>

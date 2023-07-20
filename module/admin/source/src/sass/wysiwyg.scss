@@ -26,18 +26,18 @@
 		font-size: 18px;
 		color: var(--color-text);
 
-		.icon-maximize {
+		.icon-arrows-maximize {
 			display: block;
 		}
-		.icon-minimize {
+		.icon-arrows-minimize {
 			display: none;
 		}
 
 		&.active {
-			.icon-maximize {
+			.icon-arrows-maximize {
 				display: none;
 			}
-			.icon-minimize {
+			.icon-arrows-minimize {
 				display: block;
 			}
 		}

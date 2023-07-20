@@ -1,3 +1,5 @@
+<?php Theme::header(); ?>
+
 <section class="section section_offset">
 	<div class="container">
 		<h2 class="section__title">Forms validation</h2>
@@ -112,3 +114,5 @@
 
 	</div>
 </section>
+
+<?php Theme::footer(); ?>

@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
 	@@include('partial/format-tel-link.js')
 	@@include('partial/external-link-norefer.js')
 	@@include('partial/protect-image.js')
-	@@include('partial/responsive-table.js')
 	@@include('partial/popover.js')
 	@@include('partial/tab.js')
 	@@include('partial/textarea.js')

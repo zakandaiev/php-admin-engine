@@ -8,7 +8,7 @@ class Cache {
 		'expires' => 'expires'
 	];
 
-	public static function set($key, $data, $lifetime = null) {
+	public static function set($key, $data = null, $lifetime = null) {
 		$path = Path::file('cache');
 
 		if(!file_exists($path)) {

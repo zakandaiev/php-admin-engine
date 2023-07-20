@@ -37,10 +37,10 @@ table {
 
 	// .table__action
 	&__action {
-		width: 6em;
+		width: 7em;
 		text-align: right;
 
-		& > * {
+		a {
 			@extend %reset-btn;
 			font-size: 1.25em;
 			cursor: pointer;
@@ -54,7 +54,7 @@ table {
 		}
 
 		.table__action {
-			width: 4em;
+			width: 5.5em;
 		}
 	}
 }

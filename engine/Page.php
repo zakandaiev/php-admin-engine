@@ -1,26 +1,24 @@
 <?php
 
+// TODO
 namespace Engine;
 
-class Meta {
-	private static $meta = [];
+class Page {
+	private static $page = [];
 
-	// TODO
-	// public static function get($key, $page_obj = null) {
-	// 	if(isset(self::$meta[$key])) {
-	// 		return self::$meta[$key];
-	// 	}
+	public static function get($key = null) {
+		return $key ? self::$page[$key] : self::$page;
+	}
 
-	// 	$value = self::$key($page_obj);
+	public static function has($key) {
+		return isset(self::$page[$key]);
+	}
 
-	// 	self::$meta[$key] = $value;
+	public static function set($key, $data = null) {
+		self::$page[$key] = $data;
 
-	// 	return $value;
-	// }
-
-	// public static function getAll() {
-	// 	return self::$meta;
-	// }
+		return true;
+	}
 
 	// private static function no_index_no_follow($page) {
 	// 	$no_index_no_follow = '';
@@ -241,5 +239,13 @@ class Meta {
 	// 	return $meta;
 	// }
 
-	public static function all() {}
+	public static function meta($key = null) {
+		return '
+			<title>AE</title>
+
+			<meta charset="utf-8">
+			<meta http-equiv="X-UA-Compatible" content="IE=edge">
+			<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		';
+	}
 }

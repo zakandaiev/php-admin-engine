@@ -2,7 +2,7 @@
 
 ############################# ASSETS #############################
 Asset::css('css/air-datepicker');
-// Asset::css('css/fancybox');
+Asset::css('css/fancybox');
 // Asset::css('css/filepond');
 Asset::css('css/slimselect');
 // Asset::css('css/quill');
@@ -14,7 +14,7 @@ Asset::js('js/air-datepicker', 'defer');
 Asset::js('js/cyr-to-lat', 'defer');
 Asset::js('js/data-copy', 'defer');
 Asset::js('js/data-form', 'defer');
-// Asset::js('js/fancybox', 'defer');
+Asset::js('js/fancybox', 'defer');
 // Asset::js('js/filepond', 'defer');
 Asset::js('js/maska', 'defer');
 // Asset::js('js/quill', 'defer');

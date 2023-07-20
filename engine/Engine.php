@@ -44,7 +44,7 @@ class Engine {
 		class_alias('\\Engine\\Asset', 'Asset');
 		class_alias('\\Engine\\Theme', 'Theme');
 		class_alias('\\Engine\\Template', 'Template');
-		class_alias('\\Engine\\Meta', 'Meta');
+		class_alias('\\Engine\\Page', 'Page');
 		// class_alias('\\Engine\\Menu', 'Menu');
 		// class_alias('\\Engine\\Breadcrumb', 'Breadcrumb');
 		// class_alias('\\Engine\\Pagination', 'Pagination');

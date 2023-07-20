@@ -12,7 +12,7 @@ document.querySelectorAll('textarea[data-wysiwyg]').forEach(textarea => {
 	wysiwyg.appendChild(textarea);
 
 	const quill_icons = Quill.import('ui/icons');
-	quill_icons['expand'] = `<i class="icon icon-maximize"></i><i class="icon icon-minimize"></i>`;
+	quill_icons['expand'] = `<i class="icon icon-arrows-maximize"></i><i class="icon icon-arrows-minimize"></i>`;
 
 	const editor = new Quill(quill, {
 		modules: {

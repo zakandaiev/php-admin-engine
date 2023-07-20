@@ -15,7 +15,7 @@ class Session {
 		return $key ? $_SESSION[$key] : $_SESSION;
 	}
 
-	public static function set($key, $data) {
+	public static function set($key, $data = null) {
 		$_SESSION[$key] = $data;
 
 		return true;
