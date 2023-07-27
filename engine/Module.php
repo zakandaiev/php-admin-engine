@@ -31,7 +31,14 @@ class Module {
 			$name = Module::get('extends') ?? $name;
 		}
 
-		return self::$list[$name][$key] ?? null;
+		$value = self::$list[$name][$key] ?? null;
+
+		if($key === 'languages' && empty($value)) {
+			$name = Module::get('extends') ?? $name;
+			$value = self::$list[$name][$key] ?? null;
+		}
+
+		return $value;
 	}
 
 	public static function has($name) {

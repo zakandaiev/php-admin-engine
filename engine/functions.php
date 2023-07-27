@@ -14,6 +14,13 @@ if(!function_exists('str_starts_with')) {
 	}
 }
 
+if(!function_exists('is_json')) {
+	function is_json($string) {
+		if(!is_string($string)) return false;
+		return is_object(@json_decode($string));
+	}
+}
+
 ############################# DEBUG #############################
 function debug(...$data) {
 	foreach($data as $key => $item) {
@@ -42,7 +49,8 @@ function file_size($path, $precision = 2) {
 
 	if(is_file($path)) {
 		$size = filesize($path);
-	} else {
+	}
+	else {
 		foreach(glob_recursive($path . '/*.*') as $file) {
 			$size += filesize($file);
 		}
@@ -85,11 +93,12 @@ function rmdir_recursive($path) {
 function svg($file, $is_asset = true) {
 	$dir = $is_asset ? (Path::file('asset') . '/img') : ROOT_DIR;
 	$file_name = str_ireplace('.svg', '', trim($file ?? '', '/'));
-	$path_to_svg = $dir . '/' . $file_name . '.svg';
+	$path_to_svg = "$dir/$file_name.svg";
 
 	if(!is_file($path_to_svg)) {
-		return '<!-- SVG not found: ' . $path_to_svg .' -->';
-	} else {
+		return "<!-- SVG not found: $path_to_svg -->";
+	}
+	else {
 		return file_get_contents($path_to_svg);
 	}
 }
@@ -128,73 +137,76 @@ function format_date($date = null, $format = null) {
 	return isset($format) ? date($format, $timestamp) : date('d.m.Y', $timestamp) . ' ' . __('at') . ' ' . date('H:i', $timestamp);
 }
 
-function format_date_input($date = null) {
-	return format_date($date, 'Y-m-d') . 'T' . format_date($date, 'H:i:s');
-}
+// TODO
+// function format_date_input($date = null) {
+// 	return format_date($date, 'Y-m-d') . 'T' . format_date($date, 'H:i:s');
+// }
 
-function date_when($date, $format = null) {
-	$fmt = $format ?? 'd.m.Y';
-	$timestamp = is_numeric($date) ? $date : strtotime($date ?? time());
+// function date_when($date, $format = null) {
+// 	$fmt = $format ?? 'd.m.Y';
+// 	$timestamp = is_numeric($date) ? $date : strtotime($date ?? time());
 
-	$getdata = date('d.m.Y', $timestamp);
-	$yesterday = date('d.m.Y', mktime(0, 0, 0, date('m'), date('d') - 1, date('Y')));
+// 	$getdata = date('d.m.Y', $timestamp);
+// 	$yesterday = date('d.m.Y', mktime(0, 0, 0, date('m'), date('d') - 1, date('Y')));
 
-	if($getdata === date('d.m.Y')) {
-		$date = __('Today at') . ' ' . date('H:i', $timestamp);
-	} else {
-		if($yesterday === $getdata) {
-			$date = __('Yesterday at') . ' ' . date('H:i', $timestamp);
-		} else {
-			$date = format_date($timestamp, $format);
-		}
-	}
+// 	if($getdata === date('d.m.Y')) {
+// 		$date = __('Today at') . ' ' . date('H:i', $timestamp);
+// 	}
+// 	else {
+// 		if($yesterday === $getdata) {
+// 			$date = __('Yesterday at') . ' ' . date('H:i', $timestamp);
+// 		}
+// 		else {
+// 			$date = format_date($timestamp, $format);
+// 		}
+// 	}
 
-	return $date;
-}
+// 	return $date;
+// }
 
-function decl_of_num($number, $titles) {
-	$cases = array(2, 0, 1, 1, 1, 2);
-	return $number . ' ' . $titles[4 < $number % 100 && $number % 100 < 20 ? 2 : $cases[min($number % 10, 5)]];
-}
+// function decl_of_num($number, $titles) {
+// 	$cases = array(2, 0, 1, 1, 1, 2);
+// 	return $number . ' ' . $titles[4 < $number % 100 && $number % 100 < 20 ? 2 : $cases[min($number % 10, 5)]];
+// }
 
-function date_left($date) {
-	$now = time();
-	$then = is_numeric($date) ? $date : strtotime($date ?? time());
+// function date_left($date) {
+// 	$now = time();
+// 	$then = is_numeric($date) ? $date : strtotime($date ?? time());
 
-	if($then - $now < 0) {
-		return __('The term has expired');
-	}
+// 	if($then - $now < 0) {
+// 		return __('The term has expired');
+// 	}
 
-	$difference = abs($then - $now);
-	$left = [];
+// 	$difference = abs($then - $now);
+// 	$left = [];
 
-	$month = floor($difference / 2592000);
-	if(0 < $month) {
-		$left['month'] = decl_of_num($month, array(__('month_nominative'), __('month_singular'), __('month_plural')));
-	}
+// 	$month = floor($difference / 2592000);
+// 	if(0 < $month) {
+// 		$left['month'] = decl_of_num($month, array(__('month_nominative'), __('month_singular'), __('month_plural')));
+// 	}
 
-	$days = floor($difference / 86400) % 30;
-	if(0 < $days) {
-		$left['days'] = decl_of_num($days, array(__('day_nominative'), __('day_singular'), __('day_plural')));
-	}
+// 	$days = floor($difference / 86400) % 30;
+// 	if(0 < $days) {
+// 		$left['days'] = decl_of_num($days, array(__('day_nominative'), __('day_singular'), __('day_plural')));
+// 	}
 
-	$hours = floor($difference / 3600) % 24;
-	if(0 < $hours) {
-		$left['hours'] = decl_of_num($hours, array(__('hour_nominative'), __('hour_singular'), __('hour_plural')));
-	}
+// 	$hours = floor($difference / 3600) % 24;
+// 	if(0 < $hours) {
+// 		$left['hours'] = decl_of_num($hours, array(__('hour_nominative'), __('hour_singular'), __('hour_plural')));
+// 	}
 
-	$minutes = floor($difference / 60) % 60;
-	if(0 < $minutes) {
-		$left['minutes'] = decl_of_num($minutes, array(__('minute_nominative'), __('minute_singular'), __('minute_plural')));
-	}
+// 	$minutes = floor($difference / 60) % 60;
+// 	if(0 < $minutes) {
+// 		$left['minutes'] = decl_of_num($minutes, array(__('minute_nominative'), __('minute_singular'), __('minute_plural')));
+// 	}
 
-	if(0 < count($left)) {
-		$datediff = implode(' ', $left);
-		return $datediff;
-	}
+// 	if(0 < count($left)) {
+// 		$datediff = implode(' ', $left);
+// 		return $datediff;
+// 	}
 
-	return __('A few seconds');
-}
+// 	return __('A few seconds');
+// }
 
 ############################# TEXT #############################
 function html($text = ''){
@@ -285,20 +297,30 @@ function __($key, $data = null) {
 	return Language::translate($key, $data);
 }
 
-function lang($lang, $key, $mixed = null) {
+function lang($key, $language = null, $mixed = null) {
 	$value = '';
+	$language = $language ?? Language::current();
 
-	switch(strval($key)) {
-		case 'region': {
-			$value = Language::get('region', $lang) ?? '';
+	switch($key) {
+		case 'key':
+		case 'name': {
+			$value = Language::get('key', $language);
 			break;
 		}
-		case 'name': {
-			$value = Language::get('name', $lang) ?? '';
+		case 'region': {
+			$value = Language::get('region', $language);
+			break;
+		}
+		case 'locale': {
+			$value = Language::get('key', $language);
+			$region = Language::get('region', $language);
+			if(!empty($region)) {
+				$value .= ($mixed ?? '-') . $region;
+			}
 			break;
 		}
 		case 'icon': {
-			$value = 'img/flag/' . $lang . '.' . ($mixed ?? 'png');
+			$value = 'img/flag/' . $language . '.' . ($mixed ?? 'png');
 			break;
 		}
 	}
@@ -307,29 +329,17 @@ function lang($lang, $key, $mixed = null) {
 }
 
 ############################# SITE #############################
-function site($key) {
-	$value = null;
+function site($key, $module = 'engine') {
+	$value = @Setting::get($module)->$key;
 
-	// TODO
-	// foreach(Setting::getAll() as $setting) {
-	// 	if(isset($setting->{$key})) {
-	// 		$value = $setting->{$key};
+	if($value === 'true') {
+		$value = true;
+	}
+	if($value === 'false') {
+		$value = false;
+	}
 
-	// 		if($value === 'true') {
-	// 			$value = true;
-	// 		}
-	// 		if($value === 'false') {
-	// 			$value = false;
-	// 		}
-	// 		if(is_string($value) && $value[0] === "[") {
-	// 			$value = json_decode($value) ?? [];
-	// 		}
-
-	// 		return $value;
-	// 	}
-	// }
-
-	switch(strval($key)) {
+	switch($key) {
 		case 'name': {
 			$value = $value ?? Engine::NAME;
 			break;
@@ -352,19 +362,21 @@ function site($key) {
 			break;
 		}
 		case 'url_language': {
-			$value = Request::$base;
-
-			if(site('language') !== site('language_current')) {
-				$value .= '/' . site('language_current');
-			}
+			$value = Request::$base . '/' . site('language_current');
 
 			break;
 		}
-		case 'uri_cut_language': {
-			$uri = trim(Request::$uri ?? '', '/');
-			$uri_parts = explode('/', $uri);
+		case 'uri': {
+			$value = Request::$uri;
 
-			if(Language::has($uri_parts[0])) {
+			break;
+		}
+		case 'uri_no_language': {
+			$uri = Request::$uri;
+			$uri_parts = Request::$uri_parts;
+			$language = $uri_parts[0];
+
+			if(Language::has($language)) {
 				array_shift($uri_parts);
 				$uri = implode('/', $uri_parts);
 			}
@@ -373,18 +385,41 @@ function site($key) {
 
 			break;
 		}
-		case 'languages': {
-			$value = Language::list();
+		case 'permalink': {
+			$value = Request::$url;
 			break;
 		}
-		case 'permalink': {
-			$value = trim(strtok(Request::$url ?? '', '?'), '/');
+		case 'languages': {
+			$value = Language::get();
 			break;
 		}
 		case 'version': {
-			$value = Engine::VERSION;
+			$value = Module::get('version') ?? Engine::VERSION;
 			break;
 		}
+		case 'placeholder_image':
+		case 'placeholder_avatar':
+		case 'favicon': {
+			$main_modules = ['admin', 'public'];
+
+			$module = in_array(Module::get('name'), $main_modules) ? Module::get('name') : Module::get('extends');
+			$module = in_array($module, $main_modules) ? $module : 'public';
+
+			$value = @Setting::get($module)->{"{$key}_{$module}"};
+
+			break;
+		}
+	}
+
+	if(is_object($value)) {
+		$array_value = (array)$value;
+		$intersects = array_intersect_key($array_value, Language::get());
+
+		if(empty($intersects)) {
+			return $value;
+		}
+
+		return @$array_value[site('language')];
 	}
 
 	return $value;
@@ -396,7 +431,7 @@ function is_closure($i) {
 }
 
 function is_route_active($route) {
-	$uri = trim(strtok(site('uri_cut_language'), '?'), '/');
+	$uri = trim(site('uri_no_language') ?? '', '/');
 
 	if(is_array($route)) {
 		$route = array_map(function($r) {
@@ -406,7 +441,8 @@ function is_route_active($route) {
 		if(is_array($route) && in_array($uri, $route)) {
 			return true;
 		}
-	} else {
+	}
+	else {
 		$route = trim($route ?? '', '/');
 
 		if($route === $uri) {
@@ -440,10 +476,6 @@ function sort_link($key, $text) {
 	return '<a href="' . $link . '">' . $text . '</a>';
 }
 
-function format_tel_link($tel = '') {
-	return preg_replace('/[^\d+]+/m', '', $tel ?? '');
-}
-
 function numerical_noun_form($number) {
 	// return 'n' - nominative (комментарий)
 	// return 's' - singular (комментария)
@@ -462,14 +494,6 @@ function numerical_noun_form($number) {
 	}
 
 	return 'p';
-}
-
-function translator_noun_form($number, $prefix) {
-	switch(numerical_noun_form($number)) {
-		case 's': return __("{$prefix}_singular");
-		case 'n': return __("{$prefix}_nominative");
-		case 'p': return __("{$prefix}_plural");
-	}
 }
 
 function is_num_in_range($number, $min, $max) {

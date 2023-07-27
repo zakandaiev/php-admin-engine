@@ -2,8 +2,6 @@
 
 namespace Engine;
 
-// use Engine\Database\Database;
-
 class Engine {
 	const PHP_MIN = '7.4.0';
 	const NAME = 'PHP Admin Engine';
@@ -29,10 +27,10 @@ class Engine {
 		class_alias('\\Engine\\Request', 'Request');
 		class_alias('\\Engine\\Server', 'Server');
 		class_alias('\\Engine\\Database', 'Database');
-		// class_alias('\\Engine\\Statement', 'Statement');
+		class_alias('\\Engine\\Statement', 'Statement');
 		// class_alias('\\Engine\\Filter', 'Filter');
-		// class_alias('\\Engine\\Setting', 'Setting');
-		// class_alias('\\Engine\\User', 'User');
+		class_alias('\\Engine\\Setting', 'Setting');
+		class_alias('\\Engine\\User', 'User');
 		class_alias('\\Engine\\Module', 'Module');
 		class_alias('\\Engine\\Language', 'Language');
 		class_alias('\\Engine\\Router', 'Router');
@@ -59,9 +57,8 @@ class Engine {
 		// Order matters
 		Session::initialize();
 		Request::initialize();
-		// Database::initialize(); TODO
-		// Setting::initialize(); TODO
-		// User::initialize(); TODO
+		Database::initialize();
+		Setting::initialize();
 		Module::initialize();
 		Language::initialize();
 		Router::initialize();

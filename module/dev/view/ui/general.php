@@ -1,55 +1,72 @@
 <?php Theme::header(); ?>
 
-<section class="section section_offset">
-	<div class="container">
-		<h2 class="section__title">General</h2>
+<?php Theme::block('sidebar'); ?>
 
-		<div class="row fill gap-xs cols-xs-1 cols-md-2">
-			<div class="col">
-				<div class="row fill gap-xs cols-xs-1">
+<main class="page-content__inner">
 
-					<div class="col">
-						<?php Theme::block('../ui/part/accordion'); ?>
-					</div>
+	<?php Theme::block('navbar-top'); ?>
 
-					<div class="col">
-						<?php Theme::block('../ui/part/tooltip'); ?>
-					</div>
+	<section class="section section_grow section_offset">
+		<div class="container-fluid">
 
-					<div class="col">
-						<?php Theme::block('../ui/part/popover'); ?>
-					</div>
+			<nav class="breadcrumb">
+				<span class="breadcrumb__item"><a href="/">Home</a></span>
+				<span class="breadcrumb__item">Dev UI</span>
+			</nav>
 
-					<div class="col">
-						<?php Theme::block('../ui/part/loader'); ?>
-					</div>
+			<h2 class="section__title">General</h2>
 
-				</div>
-			</div>
-
-			<div class="col">
-				<div class="row fill gap-xs cols-xs-1">
-
+			<div class="row fill gap-xs cols-xs-1 cols-md-2">
 				<div class="col">
-					<?php Theme::block('../ui/part/breadcrumb'); ?>
-				</div>
+					<div class="row fill gap-xs cols-xs-1">
 
-				<div class="col">
-					<?php Theme::block('../ui/part/label'); ?>
-				</div>
+						<div class="col">
+							<?php Theme::block('../ui/part/accordion'); ?>
+						</div>
 
-				<div class="col">
-					<?php Theme::block('../ui/part/dropdown'); ?>
+						<div class="col">
+							<?php Theme::block('../ui/part/tooltip'); ?>
+						</div>
+
+						<div class="col">
+							<?php Theme::block('../ui/part/popover'); ?>
+						</div>
+
+						<div class="col">
+							<?php Theme::block('../ui/part/loader'); ?>
+						</div>
+
+					</div>
 				</div>
 
 				<div class="col">
-					<?php Theme::block('../ui/part/pagination'); ?>
+					<div class="row fill gap-xs cols-xs-1">
+
+					<div class="col">
+						<?php Theme::block('../ui/part/breadcrumb'); ?>
+					</div>
+
+					<div class="col">
+						<?php Theme::block('../ui/part/label'); ?>
+					</div>
+
+					<div class="col">
+						<?php Theme::block('../ui/part/dropdown'); ?>
+					</div>
+
+					<div class="col">
+						<?php Theme::block('../ui/part/pagination'); ?>
+					</div>
+
 				</div>
 
 			</div>
 
 		</div>
-	</div>
-</section>
+	</section>
+
+	<?php Theme::block('navbar-bottom'); ?>
+
+</main>
 
 <?php Theme::footer(); ?>

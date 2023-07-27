@@ -1,6 +1,6 @@
 <?php
 
-$uri = site('uri_cut_language');
+$uri = site('uri_no_language');
 $languages = site('languages');
 
 ?>

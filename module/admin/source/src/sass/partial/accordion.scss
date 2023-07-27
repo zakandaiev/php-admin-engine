@@ -18,15 +18,16 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		gap: 0.5em;
 		padding: 1em 1.5em;
-		font-size: 1.15em;
+		font-size: 1.6rem;
 		font-weight: var(--font-medium);
 		color: var(--color-text);
 		cursor: pointer;
 
 		& > .icon {
 			flex-shrink: 0;
-			font-size: 1.5em;
+			font-size: 2rem;
 			transition: var(--transition);
 		}
 	}
@@ -57,11 +58,16 @@
 	}
 
 	// .accordion_underline
-	&_underline .accordion__header {
+	&_underline > .accordion__header {
 		&:hover, &:focus, &:active {
-			& > *:not(.icon) {
+			& > *:not([class]) {
 				text-decoration: underline;
 			}
 		}
+	}
+
+	// .accordion_underline.active
+	&_underline.active > .accordion__header > *:not([class]) {
+		text-decoration: underline;
 	}
 }

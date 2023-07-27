@@ -23,20 +23,9 @@ abstract class Controller {
 		$this->view = new View();
 		$this->model = $this->loadModel($this->route['controller']);
 
-		// TODO
-		// $this->setting = Setting::getAll();
-
-		// $this->user = User::get();
-
-		$this->page = new \stdClass();
-		$this->page->title = Engine::NAME;
-		$this->page->seo_description = '';
-		$this->page->seo_keywords = '';
-		// TODO
-		// $this->page->seo_image = $this->setting->site->logo_public;
-		$this->page->no_index_no_follow = false;
-
-		$this->view->setData(['page' => $this->page]);
+		$this->setting = Setting::get();
+		$this->page = new Page();
+		$this->user = new User();
 	}
 
 	protected function loadModel($model_name, $module = null) {
@@ -50,8 +39,8 @@ abstract class Controller {
 	}
 
 	public function get404() {
-		// $this->view->error('404');
+		$this->view->error('404');
 
-		// return true;
+		return true;
 	}
 }

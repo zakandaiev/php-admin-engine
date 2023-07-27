@@ -51,20 +51,12 @@ class Language {
 		return true;
 	}
 
-	public static function get($key, $language = null) {
-		return Module::get('languages')[$language ?? self::current()][$key] ?? null;
-	}
-
-	public static function getAll($language = null) {
-		return Module::get('languages')[$language ?? self::current()] ?? null;
+	public static function get($key = null, $language = null, $module = null) {
+		return $key ? @Module::get('languages', $module)[$language ?? self::current()][$key] : Module::get('languages', $module);
 	}
 
 	public static function has($language, $module = null) {
 		return isset(Module::get('languages', $module)[$language]);
-	}
-
-	public static function list($module_name = null) {
-		return Module::get('languages', $module_name);
 	}
 
 	public static function translate($key, $data = null) {
@@ -114,13 +106,12 @@ class Language {
 	}
 
 	public static function current() {
+		$language = Setting::get('engine')->language ?? null;
+
 		$language_from_cookie = Session::hasCookie(COOKIE_KEY['language']) ? Session::getCookie(COOKIE_KEY['language']) : null;
 
-		if(!empty($language_from_cookie) && Language::has($language_from_cookie)) {
+		if(!empty($language_from_cookie) && self::has($language_from_cookie)) {
 			$language = Session::getCookie(COOKIE_KEY['language']);
-		}
-		else {
-			$language = Setting::get('main')->language ?? null;
 		}
 
 		return $language;

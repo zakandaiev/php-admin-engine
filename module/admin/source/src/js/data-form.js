@@ -1,3 +1,5 @@
+document.addEventListener('DOMContentLoaded', () => {
+
 // VALIDATION
 document.addEventListener('click', event => {
   const form = event.target.closest('form[data-validate]');
@@ -55,4 +57,6 @@ document.addEventListener('submit', event => {
   event.preventDefault();
 
   alert();
+});
+
 });

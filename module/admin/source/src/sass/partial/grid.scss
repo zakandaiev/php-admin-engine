@@ -31,6 +31,12 @@ $breakpoints_for_max_width: (
 
 .col, [class^="col-"] {
 	display: block;
+	flex: 0 0 auto;
+
+	// .col.fill
+	&.fill {
+		flex: 1 0 auto;
+	}
 }
 
 @each $bp, $val in $breakpoints_for_min_width {

@@ -1,4 +1,13 @@
 .footer {
 	display: block;
-	border-top: var(--border);
+	padding: 1.25em 0;
+	background-color: var(--color-box);
+
+	* {
+		color: var(--color-secondary);
+	}
+}
+
+:root[data-theme="dark"] .footer * {
+	color: #a7abb1;
 }

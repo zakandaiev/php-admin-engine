@@ -14,7 +14,7 @@ const GET_PARAM = (key) => {
 @@include('util/replace-broken-image.js')
 
 document.addEventListener('DOMContentLoaded', () => {
-	// PARTIALS
+	// DOM READY PARTIALS
 	@@include('partial/accrodion.js')
 	@@include('partial/dropdown.js')
 	@@include('partial/format-tel-link.js')
@@ -24,10 +24,4 @@ document.addEventListener('DOMContentLoaded', () => {
 	@@include('partial/tab.js')
 	@@include('partial/textarea.js')
 	@@include('partial/tooltip.js')
-
-	// PLUGINS
-	@@include("plugin/air-datepicker.js")
-	@@include("plugin/maska.js")
-	@@include("plugin/slimselect.js")
-	@@include("plugin/wysiwyg.js")
 });

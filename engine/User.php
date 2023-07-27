@@ -4,12 +4,13 @@ namespace Engine;
 
 use Engine\Database\Statement;
 
+// TODO ALL
 class User {
 	private static $current;
 	private static $demand = [];
 	private static $all = [];
 
-	public static function initialize() {
+	public function __construct() {
 		self::$current = new \stdClass();
 		self::$current->id = null;
 		self::$current->authorized = false;
@@ -51,7 +52,8 @@ class User {
 	public static function get($id = null) {
 		if(isset($id) && isset(self::$demand[$id])) {
 			return self::$demand[$id];
-		} else if(isset($id)) {
+		}
+		else if(isset($id)) {
 			$sql = 'SELECT * FROM {user} WHERE id = :id ORDER BY date_created DESC LIMIT 1';
 
 			$user = new Statement($sql);

@@ -8,7 +8,7 @@
 	border-radius: var(--radius);
 	color: var(--color-text);
 	background-color: var(--color-body);
-	font-size: 0.8em;
+	font-size: 1.125rem;
 	font-weight: var(--font-medium);
 	line-height: 1;
 	white-space: nowrap;
@@ -24,35 +24,65 @@
 	&_primary {
 		color: #fff;
 		background-color: var(--color-primary);
+
+		&.label_light {
+			color: var(--color-primary);
+			background-color: var(--color-primary-light);
+		}
 	}
 
 	// .label_secondary
 	&_secondary {
 		color: #fff;
 		background-color: var(--color-secondary);
+
+		&.label_light {
+			color: var(--color-secondary);
+			background-color: var(--color-secondary-light);
+		}
 	}
 
 	// .label_success
 	&_success {
 		color: #fff;
 		background-color: var(--color-success);
+
+		&.label_light {
+			color: var(--color-success);
+			background-color: var(--color-success-light);
+		}
 	}
 
 	// .label_info
 	&_info {
 		color: #fff;
 		background-color: var(--color-info);
+
+		&.label_light {
+			color: var(--color-info);
+			background-color: var(--color-info-light);
+		}
 	}
 
 	// .label_warning
 	&_warning {
 		color: #fff;
 		background-color: var(--color-warning);
+
+		&.label_light {
+			color: var(--color-warning);
+			background-color: var(--color-warning-light);
+		}
 	}
 
 	// .label_error
 	&_error {
 		color: #fff;
 		background-color: var(--color-error);
+
+		&.label_light {
+			color: var(--color-error);
+			background-color: var(--color-error-light);
+		}
 	}
 }

@@ -2,10 +2,11 @@
 
 namespace Module\Admin\Controller;
 
+use Engine\Page;
+
 class Dashboard extends AdminController {
 	public function getDashboard() {
-		// TODO
-		// $this->page->title = __('Dashboard');
+		$this->page->set('title', __('admin.dashboard.title'));
 		$this->view->render('dashboard');
 	}
 }

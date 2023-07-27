@@ -6,7 +6,7 @@
 
 		<p>Styles:</p>
 
-		<div class="dropdown">
+		<div class="dropdown d-inline-block">
 			<button type="button" class="btn btn_secondary">Basic</button>
 			<div class="dropdown__menu">
 				<a class="dropdown__item" href="#">Action</a>
@@ -15,7 +15,7 @@
 			</div>
 		</div>
 
-		<div class="dropdown" data-keep-open>
+		<div class="dropdown d-inline-block" data-keep-open>
 			<button type="button" class="btn btn_secondary">Basic keep open</button>
 			<div class="dropdown__menu">
 				<a class="dropdown__item" href="#">Action</a>
@@ -26,7 +26,7 @@
 
 		<br>
 
-		<div class="dropdown">
+		<div class="dropdown d-inline-block">
 			<button type="button" class="btn btn_secondary">Active</button>
 			<div class="dropdown__menu">
 				<a class="dropdown__item" href="#">Regular link</a>
@@ -35,7 +35,7 @@
 			</div>
 		</div>
 
-		<div class="dropdown">
+		<div class="dropdown d-inline-block">
 			<button type="button" class="btn btn_secondary">Disabled</button>
 			<div class="dropdown__menu">
 				<a class="dropdown__item" href="#">Regular link</a>
@@ -46,16 +46,7 @@
 
 		<br>
 
-		<div class="dropdown">
-			<button type="button" class="btn btn_secondary">Header</button>
-			<div class="dropdown__menu">
-				<a class="dropdown__item" href="#">Action</a>
-				<a class="dropdown__item" href="#">Another action</a>
-				<a class="dropdown__item" href="#">Something else here</a>
-			</div>
-		</div>
-
-		<div class="dropdown">
+		<div class="dropdown d-inline-block">
 			<button type="button" class="btn btn_secondary">Header</button>
 			<div class="dropdown__menu">
 				<p class="dropdown__header">Dropdown header</p>
@@ -65,9 +56,7 @@
 			</div>
 		</div>
 
-		<br>
-
-		<div class="dropdown">
+		<div class="dropdown d-inline-block">
 			<button type="button" class="btn btn_secondary">Divider</button>
 			<div class="dropdown__menu">
 				<a class="dropdown__item" href="#">Action</a>
@@ -78,7 +67,7 @@
 			</div>
 		</div>
 
-		<div class="dropdown">
+		<div class="dropdown d-inline-block">
 			<button type="button" class="btn btn_secondary">Text</button>
 			<div class="dropdown__menu">
 				<p class="dropdown__text">

@@ -12,7 +12,9 @@ Route::get('/admin/reset-password', 'Auth@getRestore', ['is_public' => true]);
 Route::get('/admin/register', 'Auth@getRegister', ['is_public' => true]);
 
 ############################# DASHBOARD #############################
-Route::get('/admin', 'Dashboard@getDashboard', ['is_public' => true]);
+Route::get('/admin', function() {
+	Server::redirect('/admin/dashboard');
+});
 Route::get('/admin/dashboard', 'Dashboard@getDashboard', ['is_public' => true]);
 
 ############################# PROFILE #############################

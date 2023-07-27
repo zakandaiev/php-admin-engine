@@ -1,5 +1,4 @@
 <?php
-// TODO
 namespace Engine;
 
 class Asset {
@@ -21,7 +20,7 @@ class Asset {
 	];
 
 	private static function add($extension, $file_name, $attributes = '', $routes = null) {
-		$file_path = Path::file('asset') . '/' . $file_name . '.' . $extension;
+		$file_path = Path::file('asset') . "/$file_name.$extension";
 
 		if(is_file($file_path)) {
 			self::$container[$extension][] = [
@@ -60,11 +59,12 @@ class Asset {
 		}
 
 		// TODO
-		// $group_setting = @Setting::get('optimization')->{'group_' . $extension};
+		// $group_setting = @Setting::get('engine')->{'group_' . $extension};
 		// if(Module::getName() === 'public' && $group_setting != 'false' && !empty($group_setting)) {
 		// 	$assets = [
 		// 		[
-		// 			'file' => $extension . '/' . $group_setting . '.' . $extension,
+		// 			'module' => 'public',
+		// 			'file' => "$extension/$group_setting.$extension",
 		// 			'attributes' => self::$optimization[$extension]['attributes'],
 		// 			'routes' => self::$optimization[$extension]['routes']
 		// 		]
@@ -74,9 +74,11 @@ class Asset {
 		$output = '';
 
 		foreach($assets as $asset) {
-			if(!self::checkRoute($asset['routes'])) {
-				continue;
-			}
+			// TODO
+			// add * support
+			// if(!self::checkRoute($asset['routes'])) {
+			// 	continue;
+			// }
 
 			$output .= sprintf(
 				self::EXTENSION_MASK[$extension],
@@ -94,6 +96,10 @@ class Asset {
 
 	public static function get($extension) {
 		return self::$container[$extension] ?? [];
+	}
+
+	public static function has($extension) {
+		return isset(self::$container[$extension]);
 	}
 
 	private static function checkRoute($routes = null) {

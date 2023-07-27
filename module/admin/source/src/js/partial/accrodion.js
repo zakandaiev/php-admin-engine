@@ -51,5 +51,7 @@ document.querySelectorAll('.accordion').forEach(accordion => {
 
 	const body_height = body.scrollHeight;
 	body.style.height = `${body_height}px`;
+	body.style.transition = 'none';
+	setTimeout(() => body.style.transition = '', 100);
 	accordion.classList.add('active');
 });

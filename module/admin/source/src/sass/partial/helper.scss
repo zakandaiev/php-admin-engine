@@ -87,13 +87,20 @@
 	flex-shrink: 2 !important;
 }
 
+$indent-step: 0.5;
+@for $i from 0 through 10 {
+	.gap-#{$i} {
+		gap: #{$i * $indent-step}em !important;
+	}
+}
+
 /* ==========  Margins  ========== */
 .m-0 {
 	margin: 0 !important;
 }
 
 $indent-step: 0.5;
-@for $i from 0 through 10 {
+@for $i from -10 through 10 {
 	.m-t-#{$i} {
 		margin-top: #{$i * $indent-step}rem !important;
 	}
@@ -155,7 +162,7 @@ $indent-step: 0.5;
 }
 
 $indent-step: 0.5;
-@for $i from 0 through 10 {
+@for $i from -10 through 10 {
 	.p-t-#{$i} {
 		padding-top: #{$i * $indent-step}rem !important;
 	}
@@ -297,6 +304,22 @@ $indent-step: 0.5;
 
 .h-25 {
 	height: 25% !important;
+}
+
+$indent-step: 1;
+@for $i from 1 through 10 {
+	.w-#{$i}em {
+		width: #{$i * $indent-step}em !important;
+	}
+	.w-#{$i}rem {
+		width: #{$i * $indent-step}rem !important;
+	}
+	.h-#{$i}em {
+		height: #{$i * $indent-step}em !important;
+	}
+	.h-#{$i}rem {
+		height: #{$i * $indent-step}rem !important;
+	}
 }
 
 .fit-contain {
@@ -490,6 +513,14 @@ $indent-step: 0.5;
 			background-color: var(--color-border-hover) !important;
 		}
 	}
+}
+
+.background-body {
+	background-color: var(--color-body) !important;
+}
+
+.background-box {
+	background-color: var(--color-box) !important;
 }
 
 /* ==========  Cursors  ========== */

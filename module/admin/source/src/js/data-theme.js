@@ -65,10 +65,8 @@ document.addEventListener('click', event => {
 
 	event.preventDefault();
 
-  const theme = theme_switcher.getAttribute('data-theme-set');
-
   if (theme_switcher) {
-    DATA_THEME.setTheme(theme);
+    DATA_THEME.setTheme(theme_switcher.getAttribute('data-theme-set'));
   }
   else if (theme_toggler) {
     DATA_THEME.toggleTheme();

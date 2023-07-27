@@ -21,12 +21,33 @@ table {
 
 	th, td {
 		padding: 1em;
-		vertical-align: top;
+		vertical-align: middle;
 		border-bottom: var(--border);
 	}
 }
 
 .table {
+
+	// .table_align-top
+	&_align-top {
+		th, td {
+			vertical-align: top;
+		}
+	}
+
+	// .table_align-middle
+	&_align-middle {
+		th, td {
+			vertical-align: middle;
+		}
+	}
+
+	// .table_align-bottom
+	&_align-bottom {
+		th, td {
+			vertical-align: bottom;
+		}
+	}
 
 	// .table_striped
 	&_striped > tbody > tr:nth-child(odd) {
@@ -35,26 +56,38 @@ table {
 		}
 	}
 
+	// .table_borderless
+	&_borderless {
+		th, td {
+			border: none;
+		}
+
+		th {
+			color: var(--color-text);
+		}
+	}
+
 	// .table__action
 	&__action {
-		width: 7em;
+		width: 9rem;
 		text-align: right;
 
 		a {
 			@extend %reset-btn;
-			font-size: 1.25em;
+			font-size: 1.8rem;
 			cursor: pointer;
+
+			&:hover, &:focus, &:active {
+				text-decoration: none;
+			}
 		}
 	}
 
 	// .table_sm
 	&_sm {
 		th, td {
-			padding: 0.5em;
-		}
-
-		.table__action {
-			width: 5.5em;
+			padding-top: 0.5em;
+			padding-bottom: 0.5em;
 		}
 	}
 }

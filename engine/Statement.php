@@ -1,16 +1,9 @@
 <?php
 
-namespace Engine\Database;
+namespace Engine;
 
 use \PDO;
 use \PDOException;
-
-use Engine\Cache;
-use Engine\Module;
-use Engine\Request;
-use Engine\Server;
-use Engine\Setting;
-use Engine\Theme\Pagination;
 
 class Statement {
 	private $sql;
@@ -45,7 +38,8 @@ class Statement {
 
 		if(isset($straight)) {
 			$sql = !empty($filter->sql) ? "{$this->sql} $straight {$filter->sql}" : $this->sql;
-		} else {
+		}
+		else {
 			$sql = !empty($filter->sql) ? "WHERE {$filter->sql}" : '';
 			$sql = "SELECT * FROM ({$this->sql}) t_filter $sql";
 		}
@@ -59,7 +53,8 @@ class Statement {
 
 			if(preg_match($order_pattern, $sql)) {
 				$sql = preg_replace($order_pattern, " ORDER BY {$filter->order}, $2", $sql);
-			} else {
+			}
+			else {
 				$sql .= " ORDER BY {$filter->order}";
 			}
 		}
@@ -160,8 +155,7 @@ class Statement {
 			$this->addBinding($params);
 
 			if($this->debug) {
-				debug($this->binding);
-				debug(trim($this->sql ?? ''));
+				debug($this->binding, trim($this->sql ?? ''));
 			}
 
 			return $this;
@@ -170,8 +164,7 @@ class Statement {
 		$this->addBinding($params);
 
 		if($this->debug) {
-			debug($this->binding);
-			debug(trim($this->sql ?? ''));
+			debug($this->binding, trim($this->sql ?? ''));
 		}
 
 		$this->initializePagination();
@@ -189,9 +182,14 @@ class Statement {
 			}
 
 			if(Request::$method === 'get') {
-				debug(__($error_message));
-				if(DEBUG['is_enabled']) debug($this->sql);
-			} else {
+				if(DEBUG['is_enabled']) {
+					debug(__($error_message), $this->sql);
+				}
+				else {
+					debug(__($error_message));
+				}
+			}
+			else {
 				$debug_sql = DEBUG['is_enabled'] ? ['query' => preg_replace('/(\v|\s)+/', ' ', trim($this->sql ?? ''))] : null;
 				Server::answer($debug_sql, 'error', __($error_message), '409');
 			}
@@ -203,7 +201,7 @@ class Statement {
 	private function isCached() {
 		$is_cached = false;
 
-		if(Module::getName() === 'public' && Setting::get('optimization')->cache_db == 'true') {
+		if(Module::getName() === 'public' && Setting::get('engine')->cache_db == 'true') {
 			if(preg_match('/^\s*SELECT/mi', $this->sql)) {
 				$is_cached = true;
 			}
@@ -220,7 +218,8 @@ class Statement {
 
 			if($cache) {
 				return $cache;
-			} else {
+			}
+			else {
 				$this->prepare();
 				$this->bind();
 				$this->statement->execute();
@@ -271,7 +270,8 @@ class Statement {
 			foreach($key_or_array as $k => $v) {
 				$this->binding[strval($k)] = $v;
 			}
-		} else {
+		}
+		else {
 			$this->binding[strval($key_or_array)] = $value;
 		}
 

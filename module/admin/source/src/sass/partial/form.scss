@@ -42,11 +42,11 @@ form, .form {
 	}
 }
 
-label {
+label:not([class]) {
 	display: inline-block;
 	max-width: 100%;
 	margin: 0 0 0.5em 0;
-	font-size: 1em;
+	font-size: 1.4rem;
 	font-weight: var(--font-normal);
 	line-height: 1.2;
 	position: relative;
@@ -63,7 +63,7 @@ input, textarea, select,
 	display: block;
 	width: 100%;
 	padding: 0.5em 1em;
-	font-size: 1em;
+	font-size: 1.4rem;
 	font-weight: var(--font-normal);
 	line-height: 1.4;
 	border-radius: var(--radius);
@@ -111,7 +111,7 @@ label:not(.switch) {
 			display: inline-flex;
 			align-items: center;
 			gap: 0.5em;
-			font-size: 1em;
+			font-size: 1.4rem;
 			font-weight: var(--font-normal);
 			line-height: 1.2;
 			color: var(--color-text);
@@ -208,7 +208,7 @@ label:not(.switch) {
 	}
 
 	& > *:not([class]) {
-		font-size: 1em;
+		font-size: 1.4rem;
 		font-weight: var(--font-normal);
 		line-height: 1.2;
 		color: var(--color-text);
