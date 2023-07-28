@@ -3,30 +3,36 @@
 namespace Engine;
 
 class Page {
-	private static $page = [];
+	protected static $page;
+	protected static $meta = [];
 
 	public function __construct() {
-		self::$page =  [
-			'title' => Engine::NAME,
-			'no_index_no_follow' => false
-		];
+		self::$page = new \stdClass();
+		self::$page->title = Engine::NAME;
+		self::$page->no_index_no_follow = false;
+
+		return $this;
 	}
 
 	public static function get($key = null) {
-		return $key ? @self::$page[$key] : self::$page;
+		return isset($key) ? @self::$page->{$key} : self::$page;
 	}
 
 	public static function has($key) {
-		return isset(self::$page[$key]);
+		return isset(self::$page->{$key});
 	}
 
 	public static function set($key, $data = null) {
-		self::$page[$key] = $data;
+		self::$page->{$key} = $data;
 
 		return true;
 	}
 
 	public static function meta($key = null) {
+		if(!empty($key) && isset(self::$meta[$key])) {
+			return self::$meta[$key];
+		}
+
 		switch($key) {
 			case 'no_index_no_follow': {
 				$no_index_no_follow = '';
@@ -35,33 +41,54 @@ class Page {
 					$no_index_no_follow = '<meta name="robots" content="noindex, nofollow">';
 				}
 
+				self::$meta['no_index_no_follow'] = $no_index_no_follow;
+
 				return $no_index_no_follow;
 			}
 			case 'title': {
-				return self::get('title') . ' — ' . site('name');
+				$title = self::get('title') . ' — ' . site('name');
+
+				self::$meta['title'] = $title;
+
+				return $title;
 			}
 			case 'seo_description': {
-				$description = self::get('seo_description') ?? site('name');
+				$seo_description = self::get('seo_description') ?? site('name');
 				$site_description = site('description');
 
 				if(!empty($site_description)) {
-					$description = '. ' . $site_description;
+					$seo_description = '. ' . $site_description;
 				}
 
-				return $description;
+				self::$meta['seo_description'] = $seo_description;
+
+				return $seo_description;
 			}
 			case 'seo_keywords': {
-				return self::get('seo_keywords') ?? trim(preg_replace('/[\s\.;]+/', ',', self::meta('seo_description')) ?? '', ',');
+				$seo_keywords = self::get('seo_keywords') ?? trim(preg_replace('/[\s\.;]+/', ',', self::meta('seo_description')) ?? '', ',');
+
+				self::$meta['seo_keywords'] = $seo_keywords;
+
+				return $seo_keywords;
 			}
 			case 'seo_image': {
 				$image = self::get('seo_image') ?? self::get('image') ?? site('logo_public');
-				return !empty($image) ? site('url') . '/' . $image : null;
+
+				$seo_image = !empty($image) ? site('url') . '/' . $image : null;
+
+				self::$meta['seo_image'] = $seo_image;
+
+				return $seo_image;
 			}
 			case 'locale': {
-				return lang('locale', null, '_');
+				$locale = lang('locale', null, '_');
+
+				self::$meta['locale'] = $locale;
+
+				return $locale;
 			}
 			case 'meta_og': {
-				return '
+				$meta_og = '
 					<meta property="og:type" content="website">
 					<meta property="og:site_name" content="' . site('name') . '">
 					<meta property="og:locale" content="' . self::meta('locale') . '">
@@ -71,28 +98,38 @@ class Page {
 					<meta property="og:keywords" content="' . self::meta('seo_keywords') . '">
 					<meta property="og:image" content="' . self::meta('seo_image') . '">
 				';
+
+				self::$meta['meta_og'] = $meta_og;
+
+				return $meta_og;
 			}
 			case 'meta_twitter': {
-				return '
+				$meta_twitter = '
 					<meta property="twitter:card" content="summary">
 					<meta property="twitter:url" content="' . site('permalink') . '">
 					<meta property="twitter:title" content="' . self::meta('title') . '">
 					<meta property="twitter:description" content="' . self::meta('seo_description') . '">
 					<meta property="twitter:image" content="' . self::meta('seo_image') . '">
 				';
+
+				self::$meta['meta_twitter'] = $meta_twitter;
+
+				return $meta_twitter;
 			}
 			case 'alt_languages': {
 				$languages = site('languages');
 
-				$output = '<link rel="alternate" href="' . site('url') . '" hreflang="x-default">';
+				$alt_languages = '<link rel="alternate" href="' . site('url') . '" hreflang="x-default">';
 
 				foreach($languages as $language) {
 					if(site('language_current') !== $language['key']) {
-						$output .= '<link rel="alternate" href="' . site('url') . '/' . $language['key'] . '" hreflang="' . $language['key'] . '">';
+						$alt_languages .= '<link rel="alternate" href="' . site('url') . '/' . $language['key'] . '" hreflang="' . $language['key'] . '">';
 					}
 				}
 
-				return $output;
+				self::$meta['alt_languages'] = $alt_languages;
+
+				return $alt_languages;
 			}
 			case 'favicon': {
 				$favicon = '
@@ -105,6 +142,7 @@ class Page {
 				$icon_path = site('favicon');
 
 				if(empty($icon_path)) {
+					self::$meta['favicon'] = $favicon;
 					return $favicon;
 				}
 
@@ -126,10 +164,12 @@ class Page {
 					}
 				}
 
+				self::$meta['favicon'] = $favicon;
+
 				return $favicon;
 			}
 			case 'engine_script': {
-				return '
+				$engine_script = '
 					<script>
 						const ENGINE = {
 							language: {
@@ -142,10 +182,18 @@ class Page {
 							},
 							pagination_limit: ' . site('pagination_limit') . ',
 							translation: {},
-							color: {}
+							theme: {},
+							api: {
+								delay_ms: 1000,
+								timeout_ms: 15000
+							}
 						};
 					</script>
 				';
+
+				self::$meta['engine_script'] = $engine_script;
+
+				return $engine_script;
 			}
 			case 'analytics_gtag': {
 				$gtag_id = site('analytics_gtag');
@@ -162,6 +210,8 @@ class Page {
 						</script>
 					';
 				}
+
+				self::$meta['analytics_gtag'] = $analytics_gtag;
 
 				return $analytics_gtag;
 			}
@@ -180,7 +230,6 @@ class Page {
 		$favicon = self::meta('favicon');
 		$engine_script = self::meta('engine_script');
 		$analytics_gtag = self::meta('analytics_gtag');
-
 
 		$meta = self::meta('no_index_no_follow');
 		$meta .= '

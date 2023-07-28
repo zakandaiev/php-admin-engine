@@ -90,10 +90,14 @@ function rmdir_recursive($path) {
 }
 
 ############################# IMAGE #############################
-function svg($file, $is_asset = true) {
-	$dir = $is_asset ? (Path::file('asset') . '/img') : ROOT_DIR;
+function svg($file, $is_asset = true, $module = null) {
+	$dir = $is_asset ? (Path::file('asset', $module) . '/img') : ROOT_DIR;
 	$file_name = str_ireplace('.svg', '', trim($file ?? '', '/'));
 	$path_to_svg = "$dir/$file_name.svg";
+
+	if(!is_file($path_to_svg) && Module::get('extends')) {
+		return svg($file, $is_asset, Module::get('extends'));
+	}
 
 	if(!is_file($path_to_svg)) {
 		return "<!-- SVG not found: $path_to_svg -->";
@@ -378,10 +382,10 @@ function site($key, $module = 'engine') {
 
 			if(Language::has($language)) {
 				array_shift($uri_parts);
-				$uri = implode('/', $uri_parts);
+				$uri = '/' . implode('/', $uri_parts);
 			}
 
-			$value = '/' . $uri;
+			$value = $uri;
 
 			break;
 		}
@@ -428,29 +432,6 @@ function site($key, $module = 'engine') {
 ############################# HELPERS #############################
 function is_closure($i) {
 	return $i instanceof \Closure;
-}
-
-function is_route_active($route) {
-	$uri = trim(site('uri_no_language') ?? '', '/');
-
-	if(is_array($route)) {
-		$route = array_map(function($r) {
-			return trim($r ?? '', '/');
-		}, $route);
-
-		if(is_array($route) && in_array($uri, $route)) {
-			return true;
-		}
-	}
-	else {
-		$route = trim($route ?? '', '/');
-
-		if($route === $uri) {
-			return true;
-		}
-	}
-
-	return false;
 }
 
 function filter_link($key, $value, $text) {

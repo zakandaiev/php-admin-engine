@@ -170,14 +170,22 @@ class Router {
 
 	private static function check404() {
 		if(empty(self::$route)) {
-			Module::setName('public');
-
-			if(str_starts_with(Request::$uri, '/admin')) {
-				Module::setName('admin');
+			if(Request::$method !== 'get') {
+				Server::answer(null, 'error', 'Request not found', 404);
 			}
 
-			if(Request::$method !== 'get') {
-				Server::answer([], 'error', 'Request not found', 404);
+			Module::setName('public');
+
+			$uri_parts = Request::$uri_parts;
+
+			if(Language::has($uri_parts[0])) {
+				array_shift($uri_parts);
+			}
+
+			foreach(Module::get() as $module) {
+				if($uri_parts[0] === $module['name'] || $uri_parts[0] === $module['extends']) {
+					Module::setName('admin');
+				}
 			}
 
 			self::$route['method'] = Request::$method;
@@ -214,10 +222,12 @@ class Router {
 			if(method_exists($controller_class, $controller_action)) {
 				$controller = new $controller_class;
 				$controller->$controller_action();
-			} else {
+			}
+			else {
 				throw new \Exception(sprintf('Action %s does not exist in %s.', $controller_action, $controller_class));
 			}
-		} else {
+		}
+		else {
 			throw new \Exception(sprintf('Controller %s does not exist.', $controller_class));
 		}
 

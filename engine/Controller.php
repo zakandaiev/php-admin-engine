@@ -4,28 +4,25 @@ namespace Engine;
 
 abstract class Controller {
 	protected $module;
+	protected $modules;
 	protected $route;
-
-	protected $view;
-	protected $model;
-
 	protected $setting;
 
 	protected $user;
-
 	protected $page;
+	protected $view;
+	protected $model;
 
 	public function __construct() {
 		$this->module = Module::get('all');
 		$this->modules = Module::get();
 		$this->route = Router::$route;
+		$this->setting = Setting::get();
 
+		$this->user = new User();
+		$this->page = new Page();
 		$this->view = new View();
 		$this->model = $this->loadModel($this->route['controller']);
-
-		$this->setting = Setting::get();
-		$this->page = new Page();
-		$this->user = new User();
 	}
 
 	protected function loadModel($model_name, $module = null) {

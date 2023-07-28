@@ -1,9 +1,6 @@
 <?php
 
-namespace Engine\Theme;
-
-use Engine\Request;
-use Engine\Setting;
+namespace Engine;
 
 class Pagination {
 	public $uri_key;
@@ -27,7 +24,7 @@ class Pagination {
 	public function __construct($total_rows, $options = []) {
 		$this->uri_key = $options['uri_key'] ?? PAGINATION['uri_key'];
 		$this->uri = $this->handleUri();
-		$this->limit = $options['limit'] ?? Setting::get('site')->pagination_limit;
+		$this->limit = $options['limit'] ?? Setting::get('engine')->pagination_limit ?? 10;
 		$this->limit = intval($this->limit);
 		$this->total_rows = intval($total_rows);
 		$this->total_pages = $this->countPages();
@@ -38,7 +35,7 @@ class Pagination {
 	}
 
 	private function handleUri() {
-		$uri = explode('?', Request::$uri, 2);
+		$uri = explode('?', Request::$uri_full, 2);
 		$uri_handle = $uri[0] . '?';
 
 		if(isset($uri[1]) && !empty($uri[1])) {

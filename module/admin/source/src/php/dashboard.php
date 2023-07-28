@@ -1,3 +1,7 @@
+<?php
+	Page::set('title', __('admin.dashboard.title'));
+?>
+
 <?php Theme::header(); ?>
 
 <?php Theme::block('sidebar'); ?>
@@ -9,7 +13,7 @@
 	<section class="section section_grow section_offset">
 		<div class="container-fluid">
 
-			<h2 class="section__title">Dashboard</h2>
+			<h2 class="section__title"><?=  __('admin.dashboard.title') ?></h2>
 
 			<div class="row fill cols-xs-1 cols-md-2 gap-xs">
 

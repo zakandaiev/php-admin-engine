@@ -9,7 +9,6 @@ const GET_PARAM = (key) => {
 
 // UTILS
 @@include('util/fade-out.js')
-@@include('util/sleep.js')
 @@include('util/smooth-scroll.js')
 @@include('util/replace-broken-image.js')
 

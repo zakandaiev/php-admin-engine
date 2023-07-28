@@ -2,13 +2,9 @@
 
 namespace Engine;
 
-use Engine\Database\Statement;
-
-// TODO ALL
 class User {
-	private static $current;
-	private static $demand = [];
-	private static $all = [];
+	protected static $current;
+	protected static $stored = [];
 
 	public function __construct() {
 		self::$current = new \stdClass();
@@ -43,15 +39,16 @@ class User {
 
 			if($user) {
 				self::$current = self::format($user, true);
+				self::$stored[$user->id] = self::$current;
 			}
 		}
 
-		return true;
+		return $this;
 	}
 
 	public static function get($id = null) {
-		if(isset($id) && isset(self::$demand[$id])) {
-			return self::$demand[$id];
+		if(isset($id) && isset(self::$stored[$id])) {
+			return self::$stored[$id];
 		}
 		else if(isset($id)) {
 			$sql = 'SELECT * FROM {user} WHERE id = :id ORDER BY date_created DESC LIMIT 1';
@@ -66,7 +63,7 @@ class User {
 
 			$user = self::format($user);
 
-			self::$demand[$user->id] = $user;
+			self::$stored[$user->id] = $user;
 
 			return $user;
 		}
@@ -74,136 +71,121 @@ class User {
 		return self::$current;
 	}
 
-	public static function getAll($order = '') {
-		if(!empty(self::$all)) {
-			return self::$all;
-		}
+	public static function set($key, $data = null) {
+		self::$current->{$key} = $data;
 
-		if(!empty($order)) {
-			$order = "ORDER BY $order";
-		}
-
-		$sql = "SELECT * FROM {user} $order";
-
-		$users = new Statement($sql);
-
-		$users = $users->execute()->fetchAll();
-
-		foreach($users as $user) {
-			self::$all[$user->id] = self::format($user);
-		}
-
-		return self::$all;
+		return true;
 	}
 
+	// TODO
 	public static function authorize($user, $lifetime = null) {
-		$auth_token = Hash::token();
+		// $auth_token = Hash::token();
 
-		$user->ip = Request::$ip;
+		// $user->ip = Request::$ip;
 
-		$authorize = '
-			UPDATE {user} SET
-				auth_token = :auth_token,
-				auth_ip = :auth_ip,
-				auth_date = CURRENT_TIMESTAMP
-			WHERE id = :user_id
-		';
+		// $authorize = '
+		// 	UPDATE {user} SET
+		// 		auth_token = :auth_token,
+		// 		auth_ip = :auth_ip,
+		// 		auth_date = CURRENT_TIMESTAMP
+		// 	WHERE id = :user_id
+		// ';
 
-		$authorize = new Statement($authorize);
+		// $authorize = new Statement($authorize);
 
-		$authorize->execute(['user_id' => $user->id, 'auth_ip' => $user->ip, 'auth_token' => $auth_token]);
+		// $authorize->execute(['user_id' => $user->id, 'auth_ip' => $user->ip, 'auth_token' => $auth_token]);
 
-		Session::setCookie(COOKIE_KEY['auth'], $auth_token, $lifetime ?? LIFETIME['auth']);
+		// Session::setCookie(COOKIE_KEY['auth'], $auth_token, $lifetime ?? LIFETIME['auth']);
 
-		self::$current = $user;
-		self::$current->authorized = true;
+		// self::$current = $user;
+		// self::$current->authorized = true;
 
-		Notification::create('user_authorize', $user->id, ['ip' => $user->ip]);
+		// Notification::create('user_authorize', $user->id, ['ip' => $user->ip]);
 
-		Log::write('User ID: ' . $user->id . ' logged in from IP: ' . $user->ip, 'user');
+		// Log::write('User ID: ' . $user->id . ' logged in from IP: ' . $user->ip, 'user');
 
-		Hook::run('user_authorize', $user);
+		// Hook::run('user_authorize', $user);
 
 		return true;
 	}
 
 	public static function unauthorize() {
-		Session::unsetCookie(COOKIE_KEY['auth']);
+		// Session::unsetCookie(COOKIE_KEY['auth']);
 
-		Log::write('User ID: ' . self::$current->id . ' logged out from IP: ' . Request::$ip, 'user');
+		// Log::write('User ID: ' . self::$current->id . ' logged out from IP: ' . Request::$ip, 'user');
 
-		Hook::run('user_unauthorize', self::$current);
+		// Hook::run('user_unauthorize', self::$current);
 
-		self::$current = new \stdClass();
-		self::$current->authorized = false;
+		// self::$current = new \stdClass();
+		// self::$current->authorized = false;
 
 		return true;
 	}
 
 	public static function register($user) {
-		if(is_array($user)) {
-			$user = json_decode(json_encode($user));
-		}
+		// if(is_array($user)) {
+		// 	$user = json_decode(json_encode($user));
+		// }
 
-		$user_password = $user->password;
-		$user->password = Hash::password($user->password);
+		// $user_password = $user->password;
+		// $user->password = Hash::password($user->password);
 
-		$register = '
-			INSERT INTO {user}
-				(name, login, email, password)
-			VALUES
-				(:name, :login, :email, :password)
-		';
+		// $register = '
+		// 	INSERT INTO {user}
+		// 		(name, email, password)
+		// 	VALUES
+		// 		(:name, :email, :password)
+		// ';
 
-		$register = new Statement($register);
+		// $register = new Statement($register);
 
-		$user->id = $register->execute(json_decode(json_encode($user), true))->insertId();
+		// $user->id = $register->execute(json_decode(json_encode($user), true))->insertId();
 
-		self::authorize($user);
+		// self::authorize($user);
 
-		Notification::create('user_register', $user->id, ['ip' => $user->ip]);
+		// Notification::create('user_register', $user->id, ['ip' => $user->ip]);
 
-		$user->password = $user_password;
+		// $user->password = $user_password;
 
-		Mail::send('Register', $user->email, $user);
+		// Mail::send('Register', $user->email, $user);
 
-		Log::write('User ID: ' . $user->id . ' registered from IP: ' . $user->ip, 'user');
+		// Log::write('User ID: ' . $user->id . ' registered from IP: ' . $user->ip, 'user');
 
-		Hook::run('user_register', $user);
+		// Hook::run('user_register', $user);
 
 		return true;
 	}
 
 	public static function restore($email) {
-		$statement = new Statement('SELECT * FROM {user} WHERE email = :email LIMIT 1');
+		// $statement = new Statement('SELECT * FROM {user} WHERE email = :email LIMIT 1');
 
-		$user = $statement->execute(['email' => $email])->fetch();
+		// $user = $statement->execute(['email' => $email])->fetch();
 
-		if(empty($user)) {
-			return false;
-		}
+		// if(empty($user)) {
+		// 	return false;
+		// }
 
-		$new_password = Hash::token();
+		// $new_password = Hash::token();
 
-		$update_password = '
-			UPDATE {user} SET
-				password = :new_password
-			WHERE id = :id
-		';
+		// $update_password = '
+		// 	UPDATE {user} SET
+		// 		password = :new_password
+		// 	WHERE id = :id
+		// ';
 
-		$update_password = new Statement($update_password);
+		// $update_password = new Statement($update_password);
 
-		$update_password->execute(['id' => $user->id, 'new_password' => Hash::password($new_password)]);
+		// $update_password->execute(['id' => $user->id, 'new_password' => Hash::password($new_password)]);
 
-		$user->password = $new_password;
+		// $user->password = $new_password;
 
-		Notification::create('user_restore', $user->id, ['ip' => Request::$ip]);
+		// Notification::create('user_restore', $user->id, ['ip' => Request::$ip]);
 
-		Mail::send('Restore', $email, $user);
+		// Mail::send('Restore', $email, $user);
 
-		Log::write('User ID: ' . $user->id . ' restored password from IP: ' . Request::$ip, 'user');
+		// Log::write('User ID: ' . $user->id . ' restored password from IP: ' . Request::$ip, 'user');
 
-		Hook::run('user_restore', $user);
+		// Hook::run('user_restore', $user);
 
 		return true;
 	}
@@ -214,43 +196,42 @@ class User {
 		}
 
 		$user->authorized = $authorized;
-		$user->nicename = !empty($user->name) ? "{$user->name} (@$user->login)" : "@$user->login";
-		$user->setting = isset($user->setting) ? (json_decode($user->setting) ?? new \stdClass()) : new \stdClass();
-		$user->setting->notifications = $user->setting->notifications ?? new \stdClass();
-		$user->socials = isset($user->socials) ? (json_decode($user->socials) ?? []) : [];
+		$user->fullname = !empty($user->name) ? "{$user->name} ($user->email)" : "$user->email";
+		$user->setting = is_json($user->setting) ? json_decode($user->setting) : new \stdClass();
+		$user->setting->notifications = is_json($user->setting->notifications) ? json_decode($user->setting->notifications) : new \stdClass();
 
 		return $user;
 	}
 
 	public static function update($key, $value = null, $id = null) {
-		$id = $id ?? self::get()->id;
+		// $id = $id ?? self::get()->id;
 
-		$binding = [$key => $value, 'id' => $id];
+		// $binding = [$key => $value, 'id' => $id];
 
-		$sql = "UPDATE {user} SET $key = :$key WHERE id = :id";
+		// $sql = "UPDATE {user} SET $key = :$key WHERE id = :id";
 
-		$statement = new Statement($sql);
+		// $statement = new Statement($sql);
 
-		$statement->execute($binding);
+		// $statement->execute($binding);
 
-		Log::write('User ID: ' . $id . ' updated ' . $key . ' from IP: ' . Request::$ip, 'user');
+		// Log::write('User ID: ' . $id . ' updated ' . $key . ' from IP: ' . Request::$ip, 'user');
 
-		Hook::run('user_update', $id);
-		Hook::run('user_update_' . $key, $id);
+		// Hook::run('user_update', $id);
+		// Hook::run('user_update_' . $key, $id);
 
 		return true;
 	}
 
 	public static function delete($id) {
-		$sql = "DELETE FROM {user} WHERE id = :id";
+		// $sql = "DELETE FROM {user} WHERE id = :id";
 
-		$statement = new Statement($sql);
+		// $statement = new Statement($sql);
 
-		$statement->execute(['id' => $id]);
+		// $statement->execute(['id' => $id]);
 
-		Log::write('User ID: ' . $id . ' deleted from IP: ' . Request::$ip, 'user');
+		// Log::write('User ID: ' . $id . ' deleted from IP: ' . Request::$ip, 'user');
 
-		Hook::run('user_delete', $id);
+		// Hook::run('user_delete', $id);
 
 		return true;
 	}

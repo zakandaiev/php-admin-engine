@@ -33,6 +33,7 @@ class Engine {
 		class_alias('\\Engine\\User', 'User');
 		class_alias('\\Engine\\Module', 'Module');
 		class_alias('\\Engine\\Language', 'Language');
+		class_alias('\\Engine\\Hook', 'Hook');
 		class_alias('\\Engine\\Router', 'Router');
 		class_alias('\\Engine\\Route', 'Route');
 		class_alias('\\Engine\\Controller', 'Controller');
@@ -43,11 +44,10 @@ class Engine {
 		class_alias('\\Engine\\Theme', 'Theme');
 		class_alias('\\Engine\\Template', 'Template');
 		class_alias('\\Engine\\Page', 'Page');
+		class_alias('\\Engine\\Breadcrumb', 'Breadcrumb');
 		// class_alias('\\Engine\\Menu', 'Menu');
-		// class_alias('\\Engine\\Breadcrumb', 'Breadcrumb');
 		// class_alias('\\Engine\\Pagination', 'Pagination');
 		// class_alias('\\Engine\\Cache', 'Cache');
-		// class_alias('\\Engine\\Hook', 'Hook');
 		// class_alias('\\Engine\\Log', 'Log');
 		// class_alias('\\Engine\\Mail', 'Mail');
 		// class_alias('\\Engine\\Upload', 'Upload');

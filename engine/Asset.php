@@ -19,12 +19,12 @@ class Asset {
 		]
 	];
 
-	private static function add($extension, $file_name, $attributes = '', $routes = null) {
+	private static function add($extension, $file_name, $attributes = '', $routes = null, $module = null) {
 		$file_path = Path::file('asset') . "/$file_name.$extension";
 
 		if(is_file($file_path)) {
 			self::$container[$extension][] = [
-				'module' => Module::getName(),
+				'module' => $module ?? Module::getName(),
 				'file' => "$file_name.$extension",
 				'attributes' => $attributes,
 				'routes' => $routes
@@ -36,12 +36,12 @@ class Asset {
 		return false;
 	}
 
-	public static function css($asset, $attributes = null, $routes = null) {
-		return self::add(__FUNCTION__, $asset, $attributes, $routes);
+	public static function css($asset, $attributes = null, $routes = null, $module = null) {
+		return self::add(__FUNCTION__, $asset, $attributes, $routes, $module);
 	}
 
-	public static function js($asset, $attributes = null, $routes = null) {
-		return self::add(__FUNCTION__, $asset, $attributes, $routes);
+	public static function js($asset, $attributes = null, $routes = null, $module = null) {
+		return self::add(__FUNCTION__, $asset, $attributes, $routes, $module);
 	}
 
 	public static function optimization($extension, $attributes = null, $routes = null) {
@@ -94,12 +94,18 @@ class Asset {
 		return Path::url('asset', $module ?? Module::get('extends'));
 	}
 
-	public static function get($extension) {
-		return self::$container[$extension] ?? [];
+	public static function getContainer($extension = null) {
+		return isset($extension) ? @self::$container[$extension] : self::$container;
 	}
 
-	public static function has($extension) {
+	public static function hasContainer($extension) {
 		return isset(self::$container[$extension]);
+	}
+
+	public static function setContainer($key, $data = null) {
+		self::$container[$key] = $data;
+
+		return true;
 	}
 
 	private static function checkRoute($routes = null) {

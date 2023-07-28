@@ -20,8 +20,18 @@
 	// .box__header
 	&__header {
 		display: block;
-		padding: 1.5em 3.5em 1.5em 1.5em;
+		padding: 1.5em;
 		position: relative;
+
+		// .box__header_actions
+		&_icon {
+			padding-right: 3.5em;
+		}
+
+		// .box__header_icon
+		&_icon {
+			padding-right: 5.5em;
+		}
 	}
 
 	// .box__title
@@ -105,10 +115,6 @@
 		&.dropdown {
 			position: absolute;
 		}
-	}
-
-	.box__header_icon {
-		padding: 1.5em 5.5em 1.5em 1.5em;
 	}
 
 	// .box__icon

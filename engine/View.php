@@ -3,7 +3,7 @@
 namespace Engine;
 
 class View {
-	private static $data = [];
+	protected static $data = [];
 
 	public function render($template, $is_required = true) {
 		$module_name = Module::getName();
@@ -28,9 +28,14 @@ class View {
 		exit;
 	}
 
+	// TODO -> transform for keys
 	public static function getData() {
 		return self::$data;
 	}
+
+	// public static function hasData($key) {
+	// 	return isset(self::$data[$key]);
+	// }
 
 	public static function setData($data) {
 		self::$data = $data + self::$data;

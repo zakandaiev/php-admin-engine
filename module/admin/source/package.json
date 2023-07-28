@@ -46,6 +46,7 @@
 		],
 		"ignore": [
 			"./src/js/air-datepicker.js",
+			"./src/js/chart.js",
 			"./src/js/fancybox.js",
 			"./src/js/maska.js",
 			"./src/js/slimselect.js",

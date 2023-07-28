@@ -14,9 +14,9 @@ Asset::js('js/air-datepicker', 'defer');
 Asset::js('js/chart', 'defer');
 Asset::js('js/cyr-to-lat', 'defer');
 Asset::js('js/data-copy', 'defer');
-Asset::js('js/data-form', 'defer');
 Asset::js('js/fancybox', 'defer');
 // Asset::js('js/filepond', 'defer');
+Asset::js('js/form', 'defer');
 Asset::js('js/maska', 'defer');
 Asset::js('js/modal', 'defer');
 Asset::js('js/slimselect', 'defer');
@@ -29,13 +29,12 @@ Asset::js('js/wysiwyg', 'defer');
 // Asset::js('js/translations', 'defer', '/admin/translation/$module/$language');
 Asset::js('js/main', 'defer');
 
-// TODO
-// ############################# BREADCRUMBS #############################
-// Breadcrumb::setOption('render_homepage', true);
-// Breadcrumb::setOption('homepage_name', '<i class="align-middle" data-feather="home"></i>');
-// Breadcrumb::setOption('homepage_url', 'admin');
-// Breadcrumb::setOption('separator', '<i class="align-middle" data-feather="arrow-right"></i>');
+############################# BREADCRUMBS #############################
+Breadcrumb::setOption('render_homepage', true);
+Breadcrumb::setOption('homepage_name', __('admin.breadcrumb.home'));
+Breadcrumb::setOption('homepage_url', '/admin/dashboard');
 
+// TODO
 // ############################# NOTIFICATIONS #############################
 // function notification($type, $key = null) {
 // 	$notifications = $GLOBALS['admin_notification'];

@@ -79,7 +79,7 @@ class Setting extends AdminController {
 
 			require_once $functions;
 
-			foreach(Asset::get($type) as $file) {
+			foreach(Asset::getContainer($type) as $file) {
 				if($file['module'] !== $module) {
 					continue;
 				}

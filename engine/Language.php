@@ -52,7 +52,7 @@ class Language {
 	}
 
 	public static function get($key = null, $language = null, $module = null) {
-		return $key ? @Module::get('languages', $module)[$language ?? self::current()][$key] : Module::get('languages', $module);
+		return isset($key) ? @Module::get('languages', $module)[$language ?? self::current()][$key] : Module::get('languages', $module);
 	}
 
 	public static function has($language, $module = null) {

@@ -3,7 +3,7 @@
 namespace Engine;
 
 class Setting {
-	private static $setting;
+	protected static $setting;
 
 	public static function initialize() {
 		self::$setting = self::load();

@@ -4,17 +4,21 @@ namespace Engine;
 
 class Server {
 	public static function answer($data = null, $status = null, $message = null, $code = 200, $content_type = 'text/plain') {
-		if(is_array($data)) {
-			$answer['status'] = $status ?? 'success';
-			$answer['message'] = $message ?? 'success';
+		if(
+			(isset($status) || isset($message))
+			||
+			(is_array($data) || is_object($data))
+		) {
+			$answer['status'] = $status ?? '';
+			$answer['message'] = $message ?? '';
 			$answer['data'] = $data;
 
 			$answer = json_encode($answer);
 
 			$content_type = 'application/json';
 		}
-		else if(is_string($data)) {
-			$answer = $data;
+		else if(isset($data)) {
+			$answer = strval($data);
 		}
 		else {
 			self::answerEmpty($code, $content_type);

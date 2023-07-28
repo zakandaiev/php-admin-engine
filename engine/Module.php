@@ -106,7 +106,6 @@ class Module {
 		return true;
 	}
 
-	// TODO
 	public static function loadHooks() {
 		if(self::$is_hooks_loaded) {
 			return false;
@@ -118,12 +117,12 @@ class Module {
 
 		$modules = self::$list;
 
-		// uasort($modules, function ($module1, $module2) {
-		// 	if(isset($module1['priority']) && isset($module2['priority'])) {
-		// 		return $module1['priority'] <=> $module2['priority'];
-		// 	}
-		// 	return 0;
-		// });
+		uasort($modules, function ($module1, $module2) {
+			if(isset($module1['priority']) && isset($module2['priority'])) {
+				return $module1['priority'] <=> $module2['priority'];
+			}
+			return 0;
+		});
 
 		foreach($modules as $module) {
 			if(!$module['is_enabled']) {
@@ -155,100 +154,100 @@ class Module {
 
 	// TODO
 	public static function update($key, $value, $module = null) {
-		$name = $module ?? self::$name;
-		$config_file = Path::file('module') . '/' . $name . '/config.php';
+		// $name = $module ?? self::$name;
+		// $config_file = Path::file('module') . '/' . $name . '/config.php';
 
-		if(!is_file($config_file)) {
-			return false;
-		}
+		// if(!is_file($config_file)) {
+		// 	return false;
+		// }
 
-		if(is_numeric($value)) {
-			$value = $value;
-		} else if(is_string($value)) {
-			$value = "'$value'";
-		} else if(is_bool($value)) {
-			$value = $value ? 'true' : 'false';
-		} else if(is_null($value)) {
-			$value = 'null';
-		} else {
-			return false;
-		}
+		// if(is_numeric($value)) {
+		// 	$value = $value;
+		// } else if(is_string($value)) {
+		// 	$value = "'$value'";
+		// } else if(is_bool($value)) {
+		// 	$value = $value ? 'true' : 'false';
+		// } else if(is_null($value)) {
+		// 	$value = 'null';
+		// } else {
+		// 	return false;
+		// }
 
-		$config_content = file_get_contents($config_file);
+		// $config_content = file_get_contents($config_file);
 
-		$replacement = "'$key' => $value";
+		// $replacement = "'$key' => $value";
 
-		if(preg_match('/([\'"]' . $key . '[\'"][\s]*=>)/mi', $config_content)) {
-			$pattern = '/([\'"]' . $key . '[\'"][\s]*=>[\s]*[^,\]\n\/#]+)/mi';
-		} else {
-			$pattern = '/(return[\s]*(\[|array\())/mi';
-			$replacement = "$1\n\t" . $replacement . ",";
-		}
+		// if(preg_match('/([\'"]' . $key . '[\'"][\s]*=>)/mi', $config_content)) {
+		// 	$pattern = '/([\'"]' . $key . '[\'"][\s]*=>[\s]*[^,\]\n\/#]+)/mi';
+		// } else {
+		// 	$pattern = '/(return[\s]*(\[|array\())/mi';
+		// 	$replacement = "$1\n\t" . $replacement . ",";
+		// }
 
-		$config_content = preg_replace($pattern, $replacement, $config_content);
+		// $config_content = preg_replace($pattern, $replacement, $config_content);
 
-		static $is_edited = false;
+		// static $is_edited = false;
 
-		if(file_put_contents($config_file, $config_content, LOCK_EX)) {
-			if(!$is_edited) {
-				Log::write('Module: ' . $name. ' edited by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'module');
-				Hook::run('module_update', $name);
-			}
+		// if(file_put_contents($config_file, $config_content, LOCK_EX)) {
+		// 	if(!$is_edited) {
+		// 		Log::write('Module: ' . $name. ' edited by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'module');
+		// 		Hook::run('module_update', $name);
+		// 	}
 
-			$is_edited = true;
+		// 	$is_edited = true;
 
-			return true;
-		}
+		// 	return true;
+		// }
 
 		return false;
 	}
 
 	public static function delete($name) {
-		Log::write('Module: ' . $name. ' deleted by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'module');
+		// Log::write('Module: ' . $name. ' deleted by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'module');
 
-		Hook::run('module_delete', $name);
+		// Hook::run('module_delete', $name);
 
-		return rmdir_recursive(Path::file('module') . '/' . $name);
+		// return rmdir_recursive(Path::file('module') . '/' . $name);
 	}
 
 	public static function install($name) {
-		$path = Path::file('module') . '/' . $name . '/Install';
+		// $path = Path::file('module') . '/' . $name . '/Install';
 
-		if(!file_exists($path)) {
-			return false;
-		}
+		// if(!file_exists($path)) {
+		// 	return false;
+		// }
 
-		// INSTALL SCRIPT
-		$path_install = $path . '/install.php';
+		// // INSTALL SCRIPT
+		// $path_install = $path . '/install.php';
 
-		if(is_file($path_install)) {
-			require $path_install;
-		}
+		// if(is_file($path_install)) {
+		// 	require $path_install;
+		// }
 
-		Log::write('Module: ' . $name. ' installed by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'module');
+		// Log::write('Module: ' . $name. ' installed by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'module');
 
-		Hook::run('module_install', $name);
+		// Hook::run('module_install', $name);
 
 		return true;
 	}
 
 	public static function uninstall($name) {
-		$path = Path::file('module') . '/' . $name . '/Install';
+		// $path = Path::file('module') . '/' . $name . '/Install';
 
-		if(!file_exists($path)) {
-			return false;
-		}
+		// if(!file_exists($path)) {
+		// 	return false;
+		// }
 
-		// UNINSTALL SCRIPT
-		$path_uninstall = $path . '/uninstall.php';
+		// // UNINSTALL SCRIPT
+		// $path_uninstall = $path . '/uninstall.php';
 
-		if(is_file($path_uninstall)) {
-			require $path_uninstall;
-		}
+		// if(is_file($path_uninstall)) {
+		// 	require $path_uninstall;
+		// }
 
-		Log::write('Module: ' . $name. ' uninstalled by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'module');
+		// Log::write('Module: ' . $name. ' uninstalled by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'module');
 
-		Hook::run('module_uninstall', $name);
+		// Hook::run('module_uninstall', $name);
 
 		return true;
 	}

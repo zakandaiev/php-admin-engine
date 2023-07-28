@@ -1,9 +1,9 @@
 @@include("../../node_modules/chart.js/dist/chart.umd.js")
 
-if (typeof ENGINE !== 'undefined' && ENGINE.color) {
-	Chart.defaults.backgroundColor = ENGINE.color.box;
-	Chart.defaults.borderColor = ENGINE.color.border;
-	Chart.defaults.color = ENGINE.color.text_muted;
+if (typeof ENGINE !== 'undefined' && ENGINE.theme && ENGINE.theme.color) {
+	Chart.defaults.backgroundColor = ENGINE.theme.color.box;
+	Chart.defaults.borderColor = ENGINE.theme.color.border;
+	Chart.defaults.color = ENGINE.theme.color.text_muted;
 }
 
 document.addEventListener('DOMContentLoaded', () => {

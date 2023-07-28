@@ -21,8 +21,15 @@
 		text-decoration: none;
 	}
 
-	& > i {
+	& > .icon, & > svg, & > img {
 		flex-shrink: 0;
+	}
+
+	& > svg, & > img {
+		display: inline-block;
+		width: 2rem;
+		height: 2rem;
+		margin: -0.2rem 0.4rem -0.2rem 0;
 	}
 
 	// .btn_default
@@ -257,6 +264,48 @@
 		min-height: 3rem;
 		font-size: 1.4rem;
 		padding: 0.5em;
+	}
+
+	// .btn_google
+	&_google {
+		background: #fff;
+		border-color: #fff;
+		color: rgba(0, 0, 0, 0.54);
+		font-weight: var(--font-medium);
+
+		&:hover, &:focus, &:active {
+			background: #fff;
+			border-color: #fff;
+			color: rgba(0, 0, 0, 0.54);
+		}
+	}
+
+	// .btn_facebook
+	&_facebook {
+		background: #1877F2;
+		border-color: #1877F2;
+		color: #fff;
+		font-weight: var(--font-medium);
+
+		&:hover, &:focus, &:active {
+			background: #1877F2;
+			border-color: #1877F2;
+			color: #fff;
+		}
+	}
+
+	// .btn_apple
+	&_apple {
+		background: #000;
+		border-color: #000;
+		color: #fff;
+		font-weight: var(--font-medium);
+
+		&:hover, &:focus, &:active {
+			background: #000;
+			border-color: #000;
+			color: #fff;
+		}
 	}
 }
 

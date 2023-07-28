@@ -4,6 +4,7 @@ namespace Engine;
 
 class Hook {
 	private static $actions = [];
+	private static $data = [];
 
 	public static function register($name, $function) {
 		if(is_string($name) && !empty($name) && is_closure($function)) {
@@ -42,5 +43,19 @@ class Hook {
 		}
 
 		return false;
+	}
+
+	public static function getData($key = null) {
+		return isset($key) ? @self::$data[$key] : self::$data;
+	}
+
+	public static function hasData($key) {
+		return isset(self::$data[$key]);
+	}
+
+	public static function setData($key, $data = null) {
+		self::$data[$key] = $data;
+
+		return true;
 	}
 }

@@ -32,16 +32,16 @@ class Theme {
 		self::loadTemplate(__FUNCTION__, $name, $data);
 	}
 
+	public static function breadcrumb($name = '', $data = []) {
+		$data[__FUNCTION__] = Breadcrumb::get();
+		$data['options'] = Breadcrumb::getOption();
+
+		self::loadTemplate(__FUNCTION__, $name, $data);
+	}
+
 	// TODO
 	// public static function menu($name, $data = []) {
 	// 	$data[__FUNCTION__] = Menu::get($name);
-
-	// 	self::loadTemplate(__FUNCTION__, $name, $data);
-	// }
-
-	// public static function breadcrumb($name = '', $data = []) {
-	// 	$data[__FUNCTION__] = Breadcrumb::get();
-	// 	$data['options'] = Breadcrumb::getOptions();
 
 	// 	self::loadTemplate(__FUNCTION__, $name, $data);
 	// }

@@ -189,6 +189,13 @@ $indent-step: 0.5;
 }
 
 /* ==========  Text  ========== */
+$indent-step: 0.5;
+@for $i from 0 through 20 {
+	.font-size-#{$i} {
+		font-size: #{$i * $indent-step}rem !important;
+	}
+}
+
 .text-left {
 	text-align: left !important;
 }

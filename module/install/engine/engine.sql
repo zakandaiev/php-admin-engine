@@ -11,9 +11,9 @@ CREATE TABLE IF NOT EXISTS `%prefix%user` (
 	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	`email` VARCHAR(200) NOT NULL,
 	`password` VARCHAR(200) NOT NULL,
+	`name` VARCHAR(200) NOT NULL,
 	`phone` VARCHAR(100) DEFAULT NULL,
 	`language` VARCHAR(8) DEFAULT NULL,
-	`name` VARCHAR(200) DEFAULT NULL,
 	`avatar` TEXT DEFAULT NULL,
 	`setting` TEXT DEFAULT NULL,
 	`auth_token` VARCHAR(200) DEFAULT NULL,
@@ -230,24 +230,18 @@ INSERT INTO `%prefix%group_translation` (`group_id`, `language`, `name`) VALUES
 (3, 'en', 'Moderator');
 
 INSERT INTO `%prefix%group_route` (`group_id`, `route`) VALUES
-(3, 'delete@/upload'),
-(3, 'get@/admin/message'),
-(3, 'get@/admin/comment'),
-(3, 'get@/admin/comment/edit/$id'),
-(3, 'get@/admin/menu'),
-(3, 'get@/admin/menu/$id'),
-(3, 'get@/admin/page'),
-(3, 'get@/admin/page/add'),
-(3, 'get@/admin/page/category/$id'),
-(3, 'get@/admin/page/edit/$id'),
-(3, 'get@/admin/page/edit/$id/translation/add/$language'),
-(3, 'get@/admin/page/edit/$id/translation/edit/$language'),
-(3, 'get@/admin/translation'),
-(3, 'get@/admin/translation/$module/add'),
-(3, 'get@/admin/translation/$module/$language'),
-(3, 'post@/admin/translation/$module/add'),
-(3, 'post@/admin/translation/$module/$language'),
-(3, 'post@/upload');
+(2, 'any@/upload'),
+(2, 'any@/admin/**'),
+(3, 'any@/upload'),
+(3, 'any@/admin/message'),
+(3, 'any@/admin/comment'),
+(3, 'any@/admin/comment/**'),
+(3, 'any@/admin/menu'),
+(3, 'any@/admin/menu/**'),
+(3, 'any@/admin/page'),
+(3, 'any@/admin/page/**'),
+(3, 'any@/admin/translation'),
+(3, 'any@/admin/translation/**');
 
 INSERT INTO `%prefix%user_group` (`user_id`, `group_id`) VALUES
 (1, 1);

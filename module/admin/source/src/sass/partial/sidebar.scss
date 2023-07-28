@@ -7,6 +7,21 @@
 	height: 100vh;
 	background: #222e3c;
 	transition: var(--transition);
+	overflow: hidden auto;
+
+	&::-webkit-scrollbar {
+		width: 6px;
+		height: 6px;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background: #4e5863;
+		border-radius: var(--radius);
+	}
+
+	&::-webkit-scrollbar-track {
+		background: #222e3c;
+	}
 
 	// .sidebar_hidden
 	&_hidden {
@@ -16,17 +31,26 @@
 	// .sidebar__logo
 	&__logo {
 		flex-shrink: 0;
+		position: sticky;
+		z-index: 20;
+		top: 0;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		text-align: center;
 		padding: 1.5em;
+		background: #222e3c;
 
-		& > * {
+		& > img, & > svg {
 			display: block;
 			width: auto;
 			height: 2.5em;
 			object-fit: contain;
+		}
+
+		& > span {
+			font-size: 1.5em;
+			color: #fff;
 		}
 	}
 
@@ -35,22 +59,6 @@
 		flex-grow: 1;
 		display: flex;
 		flex-direction: column;
-		max-height: calc(100vh - 5.5em);
-		overflow: hidden auto;
-
-		&::-webkit-scrollbar {
-			width: 6px;
-			height: 6px;
-		}
-
-		&::-webkit-scrollbar-thumb {
-			background: #4e5863;
-			border-radius: var(--radius);
-		}
-
-		&::-webkit-scrollbar-track {
-			background: #222e3c;
-		}
 	}
 
 	// .sidebar__item
@@ -59,7 +67,7 @@
 		display: flex;
 		align-items: center;
 		gap: 1em;
-		padding: 1em 1.5em;
+		padding: 0.8em 1.5em;
 		color: rgba(233, 236, 239, .5);
 		transition: var(--transition);
 		position: relative;
@@ -105,6 +113,10 @@
 		font-size: 1.2rem;
 		padding: 2em 1.5em 0.5em;
 		color: #ced4da;
+
+		&:empty {
+			padding-top: 1em;
+		}
 	}
 
 	// .sidebar__text
@@ -121,6 +133,17 @@
 		display: flex;
 		align-items: stretch;
 		flex-direction: column;
+
+		& > .sidebar__item::after {
+			flex-shrink: 0;
+			@extend .icon;
+			content: "\ea5f";
+			transition: var(--transition);
+		}
+
+		&.active > .sidebar__item::after {
+			transform: rotateX(180deg);
+		}
 
 		&.active > .sidebar__collapse-menu {
 			visibility: visible;
@@ -144,7 +167,7 @@
 		display: flex;
 		align-items: center;
 		gap: 1em;
-		padding: 1em 0 1em 1em;
+		padding: 0.8em 0 0.8em 0.8em;
 		font-size: 1.2rem;
 		color: #adb5bd;
 		transition: var(--transition);

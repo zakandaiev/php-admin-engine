@@ -2,15 +2,15 @@
 
 namespace Module\Admin\Controller;
 
-// use Engine\Statement;
-// use Engine\Server;
+use Engine\Controller;
+use Engine\Server;
 
-class AdminController extends \Engine\Controller {
+class AdminController extends Controller {
 	public function __construct() {
 		parent::__construct();
 
 		// TODO
-		// if(!$this->user->authorized) {
+		// if(!$this->user->get()->authorized) {
 		// 	Server::redirect('/admin/login');
 		// }
 

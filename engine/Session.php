@@ -12,17 +12,17 @@ class Session {
 	}
 
 	public static function get($key = null) {
-		return $key ? $_SESSION[$key] : $_SESSION;
+		return isset($key) ? @$_SESSION[$key] : $_SESSION;
+	}
+
+	public static function has($key) {
+		return isset($_SESSION[$key]);
 	}
 
 	public static function set($key, $data = null) {
 		$_SESSION[$key] = $data;
 
 		return true;
-	}
-
-	public static function has($key) {
-		return isset($_SESSION[$key]);
 	}
 
 	public static function flush($key) {
@@ -36,18 +36,18 @@ class Session {
 		return true;
 	}
 
-	public static function getCookie($key) {
-		return $key ? Request::$cookie[$key] : Request::$cookie;
+	public static function getCookie($key = null) {
+		return isset($key) ? @Request::$cookie[$key] : Request::$cookie;
+	}
+
+	public static function hasCookie($key) {
+		return isset(Request::$cookie[$key]);
 	}
 
 	public static function setCookie($key, $value, $lifetime = null) {
 		Request::$cookie[$key] = $value;
 
 		return setcookie($key, $value, time() + intval($lifetime ?? LIFETIME['auth']), '/', '', false, true);
-	}
-
-	public static function hasCookie($key) {
-		return isset(Request::$cookie[$key]);
 	}
 
 	public static function flushCookie($key) {
@@ -61,9 +61,5 @@ class Session {
 		}
 
 		return true;
-	}
-
-	public static function getCookieAll() {
-		return Request::$cookie;
 	}
 }

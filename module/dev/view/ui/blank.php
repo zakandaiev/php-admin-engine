@@ -14,20 +14,15 @@
 				<span class="breadcrumb__item">Dev UI</span>
 			</nav>
 
-			<h2 class="section__title">
-				<span>Pages</span>
+			<h2 class="section__title">Blank Page</h2>
 
-				<div class="section__actions">
-					<button class="btn btn_secondary">Add category</button>
-					<button class="btn btn_primary">Add page</button>
-				</div>
-			</h2>
 			<div class="box">
 				<div class="box__header">
-					<h4 class="box__title">Polar area chart</h4>
+					<h4 class="box__title">Title</h4>
+					<h5 class="box__subtitle">Subitle</h5>
 				</div>
 				<div class="box__body">
-					asd
+					Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veniam vitae laborum corrupti quis in assumenda asperiores architecto ducimus alias sunt ab distinctio ut consectetur amet laudantium quas, autem est eveniet!
 				</div>
 			</div>
 

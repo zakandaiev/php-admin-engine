@@ -45,14 +45,14 @@ class Request {
 		self::$csrf = self::setCSRF();
 
 		if(self::$method !== 'get' && !self::verifyCSRF()) {
-			Server::answer([], 'error', 'Bad Request', 400);
+			Server::answer(null, 'error', 'Bad Request', 400);
 		}
 
 		return true;
 	}
 
 	public static function get($key = null) {
-		return $key ? self::$get[$key] : self::$get;
+		return isset($key) ? @self::$get[$key] : self::$get;
 	}
 
 	public static function has($key) {

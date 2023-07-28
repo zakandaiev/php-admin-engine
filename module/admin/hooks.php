@@ -1,36 +1,34 @@
 <?php
 
 ############################# ADMIN SIDEBAR #############################
-// $GLOBALS['admin_sidebar'] = [];
+Hook::setData('admin.sidebar', []);
 
-// Hook::register('admin_sidebar_append', function($route) {
-// 	$GLOBALS['admin_sidebar'][] = $route;
-// });
-// Hook::register('admin_sidebar_prepend', function($route) {
-// 	array_unshift($GLOBALS['admin_sidebar'] , $route);
-// });
-// Hook::register('admin_sidebar_append_after', function($position, $append_route) {
-// 	$sidebar = [];
+Hook::register('admin_sidebar_append', function($route) {
+	$sidebar = Hook::getData('admin.sidebar') ?? [];
+	$sidebar[] = $route;
+	Hook::setData('admin.sidebar', $sidebar);
+});
 
-// 	foreach($GLOBALS['admin_sidebar'] as $route) {
-// 		$sidebar[] = $route;
+Hook::register('admin_sidebar_prepend', function($route) {
+	$sidebar = Hook::getData('admin.sidebar') ?? [];
+	array_unshift($sidebar, $route);
+	Hook::setData('admin.sidebar', $sidebar);
+});
 
-// 		if(is_string($route['route']) && trim($route['route'], '/') === trim($position, '/')) {
-// 			$sidebar[] = $append_route;
-// 		}
-// 	}
+Hook::register('admin_sidebar_append_after', function($position, $append_route) {
+	$sidebar = Hook::getData('admin.sidebar') ?? [];
+	$sidebar_new = [];
 
-// 	$GLOBALS['admin_sidebar'] = $sidebar;
-// });
-// Hook::register('admin_sidebar_change', function($sidebar) {
-// 	if(!is_array($sidebar)) {
-// 		return false;
-// 	}
+	foreach($sidebar as $route) {
+		$sidebar_new[] = $route;
 
-// 	$GLOBALS['admin_sidebar'] = $sidebar;
+		if(is_string($route['route']) && trim($route['route'], '/') === trim($position, '/')) {
+			$sidebar_new[] = $append_route;
+		}
+	}
 
-// 	return true;
-// });
+	Hook::setData('admin.sidebar', $sidebar_new);
+});
 
 // ############################# NOTIFICATION #############################
 // $GLOBALS['admin_notification'] = [];
@@ -275,96 +273,86 @@
 // 	]
 // );
 
-// // SIDEBAR
-// Hook::run('admin_sidebar_append', [
-// 	'icon' => 'home',
-// 	'name' => __('Dashboard'),
-// 	'route' => '/admin',
-// 	'is_public' => true
-// ]);
-// Hook::run('admin_sidebar_append', [
-// 	'icon' => 'user',
-// 	'badge' => function() {
-// 		$notifications_count = User::get()->notifications_count;
-// 		return $notifications_count > 0 ? $notifications_count : null;
-// 	},
-// 	'name' => __('Profile'),
-// 	'route' => '/admin/profile',
-// 	'is_public' => true
-// ]);
-// Hook::run('admin_sidebar_append', [
-// 	'name' => __('Interaction'),
-// 	'is_divider' => true,
-// 	'route' => '/admin/contact'
-// ]);
-// Hook::run('admin_sidebar_append', [
-// 	'icon' => 'message-circle',
-// 	'badge' => function() {
-// 		$count = \Module\Admin\Model\Contact::getInstance()->countUnreadContacts();
-// 		return $count > 0 ? $count : null;
-// 	},
-// 	'name' => __('Messages'),
-// 	'route' => '/admin/contact'
-// ]);
-// Hook::run('admin_sidebar_append', [
-// 	'name' => __('Content'),
-// 	'is_divider' => true,
-// 	'route' => '/admin/page'
-// ]);
-// Hook::run('admin_sidebar_append', [
-// 	'icon' => 'layout',
-// 	'name' => __('Pages'),
-// 	'route' => '/admin/page'
-// ]);
-// Hook::run('admin_sidebar_append', [
-// 	'icon' => 'message-square',
-// 	'badge' => function() {
-// 		$count = \Module\Admin\Model\Comment::getInstance()->countUnapprovedComments();
-// 		return $count > 0 ? $count : null;
-// 	},
-// 	'name' => __('Comments'),
-// 	'route' => '/admin/comment'
-// ]);
-// Hook::run('admin_sidebar_append', [
-// 	'icon' => 'menu',
-// 	'name' => __('Menu'),
-// 	'route' => '/admin/menu'
-// ]);
-// Hook::run('admin_sidebar_append', [
-// 	'icon' => 'globe',
-// 	'name' => __('Translations'),
-// 	'route' => '/admin/translation'
-// ]);
-// Hook::run('admin_sidebar_append', [
-// 	'name' => __('Administration'),
-// 	'is_divider' => true,
-// 	'route' => '/admin/user'
-// ]);
-// Hook::run('admin_sidebar_append', [
-// 	'icon' => 'users',
-// 	'name' => __('Users'),
-// 	'route' => [
-// 		__('Users') => '/admin/user',
-// 		__('Groups') => '/admin/group'
-// 	]
-// ]);
-// Hook::run('admin_sidebar_append', [
-// 	'icon' => 'settings',
-// 	'name' => __('Settings'),
-// 	'route' => [
-// 		__('Main') => '/admin/setting/main',
-// 		__('Site') => '/admin/setting/site',
-// 		__('Contacts') => '/admin/setting/contact',
-// 		__('Optimizations') => '/admin/setting/optimization'
-// 	]
-// ]);
-// Hook::run('admin_sidebar_append', [
-// 	'icon' => 'activity',
-// 	'name' => __('Logs'),
-// 	'route' => '/admin/log'
-// ]);
-// Hook::run('admin_sidebar_append', [
-// 	'icon' => 'box',
-// 	'name' => __('Modules'),
-// 	'route' => '/admin/module'
-// ]);
+############################# RUN - SIDEBAR #############################
+Hook::run('admin_sidebar_append', [
+	'icon' => 'home',
+	'name' => __('admin.sidebar.dashboard'),
+	'route' => '/admin/dashboard',
+	'is_public' => true
+]);
+Hook::run('admin_sidebar_append', [
+	'icon' => 'user-circle',
+	'label' => function() {
+		$notifications_count = User::get()->notifications_count;
+		return $notifications_count > 0 ? $notifications_count : null;
+	},
+	'name' => __('admin.sidebar.profile'),
+	'route' => '/admin/profile',
+	'is_public' => true
+]);
+Hook::run('admin_sidebar_append', [
+	'name' => __('admin.sidebar.interaction'),
+	'is_separator' => true,
+	'route' => '/admin/contact'
+]);
+Hook::run('admin_sidebar_append', [
+	'icon' => 'message-circle',
+	'label' => function() {
+		$count = \Module\Admin\Model\Contact::getInstance()->countUnreadContacts();
+		return $count > 0 ? $count : null;
+	},
+	'name' => __('admin.sidebar.messages'),
+	'route' => '/admin/contact'
+]);
+Hook::run('admin_sidebar_append', [
+	'name' => __('admin.sidebar.content'),
+	'is_separator' => true,
+	'route' => '/admin/page'
+]);
+Hook::run('admin_sidebar_append', [
+	'icon' => 'file-text',
+	'name' => __('admin.sidebar.pages'),
+	'route' => '/admin/page'
+]);
+Hook::run('admin_sidebar_append', [
+	'icon' => 'message',
+	'label' => function() {
+		$count = \Module\Admin\Model\Comment::getInstance()->countUnapprovedComments();
+		return $count > 0 ? $count : null;
+	},
+	'name' => __('admin.sidebar.comments'),
+	'route' => '/admin/comment'
+]);
+Hook::run('admin_sidebar_append', [
+	'icon' => 'menu-2',
+	'name' => __('admin.sidebar.menu'),
+	'route' => '/admin/menu'
+]);
+Hook::run('admin_sidebar_append', [
+	'icon' => 'world',
+	'name' => __('admin.sidebar.translations'),
+	'route' => '/admin/translation'
+]);
+Hook::run('admin_sidebar_append', [
+	'name' => __('admin.sidebar.administration'),
+	'is_separator' => true,
+	'route' => '/admin/user'
+]);
+Hook::run('admin_sidebar_append', [
+	'icon' => 'users',
+	'name' => __('admin.sidebar.users'),
+	'route' => [
+		__('admin.sidebar.users') => '/admin/user',
+		__('admin.sidebar.groups') => '/admin/group'
+	]
+]);
+Hook::run('admin_sidebar_append', [
+	'icon' => 'settings',
+	'name' => __('admin.sidebar.settings'),
+	'route' => [
+		__('admin.sidebar.main') => '/admin/setting/main',
+		__('admin.sidebar.site') => '/admin/setting/site',
+		__('admin.sidebar.contacts') => '/admin/setting/contact',
+		__('admin.sidebar.optimizations') => '/admin/setting/optimization'
+	]
+]);

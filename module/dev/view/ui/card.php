@@ -115,7 +115,7 @@
 
 				<div class="col">
 					<div class="box">
-						<div class="box__header">
+						<div class="box__header box__header_actions">
 							<h4 class="box__title">
 								<span>Card with actions</span>
 								<button type="button" class="box__actions dropdown dropdown_bottom-right">

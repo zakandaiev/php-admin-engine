@@ -42,7 +42,17 @@ class Group {
 	}
 
 	public function getUsers() {
-		return User::getAll('name ASC, login ASC');
+		$sql = "SELECT * FROM {user} ORDER BY name ASC, login ASC";
+
+		$users = new Statement($sql);
+
+		$users = $users->execute()->fetchAll();
+
+		foreach($users as $key => $user) {
+			$users[$key] = User::format($user);
+		}
+
+		return $users;
 	}
 
 	public function getGroupById($id) {

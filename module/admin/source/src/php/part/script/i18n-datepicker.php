@@ -57,8 +57,8 @@
 		],
 		today: "<?= __('datepicker.today') ?>",
 		clear: "<?= __('datepicker.clear') ?>",
-		dateFormat: 'dd.MM.yyyy',
-		timeFormat: 'HH:mm',
-		firstDay: 1
+		dateFormat: "<?= __('datepicker.dateFormat') ?>",
+		timeFormat: "<?= __('datepicker.timeFormat') ?>",
+		firstDay: <?= __('datepicker.firstDay') ?>
 	};
 </script>
