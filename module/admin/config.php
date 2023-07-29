@@ -4,6 +4,6 @@ return [
 	'priority' => 99,
 	'version' => '1.0.0',
 	'extends' => null,
-	'description' => 'Represents all the backend engine and admin frontend interface', // TODO remake to lang key
+	'description' => 'Represents all the backend engine and admin frontend interface',
 	'is_enabled' => true
 ];

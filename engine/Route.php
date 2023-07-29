@@ -7,35 +7,35 @@ class Route {
 	public static $path = '';
 	public static $controller = '';
 	public static $action = '';
-	public static $options = [];
-	public static $parameters = [];
+	public static $option = [];
+	public static $parameter = [];
 
-	public static function get($path, $controller, $options = []) {
-		self::initRoute(__FUNCTION__, $path, $controller, $options);
+	public static function get($path, $controller, $option = []) {
+		self::initRoute(__FUNCTION__, $path, $controller, $option);
 	}
 
-	public static function post($path, $controller, $options = []) {
-		self::initRoute(__FUNCTION__, $path, $controller, $options);
+	public static function post($path, $controller, $option = []) {
+		self::initRoute(__FUNCTION__, $path, $controller, $option);
 	}
 
-	public static function put($path, $controller, $options = []) {
-		self::initRoute(__FUNCTION__, $path, $controller, $options);
+	public static function put($path, $controller, $option = []) {
+		self::initRoute(__FUNCTION__, $path, $controller, $option);
 	}
 
-	public static function patch($path, $controller, $options = []) {
-		self::initRoute(__FUNCTION__, $path, $controller, $options);
+	public static function patch($path, $controller, $option = []) {
+		self::initRoute(__FUNCTION__, $path, $controller, $option);
 	}
 
-	public static function delete($path, $controller, $options = []) {
-		self::initRoute(__FUNCTION__, $path, $controller, $options);
+	public static function delete($path, $controller, $option = []) {
+		self::initRoute(__FUNCTION__, $path, $controller, $option);
 	}
 
-	public static function options($path, $controller, $options = []) {
-		self::initRoute(__FUNCTION__, $path, $controller, $options);
+	public static function options($path, $controller, $option = []) {
+		self::initRoute(__FUNCTION__, $path, $controller, $option);
 	}
 
-	public static function any($path, $controller, $options = []) {
-		self::initRoute(__FUNCTION__, $path, $controller, $options);
+	public static function any($path, $controller, $option = []) {
+		self::initRoute(__FUNCTION__, $path, $controller, $option);
 	}
 
 	public static function isRouteActive($route) {
@@ -72,7 +72,7 @@ class Route {
 		return true;
 	}
 
-	private static function initRoute($method, $path, $controller, $options = []) {
+	private static function initRoute($method, $path, $controller, $option = []) {
 		if(is_closure($controller)) {
 			$route_controller = $controller;
 			$route_action = null;
@@ -91,7 +91,7 @@ class Route {
 			'path' => $path,
 			'controller' => $route_controller,
 			'action' => $route_action,
-			'options' => $options
+			'option' => $option
 		];
 
 		$routes = Module::get('routes');

@@ -7,13 +7,13 @@ class Page extends Controller {
 		$page_url = 'home';
 		$page_template = 'home';
 
-		if(isset($this->route['parameters']['url'])) {
-			if($this->route['parameters']['url'] === 'home') {
+		if(isset($this->route['parameter']['url'])) {
+			if($this->route['parameter']['url'] === 'home') {
 				$this->view->error('404');
 				return true;
 			}
 
-			$page_url = $this->route['parameters']['url'];
+			$page_url = $this->route['parameter']['url'];
 		}
 
 		$this->view->render('page');
@@ -56,7 +56,7 @@ class Page extends Controller {
 	}
 
 	public function getTag() {
-		$tag_url = $this->route['parameters']['url'];
+		$tag_url = $this->route['parameter']['url'];
 
 		$data['tag'] = $this->model->getTagByUrl($tag_url);
 
@@ -71,7 +71,7 @@ class Page extends Controller {
 	}
 
 	public function getAuthor() {
-		$author_id = $this->route['parameters']['id'];
+		$author_id = $this->route['parameter']['id'];
 
 		$data['author'] = $this->model->getAuthor($author_id);
 

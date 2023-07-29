@@ -7,7 +7,7 @@ use Module\Admin\Controller\AdminController;
 
 class UIElement extends AdminController {
 	public function getSection() {
-		$section = $this->route['parameters']['section'];
+		$section = $this->route['parameter']['section'];
 
 		$data['section'] = $section;
 

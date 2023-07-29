@@ -18,7 +18,7 @@ class Page extends AdminController {
 	}
 
 	public function getCategory() {
-		$category_id = $this->route['parameters']['id'];
+		$category_id = $this->route['parameter']['id'];
 
 		$pages = $this->model->getPagesByCategory($category_id);
 
@@ -38,11 +38,11 @@ class Page extends AdminController {
 	}
 
 	public function getEdit() {
-		$page_id = $this->route['parameters']['id'];
+		$page_id = $this->route['parameter']['id'];
 
 		$is_translation = false;
 
-		if(isset($this->route['parameters']['language'])) {
+		if(isset($this->route['parameter']['language'])) {
 			$is_translation = true;
 
 			$data['page_origin'] = $this->model->getPage($page_id);
@@ -52,7 +52,7 @@ class Page extends AdminController {
 			}
 		}
 
-		$data['page_edit'] = $this->model->getPage($page_id, $is_translation ? $this->route['parameters']['language'] : null);
+		$data['page_edit'] = $this->model->getPage($page_id, $is_translation ? $this->route['parameter']['language'] : null);
 
 		if(empty($data['page_edit'])) {
 			$this->view->error('404');
@@ -61,12 +61,12 @@ class Page extends AdminController {
 		$data['is_translation'] = $is_translation;
 
 		$data['page_edit']->categories = $this->model->getPageCategories($page_id);
-		$data['page_edit']->tags = $this->model->getPageTags($page_id, $is_translation ? $this->route['parameters']['language'] : null);
-		$data['page_edit']->custom_fields = $this->model->getPageCustomFields($page_id, $is_translation ? $this->route['parameters']['language'] : null);
+		$data['page_edit']->tags = $this->model->getPageTags($page_id, $is_translation ? $this->route['parameter']['language'] : null);
+		$data['page_edit']->custom_fields = $this->model->getPageCustomFields($page_id, $is_translation ? $this->route['parameter']['language'] : null);
 
 		$data['authors'] = $this->model->getAuthors();
 		$data['categories'] = $this->model->getCategories($page_id);
-		$data['tags'] = $this->model->getTags($is_translation ? $this->route['parameters']['language'] : null);
+		$data['tags'] = $this->model->getTags($is_translation ? $this->route['parameter']['language'] : null);
 
 		$data['page_edit']->custom_fieldsets = $this->model->getPageCustomFieldSets($data['page_edit']);
 
@@ -75,8 +75,8 @@ class Page extends AdminController {
 	}
 
 	public function getAddTranslation() {
-		$page_id = $this->route['parameters']['id'];
-		$translation_language = $this->route['parameters']['language'];
+		$page_id = $this->route['parameter']['id'];
+		$translation_language = $this->route['parameter']['language'];
 
 		if(!Language::has($translation_language)) {
 			Server::redirect(site('url_language') . '/admin/page');

@@ -27,7 +27,10 @@ class Form {
 		}
 
 		this.action = this.node.action;
-		this.method = this.node.method ? this.node.method : 'POST';
+		this.method = this.node.method || 'POST';
+		if (this.method.toLowerCase() === 'get') {
+			this.method = 'POST';
+		}
 		this.data_confirm = this.node.getAttribute('data-confirm');
 		this.data_reset = this.node.hasAttribute('data-reset') ? true : false;
 		this.data_redirect = this.node.getAttribute('data-redirect');

@@ -8,7 +8,7 @@ class Router {
 	public static function initialize() {
 		self::loadModuleRoutes();
 		self::checkRoutes();
-		// self::checkForm(); TODO
+		self::checkForm();
 		self::check404();
 		self::setController();
 	}
@@ -87,9 +87,9 @@ class Router {
 	}
 
 	private static function isRouteMatched($route) {
-		$parameters = [];
+		$parameter = [];
 
-		self::$route['parameters'] = $parameters;
+		self::$route['parameter'] = $parameter;
 
 		if($route === '/' && Request::$uri === '/') {
 			return true;
@@ -119,19 +119,19 @@ class Router {
 
 			if(preg_match('/^[$]/', $route_part)) {
 				$found_variable = ltrim($route_part ?? '', '$');
-				$parameters[$found_variable] = $uri_parts[$__i__];
+				$parameter[$found_variable] = $uri_parts[$__i__];
 			} else if($route_parts[$__i__] !== $uri_parts[$__i__]) {
 				return false;
 			}
 		}
 
-		self::$route['parameters'] = $parameters;
+		self::$route['parameter'] = $parameter;
 
 		return true;
 	}
 
 	private static function checkForm() {
-		if(Request::$method !== 'post') {
+		if(Request::$method === 'get') {
 			return false;
 		}
 
@@ -149,19 +149,19 @@ class Router {
 			$timestamp_created = strtotime($form->date_created);
 			$timestamp_diff = $timestamp_now - $timestamp_created;
 
-			if(trim(Request::$uri ?? '', '/') === $form->token) {
+			if(Request::$uri === ('/' . $form->token)) {
 				Module::loadHooks();
 				Module::setName($form->module);
 
 				if($timestamp_diff < LIFETIME['form']) {
 					Form::execute($form->action, $form->form_name, $form->item_id);
-				} else {
-					$error_message = __('Current form is already inactive. Reload the page and try again');
-
+				}
+				else {
+					$error_message = __('form.inactive');
 					Server::answer(null, 'error', $error_message, 409);
 				}
 
-				exit;
+				Server::answer();
 			}
 		}
 
@@ -192,11 +192,8 @@ class Router {
 			self::$route['path'] = Request::$uri;
 			self::$route['controller'] = 'Error';
 			self::$route['action'] = 'get404';
-			self::$route['options'] = [
-				'is_public' => true,
-				'breadcrumbs' => []
-			];
-			self::$route['parameters'] = [];
+			self::$route['option'] = [];
+			self::$route['parameter'] = [];
 
 			return true;
 		}
@@ -210,7 +207,7 @@ class Router {
 		}
 
 		if(is_closure(self::$route['controller'])) {
-			self::$route['controller'](self::$route['parameters']);
+			self::$route['controller'](self::$route['parameter']);
 			return true;
 		}
 

@@ -132,7 +132,7 @@
 									<label class="switch">
 										<input type="checkbox">
 										<span class="switch__slider"></span>
-										<span>Switcher</span>
+										<span>Switch</span>
 									</label>
 
 									<br>
@@ -140,7 +140,7 @@
 									<label class="switch">
 										<input type="checkbox" disabled>
 										<span class="switch__slider"></span>
-										<span>Switcher disabled</span>
+										<span>Switch disabled</span>
 									</label>
 
 									<br>
@@ -148,19 +148,19 @@
 									<label class="switch m-b-0 m-r-3">
 										<input type="checkbox">
 										<span class="switch__slider"></span>
-										<span>Switcher 1</span>
+										<span>Switch 1</span>
 									</label>
 
 									<label class="switch m-b-0 m-r-3">
 										<input type="checkbox">
 										<span class="switch__slider"></span>
-										<span>Switcher 2</span>
+										<span>Switch 2</span>
 									</label>
 
 									<label class="switch m-b-0 m-r-3">
 										<input type="checkbox">
 										<span class="switch__slider"></span>
-										<span>Switcher 3</span>
+										<span>Switch 3</span>
 									</label>
 
 								</div>

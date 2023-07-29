@@ -29,7 +29,7 @@
 				</div>
 			</h2>
 
-			<form action="" method="post" data-redirect="<?= site('url_language') ?>/admin/page" data-validate>
+			<form action="<?= Form::add('page/Page') ?>" data-redirect="<?= site('url_language') ?>/admin/page" data-validate>
 				<div class="row gap-xs">
 
 					<div class="col-xs-12 col-lg-8">
@@ -41,8 +41,20 @@
 							</nav>
 
 							<div id="tab-page-content" class="tab__body active">
+
+
+
+								<label>
+									<input type="checkbox" name="test">
+									<span>Option</span>
+								</label>
+
+
+
+
+
 								<label><?= __('admin.page.title') ?></label>
-								<input name="title" type="text" placeholder="<?= __('admin.page.enter_title') ?>" required autofocus>
+								<input name="title" type="text" placeholder="<?= __('admin.page.enter_title') ?>" autofocus>
 
 								<label><?= __('admin.page.excerpt') ?></label>
 								<textarea name="excerpt" placeholder="<?= __('admin.page.enter_excerpt') ?>" rows="1"></textarea>

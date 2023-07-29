@@ -5,9 +5,5 @@
     "ru": "Russian",
     "de": "German",
     "es": "Spanish"
-  },
-
-  "num": {
-    "product": "{s} товар | {s} товари | {s} товарів"
   }
 }

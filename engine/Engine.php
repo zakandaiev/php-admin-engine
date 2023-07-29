@@ -39,7 +39,7 @@ class Engine {
 		class_alias('\\Engine\\Controller', 'Controller');
 		class_alias('\\Engine\\Model', 'Model');
 		class_alias('\\Engine\\View', 'View');
-		// class_alias('\\Engine\\Form', 'Form');
+		class_alias('\\Engine\\Form', 'Form');
 		class_alias('\\Engine\\Asset', 'Asset');
 		class_alias('\\Engine\\Theme', 'Theme');
 		class_alias('\\Engine\\Template', 'Template');

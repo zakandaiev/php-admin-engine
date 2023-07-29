@@ -2,7 +2,7 @@
 
 namespace Module\_Dummy\Model;
 
-use Engine\Database\Statement;
+use Engine\Statement;
 
 class Dummy {
 	public function dummyMethod() {}

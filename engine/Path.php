@@ -41,25 +41,25 @@ class Path {
 				return ROOT_DIR . '/' . trim(UPLOAD['folder'], '/');
 			}
 			case 'language': {
-				$path = ROOT_DIR . "/module/$module/language";
+				$path = self::file('module') . "/$module/language";
 
 				if($module === 'public') {
-					$path = self::file('theme', $module) . '/language';
+					$path = self::file('theme') . '/language';
 				}
 
 				return $path;
 			}
 			case 'controller': {
-				return ROOT_DIR . "/module/$module/controller";
+				return self::file('module') . "/$module/controller";
 			}
 			case 'model': {
-				return ROOT_DIR . "/module/$module/model";
+				return self::file('module') . "/$module/model";
 			}
 			case 'view': {
-				$path = ROOT_DIR . "/module/$module/view";
+				$path = self::file('module') . "/$module/view";
 
 				if($module === 'public') {
-					$path = self::file('theme', $module);
+					$path = self::file('theme');
 				}
 
 				return $path;
@@ -68,34 +68,55 @@ class Path {
 				return self::file('view', $module) . '/asset';
 			}
 			case 'form': {
-				return self::file('view', $module) . '/form';
-			}
-			case 'fields': {
-				return self::file('view', $module) . '/fields';
-			}
-			case 'filter': {
-				return self::file('view', $module) . '/filter';
-			}
-			case 'mail': {
-				return self::file('view', $module) . '/mail';
-			}
-			case 'config': {
-				$path = ROOT_DIR . '/config.php';
+				$path = self::file('module') . "/$module/form";
 
-				if($module) {
-					$path = self::file('module', $module) . "/$module/config.php";
+				if($module === 'public') {
+					$path = self::file('theme') . '/form';
 				}
 
 				return $path;
 			}
+			case 'field': {
+				$path = self::file('module') . "/$module/field";
+
+				if($module === 'public') {
+					$path = self::file('theme') . '/field';
+				}
+
+				return $path;
+			}
+			case 'filter': {
+				$path = self::file('module') . "/$module/filter";
+
+				if($module === 'public') {
+					$path = self::file('theme') . '/filter';
+				}
+
+				return $path;
+			}
+			case 'mail': {
+				$path = self::file('module') . "/$module/mail";
+
+				if($module === 'public') {
+					$path = self::file('theme') . '/mail';
+				}
+
+				return $path;
+			}
+			case 'config': {
+				return self::file('module') . "/$module/config.php";
+			}
 			case 'temp': {
-				return sys_get_temp_dir();
-				// Use below path if there are problems with sys_get_temp_dir() on shared hosting
+				if(!IS_SHARED_HOSTING) {
+					return sys_get_temp_dir();
+				}
+
 				$doc_root = $_SERVER['DOCUMENT_ROOT'];
+
 				return substr($doc_root, 0, strpos($doc_root, 'data')) . 'data/tmp';
 			}
 			case 'cache': {
-				return self::file('temp', $module) . '/' . trim(CACHE['folder'], '/');
+				return self::file('temp') . '/' . trim(CACHE['folder'], '/');
 			}
 		}
 
@@ -108,23 +129,26 @@ class Path {
 		$module = $module ?? Module::getName();
 
 		switch(strtolower($section)) {
-			case 'upload': {
-				return $url_base . '/' . trim(UPLOAD['folder'], '/');
+			case 'module': {
+				return $url_base . '/module';
 			}
 			case 'theme': {
 				return $url_base . '/theme';
 			}
 			case 'view': {
-				$path = $url_base . "/module/$module/view";
+				$path = self::url('module') . "/$module/view";
 
 				if($module === 'public') {
-					$path = self::url('theme', $module);
+					$path = self::url('theme');
 				}
 
 				return $path;
 			}
 			case 'asset': {
 				return self::url('view', $module) . '/asset';
+			}
+			case 'upload': {
+				return $url_base . '/' . trim(UPLOAD['folder'], '/');
 			}
 		}
 
