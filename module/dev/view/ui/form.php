@@ -348,6 +348,26 @@
 						</div>
 					</div>
 
+					<div class="col">
+						<div class="box">
+							<div class="box__header">
+								<h5 class="box__title">Сolor picker</h5>
+							</div>
+							<div class="box__body">
+								<input type="color" placeholder="Input">
+							</div>
+						</div>
+					</div>
+
+					<div class="col">
+						<div class="box">
+							<div class="box__header">
+								<h5 class="box__title">Range slider</h5>
+							</div>
+							<div class="box__body">
+								<input type="range" min="1" max="100" step="1" value="1">
+							</div>
+						</div>
 					</div>
 
 				</div>

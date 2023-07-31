@@ -195,7 +195,52 @@ class Form {
 			data.set(this.options.csrf.key, this.options.csrf.token);
 		}
 
+		this.formatDates(data);
+
 		return data;
+	}
+
+	formatDates(data) {
+		const getFormattedDate = (type, date) => {
+			const d = new Date(date.valueOf());
+			d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+
+			switch(type) {
+				case 'date': {
+					return d.toJSON().slice(0, 10);
+				}
+				case 'datetime': {
+					return d.toJSON().slice(0, 19).replace('T', ' ');
+				}
+				case 'month': {
+					return d.toJSON().slice(0, 7);
+				}
+			}
+		};
+
+		for (const pair of data.entries()) {
+			const name = pair[0];
+			const input = this.node.querySelector(`[name="${name}"]`);
+
+			if (input && input.hasAttribute('data-picker') && input.instance && input.instance.selectedDates) {
+				const picker_type = input.getAttribute('data-picker');
+
+				if (!['date','datetime','month'].includes(picker_type)) {
+					return false;
+				}
+
+				if (input.hasAttribute('data-multiple') || input.hasAttribute('data-range')) {
+					data.delete(name);
+					input.instance.selectedDates.forEach(d => data.append(name, getFormattedDate(picker_type, d)));
+				}
+				else {
+					data.set(
+						name,
+						input.value.length && input.instance.selectedDates.length ? getFormattedDate(picker_type, input.instance.selectedDates[0]) : []
+					);
+				}
+			}
+		}
 	}
 
 	disableForm() {

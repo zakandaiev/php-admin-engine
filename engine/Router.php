@@ -153,13 +153,15 @@ class Router {
 				Module::loadHooks();
 				Module::setName($form->module);
 
-				if($timestamp_diff < LIFETIME['form']) {
-					Form::execute($form->action, $form->form_name, $form->item_id);
+				if(Request::$ip !== $form->ip) {
+					Server::answer(null, 'error', __('form.forbidden'), 403);
 				}
-				else {
-					$error_message = __('form.inactive');
-					Server::answer(null, 'error', $error_message, 409);
+
+				if($timestamp_diff > LIFETIME['form']) {
+					Server::answer(null, 'error', __('form.inactive'), 409);
 				}
+
+				Form::execute($form->action, $form->form_name, $form->item_id);
 
 				Server::answer();
 			}

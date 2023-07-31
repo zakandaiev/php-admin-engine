@@ -4,6 +4,7 @@ namespace Module\Admin\Model;
 
 use Engine\Path;
 use Engine\Statement;
+use Engine\User;
 
 class Page extends \Engine\Model {
 	public function createTranslation($data) {
@@ -117,11 +118,16 @@ class Page extends \Engine\Model {
 	}
 
 	public function getAuthors() {
-		$sql = 'SELECT * FROM {user} ORDER BY name ASC, login ASC';
+		$sql = 'SELECT * FROM {user} ORDER BY name ASC, email ASC';
 
 		$authors = new Statement($sql);
+		$authors = $authors->execute()->fetchAll();
 
-		return $authors->execute()->fetchAll();
+		foreach($authors as $key => $author) {
+			$authors[$key] = User::format($author);
+		}
+
+		return $authors;
 	}
 
 	public function getCategories($current = 0) {
@@ -148,11 +154,31 @@ class Page extends \Engine\Model {
 	}
 
 	public function getTags($language = null) {
-		$sql = 'SELECT * FROM {tag} WHERE language = :language ORDER BY name ASC';
+		$sql = '
+			SELECT
+				*
+			FROM
+				{tag} t_tag
+			INNER JOIN
+				{tag_translation} t_tag_translation
+			ON
+				t_tag.id = t_tag_translation.tag_id
+			WHERE
+				t_tag_translation.language =
+					(CASE WHEN
+						(SELECT count(*) FROM {tag_translation} WHERE tag_id = t_tag.id AND language = :language) > 0
+					THEN
+						:language
+					ELSE
+						(SELECT value FROM {setting} WHERE module = \'engine\' AND name = \'language\')
+					END)
+			ORDER BY
+				t_tag_translation.name ASC
+		';
 
 		$tags = new Statement($sql);
 
-		return $tags->execute(['language' => $language ?? site('language')])->fetchAll();
+		return $tags->execute(['language' => $language ?? site('language_current')])->fetchAll();
 	}
 
 	public function getPageCategories($page_id) {

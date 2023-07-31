@@ -198,7 +198,7 @@ class User {
 		$user->authorized = $authorized;
 		$user->fullname = !empty($user->name) ? "{$user->name} ($user->email)" : "$user->email";
 		$user->setting = is_json($user->setting) ? json_decode($user->setting) : new \stdClass();
-		$user->setting->notifications = is_json($user->setting->notifications) ? json_decode($user->setting->notifications) : new \stdClass();
+		$user->setting->notifications = isset($user->setting->notifications) && is_json($user->setting->notifications) ? json_decode($user->setting->notifications) : new \stdClass();
 
 		return $user;
 	}

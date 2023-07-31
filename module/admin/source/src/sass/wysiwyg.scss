@@ -6,9 +6,20 @@
 	min-height: 2.543em;
 	position: relative;
 	margin: 0 0 1em;
-	border-radius: var(--radius);
-	border: var(--border);
-	background: var(--color-box);
+
+	textarea {
+		position: absolute;
+		z-index: -1;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		opacity: 0;
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		padding: 0;
+	}
 
 	// .wysiwyg_fullscreen
 	&_fullscreen {
@@ -44,7 +55,10 @@
 	}
 
 	.ql-container {
-		border: none;
+		border: var(--border);
+		border-top-width: 0;
+		border-radius: 0 0 var(--radius) var(--radius);
+		background: var(--color-box);
 		color: var(--color-text);
 		font-family: var(--font);
 		font-size: 1.4rem;
@@ -194,8 +208,9 @@
 		stroke: var(--color-text);
 	}
 	.ql-toolbar.ql-snow {
-		border: none;
-		border-bottom: var(--border);
+		border: var(--border);
+		border-radius: var(--radius) var(--radius) 0 0;
+		background: var(--color-box);
 		color: var(--color-text);
 		font-family: var(--font);
 		font-size: 1.4rem;
@@ -243,5 +258,17 @@
 	}
 	.ql-color .ql-picker-label {
 		padding-top: 3px;
+	}
+}
+
+.wysiwyg {
+	& > textarea.valid ~ .ql-toolbar,
+	& > textarea.valid ~ .ql-container {
+		border-color: var(--color-success);
+	}
+
+	& > textarea.invalid ~ .ql-toolbar,
+	& > textarea.invalid ~ .ql-container {
+		border-color: var(--color-error);
 	}
 }

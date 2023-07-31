@@ -51,10 +51,10 @@ Route::get('/admin/page/edit/$id/translation/edit/$language', 'Page@getEdit');
 // Route::post('/admin/translation/$module/add', 'Translation@postAdd');
 // Route::post('/admin/translation/$module/$language', 'Translation@postEdit');
 
-// ############################# USER #############################
-// Route::get('/admin/user', 'User@getAll');
-// Route::get('/admin/user/add', 'User@getAdd');
-// Route::get('/admin/user/edit/$id', 'User@getEdit');
+############################# USER #############################
+Route::get('/admin/user', 'User@getAll');
+Route::get('/admin/user/add', 'User@getAdd');
+Route::get('/admin/user/edit/$id', 'User@getEdit');
 
 // ############################# GROUP #############################
 // Route::get('/admin/group', 'Group@getAll');

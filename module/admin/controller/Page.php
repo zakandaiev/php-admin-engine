@@ -12,9 +12,7 @@ class Page extends AdminController {
 		$data['pages'] = $pages;
 
 		$this->view->setData($data);
-		// TODO
-		// $this->view->render('page/all');
-		$this->view->render('page/pages');
+		$this->view->render('page/all');
 	}
 
 	public function getCategory() {

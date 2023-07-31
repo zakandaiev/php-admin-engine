@@ -53,6 +53,10 @@ label:not([class]) {
 	position: relative;
 	overflow: hidden;
 
+	&:last-child {
+		margin-bottom: 0;
+	}
+
 	&[for] {
 		cursor: pointer;
 	}
@@ -73,6 +77,10 @@ input, textarea, select,
 	color: var(--color-text);
 	margin: 0 0 1em;
 	position: relative;
+
+	&:last-child {
+		margin-bottom: 0;
+	}
 
 	&:disabled, &.disabled {
 		background: var(--color-border);
@@ -246,15 +254,17 @@ label:not(.switch) {
 	padding: 0;
 	background: none;
 	border: none;
+	position: relative;
 
 	select {
 		position: absolute;
 		z-index: -1;
 		top: 0;
+		right: 0;
 		bottom: 0;
 		left: 0;
 		opacity: 0;
-		width: 0;
+		width: 100%;
 		height: 100%;
 		margin: 0;
 		padding: 0;
@@ -265,6 +275,10 @@ label:not(.switch) {
 	display: flex;
 	margin: 0 0 1em;
 	position: relative;
+
+	&:last-child {
+		margin-bottom: 0;
+	}
 
 	& > *:not(input):not(textarea):not(select):not(.input):not(.textarea):not(.select) {
 		@extend %reset-btn;
@@ -310,4 +324,30 @@ label:not(.switch) {
 
 :root[data-theme="dark"] .input-group > *:not(input):not(textarea):not(select):not(.input):not(.textarea):not(.select) {
 	background: var(--color-border-hover);
+}
+
+input[type="color"] {
+	display: inline-block;
+	width: auto;
+	width: 2.543em;
+	height: 2.543em;
+	padding: 0.5em;
+  cursor: pointer;
+
+	&::-webkit-color-swatch-wrapper {
+		padding: 0;
+		border-color: none;
+	}
+
+	&::-webkit-color-swatch{
+		border: var(--border);
+		border-radius: 50%;
+	}
+}
+
+input[type="range"] {
+	display: block;
+	height: 2.543em;
+	accent-color: var(--color-primary);
+  cursor: pointer;
 }

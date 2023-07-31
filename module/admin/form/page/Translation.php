@@ -1,44 +1,43 @@
 <?php
 
-require Path::file('form') . '/_Model/Page.php';
+require Path::file('form') . '/_model/Page.php';
 
-$tags = [
-	'foreign' => function($field_value, $data) {
-		updateTags($field_value, $data);
-	}
-];
-$custom_fields = [
-	'foreign' => function($field_value, $data) {
-		updateCutomFields($field_value, $data);
-	}
-];
+// $tags = [
+// 	'foreign' => function($field_value, $data) {
+// 		updateTags($field_value, $data);
+// 	}
+// ];
+// $custom_fields = [
+// 	'foreign' => function($field_value, $data) {
+// 		updateCutomFields($field_value, $data);
+// 	}
+// ];
 
 return [
 	'table' => 'page_translation',
 	'fields' => [
-		'language' => $language,
 		'title' => $title,
 		'content' => $content,
 		'excerpt' => $excerpt,
-		'image' => $image,
-		'seo_description' => $seo_description,
-		'seo_keywords' => $seo_keywords,
-		'seo_image' => $seo_image,
 		'tags' => $tags,
-		'custom_fields' => $custom_fields
+		// 'image' => $image,
+		// 'seo_description' => $seo_description,
+		// 'seo_keywords' => $seo_keywords,
+		// 'seo_image' => $seo_image,
+		// 'custom_fields' => $custom_fields
 	],
 	'modify_fields' => function($data) {
-		$data->fields['page_id'] = $data->form_data['item_id'];
-		return $data;
+		// $data->fields['page_id'] = $data->form_data['item_id'];
+		// return $data;
 	},
 	'modify_sql' => function($data) {
-		if($data->form_data['action'] === 'edit') {
-			$data->sql .= ' AND language = :language';
-		}
-		return $data;
+		// if($data->form_data['action'] === 'edit') {
+		// 	$data->sql .= ' AND language = :language';
+		// }
+		// return $data;
 	},
 	'execute_post' => function($data) {
-		Hook::run('page_' . $data->form_data['action'], $data);
+		// Hook::run('page_' . $data->form_data['action'], $data);
 	}
 ];
 

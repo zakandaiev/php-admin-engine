@@ -13,7 +13,7 @@ document.querySelectorAll('textarea[data-wysiwyg]').forEach(textarea => {
 
 	textarea.after(wysiwyg);
 
-	wysiwyg.appendChild(textarea);
+	quill.before(textarea);
 
 	const quill_icons = Quill.import('ui/icons');
 	quill_icons['expand'] = `<i class="icon icon-arrows-maximize"></i><i class="icon icon-arrows-minimize"></i>`;
@@ -49,6 +49,7 @@ document.querySelectorAll('textarea[data-wysiwyg]').forEach(textarea => {
 	editor.on('editor-change', event => {
 		// textarea.value = JSON.stringify(editor.getContents());
 		textarea.value = editor.root.innerHTML;
+		textarea.dispatchEvent(new CustomEvent('change', { bubbles:true }));
 	});
 
 	// EXPAND
@@ -115,8 +116,6 @@ document.querySelectorAll('textarea[data-wysiwyg]').forEach(textarea => {
 
 	wysiwyg.instance = editor;
 	textarea.instance = editor;
-	textarea.setAttribute('readonly', true);
-	textarea.classList.add('hidden');
 });
 
 });

@@ -33,7 +33,6 @@ document.querySelectorAll('input[data-picker]').forEach(input => {
 		}
 	}
 
-
 	if (typeof ENGINE !== 'undefined' && ENGINE.translation && ENGINE.translation.datepicker) {
 		options = {
 			...options,
