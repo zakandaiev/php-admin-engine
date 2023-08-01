@@ -155,8 +155,10 @@ class Form {
 			}
 		}
 
+		$module_name = Module::getName();
+
 		foreach($error_messages as $field_name => $message_key) {
-			$message = __("admin.validation.{$form['table']}.{$field_name}.{$message_key}");
+			$message = __("{$module_name}.validation.{$form['table']}.{$field_name}.{$message_key}");
 
 			if(isset($field_data['message']) && isset($field_data['message'][$message_key])) {
 				$message = $field_data['message'][$message_key];
@@ -317,7 +319,7 @@ class Form {
 			case 'multiple': {
 				return is_array($value) ? true : false;
 			}
-			case 'pattern': {
+			case 'regex': {
 				return preg_match($operand_value, $value) ? true : false;
 			}
 		}
@@ -378,12 +380,19 @@ class Form {
 		}
 
 		foreach(self::$fields as $key => $field_data) {
-			if(isset($field_data['modify']) && is_closure($field_data['modify'])) {
-				self::$fields[$key]['value'] = $field_data['modify']($field_data['value'], $field_data);
+			if(isset($field_data['foreign'])) {
+				// TODO
+				unset(self::$fields[$key]);
+				continue;
 			}
 
 			if(isset($field_data['unset_null']) && $field_data['unset_null'] && empty($field_data['value'])) {
 				unset(self::$fields[$key]);
+				continue;
+			}
+
+			if(isset($field_data['modify']) && is_closure($field_data['modify'])) {
+				self::$fields[$key]['value'] = $field_data['modify']($field_data['value'], $field_data);
 			}
 		}
 
@@ -409,7 +418,7 @@ class Form {
 			exit;
 		}
 		else if(empty($form)) {
-			Server::answer(null, 'error', __('form.unknown_error'), 406);
+			Server::answer(null, 'error', __('engine.form.unknown_error'), 406);
 		}
 
 		self::formatFields($form['fields'], $income_data);
@@ -433,7 +442,7 @@ class Form {
 			'force_no_answer' => $force_no_answer,
 			'table' => $form['table'],
 			'pk_name' => null,
-			'columns' => array_keys(self::$fields),
+			'columns' => [],
 			'sql' => null,
 			'sql_binding' => [],
 			'rowCount' => 0
@@ -441,6 +450,7 @@ class Form {
 
 		if($action !== 'delete') {
 			self::modifyFields($form_name);
+			$form_data['columns'] = array_keys(self::$fields);
 		}
 
 		$pk_statement = new Statement('SHOW KEYS FROM {' . $form_data['table'] . '} WHERE Key_name=\'PRIMARY\'');
@@ -513,7 +523,7 @@ class Form {
 				break;
 			}
 			default: {
-				Server::answer(null, 'error', __('form.unknown_error'), 406);
+				Server::answer(null, 'error', __('engine.form.unknown_error'), 406);
 			}
 		}
 
@@ -525,12 +535,18 @@ class Form {
 			$form_data['sql_binding'][$field['name']] = $field['value'];
 		}
 
+		if($action !== 'add') {
+			$form_data['sql_binding'][$form_data['pk_name']] = $form_data['item_id'];
+		}
+
 		if(isset($form['modify_sql_binding']) && is_closure($form['modify_sql_binding'])) {
 			$form_data['sql_binding'] = $form['modify_sql_binding']($form_data['sql_binding'], self::$fields, $form_data);
 		}
 
 		$statement = new Statement($form_data['sql']);
 		$statement->execute($form_data['sql_binding']);
+
+		$form_data['rowCount'] = $statement->rowCount();
 
 		if($action === 'add') {
 			$form_data['item_id'] = $statement->insertId();

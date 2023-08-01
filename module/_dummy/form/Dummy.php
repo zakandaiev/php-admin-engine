@@ -7,7 +7,7 @@ $all_checks = [
 	'required' => true|false,
 	'min' => 1, // depends on type, for type number - int, for type date - string
 	'max' => 100, // depends on type, for type number - int, for type date - string
-	'pattern' => '', // for any type except file
+	'regex' => '/^[\w\d ]+$/iu', // for any type except file
 	'multiple' => true|false, // for select|checkbox|date|datetime|month|file
 	'range' => true|false, // for date|datetime|month
 	'extensions' => ['jpg','png'], // for file
@@ -26,8 +26,7 @@ $all_checks = [
 		debug($value, $data);exit;
 		return $value; // modify $value and return it
 	},
-	// 'foreign' => 'table_name@primary_key_of_current_object/primary_key_of_foreign_object'
-	// 'foreign' => 'user_group@user_id/group_id',
+	// 'foreign' => 'foreign_table_name@primary_key_of_foreign_table/primary_key_of_current_table'
 	// 'foreign' => function($field_value, $data) {
 	// 	debug($field_value);
 	// 	debug($data);
@@ -41,6 +40,7 @@ $all_checks = [
 	'label_html' => '<label>Some label</label>', // used only in form-builder
 	'placeholder' => '', // used only in form-builder
 	'col_class' => 'col-xs-12 col-lg-6', // used only in form-builder
+	'pattern' => '', // for any type except file
 ];
 
 $title = [

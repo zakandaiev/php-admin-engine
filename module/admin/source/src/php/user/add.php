@@ -1,14 +1,16 @@
 <?php
-	use \Module\Admin\Controller\FormBuilder;
 
-	$title = __('admin.user.add_user');
+use \Module\Admin\Controller\FormBuilder;
 
-	Page::set('title', $title);
+$title = __('admin.user.add_user');
 
-	Breadcrumb::add(__('admin.user.users'), '/admin/user');
-	Breadcrumb::add($title);
+Page::set('title', $title);
 
-	$form_builder = new FormBuilder('user/User');
+Breadcrumb::add(__('admin.user.users'), '/admin/user');
+Breadcrumb::add($title);
+
+$form_builder = new FormBuilder('user/add');
+$form_attributes = 'data-redirect="' . site('url_language') . '/admin/user" data-validate';
 ?>
 
 <?php Theme::header(); ?>
@@ -25,12 +27,12 @@
 			<?php Theme::breadcrumb() ?>
 
 			<h2 class="section__title">
-				<span><?= __('admin.user.users') ?></span>
+				<span><?= $title ?></span>
 			</h2>
 
 			<div class="box">
 				<div class="box__body">
-					<?= $form_builder->render('add', null, 'data-redirect="' . site('url_language') . '/admin/page" data-validate'); ?>
+					<?= $form_builder->render('add', null, $form_attributes); ?>
 				</div>
 			</div>
 

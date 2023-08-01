@@ -20,7 +20,7 @@ class User extends AdminController {
 	}
 
 	public function getEdit() {
-		$user_id = $this->route['parameters']['id'];
+		$user_id = $this->route['parameter']['id'];
 
 		$data['user'] = $this->model->getUserById($user_id);
 

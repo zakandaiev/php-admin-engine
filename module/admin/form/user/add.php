@@ -2,12 +2,10 @@
 
 require Path::file('form') . '/_model/User.php';
 
-$password['unset_null'] = true;
-
 return [
 	'table' => 'user',
 	'fields' => [
-		// 'group' => $group,
+		'group' => $group,
 		'email' => $email,
 		'password' => $password,
 		'name' => $name,

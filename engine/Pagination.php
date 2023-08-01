@@ -70,6 +70,7 @@ class Pagination {
 		return $page;
 	}
 
+	// TODO - move to admin like form builder
 	public function render() {
 		$prev = null;
 		$next = null;
@@ -86,12 +87,12 @@ class Pagination {
 
 		if($this->current_page > 1) {
 			$num = $this->current_page - 1;
-			$prev = '<a rel="prev" href="' . $url . $num . '" class="pagination__item">' . __('Previous') . '</a>';
+			$prev = '<a rel="prev" href="' . $url . $num . '" class="pagination__item">' . __('admin.pagination.previous') . '</a>';
 		}
 
 		if($this->current_page < $this->total_pages) {
 			$num = $this->current_page + 1;
-			$next = '<a rel="next" href="' . $url . $num . '" class="pagination__item">' . __('Next') . '</a>';
+			$next = '<a rel="next" href="' . $url . $num . '" class="pagination__item">' . __('admin.pagination.next') . '</a>';
 		}
 
 		if($this->current_page - 1 > 0) {

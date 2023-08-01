@@ -41,6 +41,16 @@ class FormBuilder {
 		return $this;
 	}
 
+	public function setFieldValue($field_name, $value = null) {
+		if(empty($this->form_data) || !isset($this->fields[$field_name])) {
+			return false;
+		}
+
+		$this->fields[$field_name]['value'] = $value;
+
+		return true;
+	}
+
 	public function render($action = 'add', $item_id = null, $form_attributes = null) {
 		if(empty($this->form_data)) {
 			return false;
@@ -69,15 +79,15 @@ class FormBuilder {
 		return $html;
 	}
 
-	public function renderCol($name, $value = null) {
-		if(empty($this->form_data) || !isset($this->fields[$name])) {
+	public function renderCol($field_name, $value = null) {
+		if(empty($this->form_data) || !isset($this->fields[$field_name])) {
 			return false;
 		}
 
-		$field = $this->fields[$name];
+		$field = $this->fields[$field_name];
 		$field['value'] = $value ?? @$field['value'];
 
-		return $this->getColHTML($name, $field);
+		return $this->getColHTML($field_name, $field);
 	}
 
 	public function renderSubmit() {
@@ -101,13 +111,32 @@ class FormBuilder {
 		return $html;
 	}
 
-	protected function getColHTML($name, $field) {
-		if(empty($name) || !is_array($field)) {
+	protected function getColHTML($field_name, $field) {
+		if(empty($field_name) || !is_array($field)) {
 			return false;
 		}
 
-		// INIT COL
-		$html = '<div class="' . (isset($field['col_class']) ? $field['col_class'] : 'col-xs-12') . '" data-form-row="' . $name . '">';
+		$html = '<div class="' . (isset($field['col_class']) ? $field['col_class'] : 'col-xs-12') . '" data-form-row="' . $field_name . '">';
+
+		$html_input = $this->getColHTMLInput($field_name, $field);
+
+		if(!$html_input) {
+			return false;
+		}
+
+		$html .= $html_input;
+
+		$html .= '</div>';
+
+		return $html;
+	}
+
+	protected function getColHTMLInput($field_name, $field) {
+		if(empty($field_name) || !is_array($field)) {
+			return false;
+		}
+
+		$html = '';
 
 		// SET LABEL
 		if(isset($field['label_html'])) {
@@ -127,7 +156,7 @@ class FormBuilder {
 
 		// SET ATTRIBUTES
 		$attributes = [];
-		$attributes[] = 'name="' . $name . '"';
+		$attributes[] = isset($field['multiple']) && $field['multiple'] ? 'name="' . $field_name . '[]"' : 'name="' . $field_name . '"';
 		$enabled_attributes = ['required','min','max','pattern','multiple','range','extensions','autofocus','placeholder','step'];
 		$valueless_attributes = ['required','multiple','range','autofocus'];
 		$min_max_to_datamin_datamax_replace_types = ['date','datetime','month','select'];
@@ -139,7 +168,9 @@ class FormBuilder {
 			}
 
 			if(in_array($attr, $valueless_attributes)) {
-				$attributes[$attr] = $attr;
+				if($attr_value) {
+					$attributes[$attr] = $attr;
+				}
 				continue;
 			}
 
@@ -161,17 +192,40 @@ class FormBuilder {
 				continue;
 			}
 
-			$attributes[$attr] = $attr . '="' . addslashes(strval($attr_value)) . '"';
+			$attributes[$attr] = $attr . '="' . addcslashes(strval($attr_value), '"') . '"';
 		}
+
+		$value = isset($field['value']) && is_scalar($field['value']) ? addcslashes(strval($field['value']), '"') : @$field['value'];
 
 		// FORMAT ATTRIBUTES & INIT HTML BY RIGHT TAG
 		switch($field['type']) {
 			case 'checkbox': {
-				$html .= '';
+				$value = $value ? ' checked' : '';
+
+				$html = '<label>';
+				$html .= '<input type="checkbox"  ' . implode(' ', $attributes) . $value . '>';
+
+				if(isset($field['label_html'])) {
+					$html .= $field['label_html'];
+				}
+				else if(isset($field['label'])) {
+					$html .= '<span';
+					if(isset($field['label_class'])) {
+						$html .= ' class="' . $field['label_class'] . '">';
+					}
+					else {
+						$html .= '>';
+					}
+					$html .= $field['label'];
+					$html .= '</span>';
+				}
+
+				$html .= '</label>';
 				break;
 			}
 			case 'color': {
-				$html .= '';
+				$value = $value ? ' value="' . $value . '"' : '';
+				$html .= '<input type="color" ' . implode(' ', $attributes) . $value . '>';
 				break;
 			}
 			case 'date': {
@@ -183,15 +237,18 @@ class FormBuilder {
 				break;
 			}
 			case 'email': {
-				$html .= '<input ' . implode(' ', $attributes) . '>';
+				$value = $value ? ' value="' . $value . '"' : '';
+				$html .= '<input type="email" ' . implode(' ', $attributes) . $value . '>';
 				break;
 			}
 			case 'file': {
-				$html .= '';
+				// TODO
+				$html .= '<input type="file" ' . implode(' ', $attributes) . '>';
 				break;
 			}
 			case 'hidden': {
-				$html .= '';
+				$value = $value ? ' value="' . $value . '"' : '';
+				$html .= '<input type="hidden" class="hidden" ' . implode(' ', $attributes) . $value . '>';
 				break;
 			}
 			case 'month': {
@@ -199,11 +256,13 @@ class FormBuilder {
 				break;
 			}
 			case 'number': {
-				$html .= '';
+				$value = $value ? ' value="' . $value . '"' : '';
+				$html .= '<input type="number" ' . implode(' ', $attributes) . $value . '>';
 				break;
 			}
 			case 'password': {
-				$html .= '';
+				$value = $value ? ' value="' . $value . '"' : '';
+				$html .= '<input type="password" ' . implode(' ', $attributes) . $value . '>';
 				break;
 			}
 			case 'radio': {
@@ -219,7 +278,8 @@ class FormBuilder {
 				break;
 			}
 			case 'text': {
-				$html .= '<input ' . implode(' ', $attributes) . '>';
+				$value = $value ? ' value="' . $value . '"' : '';
+				$html .= '<input type="text" ' . implode(' ', $attributes) . $value . '>';
 				break;
 			}
 			case 'time': {
@@ -231,8 +291,8 @@ class FormBuilder {
 				break;
 			}
 			case 'textarea': {
-				if(isset($attributes['value'])) unset($attributes['value']);
-				$html .= '<textarea ' . implode(' ', $attributes) . ' rows="1">' . @$field['value'] . '</textarea>';
+				$value = $value ? @json_encode($value) : '';
+				$html .= '<textarea ' . implode(' ', $attributes) . ' rows="1">' . $value . '</textarea>';
 				break;
 			}
 			case 'wysiwyg': {
@@ -248,8 +308,10 @@ class FormBuilder {
 					$html .= '<option data-placeholder="true"></option>';
 				}
 
+				$field['value'] = $field['value'] ?? [];
 				foreach($field['value'] as $value) {
-					$html .= '<option value="' . $value->value . '">' . $value->name . '</option>';
+					$selected = $value->selected ? ' selected' : '';
+					$html .= '<option value="' . $value->value . '"' . $selected . '>' . $value->name . '</option>';
 				}
 
 				$html .= '</select>';
@@ -257,20 +319,38 @@ class FormBuilder {
 				break;
 			}
 			case 'switch': {
-				$html .= '';
+				$value = $value ? ' checked' : '';
+
+				$html = '<label class="switch">';
+				$html .= '<input type="checkbox"  ' . implode(' ', $attributes) . $value . '>';
+				$html .= '<span class="switch__slider"></span>';
+
+				if(isset($field['label_html'])) {
+					$html .= $field['label_html'];
+				}
+				else if(isset($field['label'])) {
+					$html .= '<span';
+					if(isset($field['label_class'])) {
+						$html .= ' class="' . $field['label_class'] . '">';
+					}
+					else {
+						$html .= '>';
+					}
+					$html .= $field['label'];
+					$html .= '</span>';
+				}
+
+				$html .= '</label>';
 				break;
 			}
 			case 'maska': {
-				$html .= '';
+				$html .= '<input type="text" ' . implode(' ', $attributes) . '>';
 				break;
 			}
 			default: {
 				return false;
 			}
 		}
-
-		// CLOSE COL
-		$html .= '</div>';
 
 		return $html;
 	}

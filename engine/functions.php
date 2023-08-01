@@ -138,7 +138,7 @@ function placeholder_avatar($path) {
 function format_date($date = null, $format = null) {
 	$timestamp = $date ?? time();
 	$timestamp = is_numeric($timestamp) ? $timestamp : strtotime($timestamp);
-	return isset($format) ? date($format, $timestamp) : date('d.m.Y', $timestamp) . ' ' . __('at') . ' ' . date('H:i', $timestamp);
+	return isset($format) ? date($format, $timestamp) : date('d.m.Y', $timestamp) . ' ' . date('H:i', $timestamp);
 }
 
 // TODO
@@ -154,11 +154,11 @@ function format_date($date = null, $format = null) {
 // 	$yesterday = date('d.m.Y', mktime(0, 0, 0, date('m'), date('d') - 1, date('Y')));
 
 // 	if($getdata === date('d.m.Y')) {
-// 		$date = __('Today at') . ' ' . date('H:i', $timestamp);
+// 		$date = __('engine.date.today_at') . ' ' . date('H:i', $timestamp);
 // 	}
 // 	else {
 // 		if($yesterday === $getdata) {
-// 			$date = __('Yesterday at') . ' ' . date('H:i', $timestamp);
+// 			$date = __('engine.date.yesterday_at') . ' ' . date('H:i', $timestamp);
 // 		}
 // 		else {
 // 			$date = format_date($timestamp, $format);
@@ -178,7 +178,7 @@ function format_date($date = null, $format = null) {
 // 	$then = is_numeric($date) ? $date : strtotime($date ?? time());
 
 // 	if($then - $now < 0) {
-// 		return __('The term has expired');
+// 		return __('engine.date.the_term_has_expired');
 // 	}
 
 // 	$difference = abs($then - $now);
@@ -209,7 +209,7 @@ function format_date($date = null, $format = null) {
 // 		return $datediff;
 // 	}
 
-// 	return __('A few seconds');
+// 	return __('engine.date.a_few_seconds');
 // }
 
 ############################# TEXT #############################

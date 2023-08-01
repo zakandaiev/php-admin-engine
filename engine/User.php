@@ -77,6 +77,19 @@ class User {
 		return true;
 	}
 
+	public static function format($user, $authorized = false) {
+		if(!$user) {
+			return $user;
+		}
+
+		$user->authorized = $authorized;
+		$user->fullname = !empty($user->name) ? "{$user->name} ($user->email)" : "$user->email";
+		$user->setting = is_json($user->setting) ? json_decode($user->setting) : new \stdClass();
+		$user->setting->notifications = isset($user->setting->notifications) && is_json($user->setting->notifications) ? json_decode($user->setting->notifications) : new \stdClass();
+
+		return $user;
+	}
+
 	// TODO
 	public static function authorize($user, $lifetime = null) {
 		// $auth_token = Hash::token();
@@ -188,19 +201,6 @@ class User {
 		// Hook::run('user_restore', $user);
 
 		return true;
-	}
-
-	public static function format($user, $authorized = false) {
-		if(!$user) {
-			return $user;
-		}
-
-		$user->authorized = $authorized;
-		$user->fullname = !empty($user->name) ? "{$user->name} ($user->email)" : "$user->email";
-		$user->setting = is_json($user->setting) ? json_decode($user->setting) : new \stdClass();
-		$user->setting->notifications = isset($user->setting->notifications) && is_json($user->setting->notifications) ? json_decode($user->setting->notifications) : new \stdClass();
-
-		return $user;
 	}
 
 	public static function update($key, $value = null, $id = null) {

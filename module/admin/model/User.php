@@ -50,20 +50,22 @@ class User {
 
 		$groups = new Statement($sql);
 
-		return $groups->execute(['language' => site('language_current')])->fetchAll();
+		$groups = $groups->execute(['language' => site('language_current')])->fetchAll();
+
+		return $groups;
 	}
 
 	public function getUserGroups($user_id) {
-		$groups_array = [];
-
 		$sql = 'SELECT group_id FROM {user_group} WHERE user_id = :user_id';
 
 		$groups = new Statement($sql);
 
-		foreach($groups->execute(['user_id' => $user_id])->fetchAll() as $category) {
-			$groups_array[] = $category->group_id;
-		}
+		$groups = $groups->execute(['user_id' => $user_id])->fetchAll();
 
-		return $groups_array;
+		$groups = array_map(function($group) {
+			return $group->group_id;
+		}, $groups);
+
+		return $groups;
 	}
 }

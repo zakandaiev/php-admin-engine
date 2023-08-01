@@ -173,25 +173,27 @@ class Statement {
 
 		try {
 			$this->statement->execute();
-		} catch(PDOException $error) {
+		}
+		catch(PDOException $error) {
+			// TODO all codes
 			$error_message = $error->getMessage();
 
-			if(preg_match("/Duplicate entry .+ for key '(.+)'/", $error->getMessage(), $matches)) {
+			if(preg_match("/Duplicate entry .+ for key '(.+)'/", $error_message, $matches)) {
 				$error_message = str_replace(DATABASE['prefix'] . '_', '', $matches[1]);
 				$error_message = 'duplicate:' . $error_message;
 			}
 
 			if(Request::$method === 'get') {
 				if(DEBUG['is_enabled']) {
-					debug(__($error_message), $this->sql);
+					debug(__($error_message), $this->sql); // TODO translation
 				}
 				else {
-					debug(__($error_message));
+					debug(__($error_message)); // TODO translation
 				}
 			}
 			else {
 				$debug_sql = DEBUG['is_enabled'] ? ['query' => preg_replace('/(\v|\s)+/', ' ', trim($this->sql ?? ''))] : null;
-				Server::answer($debug_sql, 'error', __($error_message), '409');
+				Server::answer($debug_sql, 'error', __($error_message), '409'); // TODO translation
 			}
 		}
 

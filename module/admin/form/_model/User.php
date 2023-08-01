@@ -1,8 +1,13 @@
 <?php
 
-// $group = [
-// 	'foreign' => 'user_group@user_id/group_id'
-// ];
+$group = [
+	'type' => 'select',
+	'multiple' => true,
+	'label' => __('admin.user.user_groups'),
+	'placeholder' => __('admin.user.user_groups'),
+	'foreign' => 'user_group@group_id/user_id',
+	'col_class' => 'col-xs-12'
+];
 $email = [
 	'type' => 'email',
 	'required' => true,
@@ -29,7 +34,7 @@ $name = [
 	'required' => true,
 	'min' => 1,
 	'max' => 200,
-	'regexp' => '/^[\w ]+$/iu',
+	'regex' => '/^[\w ]+$/iu',
 	'label' => __('admin.user.name'),
 	'placeholder' => __('admin.user.enter_name'),
 	'col_class' => 'col-xs-12 col-md-6'
@@ -45,10 +50,10 @@ $setting = [
 	'type' => 'textarea',
 	'label' => __('admin.user.setting'),
 	'placeholder' => __('admin.user.enter_setting'),
-	'col_class' => 'col-xs-12 col-md-6'
+	'col_class' => 'col-xs-12'
 ];
 $is_enabled = [
 	'type' => 'switch',
 	'label' => __('admin.user.is_enabled'),
-	'col_class' => 'col-xs-12 col-md-6'
+	'col_class' => 'col-xs-12'
 ];

@@ -154,11 +154,11 @@ class Router {
 				Module::setName($form->module);
 
 				if(Request::$ip !== $form->ip) {
-					Server::answer(null, 'error', __('form.forbidden'), 403);
+					Server::answer(null, 'error', __('engine.form.forbidden'), 403);
 				}
 
 				if($timestamp_diff > LIFETIME['form']) {
-					Server::answer(null, 'error', __('form.inactive'), 409);
+					Server::answer(null, 'error', __('engine.form.inactive'), 409);
 				}
 
 				Form::execute($form->action, $form->form_name, $form->item_id);

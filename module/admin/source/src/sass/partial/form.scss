@@ -245,6 +245,14 @@ label:not(.switch) {
 				cursor: default;
 			}
 		}
+
+		&.valid ~ *:not([class]) {
+			color: var(--color-success);
+		}
+
+		&.invalid ~ *:not([class]) {
+			color: var(--color-error);
+		}
 	}
 }
 

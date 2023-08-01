@@ -75,34 +75,37 @@ class Language {
 			if(!empty($nominative) && !empty($singular) && !empty($plural)) {
 				switch(numerical_noun_form($data)) {
 					case 's': {
-						$translation = str_replace('{s}', strval($data), $singular);
+						$translation = str_replace('{s}', $data, $singular);
 						break;
 					}
 					case 'n': {
-						$translation = str_replace('{s}', strval($data), $nominative);
+						$translation = str_replace('{s}', $data, $nominative);
 						break;
 					}
 					case 'p': {
-						$translation = str_replace('{s}', strval($data), $plural);
+						$translation = str_replace('{s}', $data, $plural);
 						break;
 					}
 				}
 			}
+			else {
+				$translation = str_replace('{s}', $data, $translation);
+			}
 		}
 		else if(isset($data) && is_array($data)) {
 			foreach($data as $key => $value) {
-				$translation = str_replace('{' . strval($key) . '}', strval($value), $translation);
+				$translation = str_replace('{' . $key . '}', $value, $translation);
 			}
 		}
 		else if(isset($data)) {
-			$translation = str_replace('{s}', strval($data), $translation);
+			$translation = str_replace('{s}', $data, $translation);
 		}
 
 		if(DEBUG['is_enabled'] && !is_array($translation)) {
 			$translation = DEBUG['lang_wrap'] . $translation . DEBUG['lang_wrap'];
 		}
 
-		return $translation;
+		return html($translation);
 	}
 
 	public static function current() {
