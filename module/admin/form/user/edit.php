@@ -17,7 +17,6 @@ return [
 		'is_enabled' => $is_enabled
 	],
 	'execute_post' => function($rowCount, $fields, $data) {
-		debug($rowCount, $fields, $data);exit;
-		// Hook::run('user_' . $data->form_data['action'], $data);
+		Hook::run('user_' . $data['action'], $data['sql_binding']);
 	},
 ];

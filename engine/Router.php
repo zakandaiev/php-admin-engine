@@ -161,6 +161,9 @@ class Router {
 					Server::answer(null, 'error', __('engine.form.inactive'), 409);
 				}
 
+				self::initRoute();
+				new User();
+
 				Form::execute($form->action, $form->form_name, $form->item_id);
 
 				Server::answer();
@@ -203,10 +206,16 @@ class Router {
 		return false;
 	}
 
-	private static function setController() {
+	private static function initRoute() {
 		foreach(self::$route as $key => $value) {
 			Route::$$key = $value;
 		}
+
+		return true;
+	}
+
+	private static function setController() {
+		self::initRoute();
 
 		if(is_closure(self::$route['controller'])) {
 			self::$route['controller'](self::$route['parameter']);

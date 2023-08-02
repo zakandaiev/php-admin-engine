@@ -12,6 +12,7 @@ $all_checks = [
 	'range' => true|false, // for date|datetime|month
 	'extensions' => ['jpg','png'], // for file
 	'folder' => 'subfolder', // for file
+	'max_size' => 10 * 1024 * 1024, // for file (10MB)
 	'step' => 10, // for range slider
 
 	// CHECK MESSAGE
@@ -26,12 +27,12 @@ $all_checks = [
 		debug($value, $data);exit;
 		return $value; // modify $value and return it
 	},
-	// 'foreign' => 'foreign_table_name@primary_key_of_foreign_table/primary_key_of_current_table'
-	// 'foreign' => function($field_value, $data) {
-	// 	debug($field_value);
-	// 	debug($data);
-	// 	exit;
-	// },
+	'foreign' => 'foreign_table_name@primary_key_of_foreign_table/primary_key_of_current_table',
+	// or
+	'foreign' => function($value, $data) {
+		debug($value, $data);exit;
+		// execute some sql queries here
+	},
 
 	// RENDER
 	'autofocus' => true|false, // used only in form-builder

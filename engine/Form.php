@@ -38,6 +38,81 @@ class Form {
 		return is_file(Path::file('form') . "/$form_name.php");
 	}
 
+	public static function checkFields($form_name) {
+		$form = self::load($form_name);
+
+		if(is_closure($form) || empty($form)) {
+			return false;
+		}
+
+		if(!self::$is_fields_formatted) {
+			$method = Request::$method;
+			$income_data =  Request::$$method;
+			self::formatFields($form['fields'], $income_data);
+		}
+
+		$error_messages = [];
+
+		foreach(self::$fields as $field_data) {
+			$check = self::isFieldTypeValid($field_data['type'], $field_data['value'], $field_data);
+
+			if($check !== true) {
+				$error_messages[$field_data['name']] = $field_data['type'];
+			}
+
+			foreach($field_data as $key => $value) {
+				$check = self::isFieldValid($key, $value, $field_data);
+
+				if($check !== true) {
+					$error_messages[$field_data['name']] = $key;
+				}
+			}
+		}
+
+		$module_name = Module::getName();
+
+		foreach($error_messages as $field_name => $message_key) {
+			$message = __("{$module_name}.validation.{$form['table']}.{$field_name}.{$message_key}");
+
+			if(isset($field_data['message']) && isset($field_data['message'][$message_key])) {
+				$message = $field_data['message'][$message_key];
+			}
+
+			Server::answer(null, 'error', $message, 409);
+		}
+
+		return true;
+	}
+
+	public static function execute($action, $form_name, $item_id = null, $force_no_answer = false) {
+		self::clearExpired();
+
+		$form = self::load($form_name);
+
+		$method = Request::$method;
+		$income_data =  Request::$$method;
+
+		if(is_closure($form)) {
+			$data = new \stdClass();
+			$data->action = $action;
+			$data->form_name = $form_name;
+			$data->item_id = $item_id;
+
+			$form($data, $income_data);
+
+			exit;
+		}
+		else if(empty($form)) {
+			Server::answer(null, 'error', __('engine.form.unknown_error'), 406);
+		}
+
+		self::formatFields($form['fields'], $income_data);
+		self::checkFields($form_name);
+		self::processFields($action, $form_name, $item_id, $force_no_answer);
+
+		return true;
+	}
+
 	private static function generateToken($action, $form_name, $item_id = null) {
 		if(!self::exists($form_name)) {
 			return null;
@@ -104,6 +179,13 @@ class Form {
 		return true;
 	}
 
+	private static function clearExpired() {
+		$statement = new Statement('DELETE FROM {form} WHERE date_created <= DATE_SUB(NOW(), INTERVAL ' . intval(LIFETIME['form']) * 2 . ' SECOND)');
+		$statement->execute();
+
+		return true;
+	}
+
 	private static function load($form_name) {
 		if(self::has($form_name)) {
 			return self::get($form_name);
@@ -124,47 +206,71 @@ class Form {
 		return $form_data;
 	}
 
-	public static function checkFields($form_name) {
-		$form = self::load($form_name);
-
-		if(is_closure($form) || empty($form)) {
-			return false;
+	private static function formatFields($fields, $income_data = []) {
+		if(self::$is_fields_formatted) {
+			return true;
 		}
 
-		if(!self::$is_fields_formatted) {
-			$method = Request::$method;
-			$income_data =  Request::$$method;
-			self::formatFields($form['fields'], $income_data);
-		}
-
-		$error_messages = [];
-
-		foreach(self::$fields as $field_data) {
-			$check = self::isFieldTypeValid($field_data['type'], $field_data['value'], $field_data);
-
-			if($check !== true) {
-				$error_messages[$field_data['name']] = $field_data['type'];
+		foreach($fields as $field_name => $field_data) {
+			if(!isset($field_data['type'])) {
+				continue;
 			}
 
-			foreach($field_data as $key => $value) {
-				$check = self::isFieldValid($key, $value, $field_data);
+			$income_value = @$income_data[$field_name];
 
-				if($check !== true) {
-					$error_messages[$field_data['name']] = $key;
+			$field_data['name'] = $field_name;
+			$field_data['value'] = isset($income_value) && $income_value === '' ? null : $income_value;
+			if(isset($field_data['multiple']) && $field_data['multiple'] && $field_data['value'] === null) {
+				$field_data['value'] = [];
+			}
+
+			switch($field_data['type']) {
+				case 'checkbox':
+				case 'switch': {
+					$field_data['value'] = $income_value == 'on' ? true : false;
+					break;
+				}
+				case 'file': {
+					$files = Request::$files[$field_data['name']] ?? [];
+
+					if(empty($files) || !isset($files['tmp_name']) || empty($files['tmp_name'])) {
+						break;
+					}
+
+					$files_formatted = [];
+					if(is_array($files['tmp_name'])) {
+						for($i=0; $i<count($files['name']); $i++){
+							$files_formatted[$i] = array(
+								'name' => $files['name'][$i],
+								'type' => $files['type'][$i],
+								'tmp_name' => $files['tmp_name'][$i],
+								'error' => $files['error'][$i],
+								'size' => $files['size'][$i],
+								'full_path' => $files['full_path'][$i]
+							);
+						}
+					}
+					else {
+						$files_formatted = [$files];
+					}
+
+					$field_data['value'] = $files_formatted;
+					$field_data['max_size'] = $field_data['max_size'] ?? Upload::getMaxSize();
+
+					break;
+				}
+				case 'number':
+				case 'range': {
+					$field_data['value'] = isset($income_value) && $income_value !== '' && is_numeric($income_value) ? floatval($income_value) : null;
+					break;
+				}
+				case 'radio': {
+					$field_data['value'] = isset($income_value) && $income_value !== '' ? $income_value : null;
+					break;
 				}
 			}
-		}
 
-		$module_name = Module::getName();
-
-		foreach($error_messages as $field_name => $message_key) {
-			$message = __("{$module_name}.validation.{$form['table']}.{$field_name}.{$message_key}");
-
-			if(isset($field_data['message']) && isset($field_data['message'][$message_key])) {
-				$message = $field_data['message'][$message_key];
-			}
-
-			Server::answer(null, 'error', $message, 409);
+			self::$fields[$field_name] = $field_data;
 		}
 
 		return true;
@@ -257,10 +363,6 @@ class Form {
 					case 'month': {
 						return strtotime($value) >= strtotime($operand_value) ? true : false;
 					}
-					case 'file': {
-						// TODO
-						return false;
-					}
 					case 'number':
 					case 'range': {
 						return $value >= $operand_value ? true : false;
@@ -293,13 +395,9 @@ class Form {
 
 				switch($type) {
 					case 'date':
-						case 'datetime':
-						case 'month': {
-							return strtotime($value) <= strtotime($operand_value) ? true : false;
-						}
-						case 'file': {
-						// TODO
-						return false;
+					case 'datetime':
+					case 'month': {
+						return strtotime($value) <= strtotime($operand_value) ? true : false;
 					}
 					case 'number':
 					case 'range': {
@@ -313,8 +411,37 @@ class Form {
 				return mb_strlen($value) <= $operand_value ? true : false;
 			}
 			case 'extensions': {
-				// TODO
-				return false;
+				if(!is_array($value)) {
+					return true;
+				}
+
+				foreach($value as $file) {
+					$file_extension = strtolower(file_extension($file['name']));
+
+					$allowed_extensions = is_array($operand_value) ? $operand_value : UPLOAD['extensions'];
+
+					if(!in_array($file_extension, $allowed_extensions)) {
+						return false;
+					}
+				}
+
+				return true;
+			}
+			case 'max_size': {
+				if(!is_array($value)) {
+					return true;
+				}
+
+				foreach($value as $file) {
+					$file_size = $file['size'];
+					$max_size = Upload::getMaxSize();
+
+					if($file_size > $max_size) {
+						return false;
+					}
+				}
+
+				return true;
 			}
 			case 'multiple': {
 				return is_array($value) ? true : false;
@@ -327,65 +454,10 @@ class Form {
 		return true;
 	}
 
-	private static function formatFields($fields, $income_data = []) {
-		if(self::$is_fields_formatted) {
-			return true;
-		}
-
-		foreach($fields as $field_name => $field_data) {
-			if(!isset($field_data['type'])) {
-				continue;
-			}
-
-			$income_value = @$income_data[$field_name];
-
-			$field_data['name'] = $field_name;
-			$field_data['value'] = isset($income_value) && $income_value === '' ? null : $income_value;
-			if(isset($field_data['multiple']) && $field_data['multiple'] && $field_data['value'] === null) {
-				$field_data['value'] = [];
-			}
-
-			switch($field_data['type']) {
-				case 'checkbox':
-				case 'switch': {
-					$field_data['value'] = $income_value == 'on' ? true : false;
-					break;
-				}
-				case 'file': {
-					// TODO
-					break;
-				}
-				case 'number':
-				case 'range': {
-					$field_data['value'] = isset($income_value) && $income_value !== '' && is_numeric($income_value) ? floatval($income_value) : null;
-					break;
-				}
-				case 'radio': {
-					$field_data['value'] = isset($income_value) && $income_value !== '' ? $income_value : null;
-					break;
-				}
-			}
-
-			self::$fields[$field_name] = $field_data;
-		}
-
-		return true;
-	}
-
-	public static function modifyFields($form_name) {
-		$form = self::load($form_name);
-
-		if(is_closure($form) || empty($form)) {
-			return false;
-		}
+	private static function modifyFields() {
+		self::uploadMediaFields();
 
 		foreach(self::$fields as $key => $field_data) {
-			if(isset($field_data['foreign'])) {
-				// TODO
-				unset(self::$fields[$key]);
-				continue;
-			}
-
 			if(isset($field_data['unset_null']) && $field_data['unset_null'] && empty($field_data['value'])) {
 				unset(self::$fields[$key]);
 				continue;
@@ -399,31 +471,32 @@ class Form {
 		return true;
 	}
 
-	public static function execute($action, $form_name, $item_id = null, $force_no_answer = false) {
-		self::clearExpired();
+	private static function uploadMediaFields() {
+		foreach(self::$fields as $key => $field_data) {
+			if($field_data['type'] !== 'file') {
+				continue;
+			}
 
-		$form = self::load($form_name);
+			$value = $field_data['value'];
 
-		$method = Request::$method;
-		$income_data =  Request::$$method;
+			if(empty($value)) {
+				self::$fields[$key]['value'] = null;
+				continue;
+			}
 
-		if(is_closure($form)) {
-			$data = new \stdClass();
-			$data->action = $action;
-			$data->form_name = $form_name;
-			$data->item_id = $item_id;
+			$upload = new Upload($value, @$field_data['folder'], @$field_data['extensions']);
 
-			$form($data, $income_data);
+			if(!$upload->result['status']) {
+				Server::answer(null, 'error', $upload->result['message'], 415);
+			}
 
-			exit;
+			if(!isset($field_data['multiple']) || !$field_data['multiple']) {
+				self::$fields[$key]['value'] = @$upload->result['files'][0];
+			}
+			else {
+				self::$fields[$key]['value'] = $upload->result['files'] ?? [];
+			}
 		}
-		else if(empty($form)) {
-			Server::answer(null, 'error', __('engine.form.unknown_error'), 406);
-		}
-
-		self::formatFields($form['fields'], $income_data);
-		self::checkFields($form_name);
-		self::processFields($action, $form_name, $item_id, $force_no_answer);
 
 		return true;
 	}
@@ -448,10 +521,7 @@ class Form {
 			'rowCount' => 0
 		];
 
-		if($action !== 'delete') {
-			self::modifyFields($form_name);
-			$form_data['columns'] = array_keys(self::$fields);
-		}
+		self::modifyFields();
 
 		$pk_statement = new Statement('SHOW KEYS FROM {' . $form_data['table'] . '} WHERE Key_name=\'PRIMARY\'');
 		$form_data['pk_name'] = $pk_statement->execute()->fetch()->Column_name;
@@ -469,42 +539,9 @@ class Form {
 			exit;
 		}
 
-		// TODO
-		// $fields_foreign = [];
-		// $fields_foreign_value = [];
-		// if($action !== 'delete') {
-		// 	foreach($form['fields'] as $field => $values_array) {
-		// 		if(isset($values_array['foreign']) && !empty($values_array['foreign'])) {
+		$foreign_data = self::getForeignFields();
 
-		// 			if(is_closure($values_array['foreign'])) {
-		// 				$fields_foreign[$field] = $values_array['foreign'];
-		// 			} else {
-		// 				$foreign_t = explode('@', $values_array['foreign'], 2);
-		// 				$foreign_k = explode('/', $foreign_t[1], 2);
-
-		// 				$foreign_table = $foreign_t[0];
-		// 				$foreign_key_1 = $foreign_k[0];
-		// 				$foreign_key_2 = $foreign_k[1];
-
-		// 				$fields_foreign[$field]['table'] = $foreign_table;
-		// 				$fields_foreign[$field]['key_1'] = $foreign_key_1;
-		// 				$fields_foreign[$field]['key_2'] = $foreign_key_2;
-		// 			}
-
-		// 			if(is_array($fields[$field])) {
-		// 				$fields_foreign_value[$field] = $fields[$field];
-		// 			} else if(@json_decode($fields[$field]) || $fields[$field] === '[]') {
-		// 				$fields_foreign_value[$field] = json_decode($fields[$field]) ?? [];
-		// 			} else if(!empty($fields[$field])) {
-		// 				$fields_foreign_value[$field] = array($fields[$field]);
-		// 			} else {
-		// 				$fields_foreign_value[$field] = [];
-		// 			}
-
-		// 			unset($fields[$field]);
-		// 		}
-		// 	}
-		// }
+		$form_data['columns'] = array_keys(self::$fields);
 
 		switch($action) {
 			case 'add': {
@@ -543,6 +580,8 @@ class Form {
 			$form_data['sql_binding'] = $form['modify_sql_binding']($form_data['sql_binding'], self::$fields, $form_data);
 		}
 
+		debug($form_data['sql_binding']);exit;
+
 		$statement = new Statement($form_data['sql']);
 		$statement->execute($form_data['sql_binding']);
 
@@ -552,38 +591,7 @@ class Form {
 			$form_data['item_id'] = $statement->insertId();
 		}
 
-		// foreach($fields_foreign as $field_name => $field) {
-		// 	if(is_closure($field)) {
-		// 		$data = new \stdClass();
-
-		// 		$data->fields = $fields;
-		// 		$data->form_data = $form_data;
-
-		// 		$field($fields_foreign_value[$field_name], $data);
-		// 	}
-		// 	else if(is_array($field)) {
-		// 		$sql = 'DELETE FROM {' . $field['table'] . '} WHERE ' . $field['key_1'] . ' = :' . $field['key_1'];
-
-		// 		$statement = new Statement($sql);
-		// 		$statement->execute([$field['key_1'] => $item_id]);
-
-		// 		if(empty($fields_foreign_value[$field_name])) {
-		// 			continue;
-		// 		}
-
-		// 		foreach($fields_foreign_value[$field_name] as $value) {
-		// 			$sql = '
-		// 				INSERT INTO {' . $field['table'] . '}
-		// 					(' . $field['key_1'] . ', ' . $field['key_2'] . ')
-		// 				VALUES
-		// 					(:' . $field['key_1'] . ', :' . $field['key_2'] . ')
-		// 			';
-
-		// 			$statement = new Statement($sql);
-		// 			$statement->execute([$field['key_1'] => $item_id, $field['key_2'] => $value]);
-		// 		}
-		// 	}
-		// }
+		self::processForeignFields($foreign_data, $form_data);
 
 		if(isset($form['execute_post']) && is_closure($form['execute_post'])) {
 			$form['execute_post']($form_data['rowCount'], self::$fields, $form_data);
@@ -603,130 +611,85 @@ class Form {
 		return true;
 	}
 
-	private static function clearExpired() {
-		$statement = new Statement('DELETE FROM {form} WHERE date_created <= DATE_SUB(NOW(), INTERVAL ' . intval(LIFETIME['form']) * 2 . ' SECOND)');
-		$statement->execute();
+	private static function getForeignFields() {
+		$data = [];
+
+		foreach(self::$fields as $key => $field_data) {
+			if(!isset($field_data['foreign']) || empty($field_data['foreign'])) {
+				continue;
+			}
+
+			$field_name = $field_data['name'];
+			$foreign = $field_data['foreign'];
+
+			$data[$field_name]['value'] = $field_data['value'];
+
+			if(is_closure($foreign)) {
+				$data[$field_name]['closure'] = $foreign;
+			}
+			else {
+				preg_match('/(\w+)\@(\w+)\/(\w+)/i', $foreign, $matches);
+
+				if(empty($matches) || count($matches) !== 4) {
+					continue;
+				}
+
+				$data[$field_name]['table'] = $matches[1];
+				$data[$field_name]['key_f'] = $matches[2];
+				$data[$field_name]['key_c'] = $matches[3];
+			}
+
+			unset(self::$fields[$key]);
+		}
+
+		return $data;
+	}
+
+	private static function processForeignFields($foreign_data, $form_data) {
+		if(empty($foreign_data) || empty($form_data)) {
+			return false;
+		}
+
+		foreach($foreign_data as $foreign) {
+			if(isset($foreign['closure']) && is_closure($foreign['closure'])) {
+				$foreign['closure']($foreign['value'], $form_data);
+			}
+			else if(isset($foreign['table']) && isset($foreign['key_f']) && isset($foreign['key_c'])) {
+				$table = $foreign['table'];
+				$key_f = $foreign['key_f'];
+				$key_c = $foreign['key_c'];
+				$value = $foreign['value'];
+				$item_id = $form_data['item_id'];
+
+				$sql = 'DELETE FROM {' . $table . '} WHERE ' . $key_c . ' = :' . $key_c;
+
+				$statement = new Statement($sql);
+				$statement->execute([$key_c => $item_id]);
+
+				if(empty($value)) {
+					continue;
+				}
+
+				$value = is_array($value) ? $value : [$value];
+
+				foreach($value as $v) {
+					$sql = '
+						INSERT INTO {' . $table . '}
+							(' . $key_c . ', ' . $key_f . ')
+						VALUES
+							(:' . $key_c . ', :' . $key_f . ')
+					';
+
+					$statement = new Statement($sql);
+					$statement->execute([$key_c => $item_id, $key_f => $v]);
+				}
+			}
+		}
 
 		return true;
 	}
 
-	public static function XXX_processFields($form_name) {
-		$form = self::load($form_name);
-
-		if(empty($form)) {
-			return [];
-		}
-
-		$post = Request::$post;
-		$files = Request::$files;
-		$fields = [];
-
-		foreach($form['fields'] as $field => $values_array) {
-			$field_value = null;
-
-			if(!isset($post[$field]) || empty($post[$field])) {
-				if(isset($values_array['boolean']) && $values_array['boolean']) {
-					$field_value = false;
-				}
-				if(isset($values_array['unset_null']) && $values_array['unset_null']) {
-					continue;
-				}
-
-				$fields[$field] = $field_value;
-			} else {
-				$field_value = $post[$field];
-				$is_field_formatted = false;
-
-				if(isset($values_array['boolean']) && $values_array['boolean']) {
-					$field_value = $field_value === 'null' ? false : true;
-					$is_field_formatted = true;
-				}
-				if(isset($values_array['html']) && $values_array['html']) {
-					$field_value = trim($field_value ?? '');
-					$is_field_formatted = true;
-				}
-				if(isset($values_array['json']) && $values_array['json']) {
-					$field_value = trim($field_value ?? '');
-					$is_field_formatted = true;
-				}
-				if(isset($values_array['foreign'])) {
-					$field_value = $field_value;
-					$is_field_formatted = true;
-				}
-				if(is_array($field_value)) {
-					$field_value = json_encode($field_value);
-					$is_field_formatted = true;
-				}
-
-				if(!$is_field_formatted) {
-					$field_value = trim($field_value ?? '');
-				}
-
-				$fields[$field] = $field_value;
-			}
-
-			if(isset($values_array['modify']) && is_closure($values_array['modify'])) {
-				$fields[$field] = $values_array['modify']($fields[$field]);
-			}
-		}
-
-		foreach($form['fields'] as $field => $values_array) {
-			if(isset($values_array['file']) && $values_array['file']) {
-
-				if(!isset($files[$field]) || empty($files[$field]['tmp_name'])) {
-					continue;
-				}
-
-				$files_array = [];
-				$is_multiple = false;
-
-				if(is_array($files[$field]['tmp_name'])) {
-					$is_multiple = true;
-					foreach($files[$field] as $key => $file) {
-						foreach($file as $num => $val) {
-							$files_array[$num][$key] = $val;
-						}
-					}
-				} else {
-					$files_array[] = $files[$field];
-				}
-
-				foreach($files_array as $file) {
-					if(empty($file['tmp_name'])) {
-						continue;
-					}
-
-					$upload = Upload::file($file, $values_array['folder'] ?? null, $values_array['extensions'] ?? null);
-
-					if($upload->status === true) {
-						if(!$is_multiple) {
-							$fields[$field] = $upload->message;
-							continue;
-						}
-
-						if(isset($fields[$field]) && !empty($fields[$field])) {
-							$fields[$field] = json_decode($fields[$field]);
-
-							if(!empty($fields[$field])) {
-								$fields[$field][] = $upload->message;
-							} else {
-								$fields[$field] = array($upload->message);
-							}
-						} else {
-							$fields[$field] = array($upload->message);
-						}
-
-						$fields[$field] = json_encode($fields[$field]);
-					} else {
-						Server::answer(null, 'error', $upload->message, 415);
-					}
-				}
-			}
-		}
-
-		return $fields;
-	}
-
+	// TODO move to Admin FormBuilder
 	public static function populateFiles($files = null) {
 		$output_array = [];
 
