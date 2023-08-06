@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	@@include('partial/external-link-norefer.js')
 	@@include('partial/protect-image.js')
 	@@include('partial/popover.js')
+	@@include('partial/responsive-table.js')
 	@@include('partial/tab.js')
 	@@include('partial/textarea.js')
 	@@include('partial/tooltip.js')

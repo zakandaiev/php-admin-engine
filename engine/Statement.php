@@ -7,6 +7,7 @@ use \PDOException;
 
 class Statement {
 	private $sql;
+	private $cache;
 	private $debug;
 	private $prefix;
 	private $statement;
@@ -14,8 +15,19 @@ class Statement {
 	private $is_paginating = false;
 	private $pagination = [];
 
-	public function __construct($sql, $debug = false) {
-		$this->debug = $debug;
+	public function __construct($sql, $cache = null, $debug = null) {
+		$is_cached = false;
+		$query_is_select = preg_match('/^\s*SELECT/mi', $sql) ? true : false;
+
+		if(isset($cache) && $cache && $query_is_select) {
+			$is_cached = true;
+		}
+		else if(!isset($cache) && $query_is_select && Module::getName() === 'public' && Setting::get('engine')->cache_db == 'true') {
+			$is_cached = true;
+		}
+
+		$this->cache = $is_cached;
+		$this->debug = isset($debug) && $debug ? true : false;
 
 		$this->prefix = DATABASE['prefix'];
 
@@ -151,7 +163,7 @@ class Statement {
 	}
 
 	public function execute($params = []) {
-		if($this->isCached()) {
+		if($this->cache) {
 			$this->addBinding($params);
 
 			if($this->debug) {
@@ -180,7 +192,7 @@ class Statement {
 
 			if(preg_match("/Duplicate entry .+ for key '(.+)'/", $error_message, $matches)) {
 				$error_message = str_replace(DATABASE['prefix'] . '_', '', $matches[1]);
-				$error_message = 'duplicate:' . $error_message;
+				$error_message = 'duplicate.' . $error_message;
 			}
 
 			if(Request::$method === 'get') {
@@ -200,21 +212,9 @@ class Statement {
 		return $this;
 	}
 
-	private function isCached() {
-		$is_cached = false;
-
-		if(Module::getName() === 'public' && Setting::get('engine')->cache_db == 'true') {
-			if(preg_match('/^\s*SELECT/mi', $this->sql)) {
-				$is_cached = true;
-			}
-		}
-
-		return $is_cached;
-	}
-
 	private function fetchCache($type, $mode) {
-		if($this->isCached()) {
-			$cache_key = implode('@', $this->binding) . '@' . $this->sql;
+		if($this->cache) {
+			$cache_key =  $this->sql . '@' . json_encode($this->binding);
 
 			$cache = Cache::get($cache_key);
 

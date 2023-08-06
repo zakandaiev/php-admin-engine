@@ -109,8 +109,9 @@ class Upload {
 			return false;
 		}
 
-		// TODO
-		// Log::write(Path::url() . '/' . $path_file . ' uploaded from IP: ' . Request::$ip, 'upload');
-		// Hook::run('upload', $path_file);
+		$user_id = @User::get()->id ?? 'unlogged';
+		$user_ip = Request::$ip;
+		Log::write(Path::url() . "/$path_file uploaded by user ID: $user_id from IP: $user_ip", 'upload');
+		Hook::run('upload', $path_file);
 	}
 }

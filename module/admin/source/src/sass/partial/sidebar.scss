@@ -9,6 +9,10 @@
 	transition: var(--transition);
 	overflow: hidden auto;
 
+	& ~ .page-content__inner {
+		max-width: calc(100% - 26rem);
+	}
+
 	&::-webkit-scrollbar {
 		width: 6px;
 		height: 6px;

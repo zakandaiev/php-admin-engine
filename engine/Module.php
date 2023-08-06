@@ -191,7 +191,7 @@ class Module {
 		// if(file_put_contents($config_file, $config_content, LOCK_EX)) {
 		// 	if(!$is_edited) {
 		// 		Log::write('Module: ' . $name. ' edited by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'module');
-		// 		Hook::run('module_update', $name);
+				Hook::run('module.update', $name);
 		// 	}
 
 		// 	$is_edited = true;
@@ -205,7 +205,7 @@ class Module {
 	public static function delete($name) {
 		// Log::write('Module: ' . $name. ' deleted by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'module');
 
-		// Hook::run('module_delete', $name);
+		Hook::run('module.delete', $name);
 
 		// return rmdir_recursive(Path::file('module') . '/' . $name);
 	}
@@ -226,7 +226,7 @@ class Module {
 
 		// Log::write('Module: ' . $name. ' installed by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'module');
 
-		// Hook::run('module_install', $name);
+		Hook::run('module.install', $name);
 
 		return true;
 	}
@@ -247,7 +247,7 @@ class Module {
 
 		// Log::write('Module: ' . $name. ' uninstalled by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'module');
 
-		// Hook::run('module_uninstall', $name);
+		Hook::run('module.uninstall', $name);
 
 		return true;
 	}

@@ -580,8 +580,6 @@ class Form {
 			$form_data['sql_binding'] = $form['modify_sql_binding']($form_data['sql_binding'], self::$fields, $form_data);
 		}
 
-		debug($form_data['sql_binding']);exit;
-
 		$statement = new Statement($form_data['sql']);
 		$statement->execute($form_data['sql_binding']);
 
@@ -687,33 +685,5 @@ class Form {
 		}
 
 		return true;
-	}
-
-	// TODO move to Admin FormBuilder
-	public static function populateFiles($files = null) {
-		$output_array = [];
-
-		if(empty($files)) {
-			return json_encode($output_array);
-		}
-
-		if(is_array($files)) {
-			$files_array = $files;
-		} else if($files[0] === "[") {
-			$files_array = json_decode($files);
-		} else {
-			$files_array = array($files);
-		}
-
-		foreach($files_array as $file) {
-			$poster = Request::$base . '/' . $file;
-
-			$output_array[] = [
-				'value' => $file,
-				'poster' => $poster
-			];
-		}
-
-		return json_encode($output_array);
 	}
 }

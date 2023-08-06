@@ -62,7 +62,7 @@ class Mail {
 		$data->from = $from;
 		$data->headers = $headers;
 
-		Hook::run('mail_send', $data);
+		Hook::run('mail.send', $data);
 
 		return mail($recepient, $subject, $message, $headers);
 	}

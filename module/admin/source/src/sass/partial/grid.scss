@@ -62,6 +62,13 @@ $breakpoints_for_max_width: (
 			}
 		}
 
+		// ORDERS
+		@for $i from 1 through 12 {
+			.order-#{$bp}-#{$i} {
+				order: $i;
+			}
+		}
+
 		// GAPS - XY
 		.row.gap-#{$bp} {
 			margin: calc(-1 * var(--gap) / 2);

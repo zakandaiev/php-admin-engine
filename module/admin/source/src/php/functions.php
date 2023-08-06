@@ -3,7 +3,7 @@
 ############################# ASSETS #############################
 Asset::css('css/air-datepicker');
 Asset::css('css/fancybox');
-// Asset::css('css/filepond');
+Asset::css('css/filepond');
 Asset::css('css/modal');
 Asset::css('css/slimselect');
 Asset::css('css/toast');
@@ -15,12 +15,12 @@ Asset::js('js/chart', 'defer');
 Asset::js('js/cyr-to-lat', 'defer');
 Asset::js('js/data-copy', 'defer');
 Asset::js('js/fancybox', 'defer');
-// Asset::js('js/filepond', 'defer');
+Asset::js('js/filepond', 'defer');
 Asset::js('js/form', 'defer');
 Asset::js('js/maska', 'defer');
 Asset::js('js/modal', 'defer');
 Asset::js('js/slimselect', 'defer');
-// Asset::js('js/sortable', 'defer');
+Asset::js('js/sortable', 'defer');
 Asset::js('js/toast', 'defer');
 Asset::js('js/wysiwyg', 'defer');
 // Asset::js('js/load-more', 'defer');
@@ -269,73 +269,13 @@ Breadcrumb::setOption('homepage_url', '/admin/dashboard');
 // 	return preg_replace('/(\[.*\]) (-)/miu', $replacement, trim($body ?? ''));
 // }
 
-// ############################# HELPERS #############################
-// function icon_boolean($value = null) {
-// 	$icon = 'x';
+############################# HELPERS #############################
+function icon_boolean($value = null) {
+	$icon = 'x';
 
-// 	if($value) {
-// 		$icon = 'check';
-// 	}
+	if($value) {
+		$icon = 'check';
+	}
 
-// 	return '<i class="align-middle" data-feather="' . $icon . '"></i>';
-// }
-
-// function table_actions($edit_url = null, $delete_attributes = [], $icons = []) {
-// 	$edit = '';
-// 	$delete = '';
-
-// 	$edit_icon = $icons['edit'] ?? 'edit';
-// 	$delete_icon = $icons['delete'] ?? 'trash';
-
-// 	if(!empty($edit_url)) {
-// 		$edit = '<a href="' . $edit_url .'"><i data-feather="' . $edit_icon . '"></i></a>';
-// 	}
-
-// 	if(!empty($delete_attributes)) {
-// 		$delete = '<a';
-
-// 		foreach($delete_attributes as $attribute => $value) {
-// 			if(empty($attribute)) {
-// 				continue;
-// 			}
-
-// 			$delete .= ' ' . $attribute . '="' . html($value) . '"';
-// 		}
-
-// 		$delete .= ' href="#"><i data-feather="' . $delete_icon . '"></i></a>';
-// 	}
-
-// 	return $edit . ' ' . $delete;
-// }
-
-// function locale_script($folder) {
-// 	$base = Path::file('asset') . '/js/locale/' . $folder . '/';
-
-// 	$url = '';
-
-// 	$path = $base . site('language_current') . '.js';
-// 	if(is_file($path)) {
-// 		$url = str_replace(ROOT_DIR, Path::url(), $path);
-// 	}
-
-// 	$path = $base . sprintf('%s_%s', site('language_current'), lang(site('language_current'), 'region')) . '.js';
-// 	if(is_file($path)) {
-// 		$url = str_replace(ROOT_DIR, Path::url(), $path);
-// 	}
-
-// 	$path = $base . sprintf('%s-%s', site('language_current'), strtolower(lang(site('language_current'), 'region'))) . '.js';
-// 	if(is_file($path)) {
-// 		$url = str_replace(ROOT_DIR, Path::url(), $path);
-// 	}
-
-// 	$path = $base . sprintf('%s_%s', site('language_current'), strtolower(lang(site('language_current'), 'region'))) . '.js';
-// 	if(is_file($path)) {
-// 		$url = str_replace(ROOT_DIR, Path::url(), $path);
-// 	}
-
-// 	if(empty($url)) {
-// 		return null;
-// 	}
-
-// 	return sprintf('<script src="%s"></script>', $url);
-// }
+	return '<i class="icon icon-' . $icon . '"></i>';
+}

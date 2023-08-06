@@ -115,9 +115,9 @@ class User {
 
 		// Notification::create('user_authorize', $user->id, ['ip' => $user->ip]);
 
-		// Log::write('User ID: ' . $user->id . ' logged in from IP: ' . $user->ip, 'user');
+		Log::write("User ID: {$user->id} logged in from IP: {$user->ip}", 'user');
 
-		// Hook::run('user_authorize', $user);
+		Hook::run('user.authorize', $user);
 
 		return true;
 	}
@@ -125,9 +125,11 @@ class User {
 	public static function unauthorize() {
 		// Session::unsetCookie(COOKIE_KEY['auth']);
 
-		// Log::write('User ID: ' . self::$current->id . ' logged out from IP: ' . Request::$ip, 'user');
+		$user_id = self::$current->id;
+		$user_ip = Request::$ip;
+		Log::write("User ID: $user_id logged out from IP: $user_ip", 'user');
 
-		// Hook::run('user_unauthorize', self::$current);
+		Hook::run('user.unauthorize', self::$current);
 
 		// self::$current = new \stdClass();
 		// self::$current->authorized = false;
@@ -162,9 +164,9 @@ class User {
 
 		// Mail::send('Register', $user->email, $user);
 
-		// Log::write('User ID: ' . $user->id . ' registered from IP: ' . $user->ip, 'user');
+		Log::write("User ID: {$user->id} registered from IP: {$user->ip}", 'user');
 
-		// Hook::run('user_register', $user);
+		Hook::run('user.register', $user);
 
 		return true;
 	}
@@ -196,9 +198,10 @@ class User {
 
 		// Mail::send('Restore', $email, $user);
 
-		// Log::write('User ID: ' . $user->id . ' restored password from IP: ' . Request::$ip, 'user');
+		$user_ip = Request::$ip;
+		Log::write("User ID: {$user->id} restored password from IP: $user_ip", 'user');
 
-		// Hook::run('user_restore', $user);
+		Hook::run('user.restore', $user);
 
 		return true;
 	}
@@ -214,10 +217,12 @@ class User {
 
 		// $statement->execute($binding);
 
-		// Log::write('User ID: ' . $id . ' updated ' . $key . ' from IP: ' . Request::$ip, 'user');
+		$user_ip = Request::$ip;
 
-		// Hook::run('user_update', $id);
-		// Hook::run('user_update_' . $key, $id);
+		Log::write("User ID: $id updated $key from IP: $user_ip", 'user');
+
+		Hook::run('user.update', $id);
+		Hook::run('user.update.' . $key, $id);
 
 		return true;
 	}
@@ -229,9 +234,11 @@ class User {
 
 		// $statement->execute(['id' => $id]);
 
-		// Log::write('User ID: ' . $id . ' deleted from IP: ' . Request::$ip, 'user');
+		$user_ip = Request::$ip;
 
-		// Hook::run('user_delete', $id);
+		Log::write("User ID: $id deleted from DB from IP: $user_ip", 'user');
+
+		Hook::run('user.delete', $id);
 
 		return true;
 	}

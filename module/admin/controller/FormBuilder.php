@@ -4,6 +4,7 @@ namespace Module\Admin\Controller;
 
 use \Engine\Form;
 use \Engine\Path;
+use \Engine\Request;
 
 class FormBuilder {
 	protected $form_name;
@@ -185,17 +186,24 @@ class FormBuilder {
 			}
 
 			if($attr === 'extensions') {
-				$attr_value = array_map(function($v) {
-					return '.' . $v;
+				$mime_map = include_once __DIR__ . '/FormBuilder/extension_to_mime.php';
+
+				$accept = array_map(function($v) use($mime_map) {
+					return $mime_map[$v] ?? '.' . $v;
 				}, $attr_value);
-				$attributes[$attr] = 'accept="' . implode(',', $attr_value) . '"';
+
+				$accept = implode(',', array_unique($accept));
+
+				$attributes[$attr] = 'accept="' . $accept . '"';
+
 				continue;
 			}
 
 			$attributes[$attr] = $attr . '="' . addcslashes(strval($attr_value), '"') . '"';
 		}
 
-		$value = isset($field['value']) && is_scalar($field['value']) ? addcslashes(strval($field['value']), '"') : @$field['value'];
+		$value = $field['value'] ?? $field['default'] ?? null;
+		$value = is_scalar($value) ? addcslashes(strval($value), '"') : $value;
 
 		// FORMAT ATTRIBUTES & INIT HTML BY RIGHT TAG
 		switch($field['type']) {
@@ -229,10 +237,12 @@ class FormBuilder {
 				break;
 			}
 			case 'date': {
+				// TODO
 				$html .= '';
 				break;
 			}
 			case 'datetime': {
+				// TODO
 				$html .= '';
 				break;
 			}
@@ -242,8 +252,21 @@ class FormBuilder {
 				break;
 			}
 			case 'file': {
-				// TODO
-				$html .= '<input type="file" ' . implode(' ', $attributes) . '>';
+				$value = is_array($value) ? $value : ($value ? [$value] : []);
+
+				$value = array_map(function($v) {
+					return [
+						'value' => $v,
+						'poster' => Request::$base . '/' . $v
+					];
+				}, $value);
+
+				$value = !empty($value) ? json_encode($value, JSON_UNESCAPED_SLASHES) : '';
+
+				$value = $value ? " data-value='$value'" : '';
+
+				$html .= '<input type="file" ' . implode(' ', $attributes) . $value . '>';
+
 				break;
 			}
 			case 'hidden': {
@@ -252,6 +275,7 @@ class FormBuilder {
 				break;
 			}
 			case 'month': {
+				// TODO
 				$html .= '';
 				break;
 			}
@@ -266,14 +290,17 @@ class FormBuilder {
 				break;
 			}
 			case 'radio': {
+				// TODO
 				$html .= '';
 				break;
 			}
 			case 'range': {
+				// TODO
 				$html .= '';
 				break;
 			}
 			case 'tel': {
+				// TODO
 				$html .= '';
 				break;
 			}
@@ -283,10 +310,12 @@ class FormBuilder {
 				break;
 			}
 			case 'time': {
+				// TODO
 				$html .= '';
 				break;
 			}
 			case 'url': {
+				// TODO
 				$html .= '';
 				break;
 			}
@@ -296,6 +325,7 @@ class FormBuilder {
 				break;
 			}
 			case 'wysiwyg': {
+				// TODO
 				$html .= '';
 				break;
 			}

@@ -17,7 +17,7 @@ class Cache {
 
 		$key = md5($key);
 
-		$path = $path . '/' . $key . '.' . trim(trim(CACHE['extension']), '.');
+		$path = $path . '/' . $key . '.' . trim(CACHE['extension'], '.');
 
 		$content[self::CACHE_KEY['data']] = $data;
 		$content[self::CACHE_KEY['expires']] = time() + intval($lifetime ?? LIFETIME['cache']);
@@ -31,13 +31,15 @@ class Cache {
 			throw new \Exception(sprintf('Cache error: %s.', $error->getMessage()));
 		}
 
-		Log::write('Cache: ' . $key . ' created from IP: ' . Request::$ip, 'cache');
+		$user_id = @User::get()->id ?? 'unlogged';
+		$user_ip = Request::$ip;
+		Log::write("Cache key: $key created by user ID: $user_id from IP: $user_ip", 'cache');
 
 		return true;
 	}
 
 	public static function get($key) {
-		$path = Path::file('cache') . '/' . md5($key) . '.' . trim(trim(CACHE['extension']), '.');
+		$path = Path::file('cache') . '/' . md5($key) . '.' . trim(CACHE['extension'], '.');
 
 		if(is_file($path)) {
 			$content = unserialize(file_get_contents($path));
@@ -53,7 +55,7 @@ class Cache {
 	public static function delete($key) {
 		$key = md5($key);
 
-		$path = Path::file('cache') . '/' . $key . '.' . trim(trim(CACHE['extension']), '.');
+		$path = Path::file('cache') . '/' . $key . '.' . trim(CACHE['extension'], '.');
 
 		if(!is_file($path)) {
 			return false;
@@ -61,7 +63,9 @@ class Cache {
 
 		unlink($path);
 
-		Log::write('Cache: ' . $key . ' deleted from IP: ' . Request::$ip, 'cache');
+		$user_id = @User::get()->id ?? 'unlogged';
+		$user_ip = Request::$ip;
+		Log::write("Cache key: $key deleted by user ID: $user_id from IP: $user_ip", 'cache');
 
 		return true;
 	}
@@ -76,14 +80,16 @@ class Cache {
 		foreach(scandir($path) as $file) {
 			if(in_array($file, ['.', '..'], true)) continue;
 
-			if(file_extension($file) !== trim(trim(CACHE['extension']), '.')) continue;
+			if(file_extension($file) !== trim(CACHE['extension'], '.')) continue;
 
 			unlink($path . '/' . $file);
 		}
 
-		Log::write('Cache: flushed from IP: ' . Request::$ip, 'cache');
+		$user_id = @User::get()->id ?? 'unlogged';
+		$user_ip = Request::$ip;
+		Log::write("Cache: flushed by user ID: $user_id from IP: $user_ip", 'cache');
 
-		Hook::run('cache_flush');
+		Hook::run('cache.flush');
 
 		return true;
 	}

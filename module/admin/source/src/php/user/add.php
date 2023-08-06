@@ -11,6 +11,14 @@ Breadcrumb::add($title);
 
 $form_builder = new FormBuilder('user/add');
 $form_attributes = 'data-redirect="' . site('url_language') . '/admin/user" data-validate';
+
+$form_builder->setFieldValue('group', array_map(function($group) {
+	$t = new \stdClass();
+	$t->value = $group->id;
+	$t->name = $group->name;
+	$t->selected = false;
+	return $t;
+}, $groups));
 ?>
 
 <?php Theme::header(); ?>
@@ -24,7 +32,7 @@ $form_attributes = 'data-redirect="' . site('url_language') . '/admin/user" data
 	<section class="section section_grow section_offset">
 		<div class="container-fluid">
 
-			<?php Theme::breadcrumb() ?>
+			<?php Theme::breadcrumb(); ?>
 
 			<h2 class="section__title">
 				<span><?= $title ?></span>

@@ -1,10 +1,6 @@
 <?php
 
-namespace Engine\Database;
-
-use Engine\Hash;
-use Engine\Path;
-use Engine\Request;
+namespace Engine;
 
 class Filter {
 	public $sql;

@@ -1,15 +1,15 @@
 <?php
 
 ############################# SET DATA #############################
-Hook::setData('dummy_key', 'dummy_data');
+Hook::setData('dummy.key', 'dummy.data');
 
 ############################# GET DATA #############################
-debug(Hook::getData('dummy_key'));
+debug(Hook::getData('dummy.key'));
 
 ############################# REGISTER #############################
-Hook::register('dummy_hook', function($data1, $data2) {
+Hook::register('dummy.hook', function($data1, $data2) {
 	debug($data1, $data2);
 });
 
 ############################# RUN #############################
-Hook::run('dummy_hook', 'Hook dummy_hook is running', 'Yeah!');
+Hook::run('dummy.hook', 'Hook dummy.hook is running', 'Yeah!');

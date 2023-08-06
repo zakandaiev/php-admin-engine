@@ -41,12 +41,12 @@ $form_builder->setFieldValue('group', array_map(function($group) use ($user) {
 	<section class="section section_grow section_offset">
 		<div class="container-fluid">
 
-			<?php Theme::breadcrumb() ?>
+			<?php Theme::breadcrumb(); ?>
 
 			<h2 class="section__title">
 				<span><?= $title ?></span>
 				<?php if($user->date_edited): ?>
-				<span class="label label_info align-self-center"><?= __('admin.user.last_edit', format_date($user->date_edited)) ?></span>
+				<span class="label label_info align-self-center"><?= __('admin.user.last_edit_at', format_date($user->date_edited)) ?></span>
 				<?php endif; ?>
 			</h2>
 

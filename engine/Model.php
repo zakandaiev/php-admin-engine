@@ -35,11 +35,12 @@ abstract class Model {
 			$sql = preg_replace($replacement_pattern, $replacement, $sql);
 		}
 
-		$options['limit'] = $options['limit'] ?? false;
-		$options['offset'] = $options['offset'] ?? false;
-		$options['filter'] = $options['filter'] ?? false;
-		$options['paginate'] = $options['paginate'] ?? false;
-		$options['debug'] = $options['debug'] ?? false;
+		$options['limit'] = @$options['limit'];
+		$options['offset'] = @$options['offset'];
+		$options['filter'] = @$options['filter'];
+		$options['paginate'] = @$options['paginate'];
+		$options['cache'] = @$options['cache'];
+		$options['debug'] = @$options['debug'];
 
 		if($options['limit'] && !$options['paginate']) {
 			$sql .= " LIMIT {$options['limit']}";
@@ -49,7 +50,7 @@ abstract class Model {
 			$sql .= " OFFSET {$options['offset']}";
 		}
 
-		$statement = new Statement($sql, $options['debug']);
+		$statement = new Statement($sql, $options['cache'], $options['debug']);
 
 		if($options['filter']) {
 			$statement->filter($options['filter']);

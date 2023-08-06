@@ -185,8 +185,8 @@
 									</div>
 
 									<div class="input-group">
-										<input type="text" placeholder="Search">
-										<a href="#">Go!</a>
+										<span><i class="icon icon-calendar"></i></span>
+										<input type="text" data-picker="date">
 									</div>
 
 									<div class="input-group">

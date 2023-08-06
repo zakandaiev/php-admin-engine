@@ -46,11 +46,11 @@ class Theme {
 	// 	self::loadTemplate(__FUNCTION__, $name, $data);
 	// }
 
-	// public static function pagination($name = '', $data = []) {
-	// 	$data[__FUNCTION__] = Pagination::getInstance();
+	public static function pagination($name = '', $data = []) {
+		$data[__FUNCTION__] = Pagination::getInstance();
 
-	// 	self::loadTemplate(__FUNCTION__, $name, $data);
-	// }
+		self::loadTemplate(__FUNCTION__, $name, $data);
+	}
 
 	private static function loadTemplate($type, $name = '', $data = []) {
 		$file = self::detectNameFile($name, $type);

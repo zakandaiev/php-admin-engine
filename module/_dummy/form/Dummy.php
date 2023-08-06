@@ -9,6 +9,7 @@ $all_checks = [
 	'max' => 100, // depends on type, for type number - int, for type date - string
 	'regex' => '/^[\w\d ]+$/iu', // for any type except file
 	'multiple' => true|false, // for select|checkbox|date|datetime|month|file
+	'default' => null, // default value
 	'range' => true|false, // for date|datetime|month
 	'extensions' => ['jpg','png'], // for file
 	'folder' => 'subfolder', // for file

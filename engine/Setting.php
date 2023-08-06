@@ -26,10 +26,12 @@ class Setting {
 
 		$statement->execute($params);
 
-		// TODO
-		// Log::write('Setting: ' . $name . ' changed by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'setting');
-		// Hook::run('setting_update', $params);
-		// Hook::run('setting_update_' . $name, $params);
+		$user_id = @User::get()->id ?? 'unlogged';
+		$user_ip = Request::$ip;
+		Log::write("Setting: $name changed by user ID: $user_id from IP: $user_ip", 'setting');
+
+		Hook::run('setting.update', $params);
+		Hook::run('setting.update.' . $name, $params);
 
 		return true;
 	}

@@ -28,6 +28,19 @@ table {
 
 .table {
 
+	a {
+		color: var(--color-text);
+
+		&:hover, &:focus, &:active {
+			color: var(--color-heading);
+		}
+	}
+
+	// .table_fixed
+	&_fixed {
+		table-layout: fixed;
+	}
+
 	// .table_align-top
 	&_align-top {
 		th, td {
@@ -67,19 +80,27 @@ table {
 		}
 	}
 
-	// .table__action
-	&__action {
+	// .table__actions
+	&__actions {
+		max-width: 9rem;
+		min-width: 9rem;
 		width: 9rem;
 		text-align: right;
+	}
 
-		a {
-			@extend %reset-btn;
-			font-size: 1.8rem;
-			cursor: pointer;
+	// .table__action
+	&__action {
+		@extend %reset-btn;
+		display: inline-block;
+		width: 1.8rem;
+		height: 1.8rem;
+		font-size: 1.8rem;
+		color: var(--color-text);
+		cursor: pointer;
 
-			&:hover, &:focus, &:active {
-				text-decoration: none;
-			}
+		&:hover, &:focus, &:active {
+			color: var(--color-heading);
+			text-decoration: none;
 		}
 	}
 

@@ -135,82 +135,71 @@ function placeholder_avatar($path) {
 }
 
 ############################# DATE #############################
-function format_date($date = null, $format = null) {
+function format_date($date = null, $format = 'd.m.Y') {
 	$timestamp = $date ?? time();
 	$timestamp = is_numeric($timestamp) ? $timestamp : strtotime($timestamp);
-	return isset($format) ? date($format, $timestamp) : date('d.m.Y', $timestamp) . ' ' . date('H:i', $timestamp);
+	return date($format, $timestamp);
 }
 
-// TODO
-// function format_date_input($date = null) {
-// 	return format_date($date, 'Y-m-d') . 'T' . format_date($date, 'H:i:s');
-// }
+function date_when($date = null, $format = 'd.m.Y') {
+	$timestamp = $date ?? time();
+	$timestamp = is_numeric($date) ? $date : strtotime($date ?? time());
 
-// function date_when($date, $format = null) {
-// 	$fmt = $format ?? 'd.m.Y';
-// 	$timestamp = is_numeric($date) ? $date : strtotime($date ?? time());
+	$date_day = date('d.m.Y', $timestamp);
+	$today = date('d.m.Y');
+	$yesterday = date('d.m.Y', mktime(0, 0, 0, date('m'), date('d') - 1, date('Y')));
 
-// 	$getdata = date('d.m.Y', $timestamp);
-// 	$yesterday = date('d.m.Y', mktime(0, 0, 0, date('m'), date('d') - 1, date('Y')));
+	if($date_day === $today) {
+		$date = __('engine.date.today_at', date('H:i', $timestamp));
+	}
+	if($yesterday === $date_day) {
+		$date = __('engine.date.yesterday_at', date('H:i', $timestamp));
+	}
+	else {
+		$date = format_date($timestamp, $format);
+	}
 
-// 	if($getdata === date('d.m.Y')) {
-// 		$date = __('engine.date.today_at') . ' ' . date('H:i', $timestamp);
-// 	}
-// 	else {
-// 		if($yesterday === $getdata) {
-// 			$date = __('engine.date.yesterday_at') . ' ' . date('H:i', $timestamp);
-// 		}
-// 		else {
-// 			$date = format_date($timestamp, $format);
-// 		}
-// 	}
+	return $date;
+}
 
-// 	return $date;
-// }
+function date_left($date) {
+	$now = time();
+	$then = is_numeric($date) ? $date : strtotime($date ?? time());
 
-// function decl_of_num($number, $titles) {
-// 	$cases = array(2, 0, 1, 1, 1, 2);
-// 	return $number . ' ' . $titles[4 < $number % 100 && $number % 100 < 20 ? 2 : $cases[min($number % 10, 5)]];
-// }
+	if($then - $now < 0) {
+		return __('engine.date.left.expired');
+	}
 
-// function date_left($date) {
-// 	$now = time();
-// 	$then = is_numeric($date) ? $date : strtotime($date ?? time());
+	$difference = abs($then - $now);
+	$left = [];
 
-// 	if($then - $now < 0) {
-// 		return __('engine.date.the_term_has_expired');
-// 	}
+	$month = floor($difference / 2592000);
+	if(0 < $month) {
+		$left['month'] = __('engine.date.left.month', $month);
+	}
 
-// 	$difference = abs($then - $now);
-// 	$left = [];
+	$days = floor($difference / 86400) % 30;
+	if(0 < $days) {
+		$left['days'] = __('engine.date.left.days', $days);
+	}
 
-// 	$month = floor($difference / 2592000);
-// 	if(0 < $month) {
-// 		$left['month'] = decl_of_num($month, array(__('month_nominative'), __('month_singular'), __('month_plural')));
-// 	}
+	$hours = floor($difference / 3600) % 24;
+	if(0 < $hours) {
+		$left['hours'] = __('engine.date.left.hours', $hours);
+	}
 
-// 	$days = floor($difference / 86400) % 30;
-// 	if(0 < $days) {
-// 		$left['days'] = decl_of_num($days, array(__('day_nominative'), __('day_singular'), __('day_plural')));
-// 	}
+	$minutes = floor($difference / 60) % 60;
+	if(0 < $minutes) {
+		$left['minutes'] = __('engine.date.left.minutes', $minutes);
+	}
 
-// 	$hours = floor($difference / 3600) % 24;
-// 	if(0 < $hours) {
-// 		$left['hours'] = decl_of_num($hours, array(__('hour_nominative'), __('hour_singular'), __('hour_plural')));
-// 	}
+	if(0 < count($left)) {
+		$datediff = implode(' ', $left);
+		return $datediff;
+	}
 
-// 	$minutes = floor($difference / 60) % 60;
-// 	if(0 < $minutes) {
-// 		$left['minutes'] = decl_of_num($minutes, array(__('minute_nominative'), __('minute_singular'), __('minute_plural')));
-// 	}
-
-// 	if(0 < count($left)) {
-// 		$datediff = implode(' ', $left);
-// 		return $datediff;
-// 	}
-
-// 	return __('engine.date.a_few_seconds');
-// }
+	return __('engine.date.left.few_seconds');
+}
 
 ############################# TEXT #############################
 function html($text = ''){

@@ -18,6 +18,8 @@ class User {
 
 		$users = $users->filter('User', 'WHERE')->paginate()->execute()->fetchAll();
 
+		$users = array_map(function($user) { return \Engine\User::format($user); }, $users);
+
 		return $users;
 	}
 

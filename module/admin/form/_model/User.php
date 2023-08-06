@@ -15,7 +15,7 @@ $email = [
 	'max' => 200,
 	'label' => __('admin.user.email'),
 	'placeholder' => __('admin.user.enter_email'),
-	'col_class' => 'col-xs-12 col-md-6'
+	'col_class' => 'col-xs-12 col-md-6 col-lg-3'
 ];
 $password = [
 	'type' => 'password',
@@ -27,7 +27,7 @@ $password = [
 	},
 	'label' => __('admin.user.password'),
 	'placeholder' => __('admin.user.enter_password'),
-	'col_class' => 'col-xs-12 col-md-6'
+	'col_class' => 'col-xs-12 col-md-6 col-lg-3'
 ];
 $name = [
 	'type' => 'text',
@@ -37,14 +37,14 @@ $name = [
 	'regex' => '/^[\w ]+$/iu',
 	'label' => __('admin.user.name'),
 	'placeholder' => __('admin.user.enter_name'),
-	'col_class' => 'col-xs-12 col-md-6'
+	'col_class' => 'col-xs-12 col-md-6 col-lg-3'
 ];
 $avatar = [
 	'type' => 'file',
 	'extensions' => ['jpg','jpeg','png','svg'],
 	'label' => __('admin.user.avatar'),
 	'placeholder' => __('admin.user.enter_avatar'),
-	'col_class' => 'col-xs-12 col-md-6'
+	'col_class' => 'col-xs-12 col-md-6 col-lg-3'
 ];
 $setting = [
 	'type' => 'textarea',
@@ -54,6 +54,7 @@ $setting = [
 ];
 $is_enabled = [
 	'type' => 'switch',
+	'default' => true,
 	'label' => __('admin.user.is_enabled'),
 	'col_class' => 'col-xs-12'
 ];
