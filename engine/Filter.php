@@ -21,6 +21,9 @@ class Filter {
 	}
 
 	public function __construct($name) {
+		// TODO
+		return $this;
+
 		$this->name = strval($name);
 
 		$this->load();

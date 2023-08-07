@@ -35,13 +35,14 @@ $all_checks = [
 		// execute some sql queries here
 	},
 
-	// RENDER
-	'autofocus' => true|false, // used only in form-builder
-	'label' => 'This is label', // used only in form-builder
-	'label_class' => 'label-class-1 label-class-2 ...', // used only in form-builder
-	'label_html' => '<label>Some label</label>', // used only in form-builder
-	'placeholder' => '', // used only in form-builder
-	'col_class' => 'col-xs-12 col-lg-6', // used only in form-builder
+	// RENDER - used only in form-builder
+	'autofocus' => true|false,
+	'label' => 'This is label',
+	'label_class' => 'label-class-1 label-class-2 ...',
+	// or
+	'label_html' => '<label>Some label</label>',
+	'placeholder' => '',
+	'col_class' => 'col-xs-12 col-lg-6',
 	'pattern' => '', // for any type except file
 ];
 

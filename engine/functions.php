@@ -423,27 +423,50 @@ function is_closure($i) {
 	return $i instanceof \Closure;
 }
 
-function filter_link($key, $value, $text) {
-	$link = site('permalink') . '?' . $key . '=' . urlencode($value);
+function link_filter($key, $value) {
+	$query = Request::$get;
 
-	foreach(Request::$get as $get_key => $get_value) {
-		if($get_key === $key) continue;
-		$link .= '&' . $get_key . '=' . urlencode($get_value);
-	}
+	$query[$key] = $value;
 
-	return '<a href="' . $link . '">' . $text . '</a>';
+	$query = http_build_query($query);
+
+	$query = !empty($query) ? '?' . $query : '';
+
+	return site('permalink') . $query;
 }
 
-function sort_link($key, $text) {
-	$sort = (Request::get($key) === 'desc') ? 'asc' : 'desc';
+function link_unfilter($key) {
+	$query = Request::$get;
 
-	$link = site('permalink') . '?' . $key . '=' . $sort;
+	unset($query[$key]);
 
-	if(Request::has('back')) {
-		$link .= '&back=' . urlencode(Request::get('back'));
+	$query = http_build_query($query);
+
+	$query = !empty($query) ? '?' . $query : '';
+
+	return site('permalink') . $query;
+}
+
+function link_sort($key) {
+	$query = Request::$get;
+
+	foreach($query as $k => $v) {
+		if($v === 'asc' || $v === 'desc') {
+			unset($query[$k]);
+		}
 	}
 
-	return '<a href="' . $link . '">' . $text . '</a>';
+	$value = Request::get($key) === 'asc' ? 'desc' : (Request::get($key) === 'desc' ? '' : 'asc');
+
+	if(!empty($value)) {
+		$query[$key] = $value;
+	}
+
+	$query = http_build_query($query);
+
+	$query = !empty($query) ? '?' . $query : '';
+
+	return site('permalink') . $query;
 }
 
 function numerical_noun_form($number) {

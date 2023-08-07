@@ -15,6 +15,31 @@
 	text-overflow: ellipsis;
 	overflow: hidden;
 
+	// .label__close
+	&__close {
+		position: absolute;
+		z-index: 10;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		padding: 0 0.5em;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		color: currentColor;
+
+		& > * {
+			font-size: 1.125em;
+		}
+	}
+
+	// .label_close
+	&_close {
+		position: relative;
+		padding-right: 2em;
+	}
+
 	// .label_cancel
 	&_cancel {
 		background-color: var(--color-border);

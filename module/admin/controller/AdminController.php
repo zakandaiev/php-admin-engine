@@ -9,7 +9,10 @@ class AdminController extends Controller {
 	public function __construct() {
 		parent::__construct();
 
-		// TODO
+		class_alias('\\Module\\Admin\\Controller\\FormBuilder', 'FormBuilder');
+		class_alias('\\Module\\Admin\\Controller\\FilterBuilder', 'FilterBuilder');
+
+		// TODO - make as function
 		// if(!$this->user->get()->authorized) {
 		// 	Server::redirect('/admin/login');
 		// }

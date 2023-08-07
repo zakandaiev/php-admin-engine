@@ -1,7 +1,5 @@
 <?php
 
-use \Module\Admin\Controller\FormBuilder;
-
 $title = __('admin.user.edit_user');
 
 Page::set('title', $title);
@@ -52,7 +50,7 @@ $form_builder->setFieldValue('group', array_map(function($group) use ($user) {
 
 			<div class="box">
 				<div class="box__body">
-					<?= $form_builder->render('edit', $user->id, $form_attributes); ?>
+					<?= $form_builder->render('edit', $user->id, $form_attributes) ?>
 				</div>
 			</div>
 

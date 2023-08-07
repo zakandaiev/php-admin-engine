@@ -69,4 +69,13 @@
 	.air-datepicker--pointer::after {
 		background: var(--color-box);
 	}
+
+  .-in-range-.air-datepicker-cell.-year-.-other-decade-, .-in-range-.air-datepicker-cell.-day-.-other-month- {
+    color: var(--adp-color-other-month);
+    background: var(--adp-cell-background-color-in-range);
+  }
+
+  .air-datepicker-cell.-year-.-other-decade-:hover, .air-datepicker-cell.-day-.-other-month-:hover {
+    color: var(--adp-color-other-month);
+  }
 }

@@ -5,6 +5,9 @@ $title = __('admin.user.users');
 Page::set('title', $title);
 
 Breadcrumb::add($title);
+
+$filter_builder = new FilterBuilder('user');
+$filter_selected = $filter_builder->getSelected();
 ?>
 
 <?php Theme::header(); ?>
@@ -33,8 +36,26 @@ Breadcrumb::add($title);
 				<div class="col-xs-12 col-xxl-3 order-xs-1 order-xxl-2">
 
 					<div class="box">
+						<?php if(!empty($filter_selected)): ?>
+							<div class="box__header">
+								<h4 class="box__title"><?= __('admin.filter.selected') ?></h4>
+
+								<div class="row gap-1">
+									<?php foreach($filter_selected as $selected): ?>
+									<div class="col">
+										<div class="label label_close label_info">
+											<span><?= html($selected['value']) ?></span>
+											<a href="<?= link_unfilter($selected['alias']) ?>" class="label__close"><i class="icon icon-x"></i></a>
+										</div>
+									</div>
+									<?php endforeach; ?>
+								</div>
+
+								<a href="<?= site('permalink') ?>" class="d-inline-block m-t-3"><?= __('admin.filter.reset') ?></a>
+							</div>
+						<?php endif; ?>
 						<div class="box__body">
-							filters
+							<?= $filter_builder->render(); ?>
 						</div>
 					</div>
 
@@ -48,12 +69,12 @@ Breadcrumb::add($title);
 								<table class="table table_striped table_sm">
 									<thead>
 										<tr>
-											<th><?= sort_link('oid', 'ID') ?></th>
-											<th><?= sort_link('oname', __('admin.user.name')) ?></th>
-											<th><?= sort_link('ogroups', __('admin.user.groups_count')) ?></th>
-											<th><?= sort_link('ocreated', __('admin.user.date_created')) ?></th>
-											<th><?= sort_link('olastauth', __('admin.user.last_login')) ?></th>
-											<th><?= sort_link('oactive', __('admin.user.is_enabled')) ?></th>
+											<th><a href="<?= link_sort('oid') ?>">ID</a></th>
+											<th><a href="<?= link_sort('oname') ?>"><?= __('admin.user.name') ?></a></th>
+											<th><a href="<?= link_sort('ogroups') ?>"><?= __('admin.user.groups_count') ?></a></th>
+											<th><a href="<?= link_sort('ocreated') ?>"><?= __('admin.user.date_created') ?></a></th>
+											<th><a href="<?= link_sort('olastauth') ?>"><?= __('admin.user.last_login') ?></a></th>
+											<th><a href="<?= link_sort('oactive') ?>"><?= __('admin.user.is_enabled') ?></a></th>
 											<th></th>
 										</tr>
 									</thead>

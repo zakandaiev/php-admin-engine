@@ -19,10 +19,19 @@ async function fetchWithTimeout(resource, options, timeout = 15000) {
 class Form {
 	constructor(node, options = {}) {
 		this.node = node;
-		this.submit = node.querySelector('[type="submit"]');
 		this.options = options;
 
-		if (this.node.hasAttribute('data-native') || !this.submit) {
+		this.submit = node.querySelector('[type="submit"]');
+		if (!this.submit) {
+			this.submit = document.createElement('button');
+			this.submit.classList.add('hidden');
+			this.node.appendChild(this.submit);
+		}
+		this.data_submit_native = this.node.hasAttribute('data-submit-native') ? true : false;
+		this.data_submit_onchange = this.node.hasAttribute('data-submit-onchange') ? true : false;
+		this.data_unset_null = this.node.hasAttribute('data-unset-null') ? true : false;
+
+		if (this.node.hasAttribute('data-native')) {
 			return false;
 		}
 
@@ -56,6 +65,7 @@ class Form {
 	initialize() {
 		this.initValidation();
 		this.insertLoader();
+		this.initSubmit();
 		this.listenSubmit();
 	}
 
@@ -105,8 +115,43 @@ class Form {
 		return false;
 	}
 
+	initSubmit() {
+		if (this.data_submit_onchange) {
+			this.node.querySelectorAll('[name]').forEach(input => {
+				input.onchange = () => {
+					this.node.requestSubmit(this.submit);
+				};
+			});
+		}
+	}
+
 	listenSubmit() {
 		this.node.addEventListener('submit', async (event) => {
+			if (this.data_submit_native) {
+				this.node.querySelectorAll('[name]').forEach(input => {
+					if (input.hasAttribute('data-picker') && input.instance && input.instance.selectedDates) {
+						const picker_type = input.getAttribute('data-picker');
+
+						if (!['date', 'datetime', 'month'].includes(picker_type)) {
+							return false;
+						}
+
+						if (input.hasAttribute('data-multiple') || input.hasAttribute('data-range')) {
+							input.value = input.instance.selectedDates.map(d => this.getFormattedDate(picker_type, d)).join(' - ');
+						}
+						else {
+							input.value = input.value.length && input.instance.selectedDates.length ? this.getFormattedDate(picker_type, input.instance.selectedDates[0]) : '';
+						}
+					}
+
+					if (this.data_unset_null && !input.value.length) {
+						input.setAttribute('disabled', true);
+					}
+				});
+
+				return false;
+			}
+
 			event.preventDefault();
 
 			const confirmation = await this.checkConfirmation();
@@ -197,27 +242,14 @@ class Form {
 
 		this.formatDates(data);
 
+		if (this.data_unset_null) {
+			this.unsetNullFormData(data);
+		}
+
 		return data;
 	}
 
 	formatDates(data) {
-		const getFormattedDate = (type, date) => {
-			const d = new Date(date.valueOf());
-			d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-
-			switch(type) {
-				case 'date': {
-					return d.toJSON().slice(0, 10);
-				}
-				case 'datetime': {
-					return d.toJSON().slice(0, 19).replace('T', ' ');
-				}
-				case 'month': {
-					return d.toJSON().slice(0, 7);
-				}
-			}
-		};
-
 		for (const pair of data.entries()) {
 			const name = pair[0];
 			const input = this.node.querySelector(`[name="${name}"]`);
@@ -231,22 +263,52 @@ class Form {
 
 				if (input.hasAttribute('data-multiple') || input.hasAttribute('data-range')) {
 					data.delete(name);
-					input.instance.selectedDates.forEach(d => data.append(name, getFormattedDate(picker_type, d)));
+					input.instance.selectedDates.forEach(d => data.append(name, this.getFormattedDate(picker_type, d)));
 				}
 				else {
 					data.set(
 						name,
-						input.value.length && input.instance.selectedDates.length ? getFormattedDate(picker_type, input.instance.selectedDates[0]) : []
+						input.value.length && input.instance.selectedDates.length ? this.getFormattedDate(picker_type, input.instance.selectedDates[0]) : ''
 					);
 				}
 			}
 		}
 	}
 
+	unsetNullFormData(data) {
+		for (const pair of data.entries()) {
+			const name = pair[0];
+			const value = pair[1];
+
+			if (!value.length) {
+				data.delete(name);
+			}
+		}
+	}
+
+	getFormattedDate(type, date) {
+		const d = new Date(date.valueOf());
+		d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+
+		switch(type) {
+			case 'date': {
+				return d.toJSON().slice(0, 10);
+			}
+			case 'datetime': {
+				return d.toJSON().slice(0, 19).replace('T', ' ');
+			}
+			case 'month': {
+				return d.toJSON().slice(0, 7);
+			}
+		}
+
+		return false;
+	}
+
 	disableForm() {
 		this.node.setAttribute('disabled', 'disabled');
 		this.node.classList.add('submit');
-		this.node.querySelector('[type="submit"]').disabled = true;
+		this.submit.disabled = true;
 
 		return true;
 	}
@@ -254,7 +316,7 @@ class Form {
 	enableForm() {
 		this.node.removeAttribute('disabled', 'disabled');
 		this.node.classList.remove('submit');
-		this.node.querySelector('[type="submit"]').disabled = false;
+		this.submit.disabled = false;
 
 		return true;
 	}

@@ -1,7 +1,5 @@
 <?php
 
-use \Module\Admin\Controller\FormBuilder;
-
 $title = __('admin.user.add_user');
 
 Page::set('title', $title);
@@ -12,13 +10,13 @@ Breadcrumb::add($title);
 $form_builder = new FormBuilder('user/add');
 $form_attributes = 'data-redirect="' . site('url_language') . '/admin/user" data-validate';
 
-$form_builder->setFieldValue('group', array_map(function($group) {
-	$t = new \stdClass();
-	$t->value = $group->id;
-	$t->name = $group->name;
-	$t->selected = false;
-	return $t;
-}, $groups));
+// $form_builder->setFieldValue('group', array_map(function($group) {
+// 	$t = new \stdClass();
+// 	$t->value = $group->id;
+// 	$t->name = $group->name;
+// 	$t->selected = false;
+// 	return $t;
+// }, $groups));
 ?>
 
 <?php Theme::header(); ?>
@@ -40,7 +38,7 @@ $form_builder->setFieldValue('group', array_map(function($group) {
 
 			<div class="box">
 				<div class="box__body">
-					<?= $form_builder->render('add', null, $form_attributes); ?>
+					<?= $form_builder->render('add', null, $form_attributes) ?>
 				</div>
 			</div>
 

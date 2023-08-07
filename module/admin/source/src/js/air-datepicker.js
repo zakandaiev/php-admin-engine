@@ -5,9 +5,10 @@ document.addEventListener('DOMContentLoaded', () => {
 // INPUT
 document.querySelectorAll('input[data-picker]').forEach(input => {
 	const type = input.getAttribute('data-picker') || 'date';
+	const dates_array = input.value.length ? input.value.split(' - ') : [];
 
 	let options = {
-		selectedDates: input.value ? [input.value] : [],
+		selectedDates: dates_array,
 		multipleDates: input.hasAttribute('data-multiple') ? true : false,
 		multipleDatesSeparator: ' - ',
 		range: input.hasAttribute('data-range') ? true : false,
@@ -40,7 +41,23 @@ document.querySelectorAll('input[data-picker]').forEach(input => {
 		}
 	}
 
-	options.onSelect = () => input.dispatchEvent(new CustomEvent('change', { bubbles: true }));
+	options.onSelect = ({ date, datepicker }) => {
+		if (datepicker.opts.range && date.length === 2) {
+			datepicker.hide();
+		}
+		else if (!datepicker.opts.multipleDates && !datepicker.opts.range) {
+			datepicker.hide();
+		}
+	};
+
+	options.onHide = (isFinished) => {
+		const initial_dates = dates_array.map(d => new Date(d));
+		const selected_dates = input.instance && input.instance.selectedDates ? input.instance.selectedDates : [];
+
+		if (isFinished && JSON.stringify(initial_dates) !== JSON.stringify(selected_dates)) {
+			input.dispatchEvent(new CustomEvent('change', { bubbles: true }));
+		}
+	};
 
 	const datepicker = new AirDatepicker(input, options);
 
