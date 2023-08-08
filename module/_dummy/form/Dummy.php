@@ -44,6 +44,10 @@ $all_checks = [
 	'placeholder' => '',
 	'col_class' => 'col-xs-12 col-lg-6',
 	'pattern' => '', // for any type except file
+
+	// DATA ATTRIBUTES - used only in form-builder
+	'data-attr-1' => 'attr-1',
+	'data-attr-n' => 'attr-n'
 ];
 
 $title = [

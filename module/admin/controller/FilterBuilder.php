@@ -135,7 +135,7 @@ class FilterBuilder {
 		// SET ATTRIBUTES
 		$attributes = [];
 		$attributes[] = isset($field['multiple']) && $field['multiple'] ? 'name="' . $field_alias . '[]"' : 'name="' . $field_alias . '"';
-		$enabled_attributes = ['pattern','multiple','range','placeholder','step'];
+		$enabled_attributes = ['pattern','multiple','range','placeholder','step','min','max','minlength','maxlength'];
 		$valueless_attributes = ['multiple','range'];
 
 		foreach($field as $attr => $attr_value) {
@@ -158,11 +158,12 @@ class FilterBuilder {
 
 		// FORMAT ATTRIBUTES & INIT HTML BY RIGHT TAG
 		switch($field['type']) {
-			case 'checkbox': {
+			case 'checkbox':
+			case 'radio': {
 				$value = $value ? ' checked' : '';
 
-				$html = '<label>';
-				$html .= '<input type="checkbox"  ' . implode(' ', $attributes) . $value . '>';
+				$html .= '<label class="d-block">';
+				$html .= '<input type="radio"  ' . implode(' ', $attributes) . $value . '>';
 
 				if(isset($field['label_html'])) {
 					$html .= $field['label_html'];
@@ -192,16 +193,12 @@ class FilterBuilder {
 				$html .= '<input type="number" ' . implode(' ', $attributes) . $value . '>';
 				break;
 			}
-			case 'radio': {
-				// TODO
-				$html .= '';
-				break;
-			}
 			case 'range': {
-				// TODO
-				$html .= '';
+				$value = $value ? ' value="' . $value . '"' : '';
+				$html .= '<input type="range" ' . implode(' ', $attributes) . $value . '>';
 				break;
 			}
+			case 'maska':
 			case 'text': {
 				$value = $value ? ' value="' . $value . '"' : '';
 				$html .= '<input type="text" ' . implode(' ', $attributes) . $value . '>';
@@ -249,10 +246,6 @@ class FilterBuilder {
 				}
 
 				$html .= '</label>';
-				break;
-			}
-			case 'maska': {
-				$html .= '<input type="text" ' . implode(' ', $attributes) . '>';
 				break;
 			}
 			default: {

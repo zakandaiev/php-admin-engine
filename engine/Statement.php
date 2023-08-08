@@ -41,39 +41,56 @@ class Statement {
 		return $this;
 	}
 
-	public function filter($name, $straight = null, $force_no_order = false) {
+	public function filter($name) {
 		$filter = new Filter($name);
 
 		if(empty($filter->sql) && empty($filter->order)) {
 			return $this;
 		}
 
-		if(isset($straight)) {
-			$sql = !empty($filter->sql) ? "{$this->sql} $straight {$filter->sql}" : $this->sql;
+		if(!empty($filter->sql)) {
+			$this->setFilterValues($filter);
 		}
-		else {
-			$sql = !empty($filter->sql) ? "WHERE {$filter->sql}" : '';
-			$sql = "SELECT * FROM ({$this->sql}) t_filter $sql";
-		}
+
+		$sql = !empty($filter->sql) ? "WHERE {$filter->sql}" : '';
+		$sql = "SELECT * FROM ({$this->sql}) t_filter $sql";
 
 		foreach($filter->binding as $key => $value) {
 			$this->addBinding($key, $value);
 		}
 
-		if(!empty($filter->order) && !$force_no_order) {
-			$order_pattern = '/\s+(ORDER\s+BY[\s]+)([\w\s\@\<\>\.\,\=\-\'\"\`]+)$/mi';
-
-			if(preg_match($order_pattern, $sql)) {
-				$sql = preg_replace($order_pattern, " ORDER BY {$filter->order}, $2", $sql);
-			}
-			else {
-				$sql .= " ORDER BY {$filter->order}";
-			}
+		if(!empty($filter->order)) {
+			$sql .= " ORDER BY {$filter->order}";
 		}
 
 		$this->sql = $sql;
 
 		return $this;
+	}
+
+	private function setFilterValues($filter) {
+		if(empty($filter->data) || preg_match('/GROUP\s+BY/mi',  $this->sql)) {
+			return false;
+		}
+
+		$sql_cuted = $this->cutSelectionPartFromSQL($this->sql);
+		$sql_cuted = preg_replace('/\s*ORDER\s+BY\s+[\w\s\@\<\>\.\,\=\-\'\"\`]+$/mi', '', $sql_cuted);
+
+		foreach($filter->data as $alias => $filter) {
+			if(is_array($filter['column']) || !in_array($filter['type'], ['checkbox','radio','select'])) {
+				continue;
+			}
+
+			$filter_sql = "SELECT COUNT(*) as count, {$filter['column']} as name FROM $sql_cuted GROUP BY {$filter['column']}";
+
+			$filter_values = new Statement($filter_sql);
+
+			$filter_values = $filter_values->execute($this->binding)->fetchAll();
+
+			$filter->setValues($filter['column'], $filter_values);
+		}
+
+		return true;
 	}
 
 	public function paginate($total = null, $options = []) {
@@ -160,6 +177,30 @@ class Statement {
 		}
 
 		return $output;
+
+		// SLOWER
+		// $output = '';
+
+    // $paren_count = 0;
+    // $from_position = false;
+
+    // for ($i = 0; $i < strlen($sql); $i++) {
+    //   if ($sql[$i] == '(') {
+    //     $paren_count++;
+    //   }
+		// 	elseif ($sql[$i] == ')') {
+    //     $paren_count--;
+    //   }
+		// 	elseif (!$from_position && strtolower(substr($sql, $i, 4)) == 'from' && $paren_count == 0) {
+    //     $from_position = $i;
+    //   }
+    // }
+
+    // if ($from_position !== false) {
+    //   $output = substr($sql, $from_position + 4);
+    // }
+
+    // return trim($output);
 	}
 
 	public function execute($params = []) {

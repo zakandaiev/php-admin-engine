@@ -12,11 +12,12 @@ class User {
 				(SELECT COUNT(*) FROM {user_group} WHERE user_id=t_user.id) as count_groups
 			FROM
 				{user} t_user
+			ORDER BY name desc
 		';
 
 		$users = new Statement($sql);
 
-		$users = $users->filter('User', 'WHERE')->paginate()->execute()->fetchAll();
+		$users = $users->filter('User')->paginate()->execute()->fetchAll();
 
 		$users = array_map(function($user) { return \Engine\User::format($user); }, $users);
 
