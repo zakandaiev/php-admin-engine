@@ -12,17 +12,18 @@ class Statement {
 	private $prefix;
 	private $statement;
 	private $binding = [];
+	private $is_select;
 	private $is_paginating = false;
 	private $pagination = [];
 
 	public function __construct($sql, $cache = null, $debug = null) {
 		$is_cached = false;
-		$query_is_select = preg_match('/^\s*SELECT/mi', $sql) ? true : false;
+		$this->is_select = preg_match('/^\s*SELECT/mi', $sql) ? true : false;
 
-		if(isset($cache) && $cache && $query_is_select) {
+		if(isset($cache) && $cache && $this->is_select) {
 			$is_cached = true;
 		}
-		else if(!isset($cache) && $query_is_select && Module::getName() === 'public' && Setting::get('engine')->cache_db == 'true') {
+		else if(!isset($cache) && $this->is_select && Module::getName() === 'public' && Setting::get('engine')->cache_db == 'true') {
 			$is_cached = true;
 		}
 
@@ -41,15 +42,19 @@ class Statement {
 		return $this;
 	}
 
-	public function filter($name) {
-		$filter = new Filter($name);
-
-		if(empty($filter->sql) && empty($filter->order)) {
+	public function filter($name, $set_options = true) {
+		if(!$this->is_select) {
 			return $this;
 		}
 
-		if(!empty($filter->sql)) {
+		$filter = new Filter($name);
+
+		if($set_options) {
 			$this->setFilterValues($filter);
+		}
+
+		if(empty($filter->sql) && empty($filter->order)) {
+			return $this;
 		}
 
 		$sql = !empty($filter->sql) ? "WHERE {$filter->sql}" : '';
@@ -76,24 +81,42 @@ class Statement {
 		$sql_cuted = $this->cutSelectionPartFromSQL($this->sql);
 		$sql_cuted = preg_replace('/\s*ORDER\s+BY\s+[\w\s\@\<\>\.\,\=\-\'\"\`]+$/mi', '', $sql_cuted);
 
-		foreach($filter->data as $alias => $filter) {
-			if(is_array($filter['column']) || !in_array($filter['type'], ['checkbox','radio','select'])) {
+		foreach($filter->data as $alias => $filter_data) {
+			if(is_array($filter_data['column']) || !in_array($filter_data['type'], ['checkbox','radio','select'])) {
 				continue;
 			}
 
-			$filter_sql = "SELECT COUNT(*) as count, {$filter['column']} as name FROM $sql_cuted GROUP BY {$filter['column']}";
+			$filter_sql = "SELECT COUNT(*) as `count`, {$filter_data['column']} as `id`, {$filter_data['column']} as `text` FROM $sql_cuted";
 
-			$filter_values = new Statement($filter_sql);
+			$filter_binding = $this->binding;
 
-			$filter_values = $filter_values->execute($this->binding)->fetchAll();
+			$filter_data['show_all_options'] = $filter_data['show_all_options'] ?? false;
 
-			$filter->setValues($filter['column'], $filter_values);
+			if(!$filter_data['show_all_options'] && !empty($filter->sql)) {
+				$filter_sql .= " WHERE {$filter->sql}";
+
+				foreach($filter->binding as $key => $value) {
+					$filter_binding[$key] = $value;
+				}
+			}
+
+			$filter_sql .= " GROUP BY {$filter_data['column']} ORDER BY count DESC";
+
+			$filter_options = new Statement($filter_sql);
+
+			$filter_options = $filter_options->execute($filter_binding)->fetchAll();
+
+			$filter->setOptions($alias, $filter_options);
 		}
 
 		return true;
 	}
 
 	public function paginate($total = null, $options = []) {
+		if(!$this->is_select) {
+			return $this;
+		}
+
 		if(isset($total)) {
 			$this->pagination['total'] = $total;
 		}
@@ -116,7 +139,7 @@ class Statement {
 
 		if(!isset($this->pagination['total'])) {
 			// $total = "SELECT COUNT(*) FROM ({$this->sql}) as total";
-			$total_sql = "SELECT COUNT(*) FROM " . $this->cutSelectionPartFromSQL($this->sql);
+			$total_sql = "SELECT COUNT(*) as total FROM " . $this->cutSelectionPartFromSQL($this->sql);
 
 			$total_binding = [];
 
@@ -208,7 +231,7 @@ class Statement {
 			$this->addBinding($params);
 
 			if($this->debug) {
-				debug($this->binding, trim($this->sql ?? ''));
+				debug(trim($this->sql ?? ''), $this->binding);
 			}
 
 			return $this;
@@ -217,7 +240,7 @@ class Statement {
 		$this->addBinding($params);
 
 		if($this->debug) {
-			debug($this->binding, trim($this->sql ?? ''));
+			debug(trim($this->sql ?? ''), $this->binding);
 		}
 
 		$this->initializePagination();
@@ -238,7 +261,7 @@ class Statement {
 
 			if(Request::$method === 'get') {
 				if(DEBUG['is_enabled']) {
-					debug(__($error_message), $this->sql); // TODO translation
+					debug(__($error_message), $this->sql, $this->binding); // TODO translation
 				}
 				else {
 					debug(__($error_message)); // TODO translation

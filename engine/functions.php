@@ -25,9 +25,19 @@ if(!function_exists('is_json')) {
 function debug(...$data) {
 	foreach($data as $key => $item) {
 		if($key === 0) echo '<hr>';
+
 		echo '<pre>';
+
 		var_dump($item);
-		echo '</pre><hr>';
+
+		echo '</pre>';
+
+		if(isset($data[$key + 1])) {
+			echo '<br>';
+		}
+		else {
+			echo '<hr>';
+		}
 	}
 }
 
@@ -423,7 +433,7 @@ function is_closure($i) {
 	return $i instanceof \Closure;
 }
 
-function link_filter($key, $value) {
+function link_filter($key, $value = 1) {
 	$query = Request::$get;
 
 	$query[$key] = $value;

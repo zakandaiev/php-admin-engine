@@ -9,10 +9,18 @@ $all_data = [
 	'step' => 10, // for range slider
 
 	// RENDER - used only in filter-builder
+	'classifier' => 'module.classifier.key',
+	// or
+	'classifier' => function($value) {
+		debug($value);exit;
+		return $value; // modify $value and return it
+	},
+	'show_all_options' => true|false,
 	'label' => 'This is label',
 	'label_class' => 'label-class-1 label-class-2 ...',
 	// or
 	'label_html' => '<label>Some label</label>',
+	'selected_label' => true|false|'string if not isset label key',
 	'placeholder' => '',
 	'col_class' => 'col-xs-12 col-lg-6',
 	'pattern' => '',

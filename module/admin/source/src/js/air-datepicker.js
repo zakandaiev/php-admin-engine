@@ -53,8 +53,13 @@ document.querySelectorAll('input[data-picker]').forEach(input => {
 	options.onHide = (isFinished) => {
 		const initial_dates = dates_array.map(d => new Date(d));
 		const selected_dates = input.instance && input.instance.selectedDates ? input.instance.selectedDates : [];
+		const is_range = input.instance && input.instance.opts && input.instance.opts.range ? input.instance.opts.range : false;
 
-		if (isFinished && JSON.stringify(initial_dates) !== JSON.stringify(selected_dates)) {
+		if (
+			isFinished
+			&& JSON.stringify(initial_dates) !== JSON.stringify(selected_dates)
+			&& (is_range && selected_dates.length !== 1 || !is_range)
+		) {
 			input.dispatchEvent(new CustomEvent('change', { bubbles: true }));
 		}
 	};

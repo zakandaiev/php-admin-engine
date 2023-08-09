@@ -82,7 +82,7 @@ input, textarea, select,
 		margin-bottom: 0;
 	}
 
-	&:disabled, &.disabled {
+	&.disabled {
 		background: var(--color-border);
 	}
 
@@ -154,7 +154,7 @@ label:not(.switch) {
 			color: #fff;
 		}
 
-		&:disabled, &.disabled {
+		&.disabled {
 			& ~ * {
 				opacity: 0.5;
 				cursor: default;
@@ -239,7 +239,7 @@ label:not(.switch) {
 			}
 		}
 
-		&:disabled, &.disabled {
+		&.disabled {
 			& ~ * {
 				opacity: 0.5;
 				cursor: default;

@@ -2,12 +2,14 @@
 
 namespace Module\Admin\Controller;
 
+use \Engine\Filter;
 use \Engine\Path;
 use \Engine\Request;
 
 class FilterBuilder {
 	protected $filter_name;
 	protected $fields = [];
+	protected $fields_key = [];
 
 	public function __construct($filter_name, $module = null) {
 		$path = Path::file('filter', $module) . "/$filter_name.php";
@@ -24,20 +26,23 @@ class FilterBuilder {
 
 		$this->filter_name = $filter_name;
 
+		$filter_options = Filter::getInstance()->options ?? [];
+
 		foreach($fields as $field_alias => $field) {
 			if(!is_array($field)) continue;
 
 			$field['alias'] = $field_alias;
-			$field['options'] = null;
+			$field['options'] = $filter_options[$field_alias] ?? [];
 			$field['value'] = Request::$get[$field_alias] ?? @$field['default'];
 
 			$this->fields[$field_alias] = $field;
+			$this->fields_key[] = $field_alias;
 		}
 
 		return $this;
 	}
 
-	public function setFieldOptions($field_alias, $value = null) {
+	public function setOptions($field_alias, $value = null) {
 		if(!isset($this->fields[$field_alias])) {
 			return false;
 		}
@@ -63,6 +68,22 @@ class FilterBuilder {
 		}
 
 		$html .= '</div>';
+
+		foreach(Request::$get as $hidden_alias => $hidden_value) {
+			if(in_array($hidden_alias, $this->fields_key)) {
+				continue;
+			}
+
+			if(is_array($hidden_value)) {
+				foreach($hidden_value as $v) {
+					$html .= '<input type="hidden" class="hidden" name="' . $hidden_alias . '[]" value="' . $v . '">';
+				}
+			}
+			else {
+				$html .= '<input type="hidden" class="hidden" name="' . $hidden_alias . '" value="' . $hidden_value . '">';
+			}
+		}
+
 		$html .= '</form>';
 
 		return $html;
@@ -134,7 +155,7 @@ class FilterBuilder {
 
 		// SET ATTRIBUTES
 		$attributes = [];
-		$attributes[] = isset($field['multiple']) && $field['multiple'] ? 'name="' . $field_alias . '[]"' : 'name="' . $field_alias . '"';
+		$attributes['name'] = (isset($field['multiple']) && $field['multiple']) || $field['type'] === 'checkbox' ? 'name="' . $field_alias . '[]"' : 'name="' . $field_alias . '"';
 		$enabled_attributes = ['pattern','multiple','range','placeholder','step','min','max','minlength','maxlength'];
 		$valueless_attributes = ['multiple','range'];
 
@@ -160,47 +181,50 @@ class FilterBuilder {
 		switch($field['type']) {
 			case 'checkbox':
 			case 'radio': {
-				$value = $value ? ' checked' : '';
-
-				$html .= '<label class="d-block">';
-				$html .= '<input type="radio"  ' . implode(' ', $attributes) . $value . '>';
-
-				if(isset($field['label_html'])) {
-					$html .= $field['label_html'];
-				}
-				else if(isset($field['label'])) {
-					$html .= '<span';
-					if(isset($field['label_class'])) {
-						$html .= ' class="' . $field['label_class'] . '">';
+				foreach($field['options'] as $key => $option) {
+					$checked = '';
+					if(
+						(isset($field['multiple']) && $field['multiple'] && is_array($field['value']) && in_array($option->id, $field['value']))
+						|| ($field['type'] === 'checkbox' && is_array($field['value']) && in_array($option->id, $field['value']))
+						|| $option->id === $field['value']
+					) {
+						$checked = ' checked';
 					}
-					else {
-						$html .= '>';
-					}
-					$html .= $field['label'];
-					$html .= '</span>';
+
+					$class = $key === 0 ? 'd-block' : 'd-block m-t-1';
+
+					$html .= '<label class="' . $class . '">';
+					$html .= '<input type="' . $field['type'] . '" value="' . $option->id . '" ' . implode(' ', $attributes) . $checked . '>';
+					$html .= '<span>' . $option->text . '</span>';
+					$html .= '</label>';
 				}
 
-				$html .= '</label>';
 				break;
 			}
 			case 'date': {
-				$value = $value ? ' value="' . $value . '"' : '';
+				if(isset($attributes['name'])) $attributes['name'] = 'name="' . $field_alias . '"';
+				if(isset($attributes['range'])) $attributes['range'] = 'data-' . $attributes['range'];
+				if(isset($attributes['multiple'])) $attributes['multiple'] = 'data-' . $attributes['multiple'];
+
+				$value = isset($value) ? ' value="' . $value . '"' : '';
+
 				$html .= '<input type="text" data-picker="date" ' . implode(' ', $attributes) . $value . '>';
+
 				break;
 			}
 			case 'number': {
-				$value = $value ? ' value="' . $value . '"' : '';
+				$value = isset($value) ? ' value="' . $value . '"' : '';
 				$html .= '<input type="number" ' . implode(' ', $attributes) . $value . '>';
 				break;
 			}
 			case 'range': {
-				$value = $value ? ' value="' . $value . '"' : '';
+				$value = isset($value) ? ' value="' . $value . '"' : '';
 				$html .= '<input type="range" ' . implode(' ', $attributes) . $value . '>';
 				break;
 			}
 			case 'maska':
 			case 'text': {
-				$value = $value ? ' value="' . $value . '"' : '';
+				$value = isset($value) ? ' value="' . $value . '"' : '';
 				$html .= '<input type="text" ' . implode(' ', $attributes) . $value . '>';
 				break;
 			}
@@ -213,10 +237,9 @@ class FilterBuilder {
 					$html .= '<option data-placeholder="true"></option>';
 				}
 
-				$field['value'] = $field['value'] ?? [];
-				foreach($field['value'] as $value) {
-					$selected = $value->selected ? ' selected' : '';
-					$html .= '<option value="' . $value->value . '"' . $selected . '>' . $value->name . '</option>';
+				foreach($field['options'] as $option) {
+					$selected = $option->id === $field['value'] ? ' selected' : '';
+					$html .= '<option value="' . $option->id . '"' . $selected . '>' . $option->text . '</option>';
 				}
 
 				$html .= '</select>';
@@ -224,10 +247,10 @@ class FilterBuilder {
 				break;
 			}
 			case 'switch': {
-				$value = $value ? ' checked' : '';
+				$value = isset($value) ? ' checked' : '';
 
 				$html = '<label class="switch">';
-				$html .= '<input type="checkbox"  ' . implode(' ', $attributes) . $value . '>';
+				$html .= '<input type="checkbox" value="1" ' . implode(' ', $attributes) . $value . '>';
 				$html .= '<span class="switch__slider"></span>';
 
 				if(isset($field['label_html'])) {
@@ -252,6 +275,68 @@ class FilterBuilder {
 				return false;
 			}
 		}
+
+		return $html;
+	}
+
+	public function renderSelected($row_class = null, $row_attributes = null) {
+		$filter_selected = $this->getSelected();
+
+		if(empty($filter_selected)) {
+			return false;
+		}
+
+		$row_class = isset($row_class) ? ' class="' . $row_class . '"' : ' class="row gap-1"';
+		$row_attributes = !empty($row_attributes) ? " $row_attributes" : '';
+
+		$html = "<div$row_class$row_attributes>";
+
+		foreach($filter_selected as $selected) {
+			$html .= $this->renderColSelected($selected);
+		}
+
+		$html .= '</div>';
+
+		$html .= '<a href="' . site('permalink') . '" class="d-inline-block m-t-3">' . __('admin.filter.reset') . '</a>';
+
+		return $html;
+	}
+
+	public function renderColSelected($selected) {
+		if(empty($selected)) {
+			return false;
+		}
+
+		$html = '';
+
+		if(is_array($selected['value'])) {
+			foreach($selected['value'] as $value) {
+				$selected['value'] = $value;
+
+				$html .= $this->renderColSelected($selected);
+			}
+
+			return $html;
+		}
+
+		$text = $selected['value'];
+
+		if(isset($selected['classifier'])) {
+			$text = is_closure($selected['classifier']) ? $selected['classifier']($selected['value']) : __($selected['classifier'] . '.' . $selected['value']);
+		}
+
+		if(isset($selected['selected_label']) && $selected['selected_label']) {
+			$text = ($selected['label'] ?? $selected['selected_label']) . ': ' . $text;
+		}
+
+		$html .= '<div class="col">';
+		$html .= '<div class="label label_close label_info">';
+
+		$html .= '<span>' . html($text) . '</span>';
+		$html .= '<a href="' . link_unfilter($selected['alias']) . '" class="label__close"><i class="icon icon-x"></i></a>';
+
+		$html .= '</div>';
+		$html .= '</div>';
 
 		return $html;
 	}

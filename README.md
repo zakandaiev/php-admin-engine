@@ -18,7 +18,6 @@
 
 ## TODO
 * engine: Breadcrumbs to Page::breadcrumbs()
-* engine: new Classifier or function to get_classifier()
 * engine: modules install
 * admin: collapse
 * admin: remake popover & tooltip to fixed pos

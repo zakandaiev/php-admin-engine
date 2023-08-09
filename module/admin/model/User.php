@@ -12,7 +12,7 @@ class User {
 				(SELECT COUNT(*) FROM {user_group} WHERE user_id=t_user.id) as count_groups
 			FROM
 				{user} t_user
-			ORDER BY name desc
+			ORDER BY id ASC
 		';
 
 		$users = new Statement($sql);

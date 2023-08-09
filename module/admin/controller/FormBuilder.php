@@ -159,7 +159,7 @@ class FormBuilder {
 
 		// SET ATTRIBUTES
 		$attributes = [];
-		$attributes[] = isset($field['multiple']) && $field['multiple'] ? 'name="' . $field_name . '[]"' : 'name="' . $field_name . '"';
+		$attributes['name'] = isset($field['multiple']) && $field['multiple'] ? 'name="' . $field_name . '[]"' : 'name="' . $field_name . '"';
 		$enabled_attributes = ['required','min','max','pattern','multiple','range','extensions','autofocus','placeholder','step'];
 		$valueless_attributes = ['required','multiple','range','autofocus'];
 		$min_max_to_datamin_datamax_replace_types = ['date','datetime','month','select'];

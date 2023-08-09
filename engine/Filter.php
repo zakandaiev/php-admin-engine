@@ -10,7 +10,7 @@ class Filter {
 	public $binding = [];
 	public $order = [];
 
-	public static $values = [];
+	public $options = [];
 
 	private static $instance;
 
@@ -85,7 +85,7 @@ class Filter {
 
 							$token = $key === 0 ? $sql_token : Hash::token(8);
 
-							$sql_part[] = "$column_name IS :$token";
+							$sql_part[] = "$column_name = :$token";
 							$binding[$token] = ($v === 'true' || $v === '1') ? true : false;
 						}
 
@@ -223,8 +223,20 @@ class Filter {
 		return true;
 	}
 
-	public function setValues($column_name, $values = []) {
-		$this->values[$column_name] = $values;
+	public function setOptions($alias, $options = []) {
+		$this->options[$alias] = $options;
+
+		if(!isset($this->data[$alias]['classifier'])) {
+			return true;
+		}
+
+		$classifier = $this->data[$alias]['classifier'];
+
+		$this->options[$alias] = array_map(function($opt) use($classifier, $options) {
+			$opt->text = is_closure($classifier) ? $classifier($opt->id) : $classifier . '.' . $opt->id;
+
+			return $opt;
+		}, $options);
 
 		return true;
 	}

@@ -66,6 +66,12 @@
   },
 
   "admin": {
+    "classifier": {
+      "sort": {
+        "asc": "ascending",
+        "desc": "descending"
+      }
+    },
     "sidebar": {
       "dashboard": "Dashboard",
       "profile": "Profile",

@@ -23,45 +23,38 @@ $filter_selected = $filter_builder->getSelected();
 
 			<?php Theme::breadcrumb(); ?>
 
-
 			<h2 class="section__title">
 				<span><?= $title ?></span>
 
 				<div class="section__actions">
+					<?php if(Request::has('show-filters')): ?>
+						<a href="<?= site('permalink') ?>" class="btn btn_secondary" data-tooltip="top" title="<?= __('admin.filter.show_filters') ?>"><i class="icon icon-filter-minus"></i></a>
+					<?php else: ?>
+						<a href="<?= link_filter('show-filters') ?>" class="btn btn_secondary" data-tooltip="top" title="<?= __('admin.filter.show_filters') ?>"><i class="icon icon-filter-plus"></i></a>
+					<?php endif; ?>
 					<a href="<?= site('url_language') ?>/admin/user/add" class="btn btn_primary"><?= __('admin.user.add_user') ?></a>
 				</div>
 			</h2>
 
 			<div class="row gap-xs">
-				<div class="col-xs-12 col-xxl-3 order-xs-1 order-xxl-2">
+				<?php if(Request::has('show-filters')): ?>
+					<div class="col-xs-12 col-xxl-3 order-xs-1 order-xxl-2">
 
-					<div class="box">
-						<?php if(!empty($filter_selected)): ?>
-							<div class="box__header">
-								<h4 class="box__title"><?= __('admin.filter.selected') ?></h4>
-
-								<div class="row gap-1">
-									<?php foreach($filter_selected as $selected): ?>
-									<div class="col">
-										<div class="label label_close label_info">
-											<span><?= html($selected['value']) ?></span>
-											<a href="<?= link_unfilter($selected['alias']) ?>" class="label__close"><i class="icon icon-x"></i></a>
-										</div>
-									</div>
-									<?php endforeach; ?>
+						<div class="box">
+							<?php if(!empty($filter_selected)): ?>
+								<div class="box__header">
+									<h4 class="box__title"><?= __('admin.filter.selected') ?></h4>
+									<?= $filter_builder->renderSelected(); ?>
 								</div>
-
-								<a href="<?= site('permalink') ?>" class="d-inline-block m-t-3"><?= __('admin.filter.reset') ?></a>
+							<?php endif; ?>
+							<div class="box__body">
+								<?= $filter_builder->render(); ?>
 							</div>
-						<?php endif; ?>
-						<div class="box__body">
-							<?= $filter_builder->render(); ?>
 						</div>
+
 					</div>
-
-				</div>
-
-				<div class="col-xs-12 col-xxl-9 order-xs-1 order-xxl-1">
+				<?php endif; ?>
+				<div class="col-xs-12<?php if(Request::has('show-filters')): ?> col-xxl-9 order-xs-1 order-xxl-1<?php endif; ?>">
 
 					<div class="box">
 						<div class="box__body">
@@ -73,8 +66,8 @@ $filter_selected = $filter_builder->getSelected();
 											<th><a href="<?= link_sort('oname') ?>"><?= __('admin.user.name') ?></a></th>
 											<th><a href="<?= link_sort('ogroups') ?>"><?= __('admin.user.groups_count') ?></a></th>
 											<th><a href="<?= link_sort('ocreated') ?>"><?= __('admin.user.date_created') ?></a></th>
-											<th><a href="<?= link_sort('olastauth') ?>"><?= __('admin.user.last_login') ?></a></th>
-											<th><a href="<?= link_sort('oactive') ?>"><?= __('admin.user.is_enabled') ?></a></th>
+											<th><a href="<?= link_sort('oauth') ?>"><?= __('admin.user.auth_date') ?></a></th>
+											<th><a href="<?= link_sort('oenabled') ?>"><?= __('admin.user.is_enabled') ?></a></th>
 											<th></th>
 										</tr>
 									</thead>
@@ -107,7 +100,7 @@ $filter_selected = $filter_builder->getSelected();
 													<a href="<?= site('url_language') ?>/admin/user/edit/<?= $user->id ?>" data-tooltip="top" data-title="<?= __('admin.edit') ?>" class="table__action">
 														<i class="icon icon-edit"></i>
 													</a>
-													<button type="button" data-action="<?= Form::delete('user/edit', $user->id) ?>" data-confirm="<?= __('admin.user.delete_confirm', $user->fullname) ?>" data-delete="trow" data-counter="#pagination-counter" data-tooltip="top" data-title="<?= __('admin.delete') ?>" class="table__action">
+													<button type="button" data-action="<?= Form::delete('user/edit', $user->id) ?>" data-confirm="<?= __('admin.user.delete_confirm', $user->fullname) ?>" data-tooltip="top" data-title="<?= __('admin.delete') ?>" class="table__action">
 														<i class="icon icon-trash"></i>
 													</button>
 												</td>

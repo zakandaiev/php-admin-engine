@@ -57,7 +57,7 @@ if($pagination->current_page <= $pagination->total_pages - 4) {
 
 <div class="row gap-xs m-t-4 justify-content-between align-items-center">
 	<div class="col">
-		<output><?= __('admin.pagination.total') ?>: <span id="pagination-counter"><?= $pagination->total_rows ?></span></output>
+		<output><?= __('admin.pagination.total', $pagination->total_rows) ?></output>
 	</div>
 	<?php if($pagination->total_pages > 1): ?>
 		<div class="col">
