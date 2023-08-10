@@ -27,7 +27,7 @@ RewriteRule ^(.*)$ index.php [L,QSA]
 
 ############################# SECURITY #############################
 # Deny Access to Hidden Files and Directories
-RedirectMatch 404 /\..*$
+#RedirectMatch 404 /\..*$
 
 # Deny Access to Backup and Source Files
 <FilesMatch "(\.(bin|bak|config|dist|fla|inc|ini|log|psd|sh|sql|swp)|~)$">
