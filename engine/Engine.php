@@ -48,7 +48,6 @@ class Engine {
 		class_alias('\\Engine\\Log', 'Log');
 		// class_alias('\\Engine\\Mail', 'Mail');
 		class_alias('\\Engine\\Upload', 'Upload');
-		class_alias('\\Engine\\Breadcrumb', 'Breadcrumb');
 		class_alias('\\Engine\\Pagination', 'Pagination');
 		// class_alias('\\Engine\\Menu', 'Menu');
 		// class_alias('\\Engine\\Notification', 'Notification');

@@ -151,8 +151,7 @@ function installConfig($data) {
 	$config  = "<?php" . PHP_EOL . PHP_EOL;
 
 	// TIME ZONE
-	$config  .= '$time_zone = \'Europe/Kiev\';' . PHP_EOL . PHP_EOL;
-	$config  .= 'date_default_timezone_set($time_zone);' . PHP_EOL . PHP_EOL;
+	$config  .= "date_default_timezone_set('{$data['timezone']}');" . PHP_EOL . PHP_EOL;
 
 	// DATABASE
 	$config .= "define('DATABASE', [" . PHP_EOL;
@@ -164,7 +163,7 @@ function installConfig($data) {
 	$config .= "\t'prefix' => '{$data['db_prefix']}'," . PHP_EOL;
 	$config .= "\t'options' => [" . PHP_EOL;
 	$config .= "\t\t\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION," . PHP_EOL;
-	$config .= "\t\t\PDO::MYSQL_ATTR_INIT_COMMAND => \"SET NAMES {$data['db_charset']}, time_zone = '{\$time_zone}'\"" . PHP_EOL;
+	$config .= "\t\t\PDO::MYSQL_ATTR_INIT_COMMAND => \"SET NAMES {$data['db_charset']}" . PHP_EOL;
 	$config .= "\t]" . PHP_EOL;
 	$config .= "]);" . PHP_EOL;
 	$config .= PHP_EOL;
@@ -207,6 +206,12 @@ function installConfig($data) {
 	$config .= "]);" . PHP_EOL;
 	$config .= PHP_EOL;
 
+	// AUTH
+	$config .= "define('AUTH', [" . PHP_EOL;
+	$config .= "\t'bind_session_to_ip' => true" . PHP_EOL;
+	$config .= "]);" . PHP_EOL;
+	$config .= PHP_EOL;
+
 	// PAGINATION
 	$config .= "define('PAGINATION', [" . PHP_EOL;
 	$config .= "\t'uri_key' => 'page'" . PHP_EOL;
@@ -222,9 +227,13 @@ function installConfig($data) {
 	// UPLOAD
 	$config .= "define('UPLOAD', [" . PHP_EOL;
 	$config .= "\t'folder' => 'upload'," . PHP_EOL;
+	$config .= "\t'max_size' => 10 * 1024 * 1024, // 10MB" . PHP_EOL;
 	$config .= "\t'extensions' => ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'pdf', 'txt', 'zip', 'rar']" . PHP_EOL;
 	$config .= "]);" . PHP_EOL;
 	$config .= PHP_EOL;
+
+	// MISC
+	$config  .= 'define(\'IS_SHARED_HOSTING\', false);' . PHP_EOL;
 
 	// CONFIG END
 	file_put_contents($path, $config, LOCK_EX);
@@ -303,6 +312,7 @@ function installSEO($data) {
 						</div>
 						<div class="card-body">
 							<form action="/install?step=<?= $step_next ?>" method="POST" data-focus>
+								<p><b>TODO timezone</b></p>
 								<?php if($step == 'auth'): ?>
 									<div class="mb-3">
 										<label class="form-label">Login</label>

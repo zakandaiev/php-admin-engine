@@ -4,8 +4,8 @@ $title = __('admin.user.edit_user');
 
 Page::set('title', $title);
 
-Breadcrumb::add(__('admin.user.users'), '/admin/user');
-Breadcrumb::add($title);
+Page::breadcrumb('add', ['name' => __('admin.user.users'), 'url' => '/admin/user']);
+Page::breadcrumb('add', ['name' => $title]);
 
 $form_builder = new FormBuilder('user/edit');
 $form_attributes = 'data-redirect="' . site('url_language') . '/admin/user" data-validate';

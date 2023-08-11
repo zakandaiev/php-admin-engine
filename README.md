@@ -19,9 +19,7 @@
 4. Create & enjoy ;)
 
 ## TODO
-* engine: Breadcrumbs to Page::get('breadcrumbs'), ..set('bread', []) ...
 * engine: modules install
-* dev: UI forms - https://preline.co/docs/input-group.html
 * admin: form.js - add navigator vibrate
 * admin: modals - add espace button
 * admin: create collapse.js
@@ -38,11 +36,3 @@
   * /api/data/$data - show data from DB
 * install: instalation page
 * other jobs based on old (but ready) https://github.com/zakandaiev/adminkit-engine
-
-replace all str* to mb_str*
-
-/* Set internal character encoding to UTF-8 */
-mb_internal_encoding("UTF-8");
-
-/* Display current internal character encoding */
-echo mb_internal_encoding();

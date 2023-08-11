@@ -116,7 +116,7 @@ class Asset {
 		$routes = is_array($routes) ? $routes : (!empty($routes) ? [$routes] : []);
 
 		$routes = array_map(function($string) {
-			return trim(trim(strval($string ?? '')), '/');
+			return trim(trim($string ?? ''), '/');
 		}, $routes);
 
 		$route = trim(trim(Router::$route['uri'] ?? ''), '/');

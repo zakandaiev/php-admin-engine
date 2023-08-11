@@ -1,10 +1,8 @@
-<?php if(!empty($breadcrumb) || $options['render_homepage']): ?>
+<?php if(!empty($items)): ?>
 	<nav class="breadcrumb">
-		<?php if($options['render_homepage']): ?>
-			<span class="breadcrumb__item"><a href="<?= site('url_language') . $options['homepage_url'] ?>"><?= $options['homepage_name'] ?></a></span>
-		<?php endif; ?>
+		<span class="breadcrumb__item"><a href="<?= site('url_language') ?>/admin/dashboard"><?= __('admin.breadcrumb.home') ?></a></span>
 
-		<?php foreach($breadcrumb as $crumb): ?>
+		<?php foreach($items as $crumb): ?>
 			<?php if(!empty($crumb->url)): ?>
 				<span class="breadcrumb__item"><a href="<?= site('url_language') . $crumb->url ?>"><?= $crumb->name ?></a></span>
 			<?php else: ?>

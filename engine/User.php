@@ -13,27 +13,29 @@ class User {
 
 		if(Session::hasCookie(COOKIE_KEY['auth'])) {
 			$auth_key = Session::getCookie(COOKIE_KEY['auth']);
+			$bind_ip = AUTH['bind_session_to_ip'] ? 'AND auth_ip = :auth_ip' : '';
 
-			$sql = '
+			$sql = "
 				SELECT
 					*
 				FROM
 					{user}
 				WHERE
 					auth_token = :auth_token
-					AND auth_ip = :auth_ip
 					AND is_enabled IS true
+					$bind_ip
 				ORDER BY
 					date_created DESC
 				LIMIT 1
-			';
+			";
 
 			$user = new Statement($sql);
 
-			$binding = [
-				'auth_token' => $auth_key,
-				'auth_ip' => Request::$ip
-			];
+			$binding = ['auth_token' => $auth_key];
+
+			if(AUTH['bind_session_to_ip']) {
+				$binding['auth_ip'] = Request::$ip;
+			}
 
 			$user = $user->execute($binding)->fetch();
 

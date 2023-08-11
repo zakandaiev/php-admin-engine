@@ -368,7 +368,7 @@ class Form {
 						return $value >= $operand_value ? true : false;
 					}
 					case 'wysiwyg': {
-						$value = strip_tags($value);
+						$value = html($value);
 					}
 				}
 
@@ -404,7 +404,7 @@ class Form {
 						return $value <= $operand_value ? true : false;
 					}
 					case 'wysiwyg': {
-						$value = strip_tags($value);
+						$value = html($value);
 					}
 				}
 

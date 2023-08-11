@@ -4,19 +4,19 @@ $title = __('admin.user.add_user');
 
 Page::set('title', $title);
 
-Breadcrumb::add(__('admin.user.users'), '/admin/user');
-Breadcrumb::add($title);
+Page::breadcrumb('add', ['name' => __('admin.user.users'), 'url' => '/admin/user']);
+Page::breadcrumb('add', ['name' => $title]);
 
 $form_builder = new FormBuilder('user/add');
 $form_attributes = 'data-redirect="' . site('url_language') . '/admin/user" data-validate';
 
-// $form_builder->setFieldValue('group', array_map(function($group) {
-// 	$t = new \stdClass();
-// 	$t->value = $group->id;
-// 	$t->name = $group->name;
-// 	$t->selected = false;
-// 	return $t;
-// }, $groups));
+$form_builder->setFieldValue('group', array_map(function($group) {
+	$t = new \stdClass();
+	$t->value = $group->id;
+	$t->name = $group->name;
+	$t->selected = false;
+	return $t;
+}, $groups));
 ?>
 
 <?php Theme::header(); ?>

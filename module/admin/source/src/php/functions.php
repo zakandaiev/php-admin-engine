@@ -29,11 +29,6 @@ Asset::js('js/wysiwyg', 'defer');
 // Asset::js('js/translations', 'defer', '/admin/translation/$module/$language');
 Asset::js('js/main', 'defer');
 
-############################# BREADCRUMBS #############################
-Breadcrumb::setOption('render_homepage', true);
-Breadcrumb::setOption('homepage_name', __('admin.breadcrumb.home'));
-Breadcrumb::setOption('homepage_url', '/admin/dashboard');
-
 // TODO
 // ############################# NOTIFICATIONS #############################
 // function notification($type, $key = null) {

@@ -33,8 +33,8 @@ class Theme {
 	}
 
 	public static function breadcrumb($name = '', $data = []) {
-		$data[__FUNCTION__] = Breadcrumb::get();
-		$data['options'] = Breadcrumb::getOption();
+		$data['items'] = Page::get(__FUNCTION__)->items;
+		$data['options'] = Page::get(__FUNCTION__)->options;
 
 		self::loadTemplate(__FUNCTION__, $name, $data);
 	}

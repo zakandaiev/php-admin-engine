@@ -4,10 +4,19 @@ $title = __('admin.user.users');
 
 Page::set('title', $title);
 
-Breadcrumb::add($title);
+Page::breadcrumb('add', ['name' => $title]);
 
 $filter_builder = new FilterBuilder('user');
 $filter_selected = $filter_builder->getSelected();
+
+$interface_builder = new InterfaceBuilder([
+	'filter' => 'user',
+	'title' => $title,
+	'fields' => [],
+	'actions' => [
+		['name' => __('admin.user.add_user'), 'url' => '/admin/user/add']
+	]
+]);
 ?>
 
 <?php Theme::header(); ?>
@@ -23,18 +32,7 @@ $filter_selected = $filter_builder->getSelected();
 
 			<?php Theme::breadcrumb(); ?>
 
-			<h2 class="section__title">
-				<span><?= $title ?></span>
-
-				<div class="section__actions">
-					<?php if(Request::has('show-filters')): ?>
-						<a href="<?= site('permalink') ?>" class="btn btn_secondary" data-tooltip="top" title="<?= __('admin.filter.show_filters') ?>"><i class="icon icon-filter-minus"></i></a>
-					<?php else: ?>
-						<a href="<?= link_filter('show-filters') ?>" class="btn btn_secondary" data-tooltip="top" title="<?= __('admin.filter.show_filters') ?>"><i class="icon icon-filter-plus"></i></a>
-					<?php endif; ?>
-					<a href="<?= site('url_language') ?>/admin/user/add" class="btn btn_primary"><?= __('admin.user.add_user') ?></a>
-				</div>
-			</h2>
+			<?= $interface_builder->render() ?>
 
 			<div class="row gap-xs">
 				<?php if(Request::has('show-filters')): ?>

@@ -190,11 +190,12 @@
 									</div>
 
 									<div class="input-group">
+										<span>www.</span>
 										<select data-placeholder="Select...">
 											<option data-placeholder="true"><option>
-											<option>One</option>
-											<option>Two</option>
-											<option>Three</option>
+											<option>google.com</option>
+											<option>microsoft.com</option>
+											<option>bing.com</option>
 										</select>
 										<button type="button" class="cursor-pointer">Go!</button>
 									</div>
