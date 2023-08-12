@@ -40,9 +40,9 @@
 										<td>864-348-0485</td>
 										<td>June 21, 1961</td>
 										<td class="table__actions">
-											<a href="#" class="table__action" data-tooltip="top" data-title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" class="table__action" data-tooltip="top" data-title="Edit"><i class="icon icon-edit"></i></a>
-											<button type="button" class="table__action" data-tooltip="top" data-title="Delete"><i class="icon icon-trash"></i></button>
+											<a href="#" class="table__action" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<button type="button" class="table__action" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></button>
 										</td>
 									</tr>
 									<tr>
@@ -50,9 +50,9 @@
 										<td>914-939-2458</td>
 										<td>May 15, 1948</td>
 										<td class="table__actions">
-											<a href="#" class="table__action" data-tooltip="top" data-title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" class="table__action" data-tooltip="top" data-title="Edit"><i class="icon icon-edit"></i></a>
-											<button type="button" class="table__action" data-tooltip="top" data-title="Delete"><i class="icon icon-trash"></i></button>
+											<a href="#" class="table__action" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<button type="button" class="table__action" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></button>
 										</td>
 									</tr>
 									<tr>
@@ -60,9 +60,9 @@
 										<td>704-993-5435</td>
 										<td>September 14, 1965</td>
 										<td class="table__actions">
-											<a href="#" class="table__action" data-tooltip="top" data-title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" class="table__action" data-tooltip="top" data-title="Edit"><i class="icon icon-edit"></i></a>
-											<button type="button" class="table__action" data-tooltip="top" data-title="Delete"><i class="icon icon-trash"></i></button>
+											<a href="#" class="table__action" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<button type="button" class="table__action" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></button>
 										</td>
 									</tr>
 									<tr>
@@ -70,9 +70,9 @@
 										<td>765-382-8195</td>
 										<td>April 2, 1971</td>
 										<td class="table__actions">
-											<a href="#" class="table__action" data-tooltip="top" data-title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" class="table__action" data-tooltip="top" data-title="Edit"><i class="icon icon-edit"></i></a>
-											<button type="button" class="table__action" data-tooltip="top" data-title="Delete"><i class="icon icon-trash"></i></button>
+											<a href="#" class="table__action" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<button type="button" class="table__action" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></button>
 										</td>
 									</tr>
 									<tr>
@@ -80,9 +80,9 @@
 										<td>202-672-1407</td>
 										<td>October 12, 1966</td>
 										<td class="table__actions">
-											<a href="#" class="table__action" data-tooltip="top" data-title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" class="table__action" data-tooltip="top" data-title="Edit"><i class="icon icon-edit"></i></a>
-											<button type="button" class="table__action" data-tooltip="top" data-title="Delete"><i class="icon icon-trash"></i></button>
+											<a href="#" class="table__action" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<button type="button" class="table__action" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></button>
 										</td>
 									</tr>
 								</tbody>
@@ -114,9 +114,9 @@
 										<td>864-348-0485</td>
 										<td>June 21, 1961</td>
 										<td class="table__actions">
-											<a href="#" class="table__action" data-tooltip="top" data-title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" class="table__action" data-tooltip="top" data-title="Edit"><i class="icon icon-edit"></i></a>
-											<button type="button" class="table__action" data-tooltip="top" data-title="Delete"><i class="icon icon-trash"></i></button>
+											<a href="#" class="table__action" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<button type="button" class="table__action" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></button>
 										</td>
 									</tr>
 									<tr>
@@ -124,9 +124,9 @@
 										<td>914-939-2458</td>
 										<td>May 15, 1948</td>
 										<td class="table__actions">
-											<a href="#" class="table__action" data-tooltip="top" data-title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" class="table__action" data-tooltip="top" data-title="Edit"><i class="icon icon-edit"></i></a>
-											<button type="button" class="table__action" data-tooltip="top" data-title="Delete"><i class="icon icon-trash"></i></button>
+											<a href="#" class="table__action" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<button type="button" class="table__action" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></button>
 										</td>
 									</tr>
 									<tr>
@@ -134,9 +134,9 @@
 										<td>704-993-5435</td>
 										<td>September 14, 1965</td>
 										<td class="table__actions">
-											<a href="#" class="table__action" data-tooltip="top" data-title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" class="table__action" data-tooltip="top" data-title="Edit"><i class="icon icon-edit"></i></a>
-											<button type="button" class="table__action" data-tooltip="top" data-title="Delete"><i class="icon icon-trash"></i></button>
+											<a href="#" class="table__action" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<button type="button" class="table__action" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></button>
 										</td>
 									</tr>
 									<tr>
@@ -144,9 +144,9 @@
 										<td>765-382-8195</td>
 										<td>April 2, 1971</td>
 										<td class="table__actions">
-											<a href="#" class="table__action" data-tooltip="top" data-title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" class="table__action" data-tooltip="top" data-title="Edit"><i class="icon icon-edit"></i></a>
-											<button type="button" class="table__action" data-tooltip="top" data-title="Delete"><i class="icon icon-trash"></i></button>
+											<a href="#" class="table__action" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<button type="button" class="table__action" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></button>
 										</td>
 									</tr>
 									<tr>
@@ -154,9 +154,9 @@
 										<td>202-672-1407</td>
 										<td>October 12, 1966</td>
 										<td class="table__actions">
-											<a href="#" class="table__action" data-tooltip="top" data-title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" class="table__action" data-tooltip="top" data-title="Edit"><i class="icon icon-edit"></i></a>
-											<button type="button" class="table__action" data-tooltip="top" data-title="Delete"><i class="icon icon-trash"></i></button>
+											<a href="#" class="table__action" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<button type="button" class="table__action" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></button>
 										</td>
 									</tr>
 								</tbody>
@@ -188,9 +188,9 @@
 										<td>864-348-0485</td>
 										<td>June 21, 1961</td>
 										<td class="table__actions">
-											<a href="#" class="table__action" data-tooltip="top" data-title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" class="table__action" data-tooltip="top" data-title="Edit"><i class="icon icon-edit"></i></a>
-											<button type="button" class="table__action" data-tooltip="top" data-title="Delete"><i class="icon icon-trash"></i></button>
+											<a href="#" class="table__action" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<button type="button" class="table__action" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></button>
 										</td>
 									</tr>
 									<tr>
@@ -198,9 +198,9 @@
 										<td>914-939-2458</td>
 										<td>May 15, 1948</td>
 										<td class="table__actions">
-											<a href="#" class="table__action" data-tooltip="top" data-title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" class="table__action" data-tooltip="top" data-title="Edit"><i class="icon icon-edit"></i></a>
-											<button type="button" class="table__action" data-tooltip="top" data-title="Delete"><i class="icon icon-trash"></i></button>
+											<a href="#" class="table__action" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<button type="button" class="table__action" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></button>
 										</td>
 									</tr>
 									<tr>
@@ -208,9 +208,9 @@
 										<td>704-993-5435</td>
 										<td>September 14, 1965</td>
 										<td class="table__actions">
-											<a href="#" class="table__action" data-tooltip="top" data-title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" class="table__action" data-tooltip="top" data-title="Edit"><i class="icon icon-edit"></i></a>
-											<button type="button" class="table__action" data-tooltip="top" data-title="Delete"><i class="icon icon-trash"></i></button>
+											<a href="#" class="table__action" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<button type="button" class="table__action" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></button>
 										</td>
 									</tr>
 									<tr>
@@ -218,9 +218,9 @@
 										<td>765-382-8195</td>
 										<td>April 2, 1971</td>
 										<td class="table__actions">
-											<a href="#" class="table__action" data-tooltip="top" data-title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" class="table__action" data-tooltip="top" data-title="Edit"><i class="icon icon-edit"></i></a>
-											<button type="button" class="table__action" data-tooltip="top" data-title="Delete"><i class="icon icon-trash"></i></button>
+											<a href="#" class="table__action" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<button type="button" class="table__action" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></button>
 										</td>
 									</tr>
 									<tr>
@@ -228,9 +228,9 @@
 										<td>202-672-1407</td>
 										<td>October 12, 1966</td>
 										<td class="table__actions">
-											<a href="#" class="table__action" data-tooltip="top" data-title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" class="table__action" data-tooltip="top" data-title="Edit"><i class="icon icon-edit"></i></a>
-											<button type="button" class="table__action" data-tooltip="top" data-title="Delete"><i class="icon icon-trash"></i></button>
+											<a href="#" class="table__action" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<button type="button" class="table__action" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></button>
 										</td>
 									</tr>
 								</tbody>
@@ -262,9 +262,9 @@
 										<td>864-348-0485</td>
 										<td>June 21, 1961</td>
 										<td class="table__actions">
-											<a href="#" class="table__action" data-tooltip="top" data-title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" class="table__action" data-tooltip="top" data-title="Edit"><i class="icon icon-edit"></i></a>
-											<button type="button" class="table__action" data-tooltip="top" data-title="Delete"><i class="icon icon-trash"></i></button>
+											<a href="#" class="table__action" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<button type="button" class="table__action" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></button>
 										</td>
 									</tr>
 									<tr>
@@ -272,9 +272,9 @@
 										<td>914-939-2458</td>
 										<td>May 15, 1948</td>
 										<td class="table__actions">
-											<a href="#" class="table__action" data-tooltip="top" data-title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" class="table__action" data-tooltip="top" data-title="Edit"><i class="icon icon-edit"></i></a>
-											<button type="button" class="table__action" data-tooltip="top" data-title="Delete"><i class="icon icon-trash"></i></button>
+											<a href="#" class="table__action" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<button type="button" class="table__action" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></button>
 										</td>
 									</tr>
 									<tr>
@@ -282,9 +282,9 @@
 										<td>704-993-5435</td>
 										<td>September 14, 1965</td>
 										<td class="table__actions">
-											<a href="#" class="table__action" data-tooltip="top" data-title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" class="table__action" data-tooltip="top" data-title="Edit"><i class="icon icon-edit"></i></a>
-											<button type="button" class="table__action" data-tooltip="top" data-title="Delete"><i class="icon icon-trash"></i></button>
+											<a href="#" class="table__action" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<button type="button" class="table__action" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></button>
 										</td>
 									</tr>
 									<tr>
@@ -292,9 +292,9 @@
 										<td>765-382-8195</td>
 										<td>April 2, 1971</td>
 										<td class="table__actions">
-											<a href="#" class="table__action" data-tooltip="top" data-title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" class="table__action" data-tooltip="top" data-title="Edit"><i class="icon icon-edit"></i></a>
-											<button type="button" class="table__action" data-tooltip="top" data-title="Delete"><i class="icon icon-trash"></i></button>
+											<a href="#" class="table__action" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<button type="button" class="table__action" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></button>
 										</td>
 									</tr>
 									<tr>
@@ -302,9 +302,9 @@
 										<td>202-672-1407</td>
 										<td>October 12, 1966</td>
 										<td class="table__actions">
-											<a href="#" class="table__action" data-tooltip="top" data-title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" class="table__action" data-tooltip="top" data-title="Edit"><i class="icon icon-edit"></i></a>
-											<button type="button" class="table__action" data-tooltip="top" data-title="Delete"><i class="icon icon-trash"></i></button>
+											<a href="#" class="table__action" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<button type="button" class="table__action" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></button>
 										</td>
 									</tr>
 								</tbody>

@@ -9,7 +9,6 @@ use \Engine\Request;
 class FilterBuilder {
 	protected $filter_name;
 	protected $fields = [];
-	protected $fields_key = [];
 
 	public function __construct($filter_name, $module = null) {
 		$path = Path::file('filter', $module) . "/$filter_name.php";
@@ -36,10 +35,17 @@ class FilterBuilder {
 			$field['value'] = Request::$get[$field_alias] ?? @$field['default'];
 
 			$this->fields[$field_alias] = $field;
-			$this->fields_key[] = $field_alias;
 		}
 
 		return $this;
+	}
+
+	public function get($key = null) {
+		return isset($key) ? @$this->fields[$key] : $this->fields;
+	}
+
+	public function has($key) {
+		return isset($this->fields[$key]);
 	}
 
 	public function setOptions($field_alias, $value = null) {
@@ -70,7 +76,7 @@ class FilterBuilder {
 		$html .= '</div>';
 
 		foreach(Request::$get as $hidden_alias => $hidden_value) {
-			if(in_array($hidden_alias, $this->fields_key)) {
+			if($this->has($hidden_alias)) {
 				continue;
 			}
 
@@ -186,7 +192,7 @@ class FilterBuilder {
 					if(
 						(isset($field['multiple']) && $field['multiple'] && is_array($field['value']) && in_array($option->id, $field['value']))
 						|| ($field['type'] === 'checkbox' && is_array($field['value']) && in_array($option->id, $field['value']))
-						|| $option->id === $field['value']
+						|| ($option->id == $field['value'] && is_scalar($field['value']))
 					) {
 						$checked = ' checked';
 					}
@@ -238,7 +244,7 @@ class FilterBuilder {
 				}
 
 				foreach($field['options'] as $option) {
-					$selected = $option->id === $field['value'] ? ' selected' : '';
+					$selected = $option->id == $field['value'] && is_scalar($field['value']) ? ' selected' : '';
 					$html .= '<option value="' . $option->id . '"' . $selected . '>' . $option->text . '</option>';
 				}
 

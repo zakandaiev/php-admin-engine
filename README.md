@@ -28,7 +28,6 @@
 * admin: uploads interface (scan /upload directory)
 * admin: wysiwyg insert from uploads interface
 * admin: wysiwyg add image upload in js (but before handle /upload routes for get, post, delete)
-* admin: interface builder
 * admin: dashboard, profile, pages, messages, groups, settings, logs, modules... interfaces
 * admin: handle login & access to routes due to group, registration, reset password
 * api + swagger:

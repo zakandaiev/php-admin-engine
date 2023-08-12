@@ -11,7 +11,7 @@ document.addEventListener('click', event => {
 	event.preventDefault();
 
 	const placement = popover.getAttribute('data-popover') || 'top';
-	const title = popover.getAttribute('data-title');
+	const title = popover.getAttribute('title');
 	const content = popover.getAttribute('data-content');
 
 	document.querySelectorAll('.popover-wrapper').forEach(wr => {

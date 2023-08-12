@@ -114,27 +114,27 @@
 										<td>Vanessa Tucker (admin@adm.in)</td>
 										<td>12.07.2023 at 11:47</td>
 										<td class="table__action">
-											<a href="#" data-tooltip="top" data-title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" data-tooltip="top" data-title="Edit"><i class="icon icon-edit"></i></a>
-											<a href="#" data-tooltip="top" data-title="Delete"><i class="icon icon-trash"></i></a>
+											<a href="#" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<a href="#" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></a>
 										</td>
 									</tr>
 									<tr>
 										<td>Vanessa Tucker (admin@adm.in)</td>
 										<td>12.07.2023 at 11:47</td>
 										<td class="table__action">
-											<a href="#" data-tooltip="top" data-title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" data-tooltip="top" data-title="Edit"><i class="icon icon-edit"></i></a>
-											<a href="#" data-tooltip="top" data-title="Delete"><i class="icon icon-trash"></i></a>
+											<a href="#" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<a href="#" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></a>
 										</td>
 									</tr>
 									<tr>
 										<td>Vanessa Tucker (admin@adm.in)</td>
 										<td>12.07.2023 at 11:47</td>
 										<td class="table__action">
-											<a href="#" data-tooltip="top" data-title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" data-tooltip="top" data-title="Edit"><i class="icon icon-edit"></i></a>
-											<a href="#" data-tooltip="top" data-title="Delete"><i class="icon icon-trash"></i></a>
+											<a href="#" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<a href="#" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></a>
 										</td>
 									</tr>
 								</tbody>

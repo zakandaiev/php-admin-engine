@@ -9,7 +9,7 @@ document.addEventListener('mouseover', event => {
 	event.preventDefault();
 
 	const placement = tooltip.getAttribute('data-tooltip') || 'top';
-	const content = tooltip.getAttribute('data-title');
+	const content = tooltip.getAttribute('title');
 
 	if (tooltip.parentElement.classList.contains('tooltip-wrapper')) {
 		return false;

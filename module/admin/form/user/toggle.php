@@ -3,6 +3,7 @@
 $is_enabled = [
 	'boolean' => true,
 	'modify' => function($field) {
+		debug($field);exit;
 		return !$field;
 	}
 ];

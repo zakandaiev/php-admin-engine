@@ -220,7 +220,9 @@ function installConfig($data) {
 
 	// SERVICE
 	$config .= "define('SERVICE', [" . PHP_EOL;
-	$config .= "\t'ip_checker' => 'https://check-host.net/ip-info?host=%s'" . PHP_EOL;
+	$config .= "\t'ip_checker' => function($value) {" . PHP_EOL;
+	$config .= "\t\treturn !empty(\$value) ? 'https://check-host.net/ip-info?host=' . \$value : false;" . PHP_EOL;
+	$config .= "\t}" . PHP_EOL;
 	$config .= "]);" . PHP_EOL;
 	$config .= PHP_EOL;
 
