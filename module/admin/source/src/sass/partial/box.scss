@@ -5,6 +5,10 @@
 	box-shadow: var(--shadow);
 	background: var(--color-box);
 
+	& + .box {
+		margin-top: var(--gap);
+	}
+
 	// .box__image
 	&__image {
 		display: block;
