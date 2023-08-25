@@ -92,15 +92,4 @@
 	text-decoration: none;
 	margin: 0;
 	padding: 0;
-
-	&:hover, &:focus, &:active {
-		text-decoration: none;
-	}
-
-	&::-webkit-search-decoration,
-	&::-webkit-search-cancel-button,
-	&::-webkit-search-results-button,
-	&::-webkit-search-results-decoration {
-		appearance: none;
-	}
 }

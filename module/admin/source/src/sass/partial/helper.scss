@@ -92,13 +92,13 @@
 }
 
 $indent-step: 0.5;
-@for $i from 0 through 10 {
+@for $i from 0 through 20 {
 	.gap-#{$i} {
-		gap: #{$i * $indent-step}em !important;
+		gap: #{$i * $indent-step}rem !important;
 	}
 }
 
-/* ==========  Margins  ========== */
+/* ==========  Margin  ========== */
 .m-0 {
 	margin: 0 !important;
 }
@@ -160,7 +160,7 @@ $indent-step: 0.5;
 	margin: auto !important;
 }
 
-/* ==========  Paddings  ========== */
+/* ==========  Padding  ========== */
 .p-0 {
 	padding: 0 !important;
 }
@@ -248,9 +248,13 @@ $indent-step: 0.5;
 	font-style: italic !important;
 }
 
-/* ==========  Decorations  ========== */
+/* ==========  Decoration  ========== */
 .radius {
 	border-radius: var(--radius) !important;
+}
+
+.shadow {
+	box-shadow: var(--shadow) !important;
 }
 
 .rounded {
@@ -261,7 +265,11 @@ $indent-step: 0.5;
 	border: var(--border) !important;
 }
 
-/* ==========  Tables  ========== */
+.underline {
+	text-decoration: underline !important;
+}
+
+/* ==========  Table  ========== */
 .table-fixed {
 	table-layout: fixed !important;
 }
@@ -284,7 +292,7 @@ $indent-step: 0.5;
 	visibility: hidden !important;
 }
 
-/* ==========  Dimensions  ========== */
+/* ==========  Dimension  ========== */
 .w-100 {
 	width: 100% !important;
 }
@@ -349,7 +357,7 @@ $indent-step: 1;
 	object-fit: cover !important;
 }
 
-/* ==========  Colorizing  ========== */
+/* ==========  Color  ========== */
 .color-heading {
 	color: var(--color-heading) !important;
 }
@@ -451,95 +459,95 @@ $indent-step: 1;
 }
 
 .background-primary {
-	background-color: var(--color-primary) !important;
+	background: var(--color-primary) !important;
 
 	&_hover {
 		transition: var(--transition);
 
 		&:hover, &:focus, &:active {
-			background-color: var(--color-primary-hover) !important;
+			background: var(--color-primary-hover) !important;
 		}
 	}
 }
 
 .background-secondary {
-	background-color: var(--color-secondary) !important;
+	background: var(--color-secondary) !important;
 
 	&_hover {
 		transition: var(--transition);
 
 		&:hover, &:focus, &:active {
-			background-color: var(--color-secondary-hover) !important;
+			background: var(--color-secondary-hover) !important;
 		}
 	}
 }
 
 .background-success {
-	background-color: var(--color-success) !important;
+	background: var(--color-success) !important;
 
 	&_hover {
 		transition: var(--transition);
 
 		&:hover, &:focus, &:active {
-			background-color: var(--color-success-hover) !important;
+			background: var(--color-success-hover) !important;
 		}
 	}
 }
 
 .background-info {
-	background-color: var(--color-info) !important;
+	background: var(--color-info) !important;
 
 	&_hover {
 		transition: var(--transition);
 
 		&:hover, &:focus, &:active {
-			background-color: var(--color-info-hover) !important;
+			background: var(--color-info-hover) !important;
 		}
 	}
 }
 
 .background-warning {
-	background-color: var(--color-warning) !important;
+	background: var(--color-warning) !important;
 
 	&_hover {
 		transition: var(--transition);
 
 		&:hover, &:focus, &:active {
-			background-color: var(--color-warning-hover) !important;
+			background: var(--color-warning-hover) !important;
 		}
 	}
 }
 
 .background-error {
-	background-color: var(--color-error) !important;
+	background: var(--color-error) !important;
 
 	&_hover {
 		transition: var(--transition);
 
 		&:hover, &:focus, &:active {
-			background-color: var(--color-error-hover) !important;
+			background: var(--color-error-hover) !important;
 		}
 	}
 }
 
 .background-border {
-	background-color: var(--color-border) !important;
+	background: var(--color-border) !important;
 
 	&_hover {
 		transition: var(--transition);
 
 		&:hover, &:focus, &:active {
-			background-color: var(--color-border-hover) !important;
+			background: var(--color-border-hover) !important;
 		}
 	}
 }
 
 .background-body {
-	background-color: var(--color-body) !important;
+	background: var(--color-body) !important;
 }
 
 .background-box {
-	background-color: var(--color-box) !important;
+	background: var(--color-box) !important;
 }
 
 /* ==========  Cursors  ========== */

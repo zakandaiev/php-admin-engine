@@ -6,7 +6,7 @@
 	&__item {
 		display: block;
 		padding: 1em 1.5em;
-		background-color: transparent;
+		background: transparent;
 		border-bottom: var(--border);
 		color: var(--color-text);
 
@@ -22,11 +22,11 @@
 
 	& > a.list-group__item {
 		&:hover, &:focus, &:active {
-			background-color: var(--color-border);
+			background: var(--color-border);
 		}
 
 		&.active {
-			background-color: var(--color-primary);
+			background: var(--color-primary);
 			color: #fff;
 		}
 	}

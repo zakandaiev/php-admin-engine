@@ -160,7 +160,7 @@
 								<tbody>
 									<tr>
 										<td>
-											<div class="d-flex gap-2">
+											<div class="d-flex gap-3">
 												<img class="d-block flex-shrink-0 w-4rem h-4rem fit-cover radius" src="https://demo.zakandaiev.com/upload/demo/post-1.jpg" data-fancybox>
 												<div>
 													<p class="m-b-0"><strong>Lorem post #1</strong></p>
@@ -175,7 +175,7 @@
 									</tr>
 									<tr>
 										<td>
-											<div class="d-flex gap-2">
+											<div class="d-flex gap-3">
 												<img class="d-block flex-shrink-0 w-4rem h-4rem fit-cover radius" src="https://demo.zakandaiev.com/upload/demo/post-2.jpg" data-fancybox>
 												<div>
 													<p class="m-b-0"><strong>Lorem post #2</strong></p>
@@ -190,7 +190,7 @@
 									</tr>
 									<tr>
 										<td>
-											<div class="d-flex gap-2">
+											<div class="d-flex gap-3">
 												<img class="d-block flex-shrink-0 w-4rem h-4rem fit-cover radius" src="https://demo.zakandaiev.com/upload/demo/post-3.jpg" data-fancybox>
 												<div>
 													<p class="m-b-0"><strong>Lorem post #3</strong></p>

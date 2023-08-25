@@ -31,7 +31,7 @@ body {
 	font-weight: var(--font-normal);
 	line-height: 1.4;
 	color: var(--color-text);
-	background-color: var(--color-body);
+	background: var(--color-body);
 
 	&.disable-scroll {
 		overflow: hidden;
@@ -98,7 +98,7 @@ mark, .mark {
 	display: inline;
 	margin: 0;
 	padding: 0;
-	background-color: #fef1d5;
+	background: #fef1d5;
 }
 
 img, svg, picture {

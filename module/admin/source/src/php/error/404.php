@@ -16,7 +16,7 @@
 
 			<h4 class="color-text"><?= __('admin.404.subtitle') ?></h4>
 
-			<div class="d-flex gap-1 m-t-4">
+			<div class="d-flex gap-2 m-t-4">
 				<?php if(isset(Request::$referer)): ?>
 					<a href="<?= Request::$referer ?>" class="btn btn_lg btn_secondary"><?= __('admin.404.go_back') ?></a>
 					<?php if(trim(Request::$referer ?? '', '/') !== Request::$base): ?>

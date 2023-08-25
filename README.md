@@ -20,8 +20,6 @@
 
 ## TODO
 * engine: modules install
-* admin: form.js - add navigator vibrate
-* admin: modals - add espace button
 * admin: create collapse.js
 * admin: remake popover & tooltip to fixed pos
 * admin: tooltip handle title attr, but not data-title
@@ -34,4 +32,5 @@
   * /api/template/$path - load Template::loadT... for ajax/fetch
   * /api/data/$data - show data from DB
 * install: instalation page
+* dev: refactor charts initialization, add default double-theme colors etc.
 * other jobs based on old (but ready) https://github.com/zakandaiev/adminkit-engine

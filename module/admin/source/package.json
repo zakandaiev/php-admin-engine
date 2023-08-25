@@ -1,6 +1,8 @@
 {
 	"name": "frontend-starter",
-	"version": "1.4.1",
+	"license": "MIT",
+	"version": "1.5.1",
+	"author": "github.com/zakandaiev",
 	"description": "FrontEnd Starter - boilerplate for easy building sites using task manager Gulp 4",
 	"keywords": [
 		"frontend",
@@ -54,11 +56,9 @@
 			"./src/js/wysiwyg.js"
 		]
 	},
-	"author": "github.com/zakandaiev",
-	"license": "MIT",
 	"devDependencies": {
-		"@babel/core": "^7.22.9",
-		"@babel/preset-env": "^7.22.9",
+		"@babel/core": "^7.22.11",
+		"@babel/preset-env": "^7.22.10",
 		"browser-sync": "^2.29.3",
 		"del": "^6.1.1",
 		"gulp": "^4.0.2",
@@ -74,12 +74,12 @@
 		"gulp-newer": "^1.4.0",
 		"gulp-sass": "^5.1.0",
 		"gulp-terser": "^2.1.0",
-		"sass": "^1.64.2"
+		"sass": "^1.66.1"
 	},
 	"dependencies": {
-		"@fancyapps/ui": "^5.0.20",
+		"@fancyapps/ui": "^5.0.22",
 		"air-datepicker": "^3.4.0",
-		"chart.js": "^4.3.3",
+		"chart.js": "^4.4.0",
 		"filepond": "^4.30.4",
 		"filepond-plugin-file-poster": "^2.5.1",
 		"filepond-plugin-file-validate-size": "^2.2.8",

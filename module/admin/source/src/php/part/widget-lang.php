@@ -6,7 +6,7 @@ $languages = site('languages');
 
 <?php if(!empty($languages)): ?>
 
-	<div class="d-flex flex-wrap justify-content-center gap-1">
+	<div class="d-flex flex-wrap justify-content-center gap-2">
 		<?php foreach($languages as $language): ?>
 
 			<?php if($language['key'] === site('language_current')) continue; ?>

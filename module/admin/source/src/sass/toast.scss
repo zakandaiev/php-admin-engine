@@ -41,7 +41,7 @@ $toast-color-error: var(--color-error);
 		border-radius: $toast-radius;
 		opacity: $toast-opacity;
 		box-shadow: $toast-shadow;
-		background-color: var(--color-box);
+		background: var(--color-box);
 		color: var(--color-text);
 		cursor: pointer;
 		overflow: hidden;
@@ -59,25 +59,25 @@ $toast-color-error: var(--color-error);
 
 		// .toasts__item.success
 		&.success {
-			background-color: $toast-color-success;
+			background: $toast-color-success;
 			color: #fff;
 		}
 
 		// .toasts__item.info
 		&.info {
-			background-color: $toast-color-info;
+			background: $toast-color-info;
 			color: #fff;
 		}
 
 		// .toasts__item.warning
 		&.warning {
-			background-color: $toast-color-warning;
+			background: $toast-color-warning;
 			color: #fff;
 		}
 
 		// .toasts__item.error
 		&.error {
-			background-color: $toast-color-error;
+			background: $toast-color-error;
 			color: #fff;
 		}
 
@@ -99,7 +99,7 @@ $toast-color-error: var(--color-error);
 		height: 22px;
 		margin-right: 13px;
 		border-radius: 50%;
-		background-color: var(--color-heading);
+		background: var(--color-heading);
 		position: relative;
 
 		&::before, &::after {
@@ -108,7 +108,7 @@ $toast-color-error: var(--color-error);
 			position: absolute;
 			z-index: 10;
 			border-radius: 3px;
-			background-color: var(--color-box);
+			background: var(--color-box);
 			transform: rotate(-45deg);
 		}
 
@@ -149,37 +149,37 @@ $toast-color-error: var(--color-error);
 
 		// .toasts__icon.success
 		&.success {
-			background-color: #fff;
+			background: #fff;
 
 			&::before, &::after {
-				background-color: $toast-color-success;
+				background: $toast-color-success;
 			}
 		}
 
 		// .toasts__icon.info
 		&.info {
-			background-color: #fff;
+			background: #fff;
 
 			&::before, &::after {
-				background-color: $toast-color-info;
+				background: $toast-color-info;
 			}
 		}
 
 		// .toasts__icon.warning
 		&.warning {
-			background-color: #fff;
+			background: #fff;
 
 			&::before, &::after {
-				background-color: $toast-color-warning;
+				background: $toast-color-warning;
 			}
 		}
 
 		// .toasts__icon.error
 		&.error {
-			background-color: #fff;
+			background: #fff;
 
 			&::before, &::after {
-				background-color: $toast-color-error;
+				background: $toast-color-error;
 			}
 		}
 	}

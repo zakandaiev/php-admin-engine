@@ -110,7 +110,7 @@
 			color: var(--color-text);
 			margin: 0;
 
-			&.disabled {
+			&.disabled, &:disabled {
 				background: var(--color-border);
 			}
 

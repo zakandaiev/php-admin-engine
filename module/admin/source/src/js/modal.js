@@ -23,29 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     container.appendChild(modal);
   });
-
-  // document.documentElement.style.setProperty('--scrollbar-width', `${getScrollbarWidth()}px`);
-
-  // function getScrollbarWidth() {
-  //   // Creating invisible container
-  //   const outer = document.createElement('div');
-  //   outer.style.visibility = 'hidden';
-  //   outer.style.overflow = 'scroll'; // forcing scrollbar to appear
-  //   outer.style.msOverflowStyle = 'scrollbar'; // needed for WinJS apps
-  //   document.body.appendChild(outer);
-
-  //   // Creating inner element and placing it in the container
-  //   const inner = document.createElement('div');
-  //   outer.appendChild(inner);
-
-  //   // Calculating difference between container's full width and the child width
-  //   const scrollbarWidth = (outer.offsetWidth - inner.offsetWidth);
-
-  //   // Removing temporary elements from the DOM
-  //   outer.parentNode.removeChild(outer);
-
-  //   return scrollbarWidth;
-  // }
 });
 
 // OPEN
@@ -77,6 +54,24 @@ document.addEventListener('click', event => {
   if ((close && modal) || (!close && !modal)) {
     closeModal(modal);
   }
+});
+
+// CLOSE BY ESC
+document.addEventListener('keydown', event => {
+  let is_escape = false;
+
+  if ('key' in event) {
+    is_escape = (event.key === 'Escape' || event.key === 'Esc');
+  }
+  else {
+    is_escape = (event.keyCode === 27);
+  }
+
+  if (!is_escape) {
+    return false;
+  }
+
+  document.querySelectorAll('.modal').forEach(modal => closeModal(modal));
 });
 
 function openModal(modal) {

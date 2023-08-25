@@ -23,7 +23,7 @@
 					<div class="box">
 						<div class="box__body">
 
-							<div class="d-flex flex-column gap-1 m-b-3">
+							<div class="d-flex flex-column gap-2 m-b-3">
 								<a class="btn btn_lg btn_google" href="#">
 									<?= svg('brand/google') ?>
 									<span><?= __('admin.auth.login_with_google') ?></span>

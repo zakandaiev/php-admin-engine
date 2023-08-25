@@ -71,8 +71,6 @@ notificationForm.addEventListener('submit', event => {
 	const type = notificationForm.querySelector('[name="type"]').value;
 	const duration = notificationForm.querySelector('[name="duration"]').value;
 
-	console.log(message, type, duration);
-
 	toast(type, message, duration);
 });
 </script>

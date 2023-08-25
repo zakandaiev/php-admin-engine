@@ -39,7 +39,7 @@
 }
 
 .filepond--file-action-button {
-	background-color: #000;
+	background: #000;
 	color: var(--color-text-muted);
 	cursor: pointer;
 	transition: var(--transition);
@@ -56,11 +56,11 @@
 
 .filepond--item-panel, .filepond--drip {
 	border-radius: var(--radius);
-	background-color: var(--color-box);
+	background: var(--color-box);
 }
 
 .filepond--drip-blob {
-	background-color: var(--color-text);
+	background: var(--color-text);
 }
 
 .filepond--file {
@@ -69,11 +69,11 @@
 
 [data-filepond-item-state*='error'] .filepond--item-panel,
 [data-filepond-item-state*='invalid'] .filepond--item-panel {
-	background-color: var(--color-error);
+	background: var(--color-error);
 }
 
 [data-filepond-item-state='processing-complete'] .filepond--item-panel {
-	background-color: var(--color-success);
+	background: var(--color-success);
 }
 
 .filepond--file-info .filepond--file-info-sub {

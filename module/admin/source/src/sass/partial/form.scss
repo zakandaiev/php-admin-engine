@@ -82,7 +82,7 @@ input, textarea, select,
 		margin-bottom: 0;
 	}
 
-	&.disabled {
+	&.disabled, &:disabled {
 		background: var(--color-border);
 	}
 
@@ -149,12 +149,12 @@ label:not(.switch) {
 
 		&:checked + *::before {
 			@extend .icon-check;
-			background-color: var(--color-primary);
+			background: var(--color-primary);
 			border-color: var(--color-primary);
 			color: #fff;
 		}
 
-		&.disabled {
+		&.disabled, &:disabled {
 			& ~ * {
 				opacity: 0.5;
 				cursor: default;
@@ -188,6 +188,7 @@ label:not(.switch) {
 	display: inline-flex;
 	align-items: center;
 	gap: 0.5em;
+	margin: 0 0 0.5em 0;
 
 	// .switch__slider
 	&__slider {
@@ -239,7 +240,7 @@ label:not(.switch) {
 			}
 		}
 
-		&.disabled {
+		&.disabled, &:disabled {
 			& ~ * {
 				opacity: 0.5;
 				cursor: default;

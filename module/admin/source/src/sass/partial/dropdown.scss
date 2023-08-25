@@ -36,19 +36,19 @@
 		text-align: left;
 		transition: var(--transition);
 
-		&:not(.disabled):not(.active):not(.dropdown__header):not(.dropdown__text):hover,
-		&:not(.disabled):not(.active):not(.dropdown__header):not(.dropdown__text):focus,
-		&:not(.disabled):not(.active):not(.dropdown__header):not(.dropdown__text):active {
+		&:not(.disabled):not(:disabled):not(.active):not(.dropdown__header):not(.dropdown__text):hover,
+		&:not(.disabled):not(:disabled):not(.active):not(.dropdown__header):not(.dropdown__text):focus,
+		&:not(.disabled):not(:disabled):not(.active):not(.dropdown__header):not(.dropdown__text):active {
 			background: var(--color-border);
 			color: var(--color-text);
 		}
 
-		&.disabled {
+		&.disabled, &:disabled {
 			color: var(--color-text-muted);
 			cursor: default;
 		}
 
-		&.active, &.active.disabled {
+		&.active, &.active.disabled, &.active:disabled {
 			background: var(--color-primary);
 			color: #fff;
 		}

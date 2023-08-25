@@ -21,7 +21,7 @@
 		width: 100%;
 		height: 100%;
 		transition: var(--transition);
-		background-color: transparent;
+		background: transparent;
 	}
 }
 
@@ -129,7 +129,7 @@
 		visibility: visible;
 
 		&::before {
-			background-color: rgba(0, 0, 0, 0.5);
+			background: rgba(0, 0, 0, 0.5);
 		}
 
 		& > .modal.active {
