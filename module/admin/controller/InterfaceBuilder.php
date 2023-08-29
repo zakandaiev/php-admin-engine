@@ -115,7 +115,10 @@ class InterfaceBuilder {
 		$html .= '<thead>';
 		$html .= '<tr>';
 		foreach($this->fields as $field_name => $field) {
-			$html .= isset($field['th_class']) ? '<th class="' . $field['th_class'] . '">' : '<th>';
+			$html .= '<th';
+			$html .= isset($field['width']) ? ' width="' . $field['width'] . '"' : '';
+			$html .= isset($field['th_class']) ? ' class="' . $field['th_class'] . '"' : '';
+			$html .= '>';
 
 			$order_alias = $this->getFilterOrderAlias($field_name);
 			$html .= $order_alias ? '<a href="' . link_sort($order_alias) . '">' . @$field['title'] . '</a>' : @$field['title'];
@@ -129,8 +132,13 @@ class InterfaceBuilder {
 		foreach($this->data as $item) {
 			$html .= '<tr>';
 			foreach($this->fields as $field_name => $field) {
-				$html .= isset($field['td_class']) ? '<td class="' . $field['td_class'] . '">' : '<td>';
+				$html .= '<td';
+				$html .= isset($field['width']) ? ' width="' . $field['width'] . '"' : '';
+				$html .= isset($field['td_class']) ? ' class="' . $field['td_class'] . '"' : '';
+				$html .= '>';
+
 				$html .= $this->renderTableItem($field, @$item->$field_name, $item);
+
 				$html .= '</td>';
 			}
 			$html .= '</tr>';
