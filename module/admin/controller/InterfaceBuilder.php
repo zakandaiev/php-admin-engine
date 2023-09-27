@@ -3,6 +3,7 @@
 namespace Module\Admin\Controller;
 
 use \Engine\Request;
+use \Engine\Pagination;
 
 class InterfaceBuilder {
 	protected $filter;
@@ -55,7 +56,7 @@ class InterfaceBuilder {
 	}
 
 	protected function renderActions() {
-		$html = '<div class="section__actions">';
+		$html = '<span class="section__actions">';
 
 		if(!empty($this->filter)) {
 			$filter_action_title = Request::has('show-filters') ? __('admin.filter.hide_filters') : __('admin.filter.show_filters');
@@ -69,7 +70,7 @@ class InterfaceBuilder {
 			$html .= '<a href="' . site('url_language') . $action['url'] . '" class="' . $action_class . '">' . $action['name'] . '</a>';
 		}
 
-		$html .= '</div>';
+		$html .= '</span>';
 
 		return $html;
 	}
@@ -148,6 +149,83 @@ class InterfaceBuilder {
 		$html .= '</table>';
 
 		$html .= '</div>';
+
+		$html .= $this->renderPagination();
+
+		$html .= '</div>';
+
+		return $html;
+	}
+
+	protected function renderPagination() {
+		$pagination = Pagination::getInstance();
+
+		$html = '<div class="box__footer">';
+
+		$prev = null;
+		$next = null;
+		$page1prev = null;
+		$page1next = null;
+		$page2prev = null;
+		$page2next = null;
+		$first = null;
+		$last = null;
+
+		$url = site('url') . $pagination->uri;
+
+		$current = '<span class="pagination__item active">' . $pagination->current_page . '</span>';
+
+		if($pagination->current_page > 1) {
+			$num = $pagination->current_page - 1;
+			$prev = '<a href="' . $url . $num . '" class="pagination__item"><i class="icon icon-chevron-left"></i></a>';
+		}
+
+		if($pagination->current_page < $pagination->total_pages) {
+			$num = $pagination->current_page + 1;
+			$next = '<a href="' . $url . $num . '" class="pagination__item"><i class="icon icon-chevron-right"></i></a>';
+		}
+
+		if($pagination->current_page - 1 > 0) {
+			$num = $pagination->current_page - 1;
+			$page1prev = '<a href="' . $url . $num . '" class="pagination__item">' . $num . '</a>';
+		}
+
+		if($pagination->current_page + 1 <= $pagination->total_pages) {
+			$num = $pagination->current_page + 1;
+			$page1next = '<a href="' . $url . $num . '" class="pagination__item">' . $num . '</a>';
+		}
+
+		if($pagination->current_page - 2 > 0) {
+			$num = $pagination->current_page - 2;
+			$page2prev = '<a href="' . $url . $num . '" class="pagination__item">' . $num . '</a>';
+		}
+
+		if($pagination->current_page + 2 <= $pagination->total_pages) {
+			$num = $pagination->current_page + 2;
+			$page2next = '<a href="' . $url . $num . '" class="pagination__item">' . $num . '</a>';
+		}
+
+		if($pagination->current_page > 4) {
+			$num = 1;
+			$first = '<a href="' . $url . $num . '" class="pagination__item">' . $num . '</a><span class="pagination__item">...</span>';
+		}
+
+		if($pagination->current_page <= $pagination->total_pages - 4) {
+			$num = $pagination->total_pages;
+			$last = '<span class="pagination__item">...</span><a href="' . $url . $num . '" class="pagination__item">' . $num . '</a>';
+		}
+
+		$html .= '<div class="flex-grow-1 row gap-xs justify-content-between align-items-center">';
+		$html .= '<div class="col">';
+		$html .= '<output class="pagination-output">' . __('admin.pagination.total', $pagination->total_rows) . '</output>';
+		$html .= '</div>';
+		if($pagination->total_pages > 1) {
+			$html .= '<div class="col">';
+			$html .= '<nav class="pagination m-0">' . $prev.$first.$page2prev.$page1prev.$current.$page1next.$page2next.$last.$next . '</nav>';
+			$html .= '</div>';
+		}
+		$html .= '</div>';
+
 		$html .= '</div>';
 
 		return $html;

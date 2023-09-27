@@ -2,8 +2,8 @@
 
 namespace Module\Admin\Controller;
 
-use Engine\Controller;
-use Engine\Server;
+use \Engine\Controller;
+use \Engine\Server;
 
 class AdminController extends Controller {
 	public function __construct() {

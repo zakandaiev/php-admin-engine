@@ -1,31 +1,28 @@
-.popover-wrapper {
-	position: relative;
-
-	&.active > .popover {
-		visibility: visible;
-		opacity: 1;
-	}
-}
-
 .popover {
-	position: absolute;
-	z-index: 200;
-	display: flex;
+	position: fixed;
+	z-index: var(--zi-tooltip);
+	display: inline-flex;
 	flex-direction: column;
-	width: 20em;
+	min-width: 11em;
+	max-width: 22em;
 	box-shadow: var(--shadow);
-	text-align: left;
-	transition: var(--transition);
-	visibility: hidden;
-	opacity: 0;
+
+	animation-name: popover_appear;
+	animation-duration: var(--transition-time);
+	animation-fill-mode: both;
+
+	// .popover_disappear
+	&_disappear {
+		animation-name: popover_disappear;
+	}
 
 	&::before {
 		content: "";
 		position: absolute;
-		z-index: 10;
+		z-index: var(--zi-default);
 		display: inline-block;
 		width: 1em;
-    height: 1em;
+		height: 1em;
 		background: var(--color-body);
 		border-width: 0 1px 1px 0;
 		border-style: solid;
@@ -58,73 +55,55 @@
 	}
 
 	// .popover_top
-	&_top {
-		bottom: 100%;
+	&_top::before {
+		top: 100%;
 		left: 50%;
-		transform: translate(-50%, -0.75em);
-
-		&::before {
-			top: 100%;
-			left: 50%;
-			transform: translate(-50%, -0.5em) rotate(45deg);
-		}
+		transform: translate(-50%, -0.5em) rotate(45deg);
 	}
 
 	// .popover_bottom
-	&_bottom {
-		top: 100%;
+	&_bottom::before {
+		bottom: 100%;
 		left: 50%;
-		transform: translate(-50%, 0.75em);
-
-		&::before {
-			bottom: 100%;
-			left: 50%;
-			transform: translate(-50%, 0.5em) rotate(45deg);
-			border-width: 1px;
-			border-color: var(--color-border);
-			background: var(--color-border);
-		}
+		transform: translate(-50%, 0.5em) rotate(45deg);
+		border-width: 1px;
+		border-color: var(--color-border);
+		background: var(--color-border);
 	}
 
 	// .popover_left
-	&_left {
+	&_left::before {
 		top: 50%;
-		right: 100%;
-		transform: translate(-0.75em, -50%);
-
-		&::before {
-			top: 50%;
-			left: 100%;
-			transform: translate(-0.5em, -50%) rotate(45deg);
-			border-width: 1px 1px 0 0;
-		}
-
-		& > .popover__header {
-			position: absolute;
-			bottom: 100%;
-			left: 0;
-			right: 0;
-		}
+		left: 100%;
+		transform: translate(-0.5em, -50%) rotate(45deg);
+		border-width: 1px 1px 0 0;
 	}
 
 	// .popover_right
-	&_right {
+	&_right::before {
 		top: 50%;
-		left: 100%;
-		transform: translate(0.75em, -50%);
+		right: 100%;
+		transform: translate(0.5em, -50%) rotate(45deg);
+		border-width: 0 0 1px 1px;
+	}
+}
 
-		&::before {
-			top: 50%;
-			right: 100%;
-			transform: translate(0.5em, -50%) rotate(45deg);
-			border-width: 0 0 1px 1px;
-		}
+@keyframes popover_appear {
+	0% {
+		opacity: 0;
+	}
 
-		& > .popover__header {
-			position: absolute;
-			bottom: 100%;
-			left: 0;
-			right: 0;
-		}
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes popover_disappear {
+	0% {
+		opacity: 1;
+	}
+
+	100% {
+		opacity: 0;
 	}
 }

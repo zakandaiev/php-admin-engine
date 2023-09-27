@@ -45,7 +45,7 @@ document.querySelectorAll('input[data-picker]').forEach(input => {
 		if (datepicker.opts.range && date.length === 2) {
 			datepicker.hide();
 		}
-		else if (!datepicker.opts.multipleDates && !datepicker.opts.range) {
+		else if (!datepicker.opts.multipleDates && !datepicker.opts.range && !type.includes('time')) {
 			datepicker.hide();
 		}
 	};

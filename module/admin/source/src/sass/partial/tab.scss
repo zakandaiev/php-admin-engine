@@ -34,7 +34,7 @@
 
 	// .tab__nav-item
 	&__nav-item {
-		@extend %reset-btn;
+		@include reset-btn;
 		display: inline-flex;
 		justify-content: center;
 		align-items: center;
@@ -48,6 +48,7 @@
 		font-weight: var(--font-normal);
 		line-height: 1;
 		cursor: pointer;
+		position: relative;
 		white-space: nowrap;
 		transition: var(--transition);
 

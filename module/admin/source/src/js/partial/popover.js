@@ -1,51 +1,76 @@
 // POPOVER
 document.addEventListener('click', event => {
-	const popover = event.target.closest('[data-popover]');
+	const trigger = event.target.closest('[data-popover]');
 
-	if (!popover) {
-		document.querySelectorAll('.popover-wrapper.active').forEach(wr => wr.classList.remove('active'));
+	document.querySelectorAll('.popover').forEach(popover => popover.remove());
 
+	if (!trigger) {
 		return false;
 	}
 
-	event.preventDefault();
+	const trigger_rect = trigger.getBoundingClientRect();
+	const offset = 15;
 
-	const placement = popover.getAttribute('data-popover') || 'top';
-	const title = popover.getAttribute('title');
-	const content = popover.getAttribute('data-content');
+	const placement = trigger.getAttribute('data-popover') || 'top';
+	const title = trigger.getAttribute('data-title');
+	const content = trigger.getAttribute('data-content');
 
-	document.querySelectorAll('.popover-wrapper').forEach(wr => {
-		if (wr === popover.parentElement) {
-			wr.classList.toggle('active');
+	const popover = document.createElement('div');
+	popover.classList.add('popover');
+	popover.classList.add(`popover_${placement}`);
+
+	const popover_header = document.createElement('div');
+	popover_header.classList.add('popover__header');
+	popover_header.textContent = title;
+
+	const popover_body = document.createElement('div');
+	popover_body.classList.add('popover__body');
+	popover_body.textContent = content;
+
+	popover.appendChild(popover_header);
+	popover.appendChild(popover_body);
+
+	document.body.appendChild(popover);
+
+	const popover_rect = popover.getBoundingClientRect();
+
+	setPopoverPosition();
+
+	function setPopoverPosition() {
+		let top = trigger_rect.top - popover_rect.height - offset;
+		let left = trigger_rect.left + (trigger_rect.width / 2) - (popover_rect.width / 2);
+
+		popover.style.top = top + 'px';
+		popover.style.left = left + 'px';
+
+		switch (placement) {
+			case 'left': {
+				top = trigger_rect.top + (trigger_rect.height / 2) - (popover_rect.height / 2);
+				left = trigger_rect.left - popover_rect.width - offset;
+
+				popover.style.top = top + 'px';
+				popover.style.left = left + 'px';
+
+				break;
+			}
+			case 'right': {
+				top = trigger_rect.top + (trigger_rect.height / 2) - (popover_rect.height / 2);
+				left = trigger_rect.right + offset;
+
+				popover.style.top = top + 'px';
+				popover.style.left = left + 'px';
+
+				break;
+			}
+			case 'bottom': {
+				top = trigger_rect.bottom + offset;
+				left = trigger_rect.left + (trigger_rect.width / 2) - (popover_rect.width / 2);
+
+				popover.style.top = top + 'px';
+				popover.style.left = left + 'px';
+
+				break;
+			}
 		}
-		else {
-			wr.classList.remove('active');
-		}
-	});
-
-	if (popover.parentElement.classList.contains('popover-wrapper')) {
-		return false;
 	}
-
-	const wrapper = document.createElement('div');
-	wrapper.classList.add('popover-wrapper', 'active');
-	wrapper.style.display = getComputedStyle(popover).getPropertyValue('display');
-
-	const pop = document.createElement('div');
-	pop.classList.add('popover', `popover_${placement}`);
-
-	const pop_header = document.createElement('div');
-	pop_header.classList.add('popover__header');
-	pop_header.textContent = title;
-
-	const pop_body = document.createElement('div');
-	pop_body.classList.add('popover__body');
-	pop_body.textContent = content;
-
-	pop.appendChild(pop_header);
-	pop.appendChild(pop_body);
-
-	popover.parentNode.insertBefore(wrapper, popover);
-  wrapper.appendChild(popover);
-  wrapper.appendChild(pop);
 });

@@ -197,7 +197,7 @@ class FilterBuilder {
 						$checked = ' checked';
 					}
 
-					$class = $key === 0 ? 'd-block' : 'd-block m-t-1';
+					$class = $key === 0 ? 'd-block' : 'd-block mt-1';
 
 					$html .= '<label class="' . $class . '">';
 					$html .= '<input type="' . $field['type'] . '" value="' . $option->id . '" ' . implode(' ', $attributes) . $checked . '>';
@@ -303,7 +303,7 @@ class FilterBuilder {
 
 		$html .= '</div>';
 
-		$html .= '<a href="' . site('permalink') . '" class="d-inline-block m-t-3">' . __('admin.filter.reset') . '</a>';
+		$html .= '<a href="' . site('permalink') . '" class="d-inline-block mt-3">' . __('admin.filter.reset') . '</a>';
 
 		return $html;
 	}

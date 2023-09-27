@@ -1,5 +1,5 @@
 .btn {
-	@extend %reset-btn;
+	@include reset-btn;
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;

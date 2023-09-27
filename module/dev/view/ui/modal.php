@@ -136,7 +136,7 @@
 							<h4 class="box__title">Modal sizes and position</h4>
 						</div>
 						<div class="box__body text-center">
-							<div class="m-b-6">
+							<div class="mb-6">
 								<button class="btn btn_primary" data-modal="#modal-small">Small</button>
 								<div id="modal-small" class="modal modal_sm">
 									<header class="modal__header">

@@ -39,14 +39,10 @@ function cyrToLat(text) {
 		'є': 'e', 'Є': 'E'
 	};
 
-	return text.split('').map(function (char) {
-		return gost[char] || char;
-	}).join('');
+	return text.split('').map(char => gost[char] || char).join('');
 }
 
-function getSlug(text, delimiter) {
-	delimiter = delimiter || '-';
-
+function getSlug(text, delimiter = '-') {
 	const replace_1 = new RegExp('[^A-Za-z0-9' + delimiter + ']+', 'g');
 	const replace_2 = new RegExp('[' + delimiter + ']+', 'g');
 	const replace_3 = new RegExp('^' + delimiter);

@@ -32,7 +32,7 @@
 									</h4>
 								</div>
 								<div class="box__body">
-									<h3 class="m-t--2">44</h3>
+									<h3 class="mt--2">44</h3>
 									<span class="label label_light label_warning">-2.25%</span>
 									<span class="color-muted">since last month</span>
 								</div>
@@ -50,7 +50,7 @@
 									</h4>
 								</div>
 								<div class="box__body">
-									<h3 class="m-t--2">$21.300</h3>
+									<h3 class="mt--2">$21.300</h3>
 									<span class="label label_light label_success">+7.75%</span>
 									<span class="color-muted">since last month</span>
 								</div>
@@ -68,7 +68,7 @@
 									</h4>
 								</div>
 								<div class="box__body">
-									<h3 class="m-t--2">69</h3>
+									<h3 class="mt--2">69</h3>
 									<span class="label label_light label_error">-5.25%</span>
 									<span class="color-muted">since last month</span>
 								</div>
@@ -86,7 +86,7 @@
 									</h4>
 								</div>
 								<div class="box__body">
-									<h3 class="m-t--2">10 525</h3>
+									<h3 class="mt--2">10 525</h3>
 									<span class="label label_light label_error">-22.25%</span>
 									<span class="color-muted">since last month</span>
 								</div>
@@ -115,7 +115,7 @@
 							<h4 class="box__title">Calendar</h4>
 						</div>
 						<div class="box__body">
-							<div class="calendar" data-calendar>2023-07-04 - 2023-07-20</div>
+						<div class="calendar" data-calendar></div>
 						</div>
 					</div>
 				</div>
@@ -138,11 +138,11 @@
 									<tr>
 										<td>
 											<div class="d-flex gap-2">
-												<div class="flex-shrink-0 w-4rem h-4rem p-2 background-body fit-cover radius">
+												<div class="flex-shrink-0 w-4rem h-4rem p-2 bg-body fit-cover radius">
 													<img class="d-inline-block w-100 h-100" src="https://demo.adminkit.io/img/icons/brand-1.svg" data-fancybox>
 												</div>
 												<div>
-													<p class="m-b-0"><strong>Product #1</strong></p>
+													<p class="mb-0"><strong>Product #1</strong></p>
 													<p class="color-muted"><small>Brandr #1</small></p>
 												</div>
 											</div>
@@ -155,11 +155,11 @@
 									<tr>
 										<td>
 											<div class="d-flex gap-2">
-												<div class="flex-shrink-0 w-4rem h-4rem p-2 background-body fit-cover radius">
+												<div class="flex-shrink-0 w-4rem h-4rem p-2 bg-body fit-cover radius">
 													<img class="d-inline-block w-100 h-100" src="https://demo.adminkit.io/img/icons/brand-2.svg" data-fancybox>
 												</div>
 												<div>
-													<p class="m-b-0"><strong>Product #2</strong></p>
+													<p class="mb-0"><strong>Product #2</strong></p>
 													<p class="color-muted"><small>Brandr #2</small></p>
 												</div>
 											</div>
@@ -172,11 +172,11 @@
 									<tr>
 										<td>
 											<div class="d-flex gap-2">
-												<div class="flex-shrink-0 w-4rem h-4rem p-2 background-body fit-cover radius">
+												<div class="flex-shrink-0 w-4rem h-4rem p-2 bg-body fit-cover radius">
 													<img class="d-inline-block w-100 h-100" src="https://demo.adminkit.io/img/icons/brand-5.svg" data-fancybox>
 												</div>
 												<div>
-													<p class="m-b-0"><strong>Product #3</strong></p>
+													<p class="mb-0"><strong>Product #3</strong></p>
 													<p class="color-muted"><small>Brandr #3</small></p>
 												</div>
 											</div>

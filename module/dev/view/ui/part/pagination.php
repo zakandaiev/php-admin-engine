@@ -4,7 +4,7 @@
 	</div>
 	<div class="box__body">
 
-		<div class="m-b-3">
+		<div class="mb-3">
 			<nav class="pagination pagination_sm">
 				<a href="/" class="pagination__item"><i class="icon icon-chevron-left"></i></a>
 				<a href="/" class="pagination__item">1</a>
@@ -17,7 +17,7 @@
 			</nav>
 		</div>
 
-		<div class="m-b-3">
+		<div class="mb-3">
 			<nav class="pagination">
 				<a href="/" class="pagination__item"><i class="icon icon-chevron-left"></i></a>
 				<a href="/" class="pagination__item">1</a>
@@ -30,7 +30,7 @@
 			</nav>
 		</div>
 
-		<div class="m-b-3">
+		<div class="mb-3">
 			<nav class="pagination pagination_lg">
 				<a href="/" class="pagination__item"><i class="icon icon-chevron-left"></i></a>
 				<a href="/" class="pagination__item">1</a>

@@ -8,9 +8,8 @@ const GET_PARAM = (key) => {
 @@include('partial/watermark.js')
 
 // UTILS
-@@include('util/fade-out.js')
+@@include('util/fade.js')
 @@include('util/smooth-scroll.js')
-@@include('util/replace-broken-image.js')
 
 document.addEventListener('DOMContentLoaded', () => {
 	// DOM READY PARTIALS
@@ -25,3 +24,5 @@ document.addEventListener('DOMContentLoaded', () => {
 	@@include('partial/textarea.js')
 	@@include('partial/tooltip.js')
 });
+
+@@include('partial/placeholder-image.js')

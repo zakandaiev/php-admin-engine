@@ -63,17 +63,17 @@
 
 									<br>
 
-									<label class="m-b-0 m-r-3">
+									<label class="mb-0 mr-3">
 										<input type="checkbox">
 										<span>Option 1</span>
 									</label>
 
-									<label class="m-b-0 m-r-3">
+									<label class="mb-0 mr-3">
 										<input type="checkbox">
 										<span>Option 2</span>
 									</label>
 
-									<label class="m-b-0 m-r-3">
+									<label class="mb-0 mr-3">
 										<input type="checkbox">
 										<span>Option 3</span>
 									</label>
@@ -103,17 +103,17 @@
 
 									<br>
 
-									<label class="m-b-0 m-r-3">
+									<label class="mb-0 mr-3">
 										<input type="radio" name="radio-example">
 										<span>Option 1</span>
 									</label>
 
-									<label class="m-b-0 m-r-3">
+									<label class="mb-0 mr-3">
 										<input type="radio" name="radio-example">
 										<span>Option 2</span>
 									</label>
 
-									<label class="m-b-0 m-r-3">
+									<label class="mb-0 mr-3">
 										<input type="radio" name="radio-example">
 										<span>Option 3</span>
 									</label>
@@ -145,19 +145,19 @@
 
 									<br>
 
-									<label class="switch m-b-0 m-r-3">
+									<label class="switch mb-0 mr-3">
 										<input type="checkbox">
 										<span class="switch__slider"></span>
 										<span>Switch 1</span>
 									</label>
 
-									<label class="switch m-b-0 m-r-3">
+									<label class="switch mb-0 mr-3">
 										<input type="checkbox">
 										<span class="switch__slider"></span>
 										<span>Switch 2</span>
 									</label>
 
-									<label class="switch m-b-0 m-r-3">
+									<label class="switch mb-0 mr-3">
 										<input type="checkbox">
 										<span class="switch__slider"></span>
 										<span>Switch 3</span>

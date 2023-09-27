@@ -20,9 +20,9 @@
 
 ## TODO
 * engine: modules install
+* admin: create data-behavior.js
+* admin: create foreign-form.js
 * admin: create collapse.js
-* admin: remake popover & tooltip to fixed pos
-* admin: tooltip handle title attr, but not data-title
 * admin: uploads interface (scan /upload directory)
 * admin: wysiwyg insert from uploads interface
 * admin: wysiwyg add image upload in js (but before handle /upload routes for get, post, delete)

@@ -58,7 +58,7 @@ function checkRouteAccess($route) {
 			<?php if(isset($item['is_separator']) && $item['is_separator']): ?>
 				<span class="sidebar__separator"><?= $item['name'] ?></span>
 			<?php elseif(is_array($item['route'])): ?>
-				<button type="button" class="sidebar__collapse <?php if(Route::isRouteActive($item['route'])): ?>active<?php endif; ?>">
+				<div class="sidebar__collapse <?php if(Route::isRouteActive($item['route'])): ?>active<?php endif; ?>">
 					<span class="sidebar__item <?php if(Route::isRouteActive($item['route'])): ?>active<?php endif; ?>">
 						<i class="icon icon-<?= $item['icon'] ?>"></i>
 						<span class="sidebar__text"><?= $item['name'] ?></span>
@@ -72,7 +72,7 @@ function checkRouteAccess($route) {
 							</a>
 						<?php endforeach; ?>
 					</div>
-				</button>
+				</div>
 			<?php else: ?>
 				<a href="<?= site('url_language') . $item['route'] ?>" class="sidebar__item <?php if(Route::isRouteActive($item['route'])): ?>active<?php endif; ?>">
 					<i class="icon icon-<?= $item['icon'] ?>"></i>

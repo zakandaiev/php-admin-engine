@@ -2,7 +2,7 @@
 
 namespace Module\Admin\Controller;
 
-use Engine\Page;
+use \Engine\Page;
 
 class Dashboard extends AdminController {
 	public function getDashboard() {

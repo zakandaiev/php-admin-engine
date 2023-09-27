@@ -24,7 +24,7 @@
 							<h5 class="box__subtitle">Default buttons style</h5>
 						</div>
 						<div class="box__body text-center">
-							<div class="m-b-6">
+							<div class="mb-6">
 								<button class="btn btn_default">Default</button>
 								<button class="btn btn_cancel">Cancel</button>
 								<button class="btn btn_primary">Primary</button>
@@ -55,7 +55,7 @@
 							<h5 class="box__subtitle">Buttons without background color</h5>
 						</div>
 						<div class="box__body text-center">
-							<div class="m-b-6">
+							<div class="mb-6">
 								<button class="btn btn_outline btn_default">Default</button>
 								<button class="btn btn_outline btn_cancel">Cancel</button>
 								<button class="btn btn_outline btn_primary">Primary</button>
@@ -86,7 +86,7 @@
 							<h5 class="box__subtitle">Buttons with icons</h5>
 						</div>
 						<div class="box__body text-center">
-							<div class="m-b-6">
+							<div class="mb-6">
 								<button class="btn btn_default"><i class="icon icon-accessible"></i> Default</button>
 								<button class="btn btn_cancel"><i class="icon icon-ad-circle"></i> Cancel</button>
 								<button class="btn btn_primary"><i class="icon icon-mood-smile"></i> Primary</button>
@@ -118,7 +118,7 @@
 							<h5 class="box__subtitle">Fancy larger or smaller buttons</h5>
 						</div>
 						<div class="box__body text-center">
-							<div class="m-b-6">
+							<div class="mb-6">
 								<button class="btn btn_sm btn_primary">Small</button>
 								<button class="btn btn_primary">Medium</button>
 								<button class="btn btn_lg btn_primary">Large</button>
@@ -139,46 +139,46 @@
 						</div>
 						<div class="box__body">
 							<p>Horizontal button group</p>
-							<div class="btn-group m-b-3">
+							<div class="btn-group mb-3">
 								<button class="btn btn_lg btn_secondary">Button</button>
 								<button class="btn btn_lg btn_secondary">Button</button>
 								<button class="btn btn_lg btn_secondary">Button</button>
 							</div>
 							<br>
-							<div class="btn-group m-b-3">
+							<div class="btn-group mb-3">
 								<button class="btn btn_secondary">Button</button>
 								<button class="btn btn_secondary">Button</button>
 								<button class="btn btn_secondary">Button</button>
 							</div>
 							<br>
-							<div class="btn-group m-b-3">
+							<div class="btn-group mb-3">
 								<button class="btn btn_sm btn_secondary">Button</button>
 								<button class="btn btn_sm btn_secondary">Button</button>
 								<button class="btn btn_sm btn_secondary">Button</button>
 							</div>
 							<p>Horizontal button group full width</p>
-							<div class="btn-group btn-group_fit m-b-6">
+							<div class="btn-group btn-group_fit mb-6">
 								<button class="btn btn_secondary">Button</button>
 								<button class="btn btn_secondary">Button</button>
 								<button class="btn btn_secondary">Button</button>
 							</div>
 							<p>Vertical button group</p>
-							<div class="btn-group btn-group_vertical m-b-6">
+							<div class="btn-group btn-group_vertical mb-6">
 								<button class="btn btn_info">Button</button>
 								<button class="btn btn_info">Button</button>
 								<button class="btn btn_info">Button</button>
 							</div>
-							<div class="btn-group btn-group_vertical m-b-6">
+							<div class="btn-group btn-group_vertical mb-6">
 								<button class="btn btn_success">Button</button>
 								<button class="btn btn_success">Button</button>
 								<button class="btn btn_success">Button</button>
 							</div>
-							<div class="btn-group btn-group_vertical m-b-6">
+							<div class="btn-group btn-group_vertical mb-6">
 								<button class="btn btn_warning">Button</button>
 								<button class="btn btn_warning">Button</button>
 								<button class="btn btn_warning">Button</button>
 							</div>
-							<div class="btn-group btn-group_vertical m-b-6">
+							<div class="btn-group btn-group_vertical mb-6">
 								<button class="btn btn_error">Button</button>
 								<button class="btn btn_error">Button</button>
 								<button class="btn btn_error">Button</button>

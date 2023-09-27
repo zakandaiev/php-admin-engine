@@ -1,12 +1,6 @@
 // INIT
 document.addEventListener('DOMContentLoaded', () => {
-  let container = document.querySelector('.modals');
-
-	if (!container) {
-		container = document.createElement('div');
-		container.classList.add('modals');
-		document.body.appendChild(container);
-	}
+  const container = initModalContainer();
 
   document.querySelectorAll('.modal').forEach(modal => {
     const instance = {
@@ -14,8 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
       close: () => closeModal(modal),
       destroy: () => {
         closeModal(modal);
+
         modal.remove();
-        return true;
       }
     }
 
@@ -74,6 +68,18 @@ document.addEventListener('keydown', event => {
   document.querySelectorAll('.modal').forEach(modal => closeModal(modal));
 });
 
+function initModalContainer() {
+  let container = document.querySelector('.modals');
+
+	if (!container) {
+		container = document.createElement('div');
+		container.classList.add('modals');
+		document.body.appendChild(container);
+	}
+
+  return container;
+}
+
 function openModal(modal) {
   if (!modal) {
     return false;
@@ -114,4 +120,123 @@ function closeModal(modal = null) {
   window.onscroll = '';
 
   return true;
+}
+
+function createModal(title, options = {}) {
+  return new Promise((resolve, reject) => {
+    const modal = document.createElement('div');
+    modal.setAttribute('id', Math.random().toString(32).replace('0.', ''));
+    modal.classList.add('modal');
+    if (options.class && options.class.length) {
+      options.class.split(' ').forEach(c => modal.classList.add(c));
+    }
+    else {
+      modal.classList.add('modal_center');
+    }
+
+    const modal_header = document.createElement('header');
+    modal_header.classList.add('modal__header');
+
+    const modal_title = document.createElement('span');
+    modal_title.textContent = title;
+
+    const modal_close = document.createElement('button');
+    modal_close.setAttribute('type', 'button');
+    modal_close.classList.add('modal__close');
+    modal_close.innerHTML = '<i class="icon icon-x"></i>';
+    modal_close.addEventListener('click', event => {
+      closeModal(modal);
+      modal.remove();
+      resolve(false);
+    });
+
+    modal_header.appendChild(modal_title);
+    modal_header.appendChild(modal_close);
+
+    modal.appendChild(modal_header);
+
+    if (options.text) {
+      const modal_body = document.createElement('div');
+      modal_body.classList.add('modal__body');
+      modal_close.textContent = options.text;
+      modal.appendChild(modal_body);
+    }
+
+    const modal_footer = document.createElement('footer');
+    modal_footer.classList.add('modal__footer');
+
+    const actions = options.actions || [{
+      text: ENGINE?.translation?.modal?.ok || 'Ok',
+      class: 'btn_primary'
+    }]
+
+    actions.forEach(action => {
+      const modal_action = document.createElement('button');
+      modal_action.setAttribute('type', 'button');
+      modal_action.classList.add('btn');
+      if (action.class && action.class.length) {
+        action.class.split(' ').forEach(c => modal_action.classList.add(c));
+      }
+      modal_action.textContent = action.text;
+      modal_action.addEventListener('click', event => {
+        if (typeof action.callback === 'function') {
+          resolve(action.callback(modal, event));
+        }
+        else {
+          closeModal(modal);
+          modal.remove();
+          resolve(true);
+        }
+      });
+      modal_footer.appendChild(modal_action);
+    });
+
+    modal.appendChild(modal_footer);
+
+    modal.instance = {
+      open: () => openModal(modal),
+      close: () => closeModal(modal),
+      destroy: () => {
+        closeModal(modal);
+
+        modal.remove();
+      }
+    };
+
+    const container = initModalContainer();
+    container.appendChild(modal);
+
+    openModal(modal);
+  });
+}
+
+async function confirmation(title, text = null) {
+  return await createModal(title, options = {
+    text,
+    class: 'modal_sm modal_center',
+    actions: [
+      {
+        text: ENGINE?.translation?.modal?.ok || 'Ok',
+        class: 'btn_primary',
+        callback: (modal) => {
+          closeModal(modal);
+
+          modal.remove();
+
+          return true;
+        }
+      },
+      {
+        text: ENGINE?.translation?.modal?.cancel || 'Cancel',
+        class: 'btn_cancel',
+        callback: (modal) => {
+          closeModal(modal);
+
+          modal.remove();
+
+          return false;
+        }
+      }
+    ]
+  });
 }

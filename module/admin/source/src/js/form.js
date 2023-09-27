@@ -1,21 +1,3 @@
-const sleep = (ms) => {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-async function fetchWithTimeout(resource, options, timeout = 15000) {
-  const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), timeout);
-
-  const response = await fetch(resource, {
-    ...options,
-    signal: controller.signal
-  });
-
-  clearTimeout(id);
-
-  return response;
-}
-
 class Form {
 	constructor(node, options = {}) {
 		this.node = node;
@@ -41,6 +23,7 @@ class Form {
 			this.method = 'POST';
 		}
 		this.data_confirm = this.node.getAttribute('data-confirm');
+		this.data_class = this.node.getAttribute('data-class') || 'submit';
 		this.data_reset = this.node.hasAttribute('data-reset') ? true : false;
 		this.data_redirect = this.node.getAttribute('data-redirect');
 		this.data_message = this.node.getAttribute('data-message');
@@ -53,8 +36,13 @@ class Form {
 			this.confirmation = confirmation;
 		}
 		this.api = {
-			delay_ms: this.options?.api?.delay_ms || 1000,
-			timeout_ms: this.options?.api?.timeout_ms || 15000
+			delay_ms: this.node.getAttribute('data-delay')
+				? parseInt(this.node.getAttribute('data-delay'))
+				: this.options?.api?.delay_ms || 1000,
+
+			timeout_ms: this.node.getAttribute('data-timeout')
+				? parseInt(this.node.getAttribute('data-timeout'))
+				: this.options?.api?.timeout_ms || 15000
 		};
 
 		if (this.action) {
@@ -161,7 +149,15 @@ class Form {
 
 			this.disableForm();
 
-			const data = await this.doRequest();
+			const data = await request(
+				this.action,
+				{
+					method: this.method,
+					body: this.getFormData()
+				},
+				this.api.timeout_ms,
+				this.api.delay_ms
+			);
 
 			if (data.status === 'success') {
 				this.successRedirect(data);
@@ -174,46 +170,6 @@ class Form {
 
 			this.enableForm();
 		});
-	}
-
-	async doRequest() {
-		const startTime = performance.now();
-
-		const options = {
-			method: this.method,
-			body: this.getFormData()
-		};
-
-		let data = {
-			code: null,
-			status: null,
-			message: null,
-			data: null
-		};
-
-		try {
-			const response = await fetchWithTimeout(this.action, options, this.api.timeout_ms);
-			const responseData = await response.json() ?? {};
-
-			data.code = response.status;
-			data.status = responseData.status;
-			data.message = responseData.message;
-			data.data = responseData.data;
-		}
-		catch (error) {
-			data.status = 'error';
-			data.message = error;
-		}
-
-		const endTime = performance.now();
-
-		const differenceTime = endTime - startTime;
-
-		if (differenceTime < this.api.delay_ms) {
-			await sleep(this.api.delay_ms - differenceTime);
-		}
-
-		return data;
 	}
 
 	async checkConfirmation() {
@@ -257,7 +213,7 @@ class Form {
 			if (input && input.hasAttribute('data-picker') && input.instance && input.instance.selectedDates) {
 				const picker_type = input.getAttribute('data-picker');
 
-				if (!['date','datetime','month'].includes(picker_type)) {
+				if (!['date', 'datetime', 'month'].includes(picker_type)) {
 					return false;
 				}
 
@@ -280,7 +236,7 @@ class Form {
 			const name = pair[0];
 			const value = pair[1];
 
-			if (!value.length) {
+			if (!value || !value.length) {
 				data.delete(name);
 			}
 		}
@@ -290,7 +246,7 @@ class Form {
 		const d = new Date(date.valueOf());
 		d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
 
-		switch(type) {
+		switch (type) {
 			case 'date': {
 				return d.toJSON().slice(0, 10);
 			}
@@ -307,7 +263,7 @@ class Form {
 
 	disableForm() {
 		this.node.setAttribute('disabled', 'disabled');
-		this.node.classList.add('submit');
+		this.node.classList.add(this.data_class);
 		this.submit.disabled = true;
 
 		return true;
@@ -315,7 +271,7 @@ class Form {
 
 	enableForm() {
 		this.node.removeAttribute('disabled', 'disabled');
-		this.node.classList.remove('submit');
+		this.node.classList.remove(this.data_class);
 		this.submit.disabled = false;
 
 		return true;

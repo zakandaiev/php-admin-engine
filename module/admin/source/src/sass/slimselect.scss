@@ -61,7 +61,7 @@
 
 .ss-content {
 	position: absolute;
-	z-index: 10;
+	z-index: var(--zi-default);
 	left: 0;
 	right: 0;
 	height: auto;

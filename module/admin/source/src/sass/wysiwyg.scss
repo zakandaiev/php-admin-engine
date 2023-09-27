@@ -9,7 +9,7 @@
 
 	textarea {
 		position: absolute;
-		z-index: -1;
+		z-index: var(--zi-below);
 		top: 0;
 		right: 0;
 		bottom: 0;
@@ -24,7 +24,7 @@
 	// .wysiwyg_fullscreen
 	&_fullscreen {
 		position: fixed;
-    z-index: 100;
+    z-index: var(--zi-modal);
     top: 0;
     right: 0;
     bottom: 0;

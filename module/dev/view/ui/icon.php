@@ -31,9 +31,9 @@ $icons = ['123','24-hours','2fa','360','360-view','3d-cube-sphere','3d-cube-sphe
 					<div class="row cols-xs-1 cols-md-4">
 						<?php foreach($icons as $icon): ?>
 						<div class="col">
-							<div class="d-flex align-items-center p-2 cursor-pointer background-border_hover" data-copy='<i class="icon icon-<?= $icon ?>"></i>' data-toast="Copied HTML code">
-								<i class="icon icon-<?= $icon ?>" style="font-size:1.5em"></i>
-								<span class="m-l-2"><?= $icon ?></span>
+							<div class="d-flex align-items-center p-2 radius cursor-pointer bg-border_hover" data-copy='<i class="icon icon-<?= $icon ?>"></i>' data-toast="Copied the HTML code">
+								<i class="icon icon-<?= $icon ?> font-size-4"></i>
+								<span class="ml-2"><?= $icon ?></span>
 							</div>
 						</div>
 						<?php endforeach; ?>

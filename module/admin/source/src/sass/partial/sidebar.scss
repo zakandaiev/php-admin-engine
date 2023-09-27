@@ -1,7 +1,7 @@
 .sidebar {
 	flex-shrink: 0;
 	position: sticky;
-	z-index: 10;
+	z-index: var(--zi-sidebar);
 	top: 0;
 	width: 26rem;
 	height: 100vh;
@@ -9,7 +9,7 @@
 	transition: var(--transition);
 	overflow: hidden auto;
 
-	@media (min-width: 992px) {
+	@include query(lg) {
 		&:not(.sidebar_hidden) ~ .page-content__inner {
 			max-width: calc(100% - 26rem);
 		}
@@ -38,7 +38,7 @@
 	&__logo {
 		flex-shrink: 0;
 		position: sticky;
-		z-index: 20;
+		z-index: calc(var(--zi-sidebar) + 1);
 		top: 0;
 		display: flex;
 		align-items: center;
@@ -69,7 +69,7 @@
 
 	// .sidebar__item
 	&__item {
-		@extend %reset-btn;
+		@include reset-btn;
 		display: flex;
 		align-items: center;
 		gap: 1em;
@@ -96,7 +96,7 @@
 			&::before {
 				content: "";
 				position: absolute;
-				z-index: 10;
+				z-index: var(--zi-default);
 				top: 0;
 				left: 0;
 				bottom: 0;
@@ -139,10 +139,11 @@
 
 	// .sidebar__collapse
 	&__collapse {
-		@extend %reset-btn;
+		@include reset-btn;
 		display: flex;
 		align-items: stretch;
 		flex-direction: column;
+		position: relative;
 
 		& > .sidebar__item::after {
 			flex-shrink: 0;
@@ -173,13 +174,14 @@
 
 	// .sidebar__collapse-item
 	&__collapse-item {
-		@extend %reset-btn;
+		@include reset-btn;
 		display: flex;
 		align-items: center;
 		gap: 1em;
 		padding: 0.8em 0 0.8em 0.8em;
 		font-size: 1.2rem;
 		color: #adb5bd;
+		cursor: pointer;
 		transition: var(--transition);
 		position: relative;
 

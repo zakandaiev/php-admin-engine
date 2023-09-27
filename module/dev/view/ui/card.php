@@ -116,17 +116,17 @@
 				<div class="col">
 					<div class="box">
 						<div class="box__header box__header_actions">
-							<h4 class="box__title">
+							<div class="box__title m-0">
 								<span>Card with actions</span>
-								<button type="button" class="box__actions dropdown dropdown_bottom-right">
+								<div class="box__actions dropdown dropdown_bottom-right">
 									<i class="icon icon-dots"></i>
 									<div class="dropdown__menu">
 										<a class="dropdown__item" href="#">Action</a>
 										<a class="dropdown__item" href="#">Another action</a>
 										<a class="dropdown__item" href="#">Something else here</a>
 									</div>
-								</button>
-							</h4>
+								</div>
+							</div>
 						</div>
 						<div class="box__body">
 							Some quick example text to build on the card title and make up the bulk of the card's content.
@@ -148,7 +148,7 @@
 									</h4>
 								</div>
 								<div class="box__body">
-									<h3 class="m-t--2">35</h3>
+									<h3 class="mt--2">35</h3>
 									<span class="label label_light label_primary">+0.75%</span>
 									<span class="color-muted">since last month</span>
 								</div>
@@ -165,8 +165,8 @@
 										</span>
 									</h4>
 								</div>
-								<div class="box__body m-t-auto">
-									<h3 class="m-t--2">35</h3>
+								<div class="box__body mt-auto">
+									<h3 class="mt--2">35</h3>
 									<span class="label label_light label_secondary">-0.75%</span>
 									<span class="color-muted">since last month</span>
 								</div>
@@ -183,8 +183,8 @@
 										</span>
 									</h4>
 								</div>
-								<div class="box__body m-t-auto">
-									<h3 class="m-t--2">35</h3>
+								<div class="box__body mt-auto">
+									<h3 class="mt--2">35</h3>
 									<span class="label label_light label_info">+0.25%</span>
 									<span class="color-muted">since last month</span>
 								</div>
@@ -201,8 +201,8 @@
 										</span>
 									</h4>
 								</div>
-								<div class="box__body m-t-auto">
-									<h3 class="m-t--2">35</h3>
+								<div class="box__body mt-auto">
+									<h3 class="mt--2">35</h3>
 									<span class="label label_light label_success">+7.75%</span>
 									<span class="color-muted">since last month</span>
 								</div>
@@ -219,8 +219,8 @@
 										</span>
 									</h4>
 								</div>
-								<div class="box__body m-t-auto">
-									<h3 class="m-t--2">35</h3>
+								<div class="box__body mt-auto">
+									<h3 class="mt--2">35</h3>
 									<span class="label label_light label_error">-7.75%</span>
 									<span class="color-muted">since last month</span>
 								</div>
@@ -237,8 +237,8 @@
 										</span>
 									</h4>
 								</div>
-								<div class="box__body m-t-auto">
-									<h3 class="m-t--2">35</h3>
+								<div class="box__body mt-auto">
+									<h3 class="mt--2">35</h3>
 									<span class="label label_light label_warning">+1.25%</span>
 									<span class="color-muted">since last month</span>
 								</div>

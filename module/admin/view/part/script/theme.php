@@ -39,7 +39,7 @@
 		}
 	};
 
-	if (typeof DATA_THEME !== 'undefined' && DATA_THEME.getCurrentTheme() && DATA_THEME.getCurrentTheme() === 'dark') {
+	if (typeof DATA_THEME !== 'undefined' && DATA_THEME.getCurrentTheme && DATA_THEME.getCurrentTheme() === 'dark') {
 		ENGINE.theme.color.body = "#19222c";
 		ENGINE.theme.color.box = "#222e3c";
 

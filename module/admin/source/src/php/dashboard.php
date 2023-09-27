@@ -31,7 +31,7 @@
 									</h4>
 								</div>
 								<div class="box__body">
-									<h3 class="m-t--2">44</h3>
+									<h3 class="mt--2">44</h3>
 									<span class="label label_light label_warning">-2.25%</span>
 									<span class="color-muted">since last month</span>
 								</div>
@@ -49,7 +49,7 @@
 									</h4>
 								</div>
 								<div class="box__body">
-									<h3 class="m-t--2">44</h3>
+									<h3 class="mt--2">44</h3>
 									<span class="label label_light label_success">+7.75%</span>
 									<span class="color-muted">since last month</span>
 								</div>
@@ -67,7 +67,7 @@
 									</h4>
 								</div>
 								<div class="box__body">
-									<h3 class="m-t--2">69</h3>
+									<h3 class="mt--2">69</h3>
 									<span class="label label_light label_error">-5.25%</span>
 									<span class="color-muted">since last month</span>
 								</div>
@@ -85,7 +85,7 @@
 									</h4>
 								</div>
 								<div class="box__body">
-									<h3 class="m-t--2">10 525</h3>
+									<h3 class="mt--2">10 525</h3>
 									<span class="label label_light label_error">-22.25%</span>
 									<span class="color-muted">since last month</span>
 								</div>
@@ -113,28 +113,28 @@
 									<tr>
 										<td>Vanessa Tucker (admin@adm.in)</td>
 										<td>12.07.2023 at 11:47</td>
-										<td class="table__action">
-											<a href="#" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
-											<a href="#" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></a>
+										<td class="table__actions">
+											<a href="#" class="table__action" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></a>
 										</td>
 									</tr>
 									<tr>
 										<td>Vanessa Tucker (admin@adm.in)</td>
 										<td>12.07.2023 at 11:47</td>
-										<td class="table__action">
-											<a href="#" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
-											<a href="#" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></a>
+										<td class="table__actions">
+											<a href="#" class="table__action" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></a>
 										</td>
 									</tr>
 									<tr>
 										<td>Vanessa Tucker (admin@adm.in)</td>
 										<td>12.07.2023 at 11:47</td>
-										<td class="table__action">
-											<a href="#" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
-											<a href="#" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
-											<a href="#" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></a>
+										<td class="table__actions">
+											<a href="#" class="table__action" data-tooltip="top" title="View"><i class="icon icon-eye"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Edit"><i class="icon icon-edit"></i></a>
+											<a href="#" class="table__action" data-tooltip="top" title="Delete"><i class="icon icon-trash"></i></a>
 										</td>
 									</tr>
 								</tbody>
@@ -163,7 +163,7 @@
 											<div class="d-flex gap-3">
 												<img class="d-block flex-shrink-0 w-4rem h-4rem fit-cover radius" src="https://demo.zakandaiev.com/upload/demo/post-1.jpg" data-fancybox>
 												<div>
-													<p class="m-b-0"><strong>Lorem post #1</strong></p>
+													<p class="mb-0"><strong>Lorem post #1</strong></p>
 													<p class="color-muted"><small>Category name</small></p>
 												</div>
 											</div>
@@ -178,7 +178,7 @@
 											<div class="d-flex gap-3">
 												<img class="d-block flex-shrink-0 w-4rem h-4rem fit-cover radius" src="https://demo.zakandaiev.com/upload/demo/post-2.jpg" data-fancybox>
 												<div>
-													<p class="m-b-0"><strong>Lorem post #2</strong></p>
+													<p class="mb-0"><strong>Lorem post #2</strong></p>
 													<p class="color-muted"><small>Category name</small></p>
 												</div>
 											</div>
@@ -193,7 +193,7 @@
 											<div class="d-flex gap-3">
 												<img class="d-block flex-shrink-0 w-4rem h-4rem fit-cover radius" src="https://demo.zakandaiev.com/upload/demo/post-3.jpg" data-fancybox>
 												<div>
-													<p class="m-b-0"><strong>Lorem post #3</strong></p>
+													<p class="mb-0"><strong>Lorem post #3</strong></p>
 													<p class="color-muted"><small>Category name</small></p>
 												</div>
 											</div>

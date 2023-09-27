@@ -106,8 +106,10 @@ class Form {
 			Server::answer(null, 'error', __('engine.form.unknown_error'), 406);
 		}
 
-		self::formatFields($form['fields'], $income_data);
-		self::checkFields($form_name);
+		if($action !== 'delete') {
+			self::formatFields($form['fields'], $income_data);
+			self::checkFields($form_name);
+		}
 		self::processFields($action, $form_name, $item_id, $force_no_answer);
 
 		return true;
@@ -227,7 +229,7 @@ class Form {
 			switch($field_data['type']) {
 				case 'checkbox':
 				case 'switch': {
-					$field_data['value'] = $income_value == 'on' ? true : false;
+					$field_data['value'] = in_array($income_value, ['on', '1', 'true']) ? true : false;
 					break;
 				}
 				case 'file': {

@@ -27,10 +27,10 @@
 			<h2 class="section__title">
 				<span><?= __('admin.page.pages') ?></span>
 
-				<div class="section__actions">
+				<span class="section__actions">
 					<button class="btn btn_secondary"><?= __('admin.page.add_category') ?></button>
 					<button class="btn btn_primary"><?= __('admin.page.add_page') ?></button>
-				</div>
+				</span>
 			</h2>
 
 			<form action="<?= Form::add('page/Page') ?>" data-redirect="<?= site('url_language') ?>/admin/page" data-validate>

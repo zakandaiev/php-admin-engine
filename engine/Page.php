@@ -145,8 +145,13 @@ class Page {
 					<meta property="og:title" content="' . self::meta('title') . '">
 					<meta property="og:description" content="' . self::meta('seo_description') . '">
 					<meta property="og:keywords" content="' . self::meta('seo_keywords') . '">
-					<meta property="og:image" content="' . self::meta('seo_image') . '">
 				';
+
+				if(!empty(self::meta('seo_image'))) {
+					$meta_og .= '
+						<meta property="og:image" content="' . self::meta('seo_image') . '">
+					';
+				}
 
 				self::$meta['meta_og'] = $meta_og;
 
@@ -158,8 +163,13 @@ class Page {
 					<meta property="twitter:url" content="' . site('permalink') . '">
 					<meta property="twitter:title" content="' . self::meta('title') . '">
 					<meta property="twitter:description" content="' . self::meta('seo_description') . '">
-					<meta property="twitter:image" content="' . self::meta('seo_image') . '">
 				';
+
+				if(!empty(self::meta('seo_image'))) {
+					$meta_twitter .= '
+						<meta property="twitter:image" content="' . self::meta('seo_image') . '">
+					';
+				}
 
 				self::$meta['meta_twitter'] = $meta_twitter;
 
@@ -297,9 +307,15 @@ class Page {
 			' . $meta_twitter . '
 
 			<link rel="canonical" href="' . $permalink . '">
+		';
 
-			<link rel="image_src" href="' . $seo_image . '">
+		if(!empty($seo_image)) {
+			$meta .= '
+				<link rel="image_src" href="' . $seo_image . '">
+			';
+		}
 
+		$meta .= '
 			' . $alt_languages . '
 
 			' . $favicon . '

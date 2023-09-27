@@ -8,11 +8,11 @@
 			<div class="row">
 				<div class="col-xs-12 col-sm-10 col-md-6 col-lg-4 m-x-auto">
 
-					<div class="text-center m-b-2">
+					<div class="text-center mb-2">
 						<?php if(!empty(site('logo_admin'))): ?>
-							<img class="d-inline-block w-25 m-b-2" src="<?= site('url') ?>/<?= site('logo_admin') ?>" alt="Logo">
+							<img class="d-inline-block w-25 mb-2" src="<?= site('url') ?>/<?= site('logo_admin') ?>" alt="Logo">
 						<?php else: ?>
-							<h1 class="font-size-6 m-b-2"><?= site('name') ?></h1>
+							<h1 class="font-size-6 mb-2"><?= site('name') ?></h1>
 						<?php endif; ?>
 
 						<h4 class="color-text"><?= __('admin.auth.cta.login') ?></h4>
@@ -23,7 +23,7 @@
 					<div class="box">
 						<div class="box__body">
 
-							<div class="d-flex flex-column gap-2 m-b-3">
+							<div class="d-flex flex-column gap-2 mb-3">
 								<a class="btn btn_lg btn_google" href="#">
 									<?= svg('brand/google') ?>
 									<span><?= __('admin.auth.login_with_google') ?></span>
@@ -61,7 +61,7 @@
 						</div>
 					</div>
 
-					<div class="text-center m-t-4">
+					<div class="text-center mt-4">
 						<a href="<?= site('url_language') ?>/admin/reset-password"><?= __('admin.auth.reset_password') ?></a>
 					</div>
 

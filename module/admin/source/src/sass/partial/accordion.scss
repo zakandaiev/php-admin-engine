@@ -14,7 +14,7 @@
 
 	// .accordion__header
 	&__header {
-		@extend %reset-btn;
+		@include reset-btn;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;

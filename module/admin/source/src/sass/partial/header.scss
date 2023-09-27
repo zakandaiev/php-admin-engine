@@ -1,6 +1,6 @@
 .header {
 	position: sticky;
-	z-index: 10;
+	z-index: var(--zi-header);
 	top: 0;
 	display: block;
 	padding: 0.75em 0;
@@ -17,8 +17,8 @@
 	// .header__burger
 	// .header__item
 	&__burger, &__item {
+		@include reset-btn;
 		flex-shrink: 0;
-		@extend %reset-btn;
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
@@ -26,6 +26,7 @@
 		height: 4rem;
 		color: var(--color-secondary);
 		cursor: pointer;
+		position: relative;
 		transition: var(--transition);
 
 		&:hover {

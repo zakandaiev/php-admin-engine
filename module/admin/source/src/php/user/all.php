@@ -46,8 +46,8 @@ $interface_builder = new InterfaceBuilder([
 			'type' => function($value, $item) {
 				$tooltip = $item->is_enabled ? __('admin.user.deactivate_this_user') : __('admin.user.activate_this_user');
 
-				$html = '<button type="button" data-action="' . Form::edit('user/toggle', $item->id) . '" data-fields=\'[{"key":"is_enabled","value":' . $item->is_enabled . '}]\' data-redirect="this" data-tooltip="top" title="' . $tooltip . '" class="table__action">';
-				$html .= icon_boolean($item->is_enabled);
+				$html = '<button type="button" data-action="' . Form::edit('user/toggle', $item->id) . '" data-fields="is_enabled:' . !$value . '" data-redirect="this" data-tooltip="top" title="' . $tooltip . '" class="table__action">';
+				$html .= icon_boolean($value);
 				$html .= '</button>';
 
 				return $html;
@@ -61,7 +61,7 @@ $interface_builder = new InterfaceBuilder([
 
 				$html .= ' <a href="' . site('url_language') . '/admin/user/edit/' . $item->id .'" data-tooltip="top" title="' . __('admin.edit') . '" class="table__action"><i class="icon icon-edit"></i></a>';
 
-				$html .= ' <button type="button" data-action="' . Form::delete('user/edit', $item->id) . '" data-confirm="' . __('admin.user.delete_confirm', $item->fullname) . '" data-redirect="this" data-tooltip="top" title="' . __('admin.delete') . '" class="table__action">';
+				$html .= ' <button type="button" data-action="' . Form::delete('user/edit', $item->id) . '" data-confirm="' . __('admin.user.delete_confirm', $item->fullname) . '" data-remove="trow" data-decrement=".pagination-output" data-tooltip="top" title="' . __('admin.delete') . '" class="table__action">';
 				$html .= '<i class="icon icon-trash"></i>';
 				$html .= '</button>';
 

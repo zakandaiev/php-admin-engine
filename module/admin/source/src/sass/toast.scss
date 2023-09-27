@@ -13,7 +13,7 @@ $toast-color-error: var(--color-error);
 
 .toasts {
 	position: fixed;
-	z-index: 10000;
+	z-index: var(--zi-top);
 	top: 0;
 	right: 0;
 	bottom: 0;
@@ -46,7 +46,7 @@ $toast-color-error: var(--color-error);
 		cursor: pointer;
 		overflow: hidden;
 		position: relative;
-		transition: all 0.3s;
+		transition: var(--transition);
 
 		&:not(:last-child) {
 			margin-bottom: $toast-margin;
@@ -83,7 +83,7 @@ $toast-color-error: var(--color-error);
 
 		// animations
 		animation-name: toast_appear;
-		animation-duration: 0.3s;
+		animation-duration: var(--transition-time);
 		animation-fill-mode: both;
 
 		// .toasts__item.disappear
@@ -106,7 +106,7 @@ $toast-color-error: var(--color-error);
 			content: "";
 			display: block;
 			position: absolute;
-			z-index: 10;
+			z-index: var(--zi-default);
 			border-radius: 3px;
 			background: var(--color-box);
 			transform: rotate(-45deg);

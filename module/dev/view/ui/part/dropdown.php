@@ -6,7 +6,7 @@
 
 		<p>Styles:</p>
 
-		<div class="dropdown d-inline-block">
+		<div class="dropdown d-inline-block m-1">
 			<button type="button" class="btn btn_secondary">Basic</button>
 			<div class="dropdown__menu">
 				<a class="dropdown__item" href="#">Action</a>
@@ -15,7 +15,7 @@
 			</div>
 		</div>
 
-		<div class="dropdown d-inline-block" data-keep-open>
+		<div class="dropdown d-inline-block m-1" data-keep-open>
 			<button type="button" class="btn btn_secondary">Basic keep open</button>
 			<div class="dropdown__menu">
 				<a class="dropdown__item" href="#">Action</a>
@@ -26,8 +26,8 @@
 
 		<br>
 
-		<div class="dropdown d-inline-block">
-			<button type="button" class="btn btn_secondary">Active</button>
+		<div class="dropdown d-inline-block m-1">
+			<button type="button" class="btn btn_secondary">Active link</button>
 			<div class="dropdown__menu">
 				<a class="dropdown__item" href="#">Regular link</a>
 				<a class="dropdown__item active" href="#">Active link</a>
@@ -35,8 +35,8 @@
 			</div>
 		</div>
 
-		<div class="dropdown d-inline-block">
-			<button type="button" class="btn btn_secondary">Disabled</button>
+		<div class="dropdown d-inline-block m-1">
+			<button type="button" class="btn btn_secondary">Disabled link</button>
 			<div class="dropdown__menu">
 				<a class="dropdown__item" href="#">Regular link</a>
 				<a class="dropdown__item disabled" href="#">Disabled link</a>
@@ -46,17 +46,17 @@
 
 		<br>
 
-		<div class="dropdown d-inline-block">
+		<div class="dropdown d-inline-block m-1">
 			<button type="button" class="btn btn_secondary">Header</button>
 			<div class="dropdown__menu">
-				<p class="dropdown__header">Dropdown header</p>
+				<p class="dropdown__header">Header text</p>
 				<a class="dropdown__item" href="#">Action</a>
 				<a class="dropdown__item" href="#">Another action</a>
 				<a class="dropdown__item" href="#">Something else here</a>
 			</div>
 		</div>
 
-		<div class="dropdown d-inline-block">
+		<div class="dropdown d-inline-block m-1">
 			<button type="button" class="btn btn_secondary">Divider</button>
 			<div class="dropdown__menu">
 				<a class="dropdown__item" href="#">Action</a>
@@ -67,7 +67,7 @@
 			</div>
 		</div>
 
-		<div class="dropdown d-inline-block">
+		<div class="dropdown d-inline-block m-1">
 			<button type="button" class="btn btn_secondary">Text</button>
 			<div class="dropdown__menu">
 				<p class="dropdown__text">
@@ -76,9 +76,9 @@
 			</div>
 		</div>
 
-		<p class="m-t-3">Placement:</p>
+		<p class="mt-3">Placement:</p>
 
-		<div class="dropdown dropdown_top-left">
+		<div class="dropdown d-inline-block m-1 dropdown_top-left">
 			<button type="button" class="btn btn_secondary">Top Left</button>
 			<div class="dropdown__menu">
 				<a class="dropdown__item" href="#">Action</a>
@@ -87,7 +87,7 @@
 			</div>
 		</div>
 
-		<div class="dropdown dropdown_top-center">
+		<div class="dropdown d-inline-block m-1 dropdown_top-center">
 			<button type="button" class="btn btn_secondary">Top Center</button>
 			<div class="dropdown__menu">
 				<a class="dropdown__item" href="#">Action</a>
@@ -96,7 +96,7 @@
 			</div>
 		</div>
 
-		<div class="dropdown dropdown_top-right">
+		<div class="dropdown d-inline-block m-1 dropdown_top-right">
 			<button type="button" class="btn btn_secondary">Top Right</button>
 			<div class="dropdown__menu">
 				<a class="dropdown__item" href="#">Action</a>
@@ -107,7 +107,7 @@
 
 		<br>
 
-		<div class="dropdown dropdown_left-top">
+		<div class="dropdown d-inline-block m-1 dropdown_left-top">
 			<button type="button" class="btn btn_secondary">Left Top</button>
 			<div class="dropdown__menu">
 				<a class="dropdown__item" href="#">Action</a>
@@ -116,7 +116,7 @@
 			</div>
 		</div>
 
-		<div class="dropdown dropdown_left-center">
+		<div class="dropdown d-inline-block m-1 dropdown_left-center">
 			<button type="button" class="btn btn_secondary">Left Center</button>
 			<div class="dropdown__menu">
 				<a class="dropdown__item" href="#">Action</a>
@@ -125,7 +125,7 @@
 			</div>
 		</div>
 
-		<div class="dropdown dropdown_left-bottom">
+		<div class="dropdown d-inline-block m-1 dropdown_left-bottom">
 			<button type="button" class="btn btn_secondary">Left Bottom</button>
 			<div class="dropdown__menu">
 				<a class="dropdown__item" href="#">Action</a>
@@ -136,7 +136,7 @@
 
 		<br>
 
-		<div class="dropdown dropdown_right-top">
+		<div class="dropdown d-inline-block m-1 dropdown_right-top">
 			<button type="button" class="btn btn_secondary">Right Top</button>
 			<div class="dropdown__menu">
 				<a class="dropdown__item" href="#">Action</a>
@@ -145,7 +145,7 @@
 			</div>
 		</div>
 
-		<div class="dropdown dropdown_right-center">
+		<div class="dropdown d-inline-block m-1 dropdown_right-center">
 			<button type="button" class="btn btn_secondary">Right Center</button>
 			<div class="dropdown__menu">
 				<a class="dropdown__item" href="#">Action</a>
@@ -154,7 +154,7 @@
 			</div>
 		</div>
 
-		<div class="dropdown dropdown_right-bottom">
+		<div class="dropdown d-inline-block m-1 dropdown_right-bottom">
 			<button type="button" class="btn btn_secondary">Right Bottom</button>
 			<div class="dropdown__menu">
 				<a class="dropdown__item" href="#">Action</a>
@@ -165,7 +165,7 @@
 
 		<br>
 
-		<div class="dropdown dropdown_bottom-left">
+		<div class="dropdown d-inline-block m-1 dropdown_bottom-left">
 			<button type="button" class="btn btn_secondary">Bottom Left</button>
 			<div class="dropdown__menu">
 				<a class="dropdown__item" href="#">Action</a>
@@ -174,7 +174,7 @@
 			</div>
 		</div>
 
-		<div class="dropdown dropdown_bottom-center">
+		<div class="dropdown d-inline-block m-1 dropdown_bottom-center">
 			<button type="button" class="btn btn_secondary">Bottom Center</button>
 			<div class="dropdown__menu">
 				<a class="dropdown__item" href="#">Action</a>
@@ -183,7 +183,7 @@
 			</div>
 		</div>
 
-		<div class="dropdown dropdown_bottom-right">
+		<div class="dropdown d-inline-block m-1 dropdown_bottom-right">
 			<button type="button" class="btn btn_secondary">Bottom Right</button>
 			<div class="dropdown__menu">
 				<a class="dropdown__item" href="#">Action</a>
