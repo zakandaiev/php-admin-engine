@@ -1,7 +1,7 @@
 <?php
 
 $group = [
-	'foreign' => 'user_group@user_id/group_id'
+	'foreign' => 'group_user@user_id/group_id'
 ];
 $login = [
 	'required' => true,

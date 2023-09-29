@@ -19,6 +19,7 @@
 4. Create & enjoy ;)
 
 ## TODO
+* all: Server::answer -> Request::answer
 * engine: modules install
 * admin: create data-behavior.js
 * admin: create foreign-form.js
@@ -34,3 +35,6 @@
 * install: instalation page
 * dev: refactor charts initialization, add default double-theme colors etc.
 * other jobs based on old (but ready) https://github.com/zakandaiev/adminkit-engine
+* docs: create docs module and plug MkDocs or create own builder
+  * /docs/dev - documentation for developers
+  * /docs/user - documentation for users

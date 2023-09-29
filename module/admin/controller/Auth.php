@@ -2,8 +2,8 @@
 
 namespace Module\Admin\Controller;
 
-use \Engine\Server;
-use \Engine\User;
+use Engine\Server;
+use Engine\User;
 
 class Auth extends \Engine\Controller {
 	public function __construct() {

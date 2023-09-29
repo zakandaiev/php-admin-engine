@@ -12,9 +12,13 @@ class Statement {
 	private $prefix;
 	private $statement;
 	private $binding = [];
-	private $is_select;
-	private $is_paginating = false;
+	private $filter;
+	private $filter_sql;
+	private $filter_binding = [];
 	private $pagination = [];
+	private $is_select;
+	private $is_paginate = false;
+	private $is_filter = false;
 
 	public function __construct($sql, $cache = null, $debug = null) {
 		$is_cached = false;
@@ -42,30 +46,42 @@ class Statement {
 		return $this;
 	}
 
-	public function filter($name, $set_options = true) {
+	public function filter($name, $mixed = null) {
 		if(!$this->is_select) {
 			return $this;
 		}
 
-		$filter = new Filter($name);
+		$mixed = isset($mixed) ? $mixed : true;
 
-		if($set_options) {
-			$this->setFilterValues($filter);
+		$this->is_filter = false;
+		$this->filter_sql = $this->sql;
+		$this->filter_binding = [];
+
+		if($mixed === true) {
+			$this->is_filter = true;
+		}
+		else if(is_array($mixed) && !empty($mixed)) {
+			foreach($mixed as $alias => $options) {
+				$this->filter->setOptions($alias, $options);
+			}
 		}
 
-		if(empty($filter->sql) && empty($filter->order)) {
+		$this->filter = new Filter($name);
+
+		if(empty($this->filter->sql) && empty($this->filter->order)) {
 			return $this;
 		}
 
-		$sql = !empty($filter->sql) ? "WHERE {$filter->sql}" : '';
-		$sql = "SELECT * FROM ({$this->sql}) t_filter $sql";
+		$sql = !empty($this->filter->sql) ? "WHERE {$this->filter->sql}" : '';
+		$sql = "SELECT * FROM ({$this->filter_sql}) t_filter $sql";
 
-		foreach($filter->binding as $key => $value) {
+		foreach($this->filter->binding as $key => $value) {
+			$this->filter_binding[$key] = $key;
 			$this->addBinding($key, $value);
 		}
 
-		if(!empty($filter->order)) {
-			$sql .= " ORDER BY {$filter->order}";
+		if(!empty($this->filter->order)) {
+			$sql .= " ORDER BY {$this->filter->order}";
 		}
 
 		$this->sql = $sql;
@@ -73,30 +89,28 @@ class Statement {
 		return $this;
 	}
 
-	private function setFilterValues($filter) {
-		if(empty($filter->data) || preg_match('/GROUP\s+BY/mi',  $this->sql)) {
+	private function setFilterValues() {
+		if(!$this->is_paginate || empty($this->filter_sql) || empty($this->filter->data) || preg_match('/GROUP\s+BY/mi',  $this->filter_sql)) {
 			return false;
 		}
 
-		$sql_cuted = $this->cutSelectionPartFromSQL($this->sql);
+		$sql_cuted = $this->cutSelectionPartFromSQL($this->filter_sql);
 		$sql_cuted = preg_replace('/\s*ORDER\s+BY\s+[\w\s\@\<\>\.\,\=\-\'\"\`]+$/mi', '', $sql_cuted);
 
-		foreach($filter->data as $alias => $filter_data) {
+		foreach($this->filter->data as $alias => $filter_data) {
 			if(is_array($filter_data['column']) || !in_array($filter_data['type'], ['checkbox','radio','select'])) {
 				continue;
 			}
 
 			$filter_sql = "SELECT COUNT(*) as `count`, {$filter_data['column']} as `id`, {$filter_data['column']} as `text` FROM $sql_cuted";
 
-			$filter_binding = $this->binding;
-
 			$filter_data['show_all_options'] = $filter_data['show_all_options'] ?? false;
 
-			if(!$filter_data['show_all_options'] && !empty($filter->sql)) {
-				$filter_sql .= " WHERE {$filter->sql}";
+			if(!$filter_data['show_all_options'] && !empty($this->filter->sql)) {
+				$filter_sql .= " WHERE {$this->filter->sql}";
 
-				foreach($filter->binding as $key => $value) {
-					$filter_binding[$key] = $value;
+				foreach($this->filter->binding as $key => $value) {
+					$this->filter_binding[$key] = $value;
 				}
 			}
 
@@ -104,9 +118,9 @@ class Statement {
 
 			$filter_options = new Statement($filter_sql);
 
-			$filter_options = $filter_options->execute($filter_binding)->fetchAll();
+			$filter_options = $filter_options->execute($this->filter_binding)->fetchAll();
 
-			$filter->setOptions($alias, $filter_options);
+			$this->filter->setOptions($alias, $filter_options);
 		}
 
 		return true;
@@ -125,13 +139,13 @@ class Statement {
 			$this->pagination[$key] = $option;
 		}
 
-		$this->is_paginating = true;
+		$this->is_paginate = true;
 
 		return $this;
 	}
 
 	private function initializePagination() {
-		if(!$this->is_paginating) {
+		if(!$this->is_paginate) {
 			return false;
 		}
 
@@ -227,28 +241,27 @@ class Statement {
 	}
 
 	public function execute($params = []) {
-		if($this->cache) {
-			$this->addBinding($params);
-
-			if($this->debug) {
-				debug(trim($this->sql ?? ''), $this->binding);
-			}
-
-			return $this;
-		}
-
 		$this->addBinding($params);
 
 		if($this->debug) {
 			debug(trim($this->sql ?? ''), $this->binding);
 		}
 
+		if($this->cache) {
+			return $this;
+		}
+
+		$this->filter_binding = array_diff_key($this->binding, $this->filter_binding);
+
 		$this->initializePagination();
 		$this->prepare();
 		$this->bind();
 
+		$is_execute_success = false;
+
 		try {
 			$this->statement->execute();
+			$is_execute_success = true;
 		}
 		catch(PDOException $error) {
 			// TODO all codes
@@ -271,6 +284,10 @@ class Statement {
 				$debug_sql = DEBUG['is_enabled'] ? ['query' => preg_replace('/(\v|\s)+/', ' ', trim($this->sql ?? ''))] : null;
 				Server::answer($debug_sql, 'error', __($error_message), '409'); // TODO translation
 			}
+		}
+
+		if($is_execute_success) {
+			$this->setFilterValues();
 		}
 
 		return $this;
@@ -309,7 +326,7 @@ class Statement {
 		return $this->fetchCache(__FUNCTION__, $mode);
 	}
 
-	public function fetchColumn(int $column = 0) {
+	public function fetchColumn($column = 0) {
 		return intval($this->fetchCache(__FUNCTION__, $column));
 	}
 

@@ -57,9 +57,9 @@ Route::get('/admin/user/add', 'User@getAdd');
 Route::get('/admin/user/edit/$id', 'User@getEdit');
 
 // ############################# GROUP #############################
-// Route::get('/admin/group', 'Group@getAll');
-// Route::get('/admin/group/add', 'Group@getAdd');
-// Route::get('/admin/group/edit/$id', 'Group@getEdit');
+Route::get('/admin/group', 'Group@getAll');
+Route::get('/admin/group/add', 'Group@getAdd');
+Route::get('/admin/group/edit/$id', 'Group@getEdit');
 
 // ############################# SETTING #############################
 // Route::get('/admin/setting/$section', 'Setting@getSection');

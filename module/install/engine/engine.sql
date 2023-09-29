@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `%prefix%user` (
 	UNIQUE `auth_token` (`auth_token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
-CREATE TABLE IF NOT EXISTS `%prefix%user_group` (
+CREATE TABLE IF NOT EXISTS `%prefix%group_user` (
 	`group_id` INT UNSIGNED NOT NULL,
 	`user_id` INT UNSIGNED NOT NULL,
 	PRIMARY KEY (`group_id`, `user_id`)
@@ -244,7 +244,7 @@ INSERT INTO `%prefix%group_route` (`group_id`, `route`) VALUES
 (3, 'any@/admin/translation'),
 (3, 'any@/admin/translation/**');
 
-INSERT INTO `%prefix%user_group` (`user_id`, `group_id`) VALUES
+INSERT INTO `%prefix%group_user` (`group_id`, `user_id`) VALUES
 (1, 1);
 
 INSERT INTO `%prefix%notification` (`user_id`, `type`, `info`) VALUES
@@ -330,15 +330,15 @@ FOR EACH ROW
   DELETE FROM `%prefix%group_route` WHERE group_id = OLD.id;
 
 CREATE TRIGGER
-	`clear_user_group_by_group_delete`
+	`clear_group_user_by_group_delete`
 AFTER DELETE ON
 	`%prefix%group`
 FOR EACH ROW
-  DELETE FROM `%prefix%user_group` WHERE group_id = OLD.id;
+  DELETE FROM `%prefix%group_user` WHERE group_id = OLD.id;
 
 CREATE TRIGGER
-	`clear_user_group_by_user_delete`
+	`clear_group_user_by_user_delete`
 AFTER DELETE ON
 	`%prefix%user`
 FOR EACH ROW
-  DELETE FROM `%prefix%user_group` WHERE user_id = OLD.id;
+  DELETE FROM `%prefix%group_user` WHERE user_id = OLD.id;

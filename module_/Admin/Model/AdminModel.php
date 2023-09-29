@@ -10,13 +10,13 @@ class AdminModel {
 			SELECT
 				t_group.access_all
 			FROM
-				{user_group} t_user_group
+				{group_user} t_group_user
 			INNER JOIN
 				{group} t_group
 			ON
-				t_group.id = t_user_group.group_id
+				t_group.id = t_group_user.group_id
 			WHERE
-				t_user_group.user_id = :user_id
+				t_group_user.user_id = :user_id
 				AND t_group.is_enabled IS true
 				AND t_group.access_all IS true
 			LIMIT 1
@@ -38,15 +38,15 @@ class AdminModel {
 
 		$groups = new Statement('
 			SELECT
-				t_user_group.group_id as id, LOWER(t_group.name) as alias
+				t_group_user.group_id as id, LOWER(t_group.name) as alias
 			FROM
-				{user_group} t_user_group
+				{group_user} t_group_user
 			LEFT JOIN
 				{group} t_group
 			ON
-				t_user_group.group_id = t_group.id
+				t_group_user.group_id = t_group.id
 			WHERE
-				t_user_group.user_id = :user_id
+				t_group_user.user_id = :user_id
 		');
 
 		$groups = $groups->execute(['user_id' => $id])->fetchAll();
@@ -66,17 +66,17 @@ class AdminModel {
 			SELECT
 				t_group_route.route
 			FROM
-				{user_group} t_user_group
+				{group_user} t_group_user
 			INNER JOIN
 				{group_route} t_group_route
 			ON
-				t_group_route.group_id = t_user_group.group_id
+				t_group_route.group_id = t_group_user.group_id
 			INNER JOIN
 				{group} t_group
 			ON
-				t_group.id = t_user_group.group_id
+				t_group.id = t_group_user.group_id
 			WHERE
-				t_user_group.user_id = :user_id
+				t_group_user.user_id = :user_id
 				AND t_group.is_enabled IS true
 		';
 

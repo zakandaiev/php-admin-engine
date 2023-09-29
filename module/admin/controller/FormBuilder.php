@@ -2,9 +2,9 @@
 
 namespace Module\Admin\Controller;
 
-use \Engine\Form;
-use \Engine\Path;
-use \Engine\Request;
+use Engine\Form;
+use Engine\Path;
+use Engine\Request;
 
 class FormBuilder {
 	protected $form_name;
@@ -119,7 +119,13 @@ class FormBuilder {
 			return false;
 		}
 
-		$html = '<div class="' . (isset($field['col_class']) ? $field['col_class'] : 'col-xs-12') . '" data-form-row="' . $field_name . '">';
+		$col_class = isset($field['col_class']) ? $field['col_class'] : 'col-xs-12';
+
+		if(!isset($field['col_class']) && $field['type'] === 'hidden') {
+			$col_class .= ' hidden';
+		}
+
+		$html = '<div class="' . $col_class . '" data-form-row="' . $field_name . '">';
 
 		$html_input = $this->getColHTMLInput($field_name, $field);
 
@@ -339,9 +345,21 @@ class FormBuilder {
 				}
 
 				$field['value'] = $field['value'] ?? [];
-				foreach($field['value'] as $value) {
-					$selected = $value->selected ? ' selected' : '';
-					$html .= '<option value="' . $value->value . '"' . $selected . '>' . $value->name . '</option>';
+				foreach($field['value'] as $key => $value) {
+					if(is_array($value)) {
+						$html .= '<optgroup label="' . $key . '">';
+
+						foreach($value as $vf => $vv) {
+							$selected = $vv->selected ? ' selected' : '';
+							$html .= '<option value="' . $vv->value . '"' . $selected . '>' . $vv->name . '</option>';
+						}
+
+						$html .= '</optgroup>';
+					}
+					else {
+						$selected = $value->selected ? ' selected' : '';
+						$html .= '<option value="' . $value->value . '"' . $selected . '>' . $value->name . '</option>';
+					}
 				}
 
 				$html .= '</select>';

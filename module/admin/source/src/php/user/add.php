@@ -11,11 +11,13 @@ $form_builder = new FormBuilder('user/add');
 $form_attributes = 'data-redirect="' . site('url_language') . '/admin/user" data-validate';
 
 $form_builder->setFieldValue('group', array_map(function($group) {
-	$t = new \stdClass();
-	$t->value = $group->id;
-	$t->name = $group->name;
-	$t->selected = false;
-	return $t;
+	$g = new \stdClass();
+
+	$g->value = $group->id;
+	$g->name = $group->name;
+	$g->selected = false;
+
+	return $g;
 }, $groups));
 ?>
 

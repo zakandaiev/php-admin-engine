@@ -4,9 +4,7 @@ namespace Module\Admin\Controller;
 
 class User extends AdminController {
 	public function getAll() {
-		$users = $this->model->getUsers();
-
-		$data['users'] = $users;
+		$data['users'] = $this->model->getUsers();
 
 		$this->view->setData($data);
 		$this->view->render('user/all');

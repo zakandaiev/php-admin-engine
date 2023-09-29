@@ -2,8 +2,8 @@
 
 namespace Module\Admin\Controller;
 
-use \Engine\Server;
-use \Engine\Language;
+use Engine\Server;
+use Engine\Language;
 
 class Page extends AdminController {
 	public function getAll() {

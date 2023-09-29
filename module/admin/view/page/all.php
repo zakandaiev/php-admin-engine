@@ -6,6 +6,9 @@ Page::set('title', $title);
 
 Page::breadcrumb('add', ['name' => $title]);
 
+$filter_builder = new FilterBuilder('user');
+$filter_selected = $filter_builder->getSelected();
+
 $interface_builder = new InterfaceBuilder([
 	'filter' => 'user',
 	'title' => $title,
@@ -22,7 +25,7 @@ $interface_builder = new InterfaceBuilder([
 			'title' => __('admin.user.name')
 		],
 		'count_groups' => [
-			'type' => function($value, $item) {return '<a href="/admin/group">' . $value . '</a>';},
+			'type' => function($value) {return '<a href="/admin/group">' . $value . '</a>';},
 			'title' => __('admin.user.count_groups')
 		],
 		'date_created' => [

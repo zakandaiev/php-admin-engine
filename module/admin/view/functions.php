@@ -175,7 +175,7 @@ Asset::js('js/main', 'defer');
 
 // 	$output = '
 // 		<div class="activity">
-// 			<img src="' . site('url') . '/' . $user_avatar . '" width="36" height="36" class="rounded-circle me-2" alt="' . $user_name . '">
+// 			<img src="' . site('url') . '/' . $user_avatar . '" width="36" height="36" class="radius-circle me-2" alt="' . $user_name . '">
 // 			<div class="flex-grow-1">
 // 				<small class="float-end text-navy">' . $when . '</small>
 // 				<strong>' . $user_name . '</strong>

@@ -2,12 +2,16 @@
 
 namespace Module\Admin\Controller;
 
-use \Engine\Controller;
-use \Engine\Server;
+use Engine\Controller;
+use Engine\Server;
 
 class AdminController extends Controller {
+	protected $model_admin;
+
 	public function __construct() {
 		parent::__construct();
+
+		$this->model_admin = $this->loadModel('AdminModel', 'admin');
 
 		class_alias('\\Module\\Admin\\Controller\\FormBuilder', 'FormBuilder');
 		class_alias('\\Module\\Admin\\Controller\\FilterBuilder', 'FilterBuilder');
@@ -18,14 +22,12 @@ class AdminController extends Controller {
 		// 	Server::redirect('/admin/login');
 		// }
 
-		// $this->modelAdmin = $this->loadModel('AdminModel', 'admin');
-
 		// // CHECK USER FOR ROUTE ACCESS
 		// $is_user_enabled = false;
 
-		// $this->user->access_all = $this->modelAdmin->getUserAccessAll($this->user->id);
-		// $this->user->groups = $this->modelAdmin->getUserGroups($this->user->id);
-		// $this->user->routes = $this->modelAdmin->getUserRoutes($this->user->id);
+		// $this->user->access_all = $this->model_admin->getUserAccessAll($this->user->id);
+		// $this->user->groups = $this->model_admin->getUserGroups($this->user->id);
+		// $this->user->routes = $this->model_admin->getUserRoutes($this->user->id);
 
 		// if((isset($this->route['is_public']) && $this->route['is_public'] === true) || $this->user->access_all) {
 		// 	$is_user_enabled = true;
@@ -45,7 +47,7 @@ class AdminController extends Controller {
 		// }
 
 		// // GET USER NOTIFICATIONS
-		// $this->user->notifications_count = $this->modelAdmin->getUserNotificationsCount($this->user->id);
-		// $this->user->notifications = $this->modelAdmin->getUserNotifications($this->user->id);
+		// $this->user->notifications_count = $this->model_admin->getUserNotificationsCount($this->user->id);
+		// $this->user->notifications = $this->model_admin->getUserNotifications($this->user->id);
 	}
 }

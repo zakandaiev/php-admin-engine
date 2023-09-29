@@ -9,7 +9,7 @@ class User {
 		$sql = '
 			SELECT
 				*,
-				(SELECT COUNT(*) FROM {user_group} WHERE user_id=t_user.id) as count_groups
+				(SELECT COUNT(*) FROM {group_user} WHERE user_id=t_user.id) as count_groups
 			FROM
 				{user} t_user
 			ORDER BY id ASC
@@ -17,7 +17,7 @@ class User {
 
 		$users = new Statement($sql);
 
-		$users = $users->filter('User')->paginate()->execute()->fetchAll();
+		$users = $users->filter('user')->paginate()->execute()->fetchAll();
 
 		$users = array_map(function($user) { return \Engine\User::format($user); }, $users);
 
@@ -59,7 +59,7 @@ class User {
 	}
 
 	public function getUserGroups($user_id) {
-		$sql = 'SELECT group_id FROM {user_group} WHERE user_id = :user_id';
+		$sql = 'SELECT group_id FROM {group_user} WHERE user_id = :user_id';
 
 		$groups = new Statement($sql);
 

@@ -14,7 +14,7 @@ $routes = [
 	'foreign' => 'group_route@group_id/route'
 ];
 $users = [
-	'foreign' => 'user_group@group_id/user_id'
+	'foreign' => 'group_user@group_id/user_id'
 ];
 $access_all = [
 	'boolean' => true

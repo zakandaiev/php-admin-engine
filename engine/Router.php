@@ -57,6 +57,12 @@ class Router {
 	private static function checkRoute($module, $route) {
 		Module::setName($module);
 
+		$language = Request::$uri_parts[0];
+
+		if(Language::has($language)) {
+			Language::setCurrent($language);
+		}
+
 		$method = strtolower(trim($route['method'] ?? ''));
 
 		if(
@@ -65,12 +71,6 @@ class Router {
 		) {
 			foreach($route as $key => $value) {
 				self::$route[$key] = $value;
-			}
-
-			$language = Request::$uri_parts[0];
-
-			if(Language::has($language)) {
-				Language::setCurrent($language);
 			}
 
 			Module::loadHooks();
@@ -179,19 +179,25 @@ class Router {
 				Server::answer(null, 'error', 'Request not found', 404);
 			}
 
-			Module::setName('public');
-
-			$uri_parts = Request::$uri_parts;
-
-			if(Language::has($uri_parts[0])) {
-				array_shift($uri_parts);
-			}
+			$module_name = 'public';
 
 			foreach(Module::get() as $module) {
-				if($uri_parts[0] === $module['name'] || $uri_parts[0] === $module['extends']) {
-					Module::setName('admin');
+				Module::setName($module['name']);
+
+				$uri_parts = Request::$uri_parts;
+				if(Language::has($uri_parts[0])) {
+					array_shift($uri_parts);
+				}
+
+				if($uri_parts[0] === $module['name']) {
+					$module_name = $module['name'];
+				}
+				else if($uri_parts[0] === $module['extends']) {
+					$module_name = $module['extends'];
 				}
 			}
+
+			Module::setName($module_name);
 
 			self::$route['method'] = Request::$method;
 			self::$route['path'] = Request::$uri;

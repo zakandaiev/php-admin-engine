@@ -7,10 +7,10 @@
 			</button>
 
 			<nav class="header__nav">
-				<?php Theme::widget('navbar-theme'); ?>
-				<?php Theme::widget('navbar-notification'); ?>
-				<?php Theme::widget('navbar-lang'); ?>
-				<?php Theme::widget('navbar-profile'); ?>
+				<?php Theme::widget('/navbar-theme'); ?>
+				<?php Theme::widget('/navbar-notification'); ?>
+				<?php Theme::widget('/navbar-lang'); ?>
+				<?php Theme::widget('/navbar-profile'); ?>
 			</nav>
 
 		</div>

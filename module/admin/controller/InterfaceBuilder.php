@@ -2,8 +2,8 @@
 
 namespace Module\Admin\Controller;
 
-use \Engine\Request;
-use \Engine\Pagination;
+use Engine\Request;
+use Engine\Pagination;
 
 class InterfaceBuilder {
 	protected $filter;
@@ -36,21 +36,26 @@ class InterfaceBuilder {
 			return $html;
 		}
 
-		$html .= '<div class="row gap-xs">';
+		if($this->isFilters()) {
+			$html .= '<div class="row gap-xs">';
 
-		$html .= '<div class="col-xs-12 col-xxl-3 order-xs-1 order-xxl-2">';
-		$html .= $this->renderFilters();
-		$html .= '</div>';
+			$html .= '<div class="col-xs-12 col-xxl-3 order-xs-1 order-xxl-2">';
+			$html .= $this->renderFilters();
+			$html .= '</div>';
 
-		$html .= '<div class="col-xs-12';
-		if(Request::has('show-filters')) {
-			$html .= ' col-xxl-9 order-xs-1 order-xxl-1';
+			$html .= '<div class="col-xs-12';
+			if(Request::has('show-filters')) {
+				$html .= ' col-xxl-9 order-xs-1 order-xxl-1';
+			}
+			$html .= '">';
+			$html .= $this->renderTable();
+			$html .= '</div>';
+
+			$html .= '</div>';
 		}
-		$html .= '">';
-		$html .= $this->renderTable();
-		$html .= '</div>';
-
-		$html .= '</div>';
+		else {
+			$html .= $this->renderTable();
+		}
 
 		return $html;
 	}
@@ -58,7 +63,7 @@ class InterfaceBuilder {
 	protected function renderActions() {
 		$html = '<span class="section__actions">';
 
-		if(!empty($this->filter)) {
+		if($this->isFilters()) {
 			$filter_action_title = Request::has('show-filters') ? __('admin.filter.hide_filters') : __('admin.filter.show_filters');
 			$filter_action_url = Request::has('show-filters') ? site('permalink') : link_filter('show-filters');
 			$filter_action_icon = Request::has('show-filters') ? 'minus' : 'plus';
@@ -75,8 +80,12 @@ class InterfaceBuilder {
 		return $html;
 	}
 
+	protected function isFilters() {
+		return (!empty($this->filter) && !empty($this->filter_builder->get()));
+	}
+
 	protected function renderFilters() {
-		if(empty($this->filter) || empty($this->filter_builder->get()) || !Request::has('show-filters')) {
+		if(!$this->isFilters() || !Request::has('show-filters')) {
 			return false;
 		}
 

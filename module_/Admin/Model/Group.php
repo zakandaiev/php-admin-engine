@@ -12,7 +12,7 @@ class Group {
 			SELECT
 				*,
 				(SELECT COUNT(*) FROM {group_route} WHERE group_id=t_group.id) as count_routes,
-				(SELECT COUNT(*) FROM {user_group} WHERE group_id=t_group.id) as count_users
+				(SELECT COUNT(*) FROM {group_user} WHERE group_id=t_group.id) as count_users
 			FROM
 				{group} t_group
 		';
@@ -81,7 +81,7 @@ class Group {
 	public function getGroupUsersById($group_id) {
 		$users = [];
 
-		$sql = 'SELECT user_id FROM {user_group} WHERE group_id = :group_id';
+		$sql = 'SELECT user_id FROM {group_user} WHERE group_id = :group_id';
 
 		$statement = new Statement($sql);
 

@@ -65,7 +65,7 @@
 													$count_aviable_languages = count(site('languages'));
 												?>
 												<?php foreach($page->translations as $language): ?>
-													<a href="<?= site('url_language') ?>/admin/page/edit/<?= $page->id ?>/translation/edit/<?= $language ?>" title="<?= lang($language, 'name') ?>"><img width="18" height="18" class="d-inline-block mw-100 rounded-circle" src="<?= Asset::url() ?>/<?= lang($language, 'icon') ?>" alt="<?= $language ?>"></a>
+													<a href="<?= site('url_language') ?>/admin/page/edit/<?= $page->id ?>/translation/edit/<?= $language ?>" title="<?= lang($language, 'name') ?>"><img width="18" height="18" class="d-inline-block mw-100 radius-circle" src="<?= Asset::url() ?>/<?= lang($language, 'icon') ?>" alt="<?= $language ?>"></a>
 												<?php endforeach; ?>
 												<?php if($count_translations < $count_aviable_languages): ?>
 													<div class="dropdown d-inline-block dropend">

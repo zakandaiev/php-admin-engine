@@ -1,24 +1,45 @@
 <?php
 
-$name = [
+$language = [
+	'type' => 'hidden',
 	'required' => true,
-	'minlength' => 2,
-	'maxlength' => 200,
-	'regexp' => '/^[\a-zA-Z]+$/u',
-	'required_message' => __('Name is required'),
-	'minlength_message' => __('Name is too short'),
-	'maxlength_message' => __('Name is too long'),
-	'regexp_message' => __('Name should consist only latin letters')
+	'default' => site('language')
+];
+$name = [
+	'type' => 'text',
+	'required' => true,
+	'min' => 1,
+	'max' => 200,
+	'regex' => '/^[\w ]+$/iu',
+	'label' => __('admin.group.name'),
+	'placeholder' => __('admin.group.name_placeholder'),
+	'col_class' => 'col-xs-12'
 ];
 $routes = [
-	'foreign' => 'group_route@group_id/route'
+	'type' => 'select',
+	'multiple' => true,
+	'label' => __('admin.group.routes'),
+	'placeholder' => __('admin.group.routes_placeholder'),
+	'foreign' => 'group_route@group_id/route',
+	'col_class' => 'col-xs-12'
 ];
 $users = [
-	'foreign' => 'user_group@group_id/user_id'
-];
-$access_all = [
-	'boolean' => true
+	'type' => 'select',
+	'multiple' => true,
+	'label' => __('admin.group.users'),
+	'placeholder' => __('admin.group.users_placeholder'),
+	'foreign' => 'group_user@group_id/user_id',
+	'col_class' => 'col-xs-12'
 ];
 $is_enabled = [
-	'boolean' => true
+	'type' => 'switch',
+	'default' => true,
+	'label' => __('admin.group.is_enabled'),
+	'col_class' => 'col-xs-12'
+];
+$access_all = [
+	'type' => 'switch',
+	'default' => false,
+	'label' => __('admin.group.access_all'),
+	'col_class' => 'col-xs-12'
 ];

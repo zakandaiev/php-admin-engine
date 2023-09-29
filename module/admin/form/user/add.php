@@ -14,6 +14,6 @@ return [
 		'is_enabled' => $is_enabled
 	],
 	'execute_post' => function($data) {
-		// Hook::run('user.' . $data->form_data['action'], $data);
+		Hook::run('user.' . $data['action'], $data['sql_binding']);
 	}
 ];

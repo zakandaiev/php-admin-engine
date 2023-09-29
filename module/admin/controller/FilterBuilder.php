@@ -2,9 +2,9 @@
 
 namespace Module\Admin\Controller;
 
-use \Engine\Filter;
-use \Engine\Path;
-use \Engine\Request;
+use Engine\Filter;
+use Engine\Path;
+use Engine\Request;
 
 class FilterBuilder {
 	protected $filter_name;

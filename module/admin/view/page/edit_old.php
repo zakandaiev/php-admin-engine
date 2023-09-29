@@ -21,7 +21,7 @@
 							$crumb_edit_name = __('Edit');
 							$crumb_edit_url = '/admin/page/edit/' . $page_origin->id;
 
-							$crumb_add_name = '<img width="18" height="18" class="d-inline-block mw-100 rounded-circle" src="' . Asset::url() . '/' . lang($page_edit->language, 'icon') . '" alt="' . $page_edit->language . '"> ' . __('translation of') . ' ' . $page_origin->title;
+							$crumb_add_name = '<img width="18" height="18" class="d-inline-block mw-100 radius-circle" src="' . Asset::url() . '/' . lang($page_edit->language, 'icon') . '" alt="' . $page_edit->language . '"> ' . __('translation of') . ' ' . $page_origin->title;
 
 							Breadcrumb::edit(1, $crumb_edit_name, $crumb_edit_url);
 							Breadcrumb::add($crumb_add_name);

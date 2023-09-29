@@ -542,6 +542,7 @@ class Form {
 		}
 
 		$foreign_data = self::getForeignFields();
+		$translation_data = self::getTranslationFields($form_name);
 
 		$form_data['columns'] = array_keys(self::$fields);
 
@@ -592,6 +593,7 @@ class Form {
 		}
 
 		self::processForeignFields($foreign_data, $form_data);
+		self::processTranslationFields($translation_data, $form_data);
 
 		if(isset($form['execute_post']) && is_closure($form['execute_post'])) {
 			$form['execute_post']($form_data['rowCount'], self::$fields, $form_data);
@@ -685,6 +687,47 @@ class Form {
 				}
 			}
 		}
+
+		return true;
+	}
+
+	private static function getTranslationFields($form_name) {
+		$data = [];
+
+		$form_data = self::get($form_name);
+
+		if(!isset($form_data['translation']) || empty($form_data['translation'])) {
+			return $data;
+		}
+
+		foreach($form_data['translation'] as $key) {
+			if(!isset(self::$fields[$key])) {
+				continue;
+			}
+
+			$data[$key] = self::$fields[$key];
+
+			unset(self::$fields[$key]);
+		}
+
+		return $data;
+	}
+
+	private static function processTranslationFields($fields, $form_data) {
+		if(empty($fields) || empty($form_data)) {
+			return false;
+		}
+
+		$name = $form_data['form_name'] . '_translation';
+		$table = $form_data['table'] . '_translation';
+		$action = $form_data['action'];
+		$data = [
+			'table' => $table,
+			'fields' => $fields
+		];
+
+		self::set($name, $data);
+		self::execute($action, $name, $form_data['item_id'], true);
 
 		return true;
 	}
