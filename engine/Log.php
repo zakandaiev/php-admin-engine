@@ -41,7 +41,7 @@ class Log {
 
 	private static function format($string) {
 		if(is_array($string)) {
-			$string = json_encode($string);
+			$string = json_encode($string, JSON_UNESCAPED_UNICODE);
 		}
 		else if(is_bool($string)) {
 			$string = $string === true ? 'true' : 'false';

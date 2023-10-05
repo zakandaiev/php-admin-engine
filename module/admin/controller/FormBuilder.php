@@ -109,6 +109,7 @@ class FormBuilder {
 		$html .= '<button type="submit"';
 		$html .= isset($submit_button['class']) ? ' class="' . $submit_button['class'] . '">' : ' class="btn btn_primary">';
 		$html .= isset($submit_button['text']) ? $submit_button['text'] : __('admin.form.submit');
+		$html .= '</button>';
 		$html .= '</div>';
 
 		return $html;
@@ -260,6 +261,11 @@ class FormBuilder {
 			case 'file': {
 				$value = is_array($value) ? $value : ($value ? [$value] : []);
 
+				if(isset($attributes['placeholder'])) {
+					$attributes['data-placeholder'] = 'data-' . $attributes['placeholder'];
+					unset($attributes['placeholder']);
+				}
+
 				$value = array_map(function($v) {
 					return [
 						'value' => $v,
@@ -367,7 +373,7 @@ class FormBuilder {
 				break;
 			}
 			case 'switch': {
-				$value = $value ? ' checked' : '';
+				$value = ($value === true || $value === 'true' || $value === 1 || $value === '1') ? ' checked' : '';
 
 				$html = '<label class="switch">';
 				$html .= '<input type="checkbox"  ' . implode(' ', $attributes) . $value . '>';

@@ -11,10 +11,10 @@ function makeSortable(element) {
 		swapThreshold: 0.5,
 		animation: 150,
 		onEnd: event => {
-			if(element.onEnd && element.onEnd instanceof Function) {
+			if (element.onEnd && element.onEnd instanceof Function) {
 				element.onEnd();
 			}
-			if(element.hasAttribute('data-callback') && window[element.getAttribute('data-callback')]) {
+			if (element.hasAttribute('data-callback') && window[element.getAttribute('data-callback')]) {
 				window[element.getAttribute('data-callback')](event);
 			}
 		},

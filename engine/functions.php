@@ -343,8 +343,11 @@ function site($key, $module = 'engine') {
 	}
 
 	switch($key) {
-		case 'name': {
-			$value = $value ?? Engine::NAME;
+		case 'name':
+		case 'description':
+		case 'address':
+		case 'hours': {
+			$value = isset($value->{site('language_current')}) ? $value->{site('language_current')} : $value->{site('language')};
 			break;
 		}
 		case 'charset': {
@@ -400,9 +403,11 @@ function site($key, $module = 'engine') {
 			$value = Module::get('version') ?? Engine::VERSION;
 			break;
 		}
+		case 'favicon':
+		case 'logo':
+		case 'logo_alt':
 		case 'placeholder_image':
-		case 'placeholder_avatar':
-		case 'favicon': {
+		case 'placeholder_avatar': {
 			$main_modules = ['admin', 'public'];
 
 			$module = in_array(Module::get('name'), $main_modules) ? Module::get('name') : Module::get('extends');

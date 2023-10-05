@@ -13,7 +13,7 @@ class Server {
 			$answer['message'] = $message ?? '';
 			$answer['data'] = $data;
 
-			$answer = json_encode($answer);
+			$answer = json_encode($answer, JSON_UNESCAPED_UNICODE);
 
 			$content_type = 'application/json';
 		}

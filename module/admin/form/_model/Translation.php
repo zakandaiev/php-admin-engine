@@ -32,5 +32,5 @@ $name = [
 ];
 $icon = [
 	'file' => true,
-	'extensions' => ['jpg','png','svg']
+	'extensions' => ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'],
 ];

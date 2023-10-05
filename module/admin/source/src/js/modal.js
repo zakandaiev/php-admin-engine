@@ -71,11 +71,11 @@ document.addEventListener('keydown', event => {
 function initModalContainer() {
   let container = document.querySelector('.modals');
 
-	if (!container) {
-		container = document.createElement('div');
-		container.classList.add('modals');
-		document.body.appendChild(container);
-	}
+  if (!container) {
+    container = document.createElement('div');
+    container.classList.add('modals');
+    document.body.appendChild(container);
+  }
 
   return container;
 }

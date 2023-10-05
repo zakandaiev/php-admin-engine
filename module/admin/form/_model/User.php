@@ -41,9 +41,8 @@ $name = [
 ];
 $avatar = [
 	'type' => 'file',
-	'extensions' => ['jpg','jpeg','png','svg'],
+	'extensions' => ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'],
 	'label' => __('admin.user.avatar'),
-	'placeholder' => __('admin.user.avatar_placeholder'),
 	'col_class' => 'col-xs-12 col-md-6 col-lg-3'
 ];
 $setting = [

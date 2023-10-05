@@ -20,7 +20,7 @@ FilePond.registerPlugin(
 document.addEventListener('DOMContentLoaded', () => {
 	document.querySelectorAll('input[type="file"]').forEach(input => {
 		const pond = FilePond.create(input, {
-			server: {load: '/'},
+			server: { load: '/' },
 			storeAsFile: true,
 			instantUpload: false,
 			allowProcess: false,
@@ -37,14 +37,14 @@ document.addEventListener('DOMContentLoaded', () => {
 			credits: false
 		});
 
-		if(input.hasAttribute('data-placeholder')) {
+		if (typeof ENGINE !== 'undefined' && ENGINE.translation && ENGINE.translation.filepond) {
+			pond.setOptions(ENGINE.translation.filepond);
+		}
+
+		if (input.hasAttribute('data-placeholder')) {
 			pond.setOptions({
 				labelIdle: input.getAttribute('data-placeholder')
 			});
-		}
-
-		if (typeof ENGINE !== 'undefined' && ENGINE.translation && ENGINE.translation.filepond) {
-			pond.setOptions(ENGINE.translation.filepond);
 		}
 
 		input.instance = pond;
@@ -53,13 +53,13 @@ document.addEventListener('DOMContentLoaded', () => {
 	function initFiles(input) {
 		let files = [];
 
-		if(!input.hasAttribute('data-value')) {
+		if (!input.hasAttribute('data-value')) {
 			return files;
 		}
 
 		let input_files = input.getAttribute('data-value');
 
-		if(!input_files || input_files == '[]') {
+		if (!input_files || input_files == '[]') {
 			return files;
 		}
 
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				}
 			};
 
-			if(input.getAttribute('data-preview') == 'false' ? false : true) {
+			if (input.getAttribute('data-preview') == 'false' ? false : true) {
 				file_obj.options.metadata.poster = file.poster;
 			}
 

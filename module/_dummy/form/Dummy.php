@@ -86,10 +86,8 @@ return [
 	'execute_pre' => function($fields, $data) {
 		debug($fields, $data);exit;
 		// execute some hooks or additional sql queries here, for example
-	},
-	'execute' => function($data) {
-		debug($data);
-		exit;
+		// or do whatever then answer
+		// Server::answer('dummy_data', 'dummy_status', 'dummy_message');
 	},
 	'execute_post' => function($rowCount, $fields, $data) {
 		debug($rowCount, $fields, $data);exit;

@@ -46,6 +46,6 @@ class Setting {
 			$setting[$row->module][$row->name] = is_json($row->value) ? json_decode($row->value) : $row->value;
 		}
 
-		return json_decode(json_encode($setting));
+		return json_decode(json_encode($setting, JSON_UNESCAPED_UNICODE));
 	}
 }

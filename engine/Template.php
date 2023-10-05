@@ -34,4 +34,18 @@ class Template {
 
 		return true;
 	}
+
+	public static function has($template, $module = null) {
+		$template_path = Path::file('view', $module) . "/$template.php";
+
+		if(!is_file($template_path) && Module::get('extends')) {
+			$template_path = Path::file('view', Module::get('extends')) . "/$template.php";
+		}
+
+		if(!is_file($template_path)) {
+			return false;
+		}
+
+		return true;
+	}
 }

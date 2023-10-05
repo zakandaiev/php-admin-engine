@@ -1,5 +1,5 @@
 function toast(type, text, duration) {
-	if(!type || !text || !text.length) {
+	if (!type || !text || !text.length) {
 		return false;
 	}
 

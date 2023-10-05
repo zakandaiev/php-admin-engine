@@ -539,15 +539,6 @@ class Form {
 			self::$fields = $form['modify_fields'](self::$fields, $form_data);
 		}
 
-		if(isset($form['execute_pre']) && is_closure($form['execute_pre'])) {
-			$form['execute_pre'](self::$fields, $form_data);
-		}
-
-		if(isset($form['execute']) && is_closure($form['execute'])) {
-			$form['execute'](self::$fields, $form_data);
-			exit;
-		}
-
 		$foreign_data = self::getForeignFields();
 		$translation_data = self::getTranslationFields($form_data['form_name']);
 
@@ -592,6 +583,11 @@ class Form {
 		if(isset($form['modify_sql_binding']) && is_closure($form['modify_sql_binding'])) {
 			$form_data['sql_binding'] = $form['modify_sql_binding']($form_data['sql_binding'], self::$fields, $form_data);
 		}
+
+		if(isset($form['execute_pre']) && is_closure($form['execute_pre'])) {
+			$form['execute_pre'](self::$fields, $form_data);
+		}
+
 		$statement = new Statement($form_data['sql']);
 		$statement->execute($form_data['sql_binding']);
 

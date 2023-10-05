@@ -274,6 +274,8 @@ class Form {
 		this.node.classList.remove(this.data_class);
 		this.submit.disabled = false;
 
+		this.node.querySelectorAll('input, textarea, select').forEach(input => input.classList.remove('valid', 'invalid'));
+
 		return true;
 	}
 

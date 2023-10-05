@@ -58,7 +58,7 @@ if (sidebar) {
 	document.addEventListener('click', event => {
 		const sidebar_toggler = event.target.closest('[data-sidebar-toggle]');
 
-		if(!sidebar_toggler) {
+		if (!sidebar_toggler) {
 			return false;
 		}
 

@@ -295,7 +295,7 @@ class Statement {
 
 	private function fetchCache($type, $mode) {
 		if($this->cache) {
-			$cache_key =  $this->sql . '@' . json_encode($this->binding);
+			$cache_key =  $this->sql . '@' . json_encode($this->binding, JSON_UNESCAPED_UNICODE);
 
 			$cache = Cache::get($cache_key);
 
@@ -375,7 +375,7 @@ class Statement {
 
 			if(is_array($value) || is_object($value)) {
 				$pdo_param = PDO::PARAM_STR;
-				$value = json_encode($value);
+				$value = json_encode($value, JSON_UNESCAPED_UNICODE);
 			}
 
 			$this->statement->bindValue(':' . $key, $value, $pdo_param);

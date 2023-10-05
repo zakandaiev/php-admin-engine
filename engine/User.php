@@ -141,7 +141,7 @@ class User {
 
 	public static function register($user) {
 		// if(is_array($user)) {
-		// 	$user = json_decode(json_encode($user));
+		// 	$user = json_decode(json_encode($user, JSON_UNESCAPED_UNICODE));
 		// }
 
 		// $user_password = $user->password;
@@ -156,7 +156,7 @@ class User {
 
 		// $register = new Statement($register);
 
-		// $user->id = $register->execute(json_decode(json_encode($user), true))->insertId();
+		// $user->id = $register->execute(json_decode(json_encode($user, JSON_UNESCAPED_UNICODE), true))->insertId();
 
 		// self::authorize($user);
 

@@ -230,7 +230,7 @@ function installConfig($data) {
 	$config .= "define('UPLOAD', [" . PHP_EOL;
 	$config .= "\t'folder' => 'upload'," . PHP_EOL;
 	$config .= "\t'max_size' => 10 * 1024 * 1024, // 10MB" . PHP_EOL;
-	$config .= "\t'extensions' => ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'pdf', 'txt', 'zip', 'rar']" . PHP_EOL;
+	$config .= "\t'extensions' => ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'pdf', 'txt', 'zip', 'rar']" . PHP_EOL;
 	$config .= "]);" . PHP_EOL;
 	$config .= PHP_EOL;
 

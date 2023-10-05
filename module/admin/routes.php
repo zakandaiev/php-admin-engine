@@ -1,10 +1,5 @@
 <?php
 
-############################# UPLOAD #############################
-Route::get('/admin/upload', 'Upload@get');
-Route::post('/admin/upload', 'Upload@post');
-Route::delete('/admin/upload', 'Upload@delete');
-
 ############################# AUTH #############################
 Route::get('/admin/login', 'Auth@getLogin', ['is_public' => true]);
 Route::get('/admin/logout', 'Auth@getLogout', ['is_public' => true]);
@@ -62,7 +57,7 @@ Route::get('/admin/group/add', 'Group@getAdd');
 Route::get('/admin/group/edit/$id', 'Group@getEdit');
 
 // ############################# SETTING #############################
-// Route::get('/admin/setting/$section', 'Setting@getSection');
+Route::get('/admin/setting/$section', 'Setting@getSection');
 
 // Route::post('/admin/setting/$section', 'Setting@postSection');
 // Route::post('/admin/setting/optimization/flush-cache', 'Setting@postFlushCache');
@@ -78,3 +73,8 @@ Route::get('/admin/group/edit/$id', 'Group@getEdit');
 // Route::post('/admin/module/edit/$name', 'Module@postEdit');
 // Route::post('/admin/module/delete/$name', 'Module@postDelete');
 // Route::post('/admin/module/toggle/$name', 'Module@postToggle');
+
+// ############################# UPLOAD #############################
+// Route::get('/admin/upload', 'Upload@get');
+// Route::post('/admin/upload', 'Upload@post');
+// Route::delete('/admin/upload', 'Upload@delete');

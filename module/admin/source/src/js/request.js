@@ -1,5 +1,5 @@
 function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+	return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function fetchWithTimeout(resource, options = {}, timeout = 15000) {
