@@ -44,7 +44,7 @@ class Group {
 		$modules = Module::get();
 
 		foreach($modules as $module) {
-			if(!$module['is_enabled']) {
+			if(!$module['is_enabled'] || ($module['name'] !== 'admin' && $module['extends'] !== 'admin')) {
 				continue;
 			}
 
@@ -53,9 +53,12 @@ class Group {
 					continue;
 				}
 
+				$routes_grouped['any'][] = $route['path'];
 				$routes_grouped[$route['method']][] = $route['path'];
 			}
 		}
+
+		$routes_grouped['any'] = array_unique($routes_grouped['any']);
 
 		ksort($routes_grouped, SORT_NATURAL | SORT_FLAG_CASE);
 

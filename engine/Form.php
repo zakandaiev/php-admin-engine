@@ -6,7 +6,7 @@ class Form {
 	private static $form = [];
 	private static $token;
 	private static $fields = [];
-	private static $is_fields_formatted = false;
+	private static $form_formatted_fields = [];
 
 	public static function add($form_name) {
 		return self::generateToken(__FUNCTION__, $form_name);
@@ -45,10 +45,10 @@ class Form {
 			return false;
 		}
 
-		if(!self::$is_fields_formatted) {
+		if(!in_array($form_name, self::$form_formatted_fields)) {
 			$method = Request::$method;
 			$income_data =  Request::$$method;
-			self::formatFields($form['fields'], $income_data);
+			self::formatFields($form_name, $form['fields'], $income_data);
 		}
 
 		$error_messages = [];
@@ -107,7 +107,7 @@ class Form {
 		}
 
 		if($action !== 'delete') {
-			self::formatFields($form['fields'], $income_data);
+			self::formatFields($form_name, $form['fields'], $income_data);
 			self::checkFields($form_name);
 		}
 		self::processFields($action, $form_name, $item_id, $force_no_answer);
@@ -208,10 +208,12 @@ class Form {
 		return $form_data;
 	}
 
-	private static function formatFields($fields, $income_data = []) {
-		if(self::$is_fields_formatted) {
+	private static function formatFields($form_name, $fields, $income_data = []) {
+		if(in_array($form_name, self::$form_formatted_fields)) {
 			return true;
 		}
+
+		self::$fields = [];
 
 		foreach($fields as $field_name => $field_data) {
 			if(!isset($field_data['type'])) {
@@ -274,6 +276,8 @@ class Form {
 
 			self::$fields[$field_name] = $field_data;
 		}
+
+		self::$form_formatted_fields[] = $form_name;
 
 		return true;
 	}
@@ -460,7 +464,7 @@ class Form {
 		self::uploadMediaFields();
 
 		foreach(self::$fields as $key => $field_data) {
-			if(isset($field_data['unset_null']) && $field_data['unset_null'] && empty($field_data['value'])) {
+			if(isset($field_data['unset_null']) && $field_data['unset_null'] && empty($field_data['value']) && $field_data['value'] != 0 && $field_data['value'] != false) {
 				unset(self::$fields[$key]);
 				continue;
 			}
@@ -527,6 +531,9 @@ class Form {
 
 		$pk_statement = new Statement('SHOW KEYS FROM {' . $form_data['table'] . '} WHERE Key_name=\'PRIMARY\'');
 		$form_data['pk_name'] = $pk_statement->execute()->fetch()->Column_name;
+		if(empty($form_data['pk_name'])) {
+			Server::answer(null, 'error', __('engine.form.unknown_error'), 406);
+		}
 
 		if(isset($form['modify_fields']) && is_closure($form['modify_fields'])) {
 			self::$fields = $form['modify_fields'](self::$fields, $form_data);
@@ -542,11 +549,14 @@ class Form {
 		}
 
 		$foreign_data = self::getForeignFields();
-		$translation_data = self::getTranslationFields($form_name);
+		$translation_data = self::getTranslationFields($form_data['form_name']);
 
 		$form_data['columns'] = array_keys(self::$fields);
+		if(!empty($form_data['item_id'])) {
+			$form_data['columns'][] = $form_data['pk_name'];
+		}
 
-		switch($action) {
+		switch($form_data['action']) {
 			case 'add': {
 				$columns = implode(', ', $form_data['columns']);
 				$bindings = ':' . implode(', :', $form_data['columns']);
@@ -575,20 +585,19 @@ class Form {
 			$form_data['sql_binding'][$field['name']] = $field['value'];
 		}
 
-		if($action !== 'add') {
+		if(in_array($form_data['pk_name'], $form_data['columns'])) {
 			$form_data['sql_binding'][$form_data['pk_name']] = $form_data['item_id'];
 		}
 
 		if(isset($form['modify_sql_binding']) && is_closure($form['modify_sql_binding'])) {
 			$form_data['sql_binding'] = $form['modify_sql_binding']($form_data['sql_binding'], self::$fields, $form_data);
 		}
-
 		$statement = new Statement($form_data['sql']);
 		$statement->execute($form_data['sql_binding']);
 
 		$form_data['rowCount'] = $statement->rowCount();
 
-		if($action === 'add') {
+		if($form_data['action'] === 'add') {
 			$form_data['item_id'] = $statement->insertId();
 		}
 
@@ -606,7 +615,7 @@ class Form {
 			$submit_message = $form['submit_message'];
 		}
 
-		if(!$force_no_answer) {
+		if(!$form_data['force_no_answer']) {
 			Server::answer(null, 'success', @$submit_message);
 		}
 
@@ -637,8 +646,8 @@ class Form {
 				}
 
 				$data[$field_name]['table'] = $matches[1];
-				$data[$field_name]['key_f'] = $matches[2];
-				$data[$field_name]['key_c'] = $matches[3];
+				$data[$field_name]['key_pk'] = $matches[2];
+				$data[$field_name]['key_fk'] = $matches[3];
 			}
 
 			unset(self::$fields[$key]);
@@ -656,17 +665,17 @@ class Form {
 			if(isset($foreign['closure']) && is_closure($foreign['closure'])) {
 				$foreign['closure']($foreign['value'], $form_data);
 			}
-			else if(isset($foreign['table']) && isset($foreign['key_f']) && isset($foreign['key_c'])) {
+			else if(isset($foreign['table']) && isset($foreign['key_pk']) && isset($foreign['key_fk'])) {
 				$table = $foreign['table'];
-				$key_f = $foreign['key_f'];
-				$key_c = $foreign['key_c'];
+				$key_pk = $foreign['key_pk'];
+				$key_fk = $foreign['key_fk'];
 				$value = $foreign['value'];
 				$item_id = $form_data['item_id'];
 
-				$sql = 'DELETE FROM {' . $table . '} WHERE ' . $key_c . ' = :' . $key_c;
+				$sql = 'DELETE FROM {' . $table . '} WHERE ' . $key_pk . ' = :' . $key_pk;
 
 				$statement = new Statement($sql);
-				$statement->execute([$key_c => $item_id]);
+				$statement->execute([$key_pk => $item_id]);
 
 				if(empty($value)) {
 					continue;
@@ -677,13 +686,13 @@ class Form {
 				foreach($value as $v) {
 					$sql = '
 						INSERT INTO {' . $table . '}
-							(' . $key_c . ', ' . $key_f . ')
+							(' . $key_pk . ', ' . $key_fk . ')
 						VALUES
-							(:' . $key_c . ', :' . $key_f . ')
+							(:' . $key_pk . ', :' . $key_fk . ')
 					';
 
 					$statement = new Statement($sql);
-					$statement->execute([$key_c => $item_id, $key_f => $v]);
+					$statement->execute([$key_pk => $item_id, $key_fk => $v]);
 				}
 			}
 		}
@@ -697,7 +706,7 @@ class Form {
 		$form_data = self::get($form_name);
 
 		if(!isset($form_data['translation']) || empty($form_data['translation'])) {
-			return $data;
+			return false;
 		}
 
 		foreach($form_data['translation'] as $key) {
@@ -714,7 +723,7 @@ class Form {
 	}
 
 	private static function processTranslationFields($fields, $form_data) {
-		if(empty($fields) || empty($form_data)) {
+		if(!is_array($fields) || empty($form_data) || empty($form_data['item_id']) || ($form_data['action'] !== 'delete' && empty($fields)) || str_contains($form_data['table'], '_translation')) {
 			return false;
 		}
 

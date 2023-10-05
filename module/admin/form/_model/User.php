@@ -5,7 +5,7 @@ $group = [
 	'multiple' => true,
 	'label' => __('admin.user.user_groups'),
 	'placeholder' => __('admin.user.name_placeholder'),
-	'foreign' => 'group_user@group_id/user_id',
+	'foreign' => 'group_user@user_id/group_id',
 	'col_class' => 'col-xs-12'
 ];
 $email = [

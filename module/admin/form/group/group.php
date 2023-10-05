@@ -14,6 +14,6 @@ return [
 	],
 	'translation' => ['language', 'name'],
 	'execute_post' => function($rowCount, $fields, $data) {
-		Hook::run('group.' . $data['action'], $data['sql_binding']);
+		Hook::run('group.' . $data['action'], $fields);
 	}
 ];

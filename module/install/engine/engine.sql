@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `%prefix%setting` (
 	`value` TEXT DEFAULT NULL,
 	PRIMARY KEY (`id`),
 	UNIQUE `module_name` (`module`, `name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `%prefix%user` (
 	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -26,13 +26,13 @@ CREATE TABLE IF NOT EXISTS `%prefix%user` (
 	UNIQUE `email` (`email`),
 	UNIQUE `phone` (`phone`),
 	UNIQUE `auth_token` (`auth_token`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `%prefix%group_user` (
 	`group_id` INT UNSIGNED NOT NULL,
 	`user_id` INT UNSIGNED NOT NULL,
 	PRIMARY KEY (`group_id`, `user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `%prefix%group` (
 	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -41,20 +41,20 @@ CREATE TABLE IF NOT EXISTS `%prefix%group` (
 	`date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`date_edited` DATETIME on update CURRENT_TIMESTAMP DEFAULT NULL,
 	PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `%prefix%group_translation` (
 	`group_id` INT UNSIGNED NOT NULL,
 	`language` VARCHAR(8) NOT NULL,
 	`name` VARCHAR(300) NOT NULL,
 	PRIMARY KEY (`group_id`, `language`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `%prefix%group_route` (
 	`group_id` INT UNSIGNED NOT NULL,
 	`route` VARCHAR(512) NOT NULL,
 	PRIMARY KEY (`group_id`, `route`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `%prefix%page` (
 	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `%prefix%page` (
 	`is_enabled` BOOLEAN NOT NULL DEFAULT TRUE,
 	PRIMARY KEY  (`id`),
 	UNIQUE `url` (`url`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `%prefix%page_translation` (
 	`page_id` INT UNSIGNED NOT NULL,
@@ -86,13 +86,13 @@ CREATE TABLE IF NOT EXISTS `%prefix%page_translation` (
 	`seo_keywords` TEXT DEFAULT NULL,
 	`seo_image` TEXT DEFAULT NULL,
 	PRIMARY KEY (`page_id`, `language`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `%prefix%page_category` (
 	`category_id` INT UNSIGNED NOT NULL,
 	`page_id` INT UNSIGNED NOT NULL,
 	PRIMARY KEY (`category_id`, `page_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `%prefix%tag` (
 	`id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -102,20 +102,20 @@ CREATE TABLE IF NOT EXISTS `%prefix%tag` (
 	`is_enabled` BOOLEAN NOT NULL DEFAULT TRUE,
 	PRIMARY KEY  (`id`),
 	UNIQUE `url` (`url`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `%prefix%tag_translation` (
 	`tag_id` INT UNSIGNED NOT NULL,
 	`language` VARCHAR(8) NOT NULL,
 	`name` VARCHAR(300) NOT NULL,
 	PRIMARY KEY (`tag_id`, `language`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `%prefix%page_tag` (
 	`page_id` INT UNSIGNED NOT NULL,
 	`tag_id` BIGINT UNSIGNED NOT NULL,
 	PRIMARY KEY (`page_id`, `tag_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `%prefix%comment` (
 	`id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS `%prefix%comment` (
 	`ip` VARCHAR(32) DEFAULT NULL,
 	`is_approved` BOOLEAN NOT NULL DEFAULT FALSE,
 	PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `%prefix%custom_field` (
 	`id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -138,7 +138,7 @@ CREATE TABLE `%prefix%custom_field` (
 	`value` LONGTEXT DEFAULT NULL,
 	PRIMARY KEY (`id`),
 	UNIQUE `page_id_language_name` (`page_id`, `language`, `name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `%prefix%form` (
 	`token` VARCHAR(200) NOT NULL,
@@ -149,21 +149,21 @@ CREATE TABLE IF NOT EXISTS `%prefix%form` (
 	`date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`ip` VARCHAR(32) NOT NULL,
 	PRIMARY KEY  (`token`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `%prefix%menu` (
 	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
 	`name` VARCHAR(200) NOT NULL,
 	PRIMARY KEY (`id`),
 	UNIQUE `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `%prefix%menu_translation` (
 	`menu_id` INT UNSIGNED NOT NULL,
 	`language` VARCHAR(8) NOT NULL,
 	`items` LONGTEXT DEFAULT NULL,
 	PRIMARY KEY (`menu_id`, `language`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `%prefix%notification` (
 	`id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -173,7 +173,7 @@ CREATE TABLE IF NOT EXISTS `%prefix%notification` (
 	`is_read` BOOLEAN NOT NULL DEFAULT FALSE,
 	`date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `%prefix%message` (
 	`id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -185,7 +185,7 @@ CREATE TABLE IF NOT EXISTS `%prefix%message` (
 	`is_read` BOOLEAN NOT NULL DEFAULT FALSE,
 	`date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `%prefix%setting` (`module`, `name`, `value`) VALUES
 ('engine', 'language', 'en'),
@@ -231,9 +231,7 @@ INSERT INTO `%prefix%group_translation` (`group_id`, `language`, `name`) VALUES
 (3, 'en', 'Moderator');
 
 INSERT INTO `%prefix%group_route` (`group_id`, `route`) VALUES
-(2, 'any@/upload'),
 (2, 'any@/admin/**'),
-(3, 'any@/upload'),
 (3, 'any@/admin/message'),
 (3, 'any@/admin/comment'),
 (3, 'any@/admin/comment/**'),
@@ -242,7 +240,8 @@ INSERT INTO `%prefix%group_route` (`group_id`, `route`) VALUES
 (3, 'any@/admin/page'),
 (3, 'any@/admin/page/**'),
 (3, 'any@/admin/translation'),
-(3, 'any@/admin/translation/**');
+(3, 'any@/admin/translation/**'),
+(3, 'any@/admin/upload');
 
 INSERT INTO `%prefix%group_user` (`group_id`, `user_id`) VALUES
 (1, 1);
@@ -328,6 +327,13 @@ AFTER DELETE ON
 	`%prefix%group`
 FOR EACH ROW
   DELETE FROM `%prefix%group_route` WHERE group_id = OLD.id;
+
+CREATE TRIGGER
+	`clear_group_translation_by_group_delete`
+AFTER DELETE ON
+	`%prefix%group`
+FOR EACH ROW
+  DELETE FROM `%prefix%group_translation` WHERE group_id = OLD.id;
 
 CREATE TRIGGER
 	`clear_group_user_by_group_delete`

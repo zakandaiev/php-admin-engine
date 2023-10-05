@@ -14,6 +14,39 @@ document.querySelectorAll('select').forEach(select => {
 
 	wrapper.appendChild(select);
 
+	const events = {
+		afterChange: () => select.dispatchEvent(new CustomEvent('change', { bubbles:true }))
+	};
+
+	if (select.hasAttribute('data-addable')) {
+		events.addable = (value) => {
+			const addable_type = select.getAttribute('data-addable');
+			const is_regex = typeof addable_type === 'string' && addable_type[0] === '/';
+			let is_regex_test = false;
+			try {
+				const regex_match = addable_type.match(new RegExp('^/(.*?)/([a-z]*)$'));
+				const regex = new RegExp(regex_match[1], regex_match[2]);
+
+				if (regex.test(value)) {
+					is_regex_test = true;
+				}
+			}
+			catch(e) {}
+
+			if (addable_type === 'tag') {
+				value = value.replaceAll(/[^\p{L}\d ]+/giu, '');
+				value = getSlug(value).toLowerCase();
+			}
+			else if (is_regex && !is_regex_test) {
+				return false;
+			}
+
+			value = value.replaceAll(/[\s]+/g, ' ').trim();
+
+			return value;
+		}
+	}
+
 	const s = new SlimSelect({
 		select: select,
 		settings: {
@@ -33,28 +66,7 @@ document.querySelectorAll('select').forEach(select => {
 			maxValuesShown: select.hasAttribute('data-max-values') ? select.getAttribute('data-max-values') : 100,
 			maxValuesMessage: select.hasAttribute('data-max-values-text') ? select.getAttribute('data-max-values-text') : null
 		},
-		events: {
-			addable: value => {
-				if (!select.hasAttribute('data-addable') && !select.instance.events.addable) {
-					return false;
-				}
-
-				let val = value;
-
-				switch (select.getAttribute('data-addable')) {
-					case 'tag': {
-						val = value.replaceAll(/[^\p{L}\d ]+/giu, '');
-						val = getSlug(val).toLowerCase();
-						break;
-					}
-				}
-
-				val = val.replaceAll(/[\s]+/g, ' ').trim();
-
-				return val;
-			},
-			afterChange: () => select.dispatchEvent(new CustomEvent('change', { bubbles:true }))
-		}
+		events
 	});
 
 	select.instance = s;

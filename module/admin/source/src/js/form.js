@@ -38,7 +38,7 @@ class Form {
 		this.api = {
 			delay_ms: this.node.getAttribute('data-delay')
 				? parseInt(this.node.getAttribute('data-delay'))
-				: this.options?.api?.delay_ms || 1000,
+				: this.options?.api?.delay_ms || 500,
 
 			timeout_ms: this.node.getAttribute('data-timeout')
 				? parseInt(this.node.getAttribute('data-timeout'))

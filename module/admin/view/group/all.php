@@ -55,11 +55,9 @@ $interface_builder = new InterfaceBuilder([
 		'table_actions' => [
 			'td_class' => 'table__actions',
 			'type' => function($value, $item) {
-				$html = '<a href="' . site('url_language') . '/admin/profile/' . $item->id .'" data-tooltip="top" title="' . __('admin.view') . '" class="table__action"><i class="icon icon-eye"></i></a>';
+				$html = ' <a href="' . site('url_language') . '/admin/group/edit/' . $item->id .'" data-tooltip="top" title="' . __('admin.edit') . '" class="table__action"><i class="icon icon-edit"></i></a>';
 
-				$html .= ' <a href="' . site('url_language') . '/admin/group/edit/' . $item->id .'" data-tooltip="top" title="' . __('admin.edit') . '" class="table__action"><i class="icon icon-edit"></i></a>';
-
-				$html .= ' <button type="button" data-action="' . Form::delete('group/edit', $item->id) . '" data-confirm="' . __('admin.group.delete_confirm', $item->name) . '" data-remove="trow" data-decrement=".pagination-output" data-tooltip="top" title="' . __('admin.delete') . '" class="table__action">';
+				$html .= ' <button type="button" data-action="' . Form::delete('group/group', $item->id) . '" data-confirm="' . __('admin.group.delete_confirm', $item->name) . '" data-remove="trow" data-decrement=".pagination-output" data-tooltip="top" title="' . __('admin.delete') . '" class="table__action">';
 				$html .= '<i class="icon icon-trash"></i>';
 				$html .= '</button>';
 

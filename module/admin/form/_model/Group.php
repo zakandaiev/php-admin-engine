@@ -18,6 +18,7 @@ $name = [
 $routes = [
 	'type' => 'select',
 	'multiple' => true,
+	'data-addable' => '/(any|delete|get|options|patch|post|put)@\/[0-9a-z\/\*\$\-\_]+/g',
 	'label' => __('admin.group.routes'),
 	'placeholder' => __('admin.group.routes_placeholder'),
 	'foreign' => 'group_route@group_id/route',

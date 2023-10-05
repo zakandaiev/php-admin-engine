@@ -18,12 +18,12 @@ foreach($user as $field_name => $value) {
 	$form_builder->setFieldValue($field_name, $value);
 }
 
-$form_builder->setFieldValue('group', array_map(function($group) use ($user) {
+$form_builder->setFieldValue('group', array_map(function($group) use($user) {
 	$g = new \stdClass();
 
 	$g->value = $group->id;
 	$g->name = $group->name;
-	$g->selected = in_array($t->value, $user->groups);
+	$g->selected = in_array($g->value, $user->groups);
 
 	return $g;
 }, $groups));

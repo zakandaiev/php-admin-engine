@@ -35,6 +35,9 @@ $all_checks = [
 		// execute some sql queries here
 	},
 
+	// TRANSLATION
+	'translation' => ['language', 'name'], // array of column names to put into translation table (translation table should have _translation suffix in name, if other then create translation with execute_post closure)
+
 	// RENDER - used only in form-builder
 	'autofocus' => true|false,
 	'label' => 'This is label',

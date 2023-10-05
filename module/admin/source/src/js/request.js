@@ -16,7 +16,7 @@ async function fetchWithTimeout(resource, options = {}, timeout = 15000) {
 	return response;
 }
 
-async function request(resource, options = {}, timeout = 15000, delay = 1000) {
+async function request(resource, options = {}, timeout = 15000, delay = 500) {
 	const startTime = performance.now();
 
 	if (!options.method) {

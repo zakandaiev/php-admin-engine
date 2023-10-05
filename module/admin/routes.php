@@ -1,9 +1,9 @@
 <?php
 
 ############################# UPLOAD #############################
-Route::get('/upload', 'Upload@get');
-Route::post('/upload', 'Upload@post');
-Route::delete('/upload', 'Upload@delete');
+Route::get('/admin/upload', 'Upload@get');
+Route::post('/admin/upload', 'Upload@post');
+Route::delete('/admin/upload', 'Upload@delete');
 
 ############################# AUTH #############################
 Route::get('/admin/login', 'Auth@getLogin', ['is_public' => true]);

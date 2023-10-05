@@ -11,31 +11,40 @@ $form_builder = new FormBuilder('group/group');
 $form_attributes = 'data-redirect="' . site('url_language') . '/admin/group" data-validate';
 
 foreach($group as $field_name => $value) {
-	debug($field_name, $value);
 	$form_builder->setFieldValue($field_name, $value);
 }
 
+$routes_all = $routes;
+foreach($group->routes as $gr_method => $gr_routes) {
+	foreach($gr_routes as $gr_r) {
+		if(isset($routes_all[$gr_method]) && in_array($gr_r, $routes_all[$gr_method])) {
+			continue;
+		}
+
+		$routes_all[$gr_method][] = $gr_r;
+	}
+}
 $routes_formatted = [];
 
-foreach($routes as $method => $r) {
+foreach($routes_all as $method => $r) {
 	foreach($r as $p) {
 		$r = new \stdClass();
 
 		$r->value = $method . '@' . $p;
 		$r->name = $p;
-		$r->selected = false;
+		$r->selected = in_array($p, $group->routes->$method ?? []) ? true : false;
 
 		$routes_formatted[$method][] = $r;
 	}
 }
 
 $form_builder->setFieldValue('routes', $routes_formatted);
-$form_builder->setFieldValue('users', array_map(function($user) {
+$form_builder->setFieldValue('users', array_map(function($user) use($group) {
 	$u = new \stdClass();
 
 	$u->value = $user->id;
 	$u->name = $user->fullname;
-	$u->selected = false;
+	$u->selected = in_array($user->id, $group->users ?? []) ? true : false;
 
 	return $u;
 }, $users));

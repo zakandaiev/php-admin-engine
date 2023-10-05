@@ -8,6 +8,6 @@ return [
 		'is_enabled' => $is_enabled
 	],
 	'execute_post' => function($rowCount, $fields, $data) {
-		Hook::run('user.toggle', $data['sql_binding']);
+		Hook::run('user.toggle', $fields);
 	}
 ];
