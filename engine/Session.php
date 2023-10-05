@@ -25,7 +25,7 @@ class Session {
 		return true;
 	}
 
-	public static function flush($key) {
+	public static function flush($key = null) {
 		if(isset($key) && self::has($key)) {
 			unset($_SESSION[$key]);
 		}
@@ -44,13 +44,13 @@ class Session {
 		return isset(Request::$cookie[$key]);
 	}
 
-	public static function setCookie($key, $value, $lifetime = null) {
+	public static function setCookie($key, $value = null, $lifetime = null) {
 		Request::$cookie[$key] = $value;
 
 		return setcookie($key, $value, time() + intval($lifetime ?? LIFETIME['auth']), '/', '', false, true);
 	}
 
-	public static function flushCookie($key) {
+	public static function flushCookie($key = null) {
 		if(isset($key) && self::hasCookie($key)) {
 			self::setCookie($key, '', 0);
 		}
