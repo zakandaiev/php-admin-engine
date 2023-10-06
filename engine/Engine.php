@@ -51,6 +51,7 @@ class Engine {
 		class_alias('\\Engine\\Pagination', 'Pagination');
 		// class_alias('\\Engine\\Menu', 'Menu');
 		// class_alias('\\Engine\\Notification', 'Notification');
+		class_alias('\\Engine\\Optimization', 'Optimization');
 		// class_alias('\\Engine\\Sitemap', 'Sitemap');
 
 		// Order matters

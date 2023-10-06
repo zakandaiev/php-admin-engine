@@ -19,6 +19,8 @@
 4. Create & enjoy ;)
 
 ## TODO
+* admin: select values from db automatically for edit-templates (setFieldValue)
+* helper: refactor font-size-
 * all: Server::answer -> Request::answer
 * engine: modules install
 * admin: create data-behavior.js

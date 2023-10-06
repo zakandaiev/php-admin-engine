@@ -33,7 +33,7 @@ $interface_builder = new InterfaceBuilder([
 		'auth_date' => [
 			'type' => function($value, $item) {
 				if(!empty($value) && $item->auth_ip) {
-					return '<a href="' . SERVICE['ip_checker']($item->auth_ip) . '" target="_blank">' . date_when($value, 'd.m.Y H:i') . '</a>';
+					return '<a href="' . sprintf(SERVICE['ip_checker'], $item->auth_ip) . '" target="_blank">' . date_when($value, 'd.m.Y H:i') . '</a>';
 				}
 				return '<i class="icon icon-minus"></i>';
 			},

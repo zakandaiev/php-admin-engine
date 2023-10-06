@@ -205,20 +205,22 @@ class Page {
 					return $favicon;
 				}
 
-				switch(file_extension($icon_path)) {
+				$icon_extension = file_extension($icon_path);
+
+				switch($icon_extension) {
 					case 'ico': {
 						$favicon = '<link rel="icon" type="image/x-icon" sizes="any" href="' . site('url') . '/' . $icon_path . '">';
 						break;
 					}
-					case 'png': {
-						$favicon = '
-							<link rel="icon" type="image/png" href="' . site('url') . '/' . $icon_path . '">
-							<link rel="apple-touch-icon" href="' . site('url') . '/' . $icon_path . '">
-						';
-						break;
-					}
 					case 'svg': {
 						$favicon = '<link rel="icon" type="image/svg+xml" href="' . site('url') . '/' . $icon_path . '">';
+						break;
+					}
+					default: {
+						$favicon = '
+							<link rel="icon" type="image/' . $icon_extension . '" href="' . site('url') . '/' . $icon_path . '">
+							<link rel="apple-touch-icon" href="' . site('url') . '/' . $icon_path . '">
+						';
 						break;
 					}
 				}

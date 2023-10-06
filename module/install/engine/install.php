@@ -224,9 +224,7 @@ function installConfig($data) {
 
 	// SERVICE
 	$config .= "define('SERVICE', [" . PHP_EOL;
-	$config .= "\t'ip_checker' => function(\$value) {" . PHP_EOL;
-	$config .= "\t\treturn !empty(\$value) ? 'https://check-host.net/ip-info?host=' . \$value : false;" . PHP_EOL;
-	$config .= "\t}" . PHP_EOL;
+	$config .= "\t'ip_checker' => 'https://check-host.net/ip-info?host=%s'" . PHP_EOL;
 	$config .= "]);" . PHP_EOL;
 	$config .= PHP_EOL;
 
@@ -323,7 +321,7 @@ function installSEO($data) {
 									<?php if($step == 'auth'): ?>
 
 										<label>Login</label>
-										<input type="text" name="admin_login" placeholder="Login" required minlength="2" maxlength="100">
+										<input type="text" name="admin_login" placeholder="Login" required minlength="2" maxlength="100" autofocus>
 
 										<label>Password</label>
 										<input type="text" name="admin_password" placeholder="Password" required minlength="8" maxlength="200">
@@ -357,7 +355,7 @@ function installSEO($data) {
 										?>
 
 										<label>Site name</label>
-										<input type="text" name="site_name" placeholder="Site name" required>
+										<input type="text" name="site_name" placeholder="Site name" required autofocus>
 
 										<label>Contact email</label>
 										<input type="email" name="contact_email" value="admin@<?=$_SERVER['HTTP_HOST']?>" placeholder="Contact email" required>
@@ -379,7 +377,7 @@ function installSEO($data) {
 										<input type="text" name="db_host" value="localhost" placeholder="Host" required>
 
 										<label>User</label>
-										<input type="text" name="db_user" placeholder="User" required>
+										<input type="text" name="db_user" placeholder="User" required autofocus>
 
 										<label>Password</label>
 										<input type="text" name="db_pass" placeholder="Password" required>

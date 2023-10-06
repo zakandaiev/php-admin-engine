@@ -188,23 +188,45 @@ $phones = [
 	'col_class' => 'col-xs-12'
 ];
 
+$group_css_label = '<span class="d-flex flex-column gap-1 ml-1">';
+$group_css_label .= '<span class="cursor-pointer">' . __('admin.setting.group_css_label') . '</span>';
+if(site('group_css') != 'false' && !empty(site('group_css'))) {
+	$file_url = Path::url('asset', 'public') . '/css/' . site('group_css') . '.css';
+	$file_path = Path::file('asset', 'public') . '/css/' . site('group_css') . '.css';
+	$group_css_label .= '<a class="font-size-12" href="' . $file_url . '" target="_blank">' . __('admin.setting.group_css_size') . ': ' . file_size($file_path) . '</a>';
+}
+$group_css_label .= '</span>';
 $group_css = [
 	'type' => 'switch',
 	'default' => false,
-	'label' => __('admin.setting.group_css_label'),
+	'label_html' => $group_css_label,
 	'col_class' => 'col-xs-12'
 ];
 
+$group_js_label = '<span class="d-flex flex-column gap-1 ml-1">';
+$group_js_label .= '<span class="cursor-pointer">' . __('admin.setting.group_js_label') . '</span>';
+if(site('group_js') != 'false' && !empty(site('group_js'))) {
+	$file_url = Path::url('asset', 'public') . '/css/' . site('group_js') . '.css';
+	$file_path = Path::file('asset', 'public') . '/css/' . site('group_js') . '.css';
+	$group_js_label .= '<a class="font-size-12" href="' . $file_url . '" target="_blank">' . __('admin.setting.group_js_size') . ': ' . file_size($file_path) . '</a>';
+}
+$group_js_label .= '</span>';
 $group_js = [
 	'type' => 'switch',
 	'default' => false,
-	'label' => __('admin.setting.group_js_label'),
+	'label_html' => $group_js_label,
 	'col_class' => 'col-xs-12'
 ];
 
+$cache_db_label = '<span class="d-flex flex-column gap-1 ml-1">';
+$cache_db_label .= '<span class="cursor-pointer">' . __('admin.setting.cache_db_label') . '</span>';
+if(site('cache_db') == 'true') {
+	$cache_db_label .= '<span class="color-link cursor-pointer font-size-12" data-action="' . Form::add('setting/flush_cache') . '" data-remove="this" data-confirm="' . __('admin.setting.flush_cache_confirm_title') . '?">' . __('admin.setting.cache_size') . ': ' . file_size(Path::file('cache')) . '</ы>';
+}
+$cache_db_label .= '</span>';
 $cache_db = [
 	'type' => 'switch',
 	'default' => false,
-	'label' => __('admin.setting.cache_db_label'),
+	'label_html' => $cache_db_label,
 	'col_class' => 'col-xs-12'
 ];

@@ -72,7 +72,7 @@ class Form {
 		$module_name = Module::getName();
 
 		foreach($error_messages as $field_name => $message_key) {
-			$message = __("{$module_name}.validation.{$form['table']}.{$field_name}.{$message_key}");
+			$message = __("{$module_name}.{$form['table']}.{$field_name}.validation.{$message_key}");
 
 			if(isset($field_data['message']) && isset($field_data['message'][$message_key])) {
 				$message = $field_data['message'][$message_key];

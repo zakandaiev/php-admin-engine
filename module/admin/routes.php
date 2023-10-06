@@ -59,9 +59,6 @@ Route::get('/admin/group/edit/$id', 'Group@getEdit');
 // ############################# SETTING #############################
 Route::get('/admin/setting/$section', 'Setting@getSection');
 
-// Route::post('/admin/setting/$section', 'Setting@postSection');
-// Route::post('/admin/setting/optimization/flush-cache', 'Setting@postFlushCache');
-
 // ############################# LOG #############################
 // Route::get('/admin/log', 'Log@getAll');
 // Route::get('/admin/log/$id', 'Log@get');

@@ -413,7 +413,7 @@ function site($key, $module = 'engine') {
 			$module = in_array(Module::get('name'), $main_modules) ? Module::get('name') : Module::get('extends');
 			$module = in_array($module, $main_modules) ? $module : 'public';
 
-			$value = @Setting::get($module)->{"{$key}_{$module}"};
+			$value = @Setting::get('engine')->{"{$key}_{$module}"};
 
 			break;
 		}
