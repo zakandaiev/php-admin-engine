@@ -6,18 +6,18 @@
 		<div class="container h-100 d-flex flex-column justify-content-center">
 
 			<div class="row">
-				<div class="col-xs-12 col-sm-10 col-md-6 col-lg-4 m-x-auto">
+				<div class="col-xs-12 col-sm-10 col-md-6 col-lg-4 mx-auto">
 
 					<div class="text-center mb-2">
 						<?php if(!empty(site('logo_admin'))): ?>
-							<img class="d-inline-block w-25 mb-2" src="<?= site('url') ?>/<?= site('logo_admin') ?>" alt="Logo">
+							<img class="d-inline-block w-25 mb-2" src="<?= site('url') ?>/<?= site('logo') ?>" data-src-dark="<?= site('url') ?>/<?= site('logo_alt') ?>" alt="Logo">
 						<?php else: ?>
 							<h1 class="font-size-6 mb-2"><?= site('name') ?></h1>
 						<?php endif; ?>
 
 						<h4 class="color-text"><?= __('admin.auth.cta.reset_password') ?></h4>
 
-						<?php Theme::widget('lang'); ?>
+						<?php Theme::widget('/lang'); ?>
 					</div>
 
 					<div class="box">

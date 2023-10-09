@@ -266,6 +266,15 @@
 		padding: 0.5em;
 	}
 
+	// .btn_auth
+	&_auth {
+		justify-content: flex-start;
+		text-align: left;
+
+		& > svg, & > img {
+			margin-right: 0.5em;
+		}
+	}
 	// .btn_google
 	&_google {
 		background: #fff;

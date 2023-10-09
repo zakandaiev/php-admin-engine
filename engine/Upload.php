@@ -10,7 +10,17 @@ class Upload {
 	public $result = [];
 
 	public function __construct($files, $custom_folder = '', $extensions = []) {
+		$this->result = [
+			'status' => false,
+			'message' => __('engine.file.unknown_error'),
+			'files' => []
+		];
+		
 		$this->files = isset($files['tmp_name']) ? [$files] : $files;
+
+		if(!is_array($this->files)) {
+			return $this;
+		}
 
 		$custom_folder = trim($custom_folder ?? '', '/');
 		if(!empty($custom_folder)) {
@@ -21,12 +31,6 @@ class Upload {
 		}
 
 		$this->extensions = !empty($extensions) && is_array($extensions) ? $extensions : UPLOAD['extensions'];
-
-		$this->result = [
-			'status' => null,
-			'message' => null,
-			'files' => []
-		];
 
 		foreach($this->files as $file) {
 			$this->file($file);
@@ -56,7 +60,7 @@ class Upload {
 
 	private function file($file) {
 		if(empty($file)) {
-			return false;
+			return $this;
 		}
 
 		$name = Hash::token(8);
@@ -85,14 +89,14 @@ class Upload {
 				$this->result['status'] = false;
 				$this->result['message'] = __('engine.file.extension_x_is_forbidden', $extension);
 
-				return false;
+				return $this;
 			}
 
 			if($size > self::getMaxSize()) {
 				$this->result['status'] = false;
 				$this->result['message'] = __('engine.file.size_of_x_is_too_large', $name_original);
 
-				return false;
+				return $this;
 			}
 
 			move_uploaded_file($file['tmp_name'], $path_full);
@@ -106,7 +110,7 @@ class Upload {
 				'message' => $e->getMessage()
 			];
 
-			return false;
+			return $this;
 		}
 
 		$user_id = @User::get()->id ?? 'unlogged';

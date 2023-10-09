@@ -479,16 +479,11 @@ class Form {
 
 	private static function uploadMediaFields() {
 		foreach(self::$fields as $key => $field_data) {
-			if($field_data['type'] !== 'file') {
+			if($field_data['type'] !== 'file' || empty($field_data['value']) || !isset($field_data['value'][0]['tmp_name'])) {
 				continue;
 			}
 
 			$value = $field_data['value'];
-
-			if(empty($value)) {
-				self::$fields[$key]['value'] = null;
-				continue;
-			}
 
 			$upload = new Upload($value, @$field_data['folder'], @$field_data['extensions']);
 

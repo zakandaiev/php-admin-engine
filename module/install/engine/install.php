@@ -298,7 +298,7 @@ function installSEO($data) {
 						<div class="col-xs-12 col-sm-10 col-md-6 col-lg-4 mx-auto">
 
 							<div class="text-center mb-4">
-								<h1 class="font-size-6 mb-2"><?= Engine::NAME ?></h1>
+								<h1 class="font-size-32 mb-2"><?= Engine::NAME ?></h1>
 								<h4 class="color-text">Instalation page</h4>
 							</div>
 

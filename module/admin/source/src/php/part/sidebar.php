@@ -40,8 +40,8 @@ function checkRouteAccess($route) {
 
 <aside class="sidebar">
 	<a class="sidebar__logo" href="<?= site('url_language') ?>/admin/dashboard">
-		<?php if(!empty(site('logo_admin'))): ?>
-			<img src="<?= site('url') ?>/<?= site('logo_admin') ?>" alt="Logo">
+		<?php if(!empty(site('logo_alt'))): ?>
+			<img src="<?= site('url') ?>/<?= site('logo_alt') ?>" alt="Logo">
 		<?php else: ?>
 			<span><?= site('name') ?></span>
 		<?php endif; ?>

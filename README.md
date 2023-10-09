@@ -23,6 +23,7 @@
 * helper: refactor font-size-
 * all: Server::answer -> Request::answer
 * engine: modules install
+* engine: refactor Upload - dont upload files if futher has an error
 * admin: create data-behavior.js
 * admin: create foreign-form.js
 * admin: create collapse.js
