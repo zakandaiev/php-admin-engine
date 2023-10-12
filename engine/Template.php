@@ -13,7 +13,8 @@ class Template {
 		if(!is_file($template_path)) {
 			if($is_required) {
 				throw new \Exception(sprintf('Template %s not found in %s.', $template, $template_path));
-			} else {
+			}
+			else {
 				return false;
 			}
 		}
@@ -25,7 +26,8 @@ class Template {
 
 		try {
 			include $template_path;
-		} catch(\Exception $e){
+		}
+		catch(\Exception $e){
 			ob_end_clean();
 			throw $e;
 		}

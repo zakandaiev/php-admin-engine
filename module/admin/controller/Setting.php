@@ -13,10 +13,9 @@ class Setting extends AdminController {
 			$this->view->error('404');
 		}
 
-		$data['section'] = $section;
-		$data['setting'] = \Engine\Setting::get('engine');
+		$this->view->setData('section', $section);
+		$this->view->setData('setting', \Engine\Setting::get('engine'));
 
-		$this->view->setData($data);
 		$this->view->render('setting/' . $section);
 	}
 }

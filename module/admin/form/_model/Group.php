@@ -5,6 +5,7 @@ $language = [
 	'required' => true,
 	'default' => site('language')
 ];
+
 $name = [
 	'type' => 'text',
 	'required' => true,
@@ -15,6 +16,7 @@ $name = [
 	'placeholder' => __('admin.group.name_placeholder'),
 	'col_class' => 'col-xs-12'
 ];
+
 $routes = [
 	'type' => 'select',
 	'multiple' => true,
@@ -24,6 +26,7 @@ $routes = [
 	'foreign' => 'group_route@group_id/route',
 	'col_class' => 'col-xs-12'
 ];
+
 $users = [
 	'type' => 'select',
 	'multiple' => true,
@@ -32,12 +35,14 @@ $users = [
 	'foreign' => 'group_user@group_id/user_id',
 	'col_class' => 'col-xs-12'
 ];
+
 $is_enabled = [
 	'type' => 'switch',
 	'default' => true,
 	'label' => __('admin.group.is_enabled'),
 	'col_class' => 'col-xs-12'
 ];
+
 $access_all = [
 	'type' => 'switch',
 	'default' => false,

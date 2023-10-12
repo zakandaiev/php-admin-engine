@@ -4,6 +4,7 @@ namespace Engine;
 
 class Upload {
 	private $files = [];
+	private $files_to_upload = [];
 	private $folder;
 	private $extensions = [];
 
@@ -11,8 +12,8 @@ class Upload {
 
 	public function __construct($files, $custom_folder = '', $extensions = []) {
 		$this->result = [
-			'status' => false,
-			'message' => __('engine.file.unknown_error'),
+			'status' => true,
+			'message' => null,
 			'files' => []
 		];
 		
@@ -30,11 +31,11 @@ class Upload {
 			$this->folder = UPLOAD['folder'];
 		}
 
-		$this->extensions = !empty($extensions) && is_array($extensions) ? $extensions : UPLOAD['extensions'];
+		$this->extensions = is_array($extensions) && !empty($extensions) ? $extensions : UPLOAD['extensions'];
 
-		foreach($this->files as $file) {
-			$this->file($file);
-		}
+		$this->initFiles();
+		$this->uploadFiles();
+		$this->logFiles();
 
 		return $this;
 	}
@@ -58,64 +59,89 @@ class Upload {
 		return (int) $nr * pow(1024, $exp);
 	}
 
-	private function file($file) {
-		if(empty($file)) {
-			return $this;
+	private function initFiles() {
+		if(empty($this->files)) {
+			return false;
 		}
 
-		$name = Hash::token(8);
-		$name_original = $file['name'];
+		foreach($this->files as $file) {
+			if(empty($file) || @$file['error'] || !isset($file['tmp_name']) || !isset($file['name']) || !isset($file['size'])) {
+				continue;
+			}
 
-		$name_prepend = time();
-		if(User::get()->authorized) {
-			$name_prepend .= '_' . User::get()->id .'_';
+			$file['name_original'] = $file['name'];
+			$file['name'] = time() . '_' . (User::get()->authorized ? User::get()->id : 'uu') . '_' . Hash::token(8);
+			$file['extension'] = strtolower(file_extension($file['name_original']));
+			$file['path_destination'] = $this->folder . '/' . $file['name'] . '.' . $file['extension'];
+			$file['path_destination_full'] = ROOT_DIR . '/' . $file['path_destination'];
+
+			if(!in_array($file['extension'], $this->extensions)) {
+				$this->result['status'] = false;
+				$this->result['message'] = __('engine.file.extension_x_is_forbidden', $file['extension']);
+	
+				break;
+			}
+	
+			if($file['size'] > self::getMaxSize()) {
+				$this->result['status'] = false;
+				$this->result['message'] = __('engine.file.size_of_x_is_too_large', $file['name_original']);
+	
+				break;
+			}
+	
+			$this->files_to_upload[] = $file;
 		}
-		else {
-			$name_prepend .= '_uu_';
+
+		return true;
+	}
+
+	private function uploadFiles() {
+		if(empty($this->files_to_upload) || !$this->result['status']) {
+			return false;
 		}
-
-		$size = $file['size'];
-		$extension = strtolower(file_extension($file['name']));
-
-		$path_file = $this->folder . '/' . $name_prepend . $name . '.' . $extension;
-		$path_full = ROOT_DIR . '/' . $path_file;
 
 		try {
 			if(!file_exists(ROOT_DIR . '/' . $this->folder)) {
 				mkdir(ROOT_DIR . '/' . $this->folder, 0755, true);
 			}
-
-			if(!in_array($extension, $this->extensions)) {
-				$this->result['status'] = false;
-				$this->result['message'] = __('engine.file.extension_x_is_forbidden', $extension);
-
-				return $this;
-			}
-
-			if($size > self::getMaxSize()) {
-				$this->result['status'] = false;
-				$this->result['message'] = __('engine.file.size_of_x_is_too_large', $name_original);
-
-				return $this;
-			}
-
-			move_uploaded_file($file['tmp_name'], $path_full);
-
-			$this->result['status'] = true;
-			$this->result['files'][] = $path_file;
 		}
 		catch(\Exception $e) {
-			$this->result = [
-				'status' => false,
-				'message' => $e->getMessage()
-			];
+			$this->result['status'] = false;
+			$this->result['message'] = DEBUG['is_enabled'] ? $e->getMessage() : __('engine.file.unknown_error');
 
-			return $this;
+			return false;
+		}
+
+		foreach($this->files_to_upload as $file) {
+			try {
+				move_uploaded_file($file['tmp_name'], $file['path_destination_full']);
+
+				$this->result['files'][] = $file['path_destination'];
+			}
+			catch(\Exception $e) {
+				$this->result['status'] = false;
+				$this->result['message'] = DEBUG['is_enabled'] ? $e->getMessage() : __('engine.file.unknown_error');
+	
+				break;
+			}
+		}
+
+		return true;
+	}
+
+	private function logFiles() {
+		if(empty($this->result['files']) || !$this->result['status']) {
+			return false;
 		}
 
 		$user_id = @User::get()->id ?? 'unlogged';
 		$user_ip = Request::$ip;
-		Log::write(Path::url() . "/$path_file uploaded by user ID: $user_id from IP: $user_ip", 'upload');
-		Hook::run('upload', $path_file);
+
+		foreach($this->result['files'] as $file) {
+			Log::write(Path::url() . "/$file uploaded by user ID: $user_id from IP: $user_ip", 'upload');
+			Hook::run('upload', $file);
+		}
+
+		return true;
 	}
 }

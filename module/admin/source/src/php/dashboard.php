@@ -149,7 +149,7 @@
 							<h4 class="box__title">Last posts</h4>
 						</div>
 						<div class="box__body">
-							<table class="table table_borderless">
+							<table class="table table_borderless table_align-top">
 								<thead>
 									<tr>
 										<th>Title</th>

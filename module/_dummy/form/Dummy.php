@@ -1,7 +1,7 @@
 <?php
 
 $all_checks = [
-	'type': 'checkbox|color|date|datetime|email|file|hidden|month|number|password|radio|range|tel|text|time|url + custom: textarea|wysiwyg|select|switch|maska',
+	'type': 'checkbox|color|date|datetime|email|file|hidden|month|number|password|radio|range|tel|text|time|url + custom: textarea|wysiwyg|select|switch',
 
 	// CHECK
 	'required' => true|false,
@@ -14,6 +14,8 @@ $all_checks = [
 	'extensions' => ['jpg','png'], // for file
 	'folder' => 'subfolder', // for file
 	'max_size' => 10 * 1024 * 1024, // for file (10MB)
+	
+	'rows' => 4, // for textarea
 	'step' => 10, // for range slider
 
 	// CHECK MESSAGE

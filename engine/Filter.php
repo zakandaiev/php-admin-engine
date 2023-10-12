@@ -182,7 +182,7 @@ class Filter {
 						$order[$column_name] = $value;
 						break;
 					}
-					default: { // text, maska, etc.
+					default: { // text etc.
 						if(!is_scalar($value)){
 							break;
 						}

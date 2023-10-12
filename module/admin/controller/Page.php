@@ -2,27 +2,25 @@
 
 namespace Module\Admin\Controller;
 
-use Engine\Server;
 use Engine\Language;
+use Engine\Server;
+use Engine\Theme;
 
 class Page extends AdminController {
 	public function getAll() {
-		$pages = $this->model->getPages();
+		$this->view->setData('pages', $this->model->getPages());
 
-		$data['pages'] = $pages;
-
-		$this->view->setData($data);
 		$this->view->render('page/all');
 	}
 
 	public function getCategory() {
-		$category_id = $this->route['parameter']['id'];
+		if(!isset($this->route['parameter']['id'])) {
+			$this->view->error('404');
+		}
 
-		$pages = $this->model->getPagesByCategory($category_id);
+		$this->view->setData('is_category', true);
+		$this->view->setData('pages', $this->model->getPagesByCategory($this->route['parameter']['id']));
 
-		$data['pages'] = $pages;
-
-		$this->view->setData($data);
 		$this->view->render('page/all');
 	}
 
@@ -30,6 +28,7 @@ class Page extends AdminController {
 		$data['authors'] = $this->model->getAuthors();
 		$data['categories'] = $this->model->getCategories();
 		$data['tags'] = $this->model->getTags();
+		$data['templates'] = Theme::pageTemplates();
 
 		$this->view->setData($data);
 		$this->view->render('page/add');

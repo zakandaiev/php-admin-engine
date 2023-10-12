@@ -12,7 +12,7 @@
 						<?php if(!empty(site('logo'))): ?>
 							<img class="d-inline-block w-25 mb-2" src="<?= site('url') ?>/<?= site('logo') ?>" data-src-dark="<?= site('url') ?>/<?= site('logo_alt') ?>" alt="Logo">
 						<?php else: ?>
-							<h1 class="font-size-6 mb-2"><?= site('name') ?></h1>
+							<h1 class="font-size-32 mb-2"><?= site('name') ?></h1>
 						<?php endif; ?>
 
 						<h4 class="color-text"><?= __('admin.auth.cta.login') ?></h4>

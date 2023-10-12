@@ -28,16 +28,22 @@ class View {
 		exit;
 	}
 
-	// TODO -> transform for keys
-	public static function getData() {
-		return self::$data;
+	public static function getData($key = null) {
+		return isset($key) ? @self::$data[$key] : self::$data;
 	}
 
-	// public static function hasData($key) {
-	// 	return isset(self::$data[$key]);
-	// }
+	public static function hasData($key) {
+		return isset(self::$data[$key]);
+	}
 
-	public static function setData($data) {
-		self::$data = $data + self::$data;
+	public static function setData($key, $data = null) {
+		if(is_string($key)) {
+			self::$data[$key] = $data;
+		}
+		else {
+			self::$data = array_merge(self::$data, $key);
+		}
+
+		return true;
 	}
 }

@@ -4,36 +4,34 @@ namespace Module\Admin\Controller;
 
 class Group extends AdminController {
 	public function getAll() {
-		$data['groups'] = $this->model->getGroups();
+		$this->view->setData('groups', $this->model->getGroups());
 
-		$this->view->setData($data);
 		$this->view->render('group/all');
 	}
 
 	public function getAdd() {
-		$data['routes'] = $this->model->getRoutes();
-		$data['users'] = $this->model->getUsers();
+		$this->view->setData('routes', $this->model->getRoutes());
+		$this->view->setData('users', $this->model->getUsers());
 
-		$this->view->setData($data);
 		$this->view->render('group/add');
 	}
 
 	public function getEdit() {
 		$group_id = $this->route['parameter']['id'];
 
-		$data['group'] = $this->model->getGroupById($group_id);
+		$group = $this->model->getGroupById($group_id);
 
-		if(empty($data['group'])) {
+		if(empty($group)) {
 			$this->view->error('404');
 		}
 
-		$data['routes'] = $this->model->getRoutes();
-		$data['users'] = $this->model->getUsers();
+		$group->routes = $this->model->getGroupRoutesById($group_id);
+		$group->users = $this->model->getGroupUsersById($group_id);
 
-		$data['group']->routes = $this->model->getGroupRoutesById($group_id);
-		$data['group']->users = $this->model->getGroupUsersById($group_id);
+		$this->view->setData('group', $group);
+		$this->view->setData('routes', $this->model->getRoutes());
+		$this->view->setData('users', $this->model->getUsers());
 
-		$this->view->setData($data);
 		$this->view->render('group/edit');
 	}
 }

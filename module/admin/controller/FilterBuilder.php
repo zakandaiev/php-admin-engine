@@ -228,7 +228,6 @@ class FilterBuilder {
 				$html .= '<input type="range" ' . implode(' ', $attributes) . $value . '>';
 				break;
 			}
-			case 'maska':
 			case 'text': {
 				$value = isset($value) ? ' value="' . $value . '"' : '';
 				$html .= '<input type="text" ' . implode(' ', $attributes) . $value . '>';

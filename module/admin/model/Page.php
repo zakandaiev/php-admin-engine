@@ -7,24 +7,12 @@ use Engine\Statement;
 use Engine\User;
 
 class Page extends \Engine\Model {
-	public function createTranslation($data) {
-		$columns = implode(', ', array_keys($data));
-		$bindings = ':' . implode(', :', array_keys($data));
-		$sql = 'INSERT INTO {page_translation} (' . $columns . ') VALUES (' . $bindings . ')';
-
-		$statement = new Statement($sql);
-		$statement->execute($data);
-
-		return true;
-	}
-
 	public function getPages() {
 		$sql = '
 			SELECT
 				*,
-				(SELECT TRIM(CONCAT_WS("", name, " ", "(", email, ")")) FROM {user} WHERE id=t_page.author) as author_name,
 				(CASE WHEN t_page.date_publish > NOW() THEN true ELSE false END) as is_pending,
-				(SELECT GROUP_CONCAT(language) FROM {page_translation} WHERE page_id=t_page.id AND language<>:language) as translations
+				(SELECT GROUP_CONCAT(language) FROM {page_translation} WHERE page_id = t_page.id AND language<>:language) as translations
 			FROM
 				{page} t_page
 			INNER JOIN
@@ -33,18 +21,17 @@ class Page extends \Engine\Model {
 				t_page.id = t_page_translation.page_id
 			WHERE
 				t_page_translation.language = :language
-				AND (SELECT count(*) FROM {page_category} WHERE page_id=t_page.id) = 0
+				AND (SELECT count(*) FROM {page_category} WHERE page_id = t_page.id) = 0
 			ORDER BY
-				t_page.is_category=false, t_page.date_publish DESC
+				t_page.is_category = false, t_page.date_publish DESC
 		';
 
 		$pages = new Statement($sql);
 
-		// TODO
-		// $pages = $pages->filter('Page')->paginate()->execute(['language' => site('language')])->fetchAll();
-		$pages = $pages->paginate()->execute(['language' => site('language')])->fetchAll();
+		$pages = $pages->filter('page')->paginate()->execute(['language' => site('language')])->fetchAll();
 
-		foreach($pages as $key => $page) {
+		foreach($pages as $page) {
+			$page->author = User::get($page->author);
 			$page->translations = !empty($page->translations) ? explode(',', $page->translations) : [];
 		}
 
@@ -54,10 +41,9 @@ class Page extends \Engine\Model {
 	public function getPagesByCategory($id) {
 		$sql = '
 			SELECT
-				t_page.*, t_page_translation.*,
-				(SELECT TRIM(CONCAT_WS("", name, " ", "(@", login, ")")) FROM {user} WHERE id=t_page.author) as author_name,
+				*,
 				(CASE WHEN t_page.date_publish > NOW() THEN true ELSE false END) as is_pending,
-				(SELECT GROUP_CONCAT(language) FROM {page_translation} WHERE page_id=t_page.id AND language<>:language) as translations
+				(SELECT GROUP_CONCAT(language) FROM {page_translation} WHERE page_id = t_page.id AND language<>:language) as translations
 			FROM
 				{page} t_page
 			INNER JOIN
@@ -72,14 +58,15 @@ class Page extends \Engine\Model {
 				t_page_category.category_id = :category_id
 				AND t_page_translation.language = :language
 			ORDER BY
-				t_page.is_category=false, t_page.date_publish DESC
+				t_page.is_category = false, t_page.date_publish DESC
 		';
 
 		$pages = new Statement($sql);
 
-		$pages = $pages->filter('Page')->paginate()->execute(['category_id' => $id, 'language' => site('language')])->fetchAll();
+		$pages = $pages->filter('page')->paginate()->execute(['category_id' => $id, 'language' => site('language')])->fetchAll();
 
-		foreach($pages as $key => $page) {
+		foreach($pages as $page) {
+			$page->author = User::get($page->author);
 			$page->translations = !empty($page->translations) ? explode(',', $page->translations) : [];
 		}
 
@@ -89,7 +76,8 @@ class Page extends \Engine\Model {
 	public static function getPage($key, $language = null) {
 		if(is_numeric($key)) {
 			$binding_key = 'id';
-		} else {
+		}
+		else {
 			$binding_key = 'url';
 		}
 
@@ -114,13 +102,20 @@ class Page extends \Engine\Model {
 
 		$page = new Statement($sql);
 
-		return $page->execute($binding)->fetch();
+		$page = $page->execute($binding)->fetch();
+
+		if(!empty($page)) {
+			$page->author = User::get($page->author);
+		}
+
+		return $page;
 	}
 
 	public function getAuthors() {
 		$sql = 'SELECT * FROM {user} ORDER BY name ASC, email ASC';
 
 		$authors = new Statement($sql);
+
 		$authors = $authors->execute()->fetchAll();
 
 		foreach($authors as $key => $author) {
@@ -154,7 +149,7 @@ class Page extends \Engine\Model {
 	}
 
 	public function getTags($language = null) {
-		$sql = '
+		$sql = "
 			SELECT
 				*
 			FROM
@@ -170,11 +165,11 @@ class Page extends \Engine\Model {
 					THEN
 						:language
 					ELSE
-						(SELECT value FROM {setting} WHERE module = \'engine\' AND name = \'language\')
+						(SELECT value FROM {setting} WHERE module = 'engine' AND name = 'language')
 					END)
 			ORDER BY
 				t_tag_translation.name ASC
-		';
+		";
 
 		$tags = new Statement($sql);
 
@@ -287,5 +282,16 @@ class Page extends \Engine\Model {
 		}
 
 		return $fieldsets;
+	}
+
+	public function createTranslation($data) {
+		$columns = implode(', ', array_keys($data));
+		$bindings = ':' . implode(', :', array_keys($data));
+		$sql = 'INSERT INTO {page_translation} (' . $columns . ') VALUES (' . $bindings . ')';
+
+		$statement = new Statement($sql);
+		$statement->execute($data);
+
+		return true;
 	}
 }

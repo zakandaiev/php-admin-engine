@@ -14,7 +14,7 @@
 				<span class="breadcrumb__item">Dev UI</span>
 			</nav>
 
-			<h2 class="section__title">Forms validation</h2>
+			<h2 class="section__title">Form validation</h2>
 
 			<div class="row fill gap-xs cols-xs-1">
 

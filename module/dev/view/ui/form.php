@@ -14,7 +14,7 @@
 				<span class="breadcrumb__item">Dev UI</span>
 			</nav>
 
-			<h2 class="section__title">Forms</h2>
+			<h2 class="section__title">Form elements</h2>
 
 			<div class="row fill gap-xs cols-xs-1 cols-md-2">
 				<div class="col">

@@ -19,25 +19,36 @@
 4. Create & enjoy ;)
 
 ## TODO
-* admin: select values from db automatically for edit-templates (setFieldValue)
-* helper: refactor font-size-
-* all: Server::answer -> Request::answer
 * engine: modules install
-* engine: refactor Upload - dont upload files if futher has an error
-* admin: create data-behavior.js
+* admin: create form-behavior.js
 * admin: create foreign-form.js
 * admin: create collapse.js
-* admin: uploads interface (scan /upload directory)
-* admin: wysiwyg insert from uploads interface
-* admin: wysiwyg add image upload in js (but before handle /upload routes for get, post, delete)
-* admin: dashboard, profile, pages, messages, groups, settings, logs, modules... interfaces
+* admin: wysiwyg add image upload in js (but before handle /admin/upload routes for get, post, delete)
+* admin: dashboard
+* admin: profile
+* admin: pages interface
+* admin: comments interface
+* admin: menu interface
+* admin: translations interface
+* admin: messages interface
+* admin: logs interface
 * admin: handle login & access to routes due to group, registration, reset password
+* admin: change favicons, logos to branded
+* admin: fix data-copy from awesomecs + update gist
+* admin: quill add margin-bottom to every
+* dev: modules interface
+* all: Server::answer -> Request::answer
+
+## Roadmap
+* engine: refactor all classes
+* engine: cache queries fails with pagination
+* admin: automatically set values to form input's in edit pages (setFieldValue)
+* admin: uploads interface (scan /upload directory)
+* admin: insert files from uploads interface to wysiwyg, forms etc.
+* dev: refactor charts initialization, add default double-theme colors etc.
 * api + swagger:
   * /api/template/$path - load Template::loadT... for ajax/fetch
   * /api/data/$data - show data from DB
-* install: instalation page
-* dev: refactor charts initialization, add default double-theme colors etc.
-* other jobs based on old (but ready) https://github.com/zakandaiev/adminkit-engine
 * docs: create docs module and plug MkDocs or create own builder
   * /docs/dev - documentation for developers
   * /docs/user - documentation for users

@@ -16,6 +16,14 @@
 	&:last-child {
 		margin-bottom: 0;
 	}
+
+	& > .valid ~ .filepond--panel-root > .filepond--panel-root {
+		border-color: var(--color-success);
+	}
+
+	& > .invalid ~ .filepond--panel-root > .filepond--panel-root {
+		border-color: var(--color-error);
+	}
 }
 
 .filepond--panel-root {

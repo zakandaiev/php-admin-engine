@@ -228,13 +228,13 @@ class Statement {
 		// 	elseif ($sql[$i] == ')') {
     //     $paren_count--;
     //   }
-		// 	elseif (!$from_position && strtolower(substr($sql, $i, 4)) == 'from' && $paren_count == 0) {
+		// 	elseif (!$from_position && strtolower(mb_substr($sql, $i, 4)) == 'from' && $paren_count == 0) {
     //     $from_position = $i;
     //   }
     // }
 
     // if ($from_position !== false) {
-    //   $output = substr($sql, $from_position + 4);
+    //   $output = mb_substr($sql, $from_position + 4);
     // }
 
     // return trim($output);

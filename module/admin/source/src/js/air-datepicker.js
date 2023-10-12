@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			multipleDates: input.hasAttribute('data-multiple') ? true : false,
 			multipleDatesSeparator: ' - ',
 			range: input.hasAttribute('data-range') ? true : false,
-			buttons: type.includes('date') ? ['clear'] : [],
 			timepicker: type.includes('time') ? true : false,
 			onlyTimepicker: type === 'time' ? true : false,
 			minDate: input.hasAttribute('data-min') ? input.getAttribute('data-min') : '',
@@ -22,23 +21,22 @@ document.addEventListener('DOMContentLoaded', () => {
 			minMinutes: input.hasAttribute('data-min-minute') ? input.getAttribute('data-min-minute') : 0,
 			maxMinutes: input.hasAttribute('data-max-minute') ? input.getAttribute('data-max-minute') : 59,
 			hoursStep: input.hasAttribute('data-hour-step') ? input.getAttribute('data-hour-step') : 1,
-			minutesStep: input.hasAttribute('data-minute-step') ? input.getAttribute('data-minute-step') : 1
+			minutesStep: input.hasAttribute('data-minute-step') ? input.getAttribute('data-minute-step') : 1,
+			position: input.getAttribute('data-position') || 'bottom left'
+		}
+
+		if (type.includes('date') && !input.required) {
+			options.buttons = type.includes('date') && !input.required ? ['clear'] : [];
 		}
 
 		if (type === 'month') {
-			options = {
-				...options,
-				view: 'months',
-				minView: 'months',
-				dateFormat: 'MMMM yyyy'
-			}
+			options.view = 'months';
+			options.minView = 'months';
+			options.dateFormat = 'MMMM yyyy';
 		}
 
 		if (typeof ENGINE !== 'undefined' && ENGINE.translation && ENGINE.translation.datepicker) {
-			options = {
-				...options,
-				locale: ENGINE.translation.datepicker
-			}
+			options.locale = ENGINE.translation.datepicker;
 		}
 
 		options.onSelect = ({ date, datepicker }) => {

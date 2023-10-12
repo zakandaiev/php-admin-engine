@@ -167,7 +167,7 @@ class FormBuilder {
 		// SET ATTRIBUTES
 		$attributes = [];
 		$attributes['name'] = isset($field['multiple']) && $field['multiple'] ? 'name="' . $field_name . '[]"' : 'name="' . $field_name . '"';
-		$enabled_attributes = ['required','min','max','pattern','multiple','range','extensions','autofocus','placeholder','step'];
+		$enabled_attributes = ['required','min','max','pattern','multiple','range','extensions','autofocus','placeholder','rows','step'];
 		$valueless_attributes = ['required','multiple','range','autofocus'];
 		$min_max_to_datamin_datamax_replace_types = ['date','datetime','month','select'];
 		$min_max_to_minlength_maxlength_replace_types = ['email','hidden','password','tel','text','url','textarea','wysiwyg'];
@@ -215,7 +215,7 @@ class FormBuilder {
 		// FORMAT ATTRIBUTES & INIT HTML BY RIGHT TAG
 		switch($field['type']) {
 			case 'checkbox': {
-				$value = $value ? ' checked' : '';
+				$value = isset($value) && $value ? ' checked' : '';
 
 				$html = '<label>';
 				$html .= '<input type="checkbox"  ' . implode(' ', $attributes) . $value . '>';
@@ -238,24 +238,18 @@ class FormBuilder {
 				$html .= '</label>';
 				break;
 			}
-			case 'color': {
-				$value = $value ? ' value="' . $value . '"' : '';
-				$html .= '<input type="color" ' . implode(' ', $attributes) . $value . '>';
-				break;
-			}
-			case 'date': {
-				// TODO
-				$html .= '';
-				break;
-			}
-			case 'datetime': {
-				// TODO
-				$html .= '';
-				break;
-			}
-			case 'email': {
-				$value = $value ? ' value="' . $value . '"' : '';
-				$html .= '<input type="email" ' . implode(' ', $attributes) . $value . '>';
+			case 'date':
+			case 'datetime':
+			case 'month':
+			case 'time': {
+				if(isset($attributes['name'])) $attributes['name'] = 'name="' . $field_name . '"';
+				if(isset($attributes['range'])) $attributes['range'] = 'data-' . $attributes['range'];
+				if(isset($attributes['multiple'])) $attributes['multiple'] = 'data-' . $attributes['multiple'];
+
+				$value = isset($value) ? ' value="' . $value . '"' : '';
+
+				$html .= '<input type="text" data-picker="' . $field['type'] . '" ' . implode(' ', $attributes) . $value . '>';
+
 				break;
 			}
 			case 'file': {
@@ -281,64 +275,25 @@ class FormBuilder {
 
 				break;
 			}
-			case 'hidden': {
-				$value = $value ? ' value="' . $value . '"' : '';
-				$html .= '<input type="hidden" class="hidden" ' . implode(' ', $attributes) . $value . '>';
-				break;
-			}
-			case 'month': {
-				// TODO
-				$html .= '';
-				break;
-			}
-			case 'number': {
-				$value = $value ? ' value="' . $value . '"' : '';
-				$html .= '<input type="number" ' . implode(' ', $attributes) . $value . '>';
-				break;
-			}
-			case 'password': {
-				$value = $value ? ' value="' . $value . '"' : '';
-				$html .= '<input type="password" ' . implode(' ', $attributes) . $value . '>';
-				break;
-			}
 			case 'radio': {
 				// TODO
 				$html .= '';
 				break;
 			}
-			case 'range': {
-				// TODO
-				$html .= '';
-				break;
-			}
-			case 'tel': {
-				// TODO
-				$html .= '';
-				break;
-			}
-			case 'text': {
-				$value = $value ? ' value="' . $value . '"' : '';
-				$html .= '<input type="text" ' . implode(' ', $attributes) . $value . '>';
-				break;
-			}
-			case 'time': {
-				// TODO
-				$html .= '';
-				break;
-			}
-			case 'url': {
-				// TODO
-				$html .= '';
-				break;
-			}
 			case 'textarea': {
-				$value = $value ? @json_encode($value) : '';
-				$html .= '<textarea ' . implode(' ', $attributes) . ' rows="1">' . $value . '</textarea>';
+				if(!isset($attributes['rows'])) {
+					$attributes['rows'] = 'rows="1"';
+				}
+
+				$value = isset($value) ? ' value="' . $value . '"' : '';
+
+				$html .= '<textarea ' . implode(' ', $attributes) . '>' . $value . '</textarea>';
+
 				break;
 			}
 			case 'wysiwyg': {
-				// TODO
-				$html .= '';
+				$html .= '<textarea data-wysiwyg ' . implode(' ', $attributes) . '>' . $value . '</textarea>';
+				
 				break;
 			}
 			case 'select': {
@@ -397,8 +352,19 @@ class FormBuilder {
 				$html .= '</label>';
 				break;
 			}
-			case 'maska': {
-				$html .= '<input type="text" ' . implode(' ', $attributes) . '>';
+			case 'color':
+			case 'email':
+			case 'hidden':
+			case 'number':
+			case 'password':
+			case 'range':
+			case 'tel':
+			case 'text':
+			case 'url': {
+				$value = isset($value) ? ' value="' . $value . '"' : '';
+
+				$html .= '<input type="' . $field['type'] . '" ' . implode(' ', $attributes) . $value . '>';
+
 				break;
 			}
 			default: {

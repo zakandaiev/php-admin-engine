@@ -8,6 +8,7 @@ use Engine\Pagination;
 class InterfaceBuilder {
 	protected $filter;
 	protected $filter_builder;
+	protected $header;
 	protected $title;
 	protected $actions = [];
 	protected $fields = [];
@@ -17,6 +18,7 @@ class InterfaceBuilder {
 	public function __construct($interface) {
 		$this->filter = @$interface['filter'];
 		$this->filter_builder = new FilterBuilder($this->filter);
+		$this->header = @$interface['header'];
 		$this->title = @$interface['title'];
 		$this->actions = $interface['actions'] ?? [];
 		$this->fields = $interface['fields'] ?? [];
@@ -67,7 +69,7 @@ class InterfaceBuilder {
 			$filter_action_title = Request::has('show-filters') ? __('admin.filter.hide_filters') : __('admin.filter.show_filters');
 			$filter_action_url = Request::has('show-filters') ? site('permalink') : link_filter('show-filters');
 			$filter_action_icon = Request::has('show-filters') ? 'minus' : 'plus';
-			$html .= '<a href="' . $filter_action_url . '" class="btn btn_secondary" data-tooltip="top" title="' . $filter_action_title . '"><i class="icon icon-filter-' . $filter_action_icon . '"></i></a>';
+			$html .= '<a href="' . $filter_action_url . '" class="btn btn_info" data-tooltip="top" title="' . $filter_action_title . '"><i class="icon icon-filter-' . $filter_action_icon . '"></i></a>';
 		}
 
 		foreach($this->actions as $action) {
@@ -111,9 +113,16 @@ class InterfaceBuilder {
 
 	protected function renderTable() {
 		$html = '<div class="box">';
+		
+		if($this->header) {
+			$html .= '<div class="box__header">';
+			$html .= is_closure($this->header) ? $this->header->__invoke() : ('<h4 class="box__title">' . $this->header . '</h4>');
+			$html .= '</div>';
+		}
+
 		$html .= '<div class="box__body">';
 
-		if(empty($this->data)) {
+		if(empty($this->data) && $this->placeholder !== false) {
 			$html .= '<h5 class="box__subtitle">' . $this->placeholder . '</h5>';
 			$html .= '</div>';
 			$html .= '</div>';

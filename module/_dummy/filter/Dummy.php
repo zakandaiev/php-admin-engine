@@ -1,7 +1,7 @@
 <?php
 
 $all_data = [
-	'type': 'checkbox|date|number|radio|range|text|select|switch|maska|order',
+	'type': 'checkbox|date|number|radio|range|text|select|switch|order',
 	'column' => ['title','excerpt']|'name', // string or array of columns to filter in
 	'multiple' => true|false, // for number|select|checkbox|date|datetime|month|file
 	'default' => null, // default value
