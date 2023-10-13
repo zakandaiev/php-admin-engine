@@ -89,27 +89,6 @@ class Page extends \Engine\Model {
 		return $statement->execute(['page_id' => $page_id, 'language' => $language ?? site('language_current')])->fetchAll();
 	}
 
-	public function getPageTags($page_id, $language = null) {
-		$sql = '
-			SELECT
-				t_tag.*
-			FROM
-				{tag} t_tag
-			INNER JOIN
-				{page_tag} t_page_tag
-			ON
-				t_tag.id = t_page_tag.tag_id
-			WHERE
-				t_tag.language = :language
-				AND t_page_tag.page_id = :page_id
-				AND t_tag.is_enabled IS true
-		';
-
-		$statement = new Statement($sql);
-
-		return $statement->execute(['page_id' => $page_id, 'language' => $language ?? site('language_current')])->fetchAll();
-	}
-
 	public function getPageCommentsCount($page_id) {
 		$sql = "
 			SELECT
@@ -436,24 +415,14 @@ class Page extends \Engine\Model {
 		$options['language'] = $options['language'] ?? site('language_current');
 		$options['page_id'] = $page->id;
 
-		$page_tags = [];
+		$page_categories = [];
 
-		foreach($page->tags as $tag) {
-			$page_tags[] = $tag->id;
+		foreach($page->categories as $category) {
+			$page_categories[] = $category->id;
 		}
 
-		if(!empty($page_tags)) {
-			$options['where'] .= ' AND id IN (SELECT page_id FROM {page_tag} WHERE tag_id IN (' . implode(',', $page_tags) . ') AND page_id <> :page_id)';
-		} else {
-			$page_categories = [];
-
-			foreach($page->categories as $category) {
-				$page_categories[] = $category->id;
-			}
-
-			if(!empty($page_categories)) {
-				$options['where'] .= ' AND id IN (SELECT page_id FROM {page_category} WHERE category_id IN (' . implode(',', $page_categories) . ') AND page_id <> :page_id)';
-			}
+		if(!empty($page_categories)) {
+			$options['where'] .= ' AND id IN (SELECT page_id FROM {page_category} WHERE category_id IN (' . implode(',', $page_categories) . ') AND page_id <> :page_id)';
 		}
 
 		$sql = "
@@ -591,88 +560,6 @@ class Page extends \Engine\Model {
 				AND date_publish <= NOW()
 				AND is_enabled IS true
 				AND is_category IS true
-				{$options['where']}
-			ORDER BY
-				{$options['order']}
-		";
-
-		return $this->getPreparedRows($sql, $options);
-	}
-
-	public function getTags($options = []) {
-		$options['fields'] = $options['fields'] ?? 't_tag.*';
-		$options['where'] = isset($options['where']) ? 'AND ' . $options['where'] : '';
-		$options['order'] = $options['order'] ?? 'count_pages DESC';
-		$options['language'] = $options['language'] ?? site('language_current');
-
-		$sql = "
-			SELECT
-				{$options['fields']},
-				(SELECT count(*) FROM {page_tag} WHERE tag_id = t_tag.id) as count_pages
-			FROM
-				{tag} t_tag
-			WHERE
-				language = :language
-				AND is_enabled IS true
-				{$options['where']}
-			ORDER BY
-				{$options['order']}
-		";
-
-		return $this->getPreparedRows($sql, $options);
-	}
-
-	public function getTagByUrl($url, $language = null) {
-		$sql = '
-			SELECT
-				*
-			FROM
-				{tag} t_tag
-			WHERE
-				language = :language
-				AND url = :url
-				AND is_enabled IS true
-		';
-
-		$page = new Statement($sql);
-
-		return $page->execute(['url' => $url, 'language' => $language ?? site('language_current')])->fetch();
-	}
-
-	public function getPagesByTag($tag_id, $options = []) {
-		$options['fields'] = $options['fields'] ?? 't_page.*, t_page_translation.*';
-		$options['where'] = isset($options['where']) ? 'AND ' . $options['where'] : '';
-		$options['order'] = $options['order'] ?? 't_page.date_publish DESC';
-		$options['language'] = $options['language'] ?? site('language_current');
-
-		$sql = "
-			SELECT
-				{$options['fields']},
-				(SELECT name FROM {user} WHERE id=t_page.author) as author_name
-			FROM
-				{page} t_page
-			INNER JOIN
-				{page_translation} t_page_translation
-			ON
-				t_page.id = t_page_translation.page_id
-			INNER JOIN
-				{page_tag} t_page_tag
-			ON
-				t_page.id = t_page_tag.page_id
-			WHERE
-				t_page_tag.tag_id IN ($tag_id)
-				AND t_page.date_publish <= NOW()
-				AND t_page.is_enabled IS true
-				AND t_page.is_category IS false
-				AND is_static IS false
-				AND t_page_translation.language =
-					(CASE WHEN
-						(SELECT count(*) FROM {page_translation} WHERE page_id = t_page.id AND language = :language) > 0
-					THEN
-						:language
-					ELSE
-						(SELECT value FROM {setting} WHERE section = 'main' AND name = 'language')
-					END)
 				{$options['where']}
 			ORDER BY
 				{$options['order']}

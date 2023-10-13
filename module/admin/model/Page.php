@@ -148,34 +148,6 @@ class Page extends \Engine\Model {
 		return $categories->execute(['id' => $current, 'language' => site('language')])->fetchAll();
 	}
 
-	public function getTags($language = null) {
-		$sql = "
-			SELECT
-				*
-			FROM
-				{tag} t_tag
-			INNER JOIN
-				{tag_translation} t_tag_translation
-			ON
-				t_tag.id = t_tag_translation.tag_id
-			WHERE
-				t_tag_translation.language =
-					(CASE WHEN
-						(SELECT count(*) FROM {tag_translation} WHERE tag_id = t_tag.id AND language = :language) > 0
-					THEN
-						:language
-					ELSE
-						(SELECT value FROM {setting} WHERE module = 'engine' AND name = 'language')
-					END)
-			ORDER BY
-				t_tag_translation.name ASC
-		";
-
-		$tags = new Statement($sql);
-
-		return $tags->execute(['language' => $language ?? site('language_current')])->fetchAll();
-	}
-
 	public function getPageCategories($page_id) {
 		$categories = [];
 
@@ -188,32 +160,6 @@ class Page extends \Engine\Model {
 		}
 
 		return $categories;
-	}
-
-	public function getPageTags($page_id, $language = null) {
-		$tags = [];
-
-		$sql = '
-			SELECT
-				t_tag.id
-			FROM
-				{tag} t_tag
-			INNER JOIN
-				{page_tag} t_page_tag
-			ON
-				t_tag.id = t_page_tag.tag_id
-			WHERE
-				t_page_tag.page_id = :page_id
-				AND t_tag.language = :language
-		';
-
-		$statement = new Statement($sql);
-
-		foreach($statement->execute(['page_id' => $page_id, 'language' => $language ?? site('language')])->fetchAll() as $tag) {
-			$tags[] = $tag->id;
-		}
-
-		return $tags;
 	}
 
 	public function getPageCustomFields($page_id, $language = null) {
@@ -286,12 +232,19 @@ class Page extends \Engine\Model {
 
 	public function createTranslation($data) {
 		$columns = implode(', ', array_keys($data));
+
 		$bindings = ':' . implode(', :', array_keys($data));
+
 		$sql = 'INSERT INTO {page_translation} (' . $columns . ') VALUES (' . $bindings . ')';
 
 		$statement = new Statement($sql);
+
 		$statement->execute($data);
 
-		return true;
+		if($statement->rowCount() > 0) {
+			return true;
+		}
+
+		return false;
 	}
 }

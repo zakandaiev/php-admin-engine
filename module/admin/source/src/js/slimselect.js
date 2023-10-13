@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				}
 				catch (e) { }
 
-				if (addable_type === 'tag') {
+				if (addable_type === 'slug') {
 					value = value.replaceAll(/[^\p{L}\d ]+/giu, '');
 					value = getSlug(value).toLowerCase();
 				}

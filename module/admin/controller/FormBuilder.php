@@ -210,32 +210,26 @@ class FormBuilder {
 		}
 
 		$value = $field['value'] ?? $field['default'] ?? null;
-		$value = is_scalar($value) ? addcslashes(strval($value), '"') : $value;
+
+		if(isset($field['multiple']) && $field['multiple'] && is_string($value) && ($value[0] === '[' || $value[0] === '{')) {
+			$value = json_decode($value);
+		}
+		else if(is_string($value)) {
+			$value = addcslashes($value, '"');
+		}
 
 		// FORMAT ATTRIBUTES & INIT HTML BY RIGHT TAG
 		switch($field['type']) {
-			case 'checkbox': {
-				$value = isset($value) && $value ? ' checked' : '';
+			case 'checkbox':
+			case 'radio': {
+				$field['value'] = $field['value'] ?? [];
 
-				$html = '<label>';
-				$html .= '<input type="checkbox"  ' . implode(' ', $attributes) . $value . '>';
+				foreach($field['value'] as $key => $value) {
+					$selected = isset($value->selected) && $value->selected ? ' checked' : '';
 
-				if(isset($field['label_html'])) {
-					$html .= $field['label_html'];
-				}
-				else if(isset($field['label'])) {
-					$html .= '<span';
-					if(isset($field['label_class'])) {
-						$html .= ' class="' . $field['label_class'] . '">';
-					}
-					else {
-						$html .= '>';
-					}
-					$html .= $field['label'];
-					$html .= '</span>';
+					$html .= '<label><input type="' . $field['type'] . '" ' . implode(' ', $attributes) . ' value="' . $value->value . '"' . $selected . '><span>' . $value->name . '</span></label>';
 				}
 
-				$html .= '</label>';
 				break;
 			}
 			case 'date':
@@ -246,7 +240,7 @@ class FormBuilder {
 				if(isset($attributes['range'])) $attributes['range'] = 'data-' . $attributes['range'];
 				if(isset($attributes['multiple'])) $attributes['multiple'] = 'data-' . $attributes['multiple'];
 
-				$value = isset($value) ? ' value="' . $value . '"' : '';
+				$value = !empty($value) ? ' value="' . $value . '"' : '';
 
 				$html .= '<input type="text" data-picker="' . $field['type'] . '" ' . implode(' ', $attributes) . $value . '>';
 
@@ -275,17 +269,10 @@ class FormBuilder {
 
 				break;
 			}
-			case 'radio': {
-				// TODO
-				$html .= '';
-				break;
-			}
 			case 'textarea': {
 				if(!isset($attributes['rows'])) {
 					$attributes['rows'] = 'rows="1"';
 				}
-
-				$value = isset($value) ? ' value="' . $value . '"' : '';
 
 				$html .= '<textarea ' . implode(' ', $attributes) . '>' . $value . '</textarea>';
 
@@ -293,7 +280,7 @@ class FormBuilder {
 			}
 			case 'wysiwyg': {
 				$html .= '<textarea data-wysiwyg ' . implode(' ', $attributes) . '>' . $value . '</textarea>';
-				
+
 				break;
 			}
 			case 'select': {
@@ -306,19 +293,20 @@ class FormBuilder {
 				}
 
 				$field['value'] = $field['value'] ?? [];
+
 				foreach($field['value'] as $key => $value) {
 					if(is_array($value)) {
 						$html .= '<optgroup label="' . $key . '">';
 
 						foreach($value as $vf => $vv) {
-							$selected = $vv->selected ? ' selected' : '';
+							$selected = isset($vv->selected) && $vv->selected ? ' selected' : '';
 							$html .= '<option value="' . $vv->value . '"' . $selected . '>' . $vv->name . '</option>';
 						}
 
 						$html .= '</optgroup>';
 					}
 					else {
-						$selected = $value->selected ? ' selected' : '';
+						$selected = isset($value->selected) && $value->selected ? ' selected' : '';
 						$html .= '<option value="' . $value->value . '"' . $selected . '>' . $value->name . '</option>';
 					}
 				}
@@ -361,7 +349,7 @@ class FormBuilder {
 			case 'tel':
 			case 'text':
 			case 'url': {
-				$value = isset($value) ? ' value="' . $value . '"' : '';
+				$value = !empty($value) ? ' value="' . $value . '"' : '';
 
 				$html .= '<input type="' . $field['type'] . '" ' . implode(' ', $attributes) . $value . '>';
 

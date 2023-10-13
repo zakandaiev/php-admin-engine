@@ -25,12 +25,10 @@ class Page extends AdminController {
 	}
 
 	public function getAdd() {
-		$data['authors'] = $this->model->getAuthors();
-		$data['categories'] = $this->model->getCategories();
-		$data['tags'] = $this->model->getTags();
-		$data['templates'] = Theme::pageTemplates();
+		$this->view->setData('authors', $this->model->getAuthors());
+		$this->view->setData('categories', $this->model->getCategories());
+		$this->view->setData('templates', Theme::pageTemplates());
 
-		$this->view->setData($data);
 		$this->view->render('page/add');
 	}
 
@@ -49,23 +47,22 @@ class Page extends AdminController {
 			}
 		}
 
-		$data['page_edit'] = $this->model->getPage($page_id, $is_translation ? $this->route['parameter']['language'] : null);
+		$data['page'] = $this->model->getPage($page_id, $is_translation ? $this->route['parameter']['language'] : null);
 
-		if(empty($data['page_edit'])) {
+		if(empty($data['page'])) {
 			$this->view->error('404');
 		}
 
 		$data['is_translation'] = $is_translation;
 
-		$data['page_edit']->categories = $this->model->getPageCategories($page_id);
-		$data['page_edit']->tags = $this->model->getPageTags($page_id, $is_translation ? $this->route['parameter']['language'] : null);
-		$data['page_edit']->custom_fields = $this->model->getPageCustomFields($page_id, $is_translation ? $this->route['parameter']['language'] : null);
+		$data['page']->categories = $this->model->getPageCategories($page_id);
+		// TODO
+		// $data['page']->custom_fields = $this->model->getPageCustomFields($page_id, $is_translation ? $this->route['parameter']['language'] : null);
+		// $data['page']->custom_fieldsets = $this->model->getPageCustomFieldSets($data['page']);
 
 		$data['authors'] = $this->model->getAuthors();
 		$data['categories'] = $this->model->getCategories($page_id);
-		$data['tags'] = $this->model->getTags($is_translation ? $this->route['parameter']['language'] : null);
-
-		$data['page_edit']->custom_fieldsets = $this->model->getPageCustomFieldSets($data['page_edit']);
+		$data['templates'] = Theme::pageTemplates();
 
 		$this->view->setData($data);
 		$this->view->render('page/edit');
@@ -99,7 +96,8 @@ class Page extends AdminController {
 
 		if($this->model->createTranslation($translation)) {
 			Server::redirect(site('url_language') . '/admin/page/edit/' . $page_id . '/translation/edit/' . $translation_language);
-		} else {
+		}
+		else {
 			Server::redirect(site('url_language') . '/admin/page');
 		}
 	}

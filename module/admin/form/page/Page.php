@@ -19,7 +19,6 @@ return [
 		'language' => $language,
 		'title' => $title,
 		'excerpt' => $excerpt,
-		'tags' => $tags,
 		'content' => $content,
 		'image' => $image,
 		'seo_description' => $seo_description,
@@ -42,7 +41,7 @@ return [
 			';
 
 			$children = new Statement($sql);
-			
+
 			$children = $children->execute(['category_id' => $data['item_id']])->fetchAll();
 
 			foreach($children as $child) {
@@ -50,12 +49,11 @@ return [
 					continue;
 				}
 
-				Form::execute('delete', $data['form_name'], $child->page_id, true);
+				Form::execute($data['action'], $data['form_name'], $child->page_id, true);
 			}
 		}
 	},
 	'execute_post' => function($rowCount, $fields, $data) {
-		// debug($rowCount, $fields, $data);
 		Hook::run('page.' . $data['action'], $fields);
 	}
 ];

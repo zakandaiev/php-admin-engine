@@ -7,10 +7,10 @@ Page::set('title', $title);
 Page::breadcrumb('add', ['name' => __('admin.page.pages'), 'url' => '/admin/page']);
 Page::breadcrumb('add', ['name' => $title]);
 
-$form_builder = new FormBuilder('page/page');
-$form_attributes = 'data-redirect="' . site('url_language') . '/admin/page" data-validate';
+$form_name = 'page/page';
 
-// debug($tags);
+$form_builder = new FormBuilder($form_name);
+$form_attributes = 'data-redirect="' . site('url_language') . '/admin/page" data-validate';
 
 $form_builder->setFieldValue('author', array_map(function($author) {
 	$a = new \stdClass();
@@ -60,7 +60,7 @@ $form_builder->setFieldValue('template', array_map(function($template) {
 				<span><?= $title ?></span>
 			</h2>
 
-			<form action="<?= Form::add('page/page') ?>" data-redirect="<?= site('url_language') ?>/admin/page" data-validate>
+			<form action="<?= Form::add($form_name) ?>" data-redirect="<?= site('url_language') ?>/admin/page" data-validate>
 				<div class="row gap-xs">
 					<div class="col-xs-12 col-md-8">
 						<div class="tab">
@@ -75,12 +75,6 @@ $form_builder->setFieldValue('template', array_map(function($template) {
 								<div class="row gap-xs">
 									<?= $form_builder->renderCol('title'); ?>
 									<?= $form_builder->renderCol('excerpt'); ?>
-									<?= $form_builder->renderCol('tags', array_map(function($tag) {
-										$t = new \stdClass();
-										$t->value = $tag->id;
-										$t->name = $tag->name;
-										return $t;
-									}, $tags)); ?>
 									<?= $form_builder->renderCol('content'); ?>
 								</div>
 							</div>
@@ -95,7 +89,7 @@ $form_builder->setFieldValue('template', array_map(function($template) {
 							</div>
 
 							<div id="tab-page-fields" class="tab__body">
-								
+
 							</div>
 
 						</div>
@@ -103,7 +97,7 @@ $form_builder->setFieldValue('template', array_map(function($template) {
 					<div class="col-xs-12 col-md-4">
 
 						<div class="box">
-							<button type="submit" class="btn btn_fit btn_primary py-4"><?= __('admin.page.add_page') ?></button>
+							<button type="submit" class="btn btn_fit btn_primary py-4"><?= $title ?></button>
 						</div>
 
 						<div class="box">

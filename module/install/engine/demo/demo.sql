@@ -107,51 +107,6 @@ INSERT INTO `%prefix%_custom_field` (`page_id`, `language`, `name`, `value`) VAL
 (2, 'en', 'vision_title', 'OUR VISION'),
 (2, 'en', 'vision_text', '<p>Est in saepe accusam luptatum. Purto deleniti philosophia eum ea, impetus copiosae id mel. Vis at ignota delenit democritum, te summo tamquam delicata pro. Utinam concludaturque et vim, mei ullum intellegam ei. Eam te illum nostrud, suas sonet corrumpit ea per. Ut sea regione posidonium. Pertinax gubergren ne qui, eos an harum mundi quaestio.</p><p>Nihil persius id est, iisque tincidunt abhorreant no duo. Eripuit placerat mnesarchum ius at, ei pro laoreet invenire persecuti, per magna tibique scriptorem an. Aeque oportere incorrupte ius ea, utroque erroribus mel in, posse dolore nam in. Per veniam vulputate intellegam et, id usu case reprimique, ne aperiam scaevola sed. Veritus omnesque qui ad. In mei admodum maiorum iracundia, no omnis melius eum, ei erat vivendo his. In pri nonumes suscipit.</p>');
 
-
-INSERT INTO `%prefix%_tag` (`language`, `name`, `url`) VALUES
-('en', 'Social', 'social'),
-('en', 'Life', 'life'),
-('en', 'Lifestyle', 'lifestyle'),
-('en', 'Fashion', 'fashion'),
-('en', 'Health', 'health'),
-('en', 'Travel', 'travel'),
-('en', 'Technology', 'technology'),
-('en', 'Food', 'food'),
-('en', 'News', 'news'),
-('en', 'Magazine', 'magazine');
-
-INSERT INTO `%prefix%_page_tag` (`page_id`, `tag_id`) VALUES
-(9, 1),
-(9, 2),
-(9, 3),
-(9, 4),
-(10, 5),
-(10, 6),
-(10, 7),
-(10, 8),
-(11, 9),
-(11, 10),
-(11, 1),
-(11, 2),
-(12, 3),
-(13, 4),
-(14, 5),
-(14, 6),
-(15, 7),
-(16, 8),
-(16, 9),
-(16, 10),
-(16, 1),
-(17, 2),
-(18, 3),
-(19, 4),
-(19, 5),
-(20, 6),
-(20, 7),
-(20, 8),
-(21, 9),
-(21, 10);
-
 INSERT INTO `%prefix%_comment` (`parent`, `page_id`, `author`, `message`) VALUES
 (NULL, 9, 1, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'),
 (1, 9, 1, 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.');

@@ -229,12 +229,15 @@ class Form {
 			}
 
 			switch($field_data['type']) {
-				case 'checkbox':
 				case 'switch': {
 					$field_data['value'] = in_array($income_value, ['on', '1', 'true']) ? true : false;
 					break;
 				}
 				case 'file': {
+					$field_data['upload'] = null;
+					$field_data['to_upload'] = false;
+					$field_data['max_size'] = $field_data['max_size'] ?? Upload::getMaxSize();
+
 					$files = Request::$files[$field_data['name']] ?? [];
 
 					if(empty($files) || !isset($files['tmp_name']) || empty($files['tmp_name'])) {
@@ -243,8 +246,12 @@ class Form {
 
 					$files_formatted = [];
 					if(is_array($files['tmp_name'])) {
-						for($i=0; $i<count($files['name']); $i++){
-							$files_formatted[$i] = array(
+						for($i = 0; $i < count($files['name']); $i++) {
+							if(@$files['error'][$i] || empty($files['tmp_name'][$i]) || empty($files['name'][$i]) || empty($files['size'][$i])) {
+								continue;
+							}
+
+							$files_formatted[] = array(
 								'name' => $files['name'][$i],
 								'type' => $files['type'][$i],
 								'tmp_name' => $files['tmp_name'][$i],
@@ -259,17 +266,13 @@ class Form {
 					}
 
 					$field_data['value'] = $files_formatted;
-					$field_data['max_size'] = $field_data['max_size'] ?? Upload::getMaxSize();
+					$field_data['to_upload'] = true;
 
 					break;
 				}
 				case 'number':
 				case 'range': {
 					$field_data['value'] = isset($income_value) && $income_value !== '' && is_numeric($income_value) ? floatval($income_value) : null;
-					break;
-				}
-				case 'radio': {
-					$field_data['value'] = isset($income_value) && $income_value !== '' ? $income_value : null;
 					break;
 				}
 			}
@@ -294,7 +297,7 @@ class Form {
 
 		switch($type) {
 			case 'color': {
-				return preg_match('/^#([a-f0-9]{6}|[a-f0-9]{3})$/i', $value) ? true : false;
+				return preg_match('/^#([a-f0-9]{6}|[a-f0-9]{3})$/i', $value ?? '') ? true : false;
 			}
 			case 'date': {
 				if((isset($field_data['multiple']) && $field_data['multiple']) || (isset($field_data['range']) && $field_data['range'])) {
@@ -318,7 +321,7 @@ class Form {
 				return filter_var($value, FILTER_VALIDATE_URL) ? true : false;
 			}
 			case 'time': {
-				return preg_match('/^[0-9]{2}:[0-9]{2}$/', $value) ? true : false;
+				return preg_match('/^[0-9]{2}:[0-9]{2}$/', $value ?? '') ? true : false;
 			}
 		}
 
@@ -378,7 +381,7 @@ class Form {
 					}
 				}
 
-				return mb_strlen($value) >= $operand_value ? true : false;
+				return mb_strlen($value ?? '') >= $operand_value ? true : false;
 			}
 			case 'max': {
 				if(isset($field_data['multiple']) && $field_data['multiple'] && in_array($type, ['date', 'datetime', 'month'])) {
@@ -414,10 +417,10 @@ class Form {
 					}
 				}
 
-				return mb_strlen($value) <= $operand_value ? true : false;
+				return mb_strlen($value ?? '') <= $operand_value ? true : false;
 			}
 			case 'extensions': {
-				if(!is_array($value)) {
+				if(isset($field_data['to_upload']) && $field_data['to_upload'] === false) {
 					return true;
 				}
 
@@ -434,15 +437,12 @@ class Form {
 				return true;
 			}
 			case 'max_size': {
-				if(!is_array($value)) {
+				if(isset($field_data['to_upload']) && $field_data['to_upload'] === false) {
 					return true;
 				}
 
 				foreach($value as $file) {
-					$file_size = $file['size'];
-					$max_size = Upload::getMaxSize();
-
-					if($file_size > $max_size) {
+					if($file['size'] > $field_data['max_size']) {
 						return false;
 					}
 				}
@@ -453,7 +453,7 @@ class Form {
 				return is_array($value) ? true : false;
 			}
 			case 'regex': {
-				return preg_match($operand_value, $value) ? true : false;
+				return preg_match($operand_value, $value ?? '') ? true : false;
 			}
 		}
 
@@ -461,8 +461,6 @@ class Form {
 	}
 
 	private static function modifyFields() {
-		self::uploadMediaFields();
-
 		foreach(self::$fields as $key => $field_data) {
 			if(isset($field_data['unset_null']) && $field_data['unset_null'] && empty($field_data['value']) && $field_data['value'] != 0 && $field_data['value'] != false) {
 				unset(self::$fields[$key]);
@@ -477,7 +475,7 @@ class Form {
 		return true;
 	}
 
-	private static function uploadMediaFields() {
+	private static function prepareMediaFields() {
 		foreach(self::$fields as $key => $field_data) {
 			if($field_data['type'] !== 'file' || empty($field_data['value']) || !isset($field_data['value'][0]['tmp_name'])) {
 				continue;
@@ -487,16 +485,30 @@ class Form {
 
 			$upload = new Upload($value, @$field_data['folder'], @$field_data['extensions']);
 
-			if(!$upload->result['status']) {
-				Server::answer(null, 'error', $upload->result['message'], 415);
+			if(!$upload->get('status')) {
+				Server::answer(null, 'error', $upload->get('message'), 415);
 			}
 
 			if(!isset($field_data['multiple']) || !$field_data['multiple']) {
-				self::$fields[$key]['value'] = @$upload->result['files'][0];
+				self::$fields[$key]['value'] = @$upload->get('files')[0];
 			}
 			else {
-				self::$fields[$key]['value'] = $upload->result['files'] ?? [];
+				self::$fields[$key]['value'] = $upload->get('files') ?? [];
 			}
+
+			self::$fields[$key]['upload'] = $upload;
+		}
+
+		return true;
+	}
+
+	private static function uploadMediaFields() {
+		foreach(self::$fields as $key => $field_data) {
+			if($field_data['type'] !== 'file' || !isset($field_data['upload']) || empty($field_data['upload'])) {
+				continue;
+			}
+
+			$field_data['upload']->execute();
 		}
 
 		return true;
@@ -522,17 +534,19 @@ class Form {
 			'rowCount' => 0
 		];
 
-		self::modifyFields();
-
 		$pk_statement = new Statement('SHOW KEYS FROM {' . $form_data['table'] . '} WHERE Key_name=\'PRIMARY\'');
 		$form_data['pk_name'] = $pk_statement->execute()->fetch()->Column_name;
 		if(empty($form_data['pk_name'])) {
 			Server::answer(null, 'error', __('engine.form.unknown_error'), 406);
 		}
 
+		self::prepareMediaFields();
+
 		if(isset($form['modify_fields']) && is_closure($form['modify_fields'])) {
 			self::$fields = $form['modify_fields'](self::$fields, $form_data);
 		}
+
+		self::modifyFields();
 
 		$foreign_data = self::getForeignFields();
 		$translation_data = self::getTranslationFields($form_data['form_name']);
@@ -592,6 +606,7 @@ class Form {
 			$form_data['item_id'] = $statement->insertId();
 		}
 
+		self::uploadMediaFields();
 		self::processForeignFields($foreign_data, $form_data);
 		self::processTranslationFields($translation_data, $form_data);
 
@@ -723,7 +738,14 @@ class Form {
 		$action = $form_data['action'];
 		$data = [
 			'table' => $table,
-			'fields' => $fields
+			'fields' => $fields,
+			'modify_sql' => function($sql, $fields, $data) {
+				if($data['action'] === 'edit') {
+					$sql .= ' AND language = :language';
+				}
+
+				return $sql;
+			},
 		];
 
 		self::set($name, $data);

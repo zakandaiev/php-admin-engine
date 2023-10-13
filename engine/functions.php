@@ -9,7 +9,7 @@ if(!function_exists('str_contains')) {
 
 if(!function_exists('str_starts_with')) {
 	function str_starts_with($haystack, $needle) {
-		$length = strlen($needle);
+		$length = strlen($needle ?? '');
 		return substr($haystack, 0, $length) === $needle;
 	}
 }

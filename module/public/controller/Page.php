@@ -44,28 +44,12 @@ class Page extends Controller {
 		$data['page']->categories = $this->model->getPageCategories($data['page']->id);
 		$data['page']->comments = $this->model->getPageComments($data['page']->id);
 		$data['page']->comments_count = $this->model->getPageCommentsCount($data['page']->id);
-		$data['page']->tags = $this->model->getPageTags($data['page']->id);
 		$data['page']->custom_fields = $this->model->getPageCustomFields($data['page']->id);
 
 		$this->model->updateViewsCounter($data['page']->id);
 
 		$this->view->setData($data);
 		$this->view->render($page_template);
-
-		return true;
-	}
-
-	public function getTag() {
-		$tag_url = $this->route['parameter']['url'];
-
-		$data['tag'] = $this->model->getTagByUrl($tag_url);
-
-		if(empty($data['tag'])) {
-			$this->view->error('404');
-		}
-
-		$this->view->setData($data);
-		$this->view->render('tag');
 
 		return true;
 	}

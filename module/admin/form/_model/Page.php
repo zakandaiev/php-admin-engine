@@ -92,15 +92,6 @@ $excerpt = [
 	'placeholder' => __('admin.page.enter_excerpt')
 ];
 
-$tags = [
-	'type' => 'select',
-	'multiple' => true,
-	'data-addable' => 'tag',
-	'foreign' => 'page_tag@page_id/tag_id',
-	'label' => __('admin.page.tags'),
-	'placeholder' => __('admin.page.enter_tags')
-];
-
 $content = [
 	'type' => 'wysiwyg',
 	'label' => __('admin.page.content'),
@@ -135,4 +126,49 @@ $no_index_no_follow = [
 	'label' => __('admin.page.set_no_index_no_follow')
 ];
 
-// $custom_fields = [];
+// TODO
+// $custom_fields = [
+// 	'type' => 'text',
+// 	'foreign' => function($value, $data) {
+// 		updateCutomFields($value, $data);
+// 	}
+// ];
+
+// function updateCutomFields($field_value, $data) {
+// 	$fields = [];
+
+// 	Module::setName('public');
+
+// 	foreach(\Module\Admin\Model\Page::getInstance()->getPageCustomFieldSets($data->form_data['item_id']) as $fieldset) {
+// 		$form_name = 'CustomFields/' . file_name($fieldset);
+
+// 		Form::check($form_name);
+
+// 		$fields = array_merge($fields, Form::processFields($form_name));
+// 	}
+
+// 	Module::setName('admin');
+
+// 	$binding = ['page_id' => $data->form_data['item_id'], 'language' => $data->fields['language']];
+
+// 	foreach($fields as $name => $value) {
+// 		$binding['name'] = slug($name, '_');
+// 		unset($binding['value']);
+
+// 		$check_exist = new Statement('SELECT id FROM {custom_field} WHERE name = :name AND page_id = :page_id AND language = :language');
+// 		$check_exist = $check_exist->execute($binding)->fetch();
+
+// 		if($check_exist) {
+// 			$sql = 'UPDATE {custom_field} SET value = :value WHERE name = :name AND page_id = :page_id AND language = :language';
+// 		} else {
+// 			$sql = 'INSERT INTO {custom_field} (name, value, page_id, language) VALUES (:name, :value, :page_id, :language)';
+// 		}
+
+// 		$binding['value'] = $value;
+
+// 		$statement = new Statement($sql);
+// 		$statement->execute($binding);
+// 	}
+
+// 	return true;
+// }

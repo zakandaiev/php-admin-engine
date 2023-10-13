@@ -94,29 +94,6 @@ CREATE TABLE IF NOT EXISTS `%prefix%_page_category` (
 	PRIMARY KEY (`category_id`, `page_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE IF NOT EXISTS `%prefix%_tag` (
-	`id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-	`url` VARCHAR(100) NOT NULL,
-	`date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	`date_edited` DATETIME on update CURRENT_TIMESTAMP DEFAULT NULL,
-	`is_enabled` BOOLEAN NOT NULL DEFAULT TRUE,
-	PRIMARY KEY  (`id`),
-	UNIQUE `url` (`url`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-CREATE TABLE IF NOT EXISTS `%prefix%_tag_translation` (
-	`tag_id` INT UNSIGNED NOT NULL,
-	`language` VARCHAR(8) NOT NULL,
-	`name` VARCHAR(300) NOT NULL,
-	PRIMARY KEY (`tag_id`, `language`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-CREATE TABLE IF NOT EXISTS `%prefix%_page_tag` (
-	`page_id` INT UNSIGNED NOT NULL,
-	`tag_id` BIGINT UNSIGNED NOT NULL,
-	PRIMARY KEY (`page_id`, `tag_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 CREATE TABLE IF NOT EXISTS `%prefix%_comment` (
 	`id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
 	`parent` BIGINT DEFAULT NULL,
@@ -175,7 +152,7 @@ CREATE TABLE IF NOT EXISTS `%prefix%_notification` (
 	PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE IF NOT EXISTS `%prefix%_message` (
+CREATE TABLE IF NOT EXISTS `%prefix%_feedback` (
 	`id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
 	`user_id` INT DEFAULT NULL,
 	`email` VARCHAR(200) NOT NULL,
@@ -232,7 +209,7 @@ INSERT INTO `%prefix%_group_translation` (`group_id`, `language`, `name`) VALUES
 
 INSERT INTO `%prefix%_group_route` (`group_id`, `route`) VALUES
 (2, 'any@/admin/**'),
-(3, 'any@/admin/message'),
+(3, 'any@/admin/feedback'),
 (3, 'any@/admin/comment'),
 (3, 'any@/admin/comment/**'),
 (3, 'any@/admin/menu'),
@@ -299,20 +276,6 @@ AFTER DELETE ON
 	`%prefix%_page`
 FOR EACH ROW
 	DELETE FROM `%prefix%_page_translation` WHERE page_id = OLD.id;
-
-CREATE TRIGGER
-	`clear_page_tag_by_page_delete`
-AFTER DELETE ON
-	`%prefix%_page`
-FOR EACH ROW
-  DELETE FROM `%prefix%_page_tag` WHERE page_id = OLD.id;
-
-CREATE TRIGGER
-	`clear_page_tag_by_tag_delete`
-AFTER DELETE ON
-	`%prefix%_tag`
-FOR EACH ROW
-  DELETE FROM `%prefix%_page_tag` WHERE tag_id = OLD.id;
 
 CREATE TRIGGER
 	`clear_menu_translation`

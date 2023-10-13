@@ -59,17 +59,17 @@ $interface_builder = new InterfaceBuilder([
 		],
 		'translations' => [
 			'type' => function($value, $item) {
-				$html = '';
+				$html = '<div class="d-flex gap-1">';
 				$count_translations = count(array_intersect($value, array_keys(site('languages')))) + 1;
 				$count_aviable_languages = count(site('languages'));
 
 				foreach($value as $language) {
-					$html .= '<a href="' . site('url_language') . '/admin/page/edit/' . $item->id . '/translation/edit/' . $language . '" title="' . lang($language, 'name') . '"><img width="18" height="18" class="d-inline-block mw-100 radius-circle" src="<?= Asset::url() ?>/' . lang($language, 'icon') . '" alt="' . $language . '"></a>';
+					$html .= '<a href="' . site('url_language') . '/admin/page/edit/' . $item->id . '/translation/edit/' . $language . '" class="flex-shrink-0 d-inline-block w-2rem h-2rem" data-tooltip="top" title="' . __('admin.page.edit_translation', __('locale.' . $language)) . '"><img class="d-inline-block w-100 h-100 radius-circle" src="' . Asset::url() . '/' . lang('icon', $language) . '" alt="' . $language . '"></a>';
 				}
 
 				if($count_translations < $count_aviable_languages) {
-					$html .= '<div class="dropdown d-inline-block dropdown_right-top">';
-					$html .= '<button type="button" class="table__action"><i class="icon icon-plus"></i></button>';
+					$html .= '<div class="flex-shrink-0 dropdown d-inline-flex w-2rem h-2rem dropdown_right-top">';
+					$html .= '<button type="button" class="table__action flex justify-content-center align-items-center w-100 h-100" data-tooltip="top" title="' . __('admin.page.add_translation') . '"><i class="icon icon-plus"></i></button>';
 					$html .= '<div class="dropdown__menu">';
 
 					foreach(site('languages') as $language) {
@@ -84,8 +84,10 @@ $interface_builder = new InterfaceBuilder([
 					}
 
 					$html .= '</div>';
-					$html .= '</div>';					
+					$html .= '</div>';
 				}
+
+				$html .= '</div>';
 
 				return $html;
 			},

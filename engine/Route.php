@@ -63,8 +63,10 @@ class Route {
 			}
 		}
 
+		// TODO - handle route part with * or **
+
 		foreach($uri_parts as $key => $part) {
-			if($part !== $route_parts[$key]) {
+			if($part !== @$route_parts[$key]) {
 				return false;
 			}
 		}
