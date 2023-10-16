@@ -135,42 +135,37 @@ class Router {
 			return false;
 		}
 
-		$statement = new Statement('SELECT * FROM {form}');
+		$statement = new Statement('SELECT * FROM {form} WHERE token = :token ORDER BY date_created DESC LIMIT 1');
 
-		$forms = $statement->execute()->fetchAll();
+		$form = $statement->execute(['token' => Request::$uri_parts[0]])->fetch();
 
-		if(empty($forms)) {
+		if(empty($form)) {
 			return false;
 		}
 
-		$timestamp_now = time();
-
-		foreach($forms as $form) {
-			$timestamp_created = strtotime($form->date_created);
-			$timestamp_diff = $timestamp_now - $timestamp_created;
-
-			if(Request::$uri === ('/' . $form->token)) {
-				Module::loadHooks();
-				Module::setName($form->module);
-
-				if(Request::$ip !== $form->ip) {
-					Server::answer(null, 'error', __('engine.form.forbidden'), 403);
-				}
-
-				if($timestamp_diff > LIFETIME['form']) {
-					Server::answer(null, 'error', __('engine.form.inactive'), 409);
-				}
-
-				self::initRoute();
-				new User();
-
-				Form::execute($form->action, $form->form_name, $form->item_id);
-
-				Server::answer();
-			}
+		if(Request::$ip !== $form->ip) {
+			Server::answer(null, 'error', __('engine.form.forbidden'), 403);
 		}
 
-		return false;
+		$timestamp_now = time();
+		$timestamp_created = strtotime($form->date_created);
+		$timestamp_diff = $timestamp_now - $timestamp_created;
+
+		if($timestamp_diff > LIFETIME['form']) {
+			Server::answer(null, 'error', __('engine.form.inactive'), 409);
+		}
+
+		Module::loadHooks();
+		Module::setName($form->module);
+
+		self::initRoute();
+		new User();
+
+		Form::execute($form->action, $form->form_name, $form->item_id, $form->is_translation);
+
+		Server::answer();
+
+		return true;
 	}
 
 	private static function check404() {

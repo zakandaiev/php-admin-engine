@@ -8,16 +8,16 @@ class Form {
 	private static $fields = [];
 	private static $form_formatted_fields = [];
 
-	public static function add($form_name) {
-		return self::generateToken(__FUNCTION__, $form_name);
+	public static function add($form_name, $is_translation = false) {
+		return self::generateToken(__FUNCTION__, $form_name, null, $is_translation);
 	}
 
-	public static function edit($form_name, $item_id) {
-		return self::generateToken(__FUNCTION__, $form_name, $item_id);
+	public static function edit($form_name, $item_id, $is_translation = false) {
+		return self::generateToken(__FUNCTION__, $form_name, $item_id, $is_translation);
 	}
 
-	public static function delete($form_name, $item_id) {
-		return self::generateToken(__FUNCTION__, $form_name, $item_id);
+	public static function delete($form_name, $item_id, $is_translation = false) {
+		return self::generateToken(__FUNCTION__, $form_name, $item_id, $is_translation);
 	}
 
 	public static function get($form_name = null) {
@@ -74,7 +74,7 @@ class Form {
 		foreach($error_messages as $field_name => $message_key) {
 			$message = __("{$module_name}.{$form['table']}.{$field_name}.validation.{$message_key}");
 
-			if(isset($field_data['message']) && isset($field_data['message'][$message_key])) {
+			if(isset($field_data['message'][$message_key])) {
 				$message = $field_data['message'][$message_key];
 			}
 
@@ -84,10 +84,10 @@ class Form {
 		return true;
 	}
 
-	public static function execute($action, $form_name, $item_id = null, $force_no_answer = false) {
+	public static function execute($action, $form_name, $item_id = null, $is_translation = false, $force_no_answer = false) {
 		self::clearExpired();
 
-		$form = self::load($form_name);
+		$form = self::load($form_name, $is_translation);
 
 		$method = Request::$method;
 		$income_data =  Request::$$method;
@@ -115,18 +115,25 @@ class Form {
 		return true;
 	}
 
-	private static function generateToken($action, $form_name, $item_id = null) {
+	private static function generateToken($action, $form_name, $item_id = null, $is_translation = false) {
 		if(!self::exists($form_name)) {
 			return null;
 		}
 
-		if(self::tokenExistsAndActive($action, $form_name, $item_id)) {
+		if(self::tokenExistsAndActive($action, $form_name, $item_id, $is_translation)) {
 			return Request::$base . '/' . self::$token;
 		}
 
 		$token = Hash::token();
 
-		$query_params = ['module' => Module::getName(), 'token' => $token, 'action' => $action, 'form_name' => $form_name, 'ip' => Request::$ip];
+		$query_params = [
+			'module' => Module::getName(),
+			'token' => $token,
+			'action' => $action,
+			'form_name' => $form_name,
+			'ip' => Request::$ip,
+			'is_translation' => $is_translation
+		];
 
 		$query_append_field = '';
 		$query_append_binding = '';
@@ -138,9 +145,9 @@ class Form {
 
 		$sql = '
 			INSERT INTO {form}
-				(token, module, action, form_name, ip' . $query_append_field . ')
+				(token, module, action, form_name, is_translation, ip' . $query_append_field . ')
 			VALUES
-				(:token, :module, :action, :form_name, :ip' . $query_append_binding . ')
+				(:token, :module, :action, :form_name, :is_translation, :ip' . $query_append_binding . ')
 		';
 
 		$statement = new Statement($sql);
@@ -149,9 +156,15 @@ class Form {
 		return Request::$base . "/$token";
 	}
 
-	private static function tokenExistsAndActive($action, $form_name = '', $item_id = '') {
-		$query_defining = 'module = :module AND action = :action AND form_name = :form_name AND ip = :ip';
-		$query_params = ['module' => Module::getName(), 'action' => $action, 'form_name' => $form_name, 'ip' => Request::$ip];
+	private static function tokenExistsAndActive($action, $form_name = '', $item_id = '', $is_translation = false) {
+		$query_defining = 'module = :module AND action = :action AND form_name = :form_name AND is_translation = :is_translation AND ip = :ip';
+		$query_params = [
+			'module' => Module::getName(),
+			'action' => $action,
+			'form_name' => $form_name,
+			'is_translation' => $is_translation,
+			'ip' => Request::$ip
+		];
 
 		if($action !== 'add') {
 			$query_defining .= ' AND item_id = :item_id';
@@ -188,7 +201,7 @@ class Form {
 		return true;
 	}
 
-	private static function load($form_name) {
+	private static function load($form_name, $is_translation = false) {
 		if(self::has($form_name)) {
 			return self::get($form_name);
 		}
@@ -202,6 +215,33 @@ class Form {
 		$form = Path::file('form') . "/$form_name.php";
 
 		$form_data = require $form;
+
+		if($is_translation) {
+			$form_name = $form_name . '_translation';
+
+			$form_data_translation = [
+				'table' => $form_data['table'] . '_translation',
+				'fields' => [],
+				'modify_sql' => function($sql, $fields, $data) {
+					if($data['action'] === 'edit') {
+						$sql .= ' AND language = :language';
+					}
+
+					return $sql;
+				},
+				'message' => @$form_data['submit_message_translation']
+			];
+
+			$translation_fields = $form_data['translation'] ?? [];
+
+			foreach($form_data['fields'] as $key => $field) {
+				if(in_array($key, $translation_fields)) {
+					$form_data_translation['fields'][$key] = $field;
+				}
+			}
+
+			$form_data = $form_data_translation;
+		}
 
 		self::set($form_name, $form_data);
 
@@ -733,6 +773,11 @@ class Form {
 			return false;
 		}
 
+		if(!isset($fields['language']['value']) || empty($fields['language']['value'])) {
+			$fields['language']['type'] = 'hidden';
+			$fields['language']['value'] = Language::current();
+		}
+
 		$name = $form_data['form_name'] . '_translation';
 		$table = $form_data['table'] . '_translation';
 		$action = $form_data['action'];
@@ -749,7 +794,7 @@ class Form {
 		];
 
 		self::set($name, $data);
-		self::execute($action, $name, $form_data['item_id'], true);
+		self::execute($action, $name, $form_data['item_id'], false, true);
 
 		return true;
 	}

@@ -76,7 +76,7 @@ $form_builder->setFieldValue('template', array_map(function($template) {
 				<span><?= $title ?></span>
 			</h2>
 
-			<form action="<?= Form::edit($form_name, $page->id) ?>" data-redirect="<?= site('url_language') ?>/admin/page" data-validate>
+			<form action="<?= Form::edit($form_name, $page->id, $is_translation) ?>" data-redirect="<?= site('url_language') ?>/admin/page" data-validate>
 				<div class="row gap-xs">
 					<div class="col-xs-12 col-md-8">
 						<div class="tab">
@@ -145,11 +145,12 @@ $form_builder->setFieldValue('template', array_map(function($template) {
 										<?= $form_builder->renderCol('allow_comment'); ?>
 										<?= $form_builder->renderCol('hide_comments'); ?>
 										<?= $form_builder->renderCol('is_enabled'); ?>
-										<?= $form_builder->renderCol('language'); ?>
 									</div>
 								</div>
 							</div>
 						<?php endif; ?>
+
+						<?= $form_builder->renderCol('language'); ?>
 
 					</div>
 				</div>

@@ -19,7 +19,10 @@
 4. Create & enjoy ;)
 
 ## TODO
+* engine: remove language from functions, request uri_parts etc.
+* engine: refactor Router checkForm()
 * engine: modules install
+* engine: remake Form from static to non-static concept
 * admin: create form-behavior.js
 * admin: create foreign-form.js
 * admin: create collapse.js

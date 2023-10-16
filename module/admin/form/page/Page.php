@@ -49,7 +49,7 @@ return [
 					continue;
 				}
 
-				Form::execute($data['action'], $data['form_name'], $child->page_id, true);
+				Form::execute($data['action'], $data['form_name'], $child->page_id, false, true);
 			}
 		}
 	},
