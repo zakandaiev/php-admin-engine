@@ -229,22 +229,4 @@ class Page extends \Engine\Model {
 
 		return $fieldsets;
 	}
-
-	public function createTranslation($data) {
-		$columns = implode(', ', array_keys($data));
-
-		$bindings = ':' . implode(', :', array_keys($data));
-
-		$sql = 'INSERT INTO {page_translation} (' . $columns . ') VALUES (' . $bindings . ')';
-
-		$statement = new Statement($sql);
-
-		$statement->execute($data);
-
-		if($statement->rowCount() > 0) {
-			return true;
-		}
-
-		return false;
-	}
 }

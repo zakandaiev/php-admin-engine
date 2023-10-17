@@ -301,7 +301,7 @@ Hook::run('admin_sidebar_append', [
 		$count = \Module\Admin\Model\Contact::getInstance()->countUnreadContacts();
 		return $count > 0 ? $count : null;
 	},
-	'name' => __('admin.sidebar.messages'),
+	'name' => __('admin.sidebar.feedback'),
 	'route' => '/admin/contact'
 ]);
 Hook::run('admin_sidebar_append', [

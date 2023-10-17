@@ -77,7 +77,7 @@ class Form {
 				$message = $field_data['message'][$message_key];
 			}
 
-			Server::answer(null, 'error', $message, 409);
+			Server::answer(null, 'error', $message, 405);
 		}
 
 		return true;
@@ -575,7 +575,7 @@ class Form {
 		$pk_statement = new Statement('SHOW KEYS FROM {' . $form_data['table'] . '} WHERE Key_name=\'PRIMARY\'');
 		$form_data['pk_name'] = $pk_statement->execute()->fetch()->Column_name;
 		if(empty($form_data['pk_name'])) {
-			Server::answer(null, 'error', __('engine.form.unknown_error'), 406);
+			Server::answer(null, 'error', __('engine.form.unknown_error'), 409);
 		}
 
 		self::prepareMediaFields();
@@ -611,7 +611,7 @@ class Form {
 				break;
 			}
 			default: {
-				Server::answer(null, 'error', __('engine.form.unknown_error'), 406);
+				Server::answer(null, 'error', __('engine.form.unknown_error'), 409);
 			}
 		}
 

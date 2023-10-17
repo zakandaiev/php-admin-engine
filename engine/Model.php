@@ -19,7 +19,29 @@ abstract class Model {
 		return self::$instances[$class];
 	}
 
+	public function createTranslation($table, $data) {
+		if(!is_array($data) || empty($data) || !isset($data['language'])) {
+			return false;
+		}
+
+		$columns = implode(', ', array_keys($data));
+		$bindings = ':' . implode(', :', array_keys($data));
+
+		$sql = 'INSERT INTO {' . $table . '} (' . $columns . ') VALUES (' . $bindings . ')';
+
+		$statement = new Statement($sql);
+
+		$statement->execute($data);
+
+		if($statement->rowCount() > 0) {
+			return true;
+		}
+
+		return false;
+	}
+
 	protected function executeStatementWithOptions($sql, $options = []) {
+		// TODO
 		foreach(['fields', 'where', 'order'] as $replacement_type) {
 			$replacement = '$2';
 			$replacement_pattern = '/\/' . $replacement_type . '(\+)?\/([\s\S]+)\/' . $replacement_type . '[\+]?\//miu';
@@ -59,7 +81,8 @@ abstract class Model {
 		if($options['paginate']) {
 			if($options['limit']) {
 				$statement->paginate(null, ['limit' => $options['limit']]);
-			} else {
+			}
+			else {
 				$statement->paginate();
 			}
 		}

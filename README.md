@@ -19,11 +19,8 @@
 4. Create & enjoy ;)
 
 ## TODO
-* engine: replace Class::$var to Class::get('var')
-* engine: remove language from functions, request uri_parts etc.
-* engine: refactor Router checkForm()
 * engine: modules install
-* engine: remake Form from static to non-static concept
+* engine: remake Form from static to non-static concept (static should be only token creation methods)
 * admin: create form-behavior.js
 * admin: create foreign-form.js
 * admin: create collapse.js

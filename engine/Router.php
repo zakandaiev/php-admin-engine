@@ -7,8 +7,8 @@ class Router {
 
 	public static function initialize() {
 		self::loadModuleRoutes();
-		self::checkRoutes();
 		self::checkForm();
+		self::checkRoutes();
 		self::check404();
 		self::setController();
 	}
@@ -67,6 +67,51 @@ class Router {
 		}
 
 		Module::setName(null);
+
+		return true;
+	}
+
+	protected static function checkForm() {
+		if(Request::method() === 'get') {
+			return false;
+		}
+
+		$token = Request::uri_parts(0);
+
+		if(empty($token)) {
+			return false;
+		}
+
+		$statement = new Statement('SELECT * FROM {form} WHERE token = :token ORDER BY date_created DESC LIMIT 1');
+
+		$form = $statement->execute(['token' => Request::uri_parts(0)])->fetch();
+
+		if(empty($form)) {
+			return false;
+		}
+
+		if(Request::ip() !== $form->ip) {
+			Server::answer(null, 'error', __('engine.form.forbidden'), 403);
+		}
+
+		$timestamp_now = time();
+		$timestamp_created = strtotime($form->date_created);
+		$timestamp_diff = $timestamp_now - $timestamp_created;
+
+		if($timestamp_diff > LIFETIME['form']) {
+			Server::answer(null, 'error', __('engine.form.inactive'), 405);
+		}
+
+		Module::loadHooks();
+		Module::setName($form->module);
+
+		self::initRoute();
+
+		new User();
+
+		Form::execute($form->action, $form->form_name, $form->item_id, $form->is_translation);
+
+		Server::answer();
 
 		return true;
 	}
@@ -165,48 +210,10 @@ class Router {
 		return true;
 	}
 
-	protected static function checkForm() {
-		if(Request::method() === 'get') {
-			return false;
-		}
-
-		$statement = new Statement('SELECT * FROM {form} WHERE token = :token ORDER BY date_created DESC LIMIT 1');
-
-		$form = $statement->execute(['token' => Request::uri_parts(0)])->fetch();
-
-		if(empty($form)) {
-			return false;
-		}
-
-		if(Request::ip() !== $form->ip) {
-			Server::answer(null, 'error', __('engine.form.forbidden'), 403);
-		}
-
-		$timestamp_now = time();
-		$timestamp_created = strtotime($form->date_created);
-		$timestamp_diff = $timestamp_now - $timestamp_created;
-
-		if($timestamp_diff > LIFETIME['form']) {
-			Server::answer(null, 'error', __('engine.form.inactive'), 409);
-		}
-
-		Module::loadHooks();
-		Module::setName($form->module);
-
-		self::initRoute();
-		new User();
-
-		Form::execute($form->action, $form->form_name, $form->item_id, $form->is_translation);
-
-		Server::answer();
-
-		return true;
-	}
-
 	protected static function check404() {
 		if(empty(self::$route)) {
 			if(Request::method() !== 'get') {
-				Server::answer(null, 'error', 'Request not found', 404);
+				Server::answer(null, 'error', 'Not found', 404);
 			}
 
 			$module_name = 'public';

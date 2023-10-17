@@ -41,7 +41,7 @@ class Request {
 			self::$csrf_token = self::setCSRF();
 		}
 		else if(!self::verifyCSRF()) {
-			Server::answer(null, 'error', 'Bad Request', 400);
+			Server::answer(null, 'error', 'Forbidden', 403);
 		}
 
 		return true;

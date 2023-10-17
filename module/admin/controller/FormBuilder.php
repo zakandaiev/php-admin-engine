@@ -10,8 +10,9 @@ class FormBuilder {
 	protected $form_name;
 	protected $form_data = [];
 	protected $fields = [];
+	protected $is_translation;
 
-	public function __construct($forms, $module = null) {
+	public function __construct($forms, $is_translation = false, $module = null) {
 		$_forms = [];
 
 		if(!is_array($forms)) {
@@ -36,8 +37,17 @@ class FormBuilder {
 
 			$this->form_name = $form_name;
 			$this->form_data = $form_data;
-			$this->fields = array_merge($this->fields, $form_data['fields']);
+
+			foreach($form_data['fields'] as $field_name => $field) {
+				if($is_translation && isset($form_data['translation']) && !in_array($field_name, $form_data['translation'])) {
+					continue;
+				}
+
+				$this->fields[$field_name] = $field;
+			}
 		}
+
+		$this->is_translation = $is_translation;
 
 		return $this;
 	}
@@ -57,7 +67,7 @@ class FormBuilder {
 			return false;
 		}
 
-		$token = Form::$action($this->form_name, $item_id);
+		$token = Form::$action($this->form_name, $item_id, $this->is_translation);
 
 		if(empty($token)) {
 			return false;

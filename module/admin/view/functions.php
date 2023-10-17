@@ -31,6 +31,41 @@ Asset::js('js/wysiwyg', 'defer');
 // Asset::js('js/translations', 'defer', '/admin/translation/$module/$language');
 Asset::js('js/main', 'defer');
 
+############################# INTERFACE #############################
+function getInterfaceTranslationsColumn($table, $value, $item) {
+	$html = '<div class="d-flex gap-1">';
+	$count_translations = count(array_intersect($value, array_keys(site('languages')))) + 1;
+	$count_aviable_languages = count(site('languages'));
+
+	foreach($value as $language) {
+		$html .= '<a href="' . site('url_language') . '/admin/' . $table . '/edit/' . $item->id . '/translation/edit/' . $language . '" class="flex-shrink-0 d-inline-block w-2rem h-2rem" data-tooltip="top" title="' . __('admin.' . $table . '.edit_translation', __('locale.' . $language)) . '"><img class="d-inline-block w-100 h-100 radius-circle" src="' . Asset::url() . '/' . lang('icon', $language) . '" alt="' . $language . '"></a>';
+	}
+
+	if($count_translations < $count_aviable_languages) {
+		$html .= '<div class="flex-shrink-0 dropdown d-inline-flex w-2rem h-2rem dropdown_right-top">';
+		$html .= '<button type="button" class="table__action flex justify-content-center align-items-center w-100 h-100" data-tooltip="top" title="' . __('admin.' . $table . '.add_translation') . '"><i class="icon icon-plus"></i></button>';
+		$html .= '<div class="dropdown__menu">';
+
+		foreach(site('languages') as $language) {
+			if($language['key'] === $item->language || in_array($language['key'], $value)) {
+				continue;
+			}
+
+			$html .= '<a href="' . site('url_language') . '/admin/' . $table . '/edit/' . $item->id . '/translation/add/' . $language['key']  . '" class="dropdown__item d-flex align-items-center gap-2">';
+			$html .= '<img src="' . Asset::url() . '/' . lang('icon', $language['key']) . '" alt="' . lang('locale', $language['key']) . '" class="flex-shrink-0 d-inline-block h-1em">';
+			$html .= '<span>' . __("locale.{$language['key']}") . '</span>';
+			$html .= '</a>';
+		}
+
+		$html .= '</div>';
+		$html .= '</div>';
+	}
+
+	$html .= '</div>';
+
+	return $html;
+}
+
 // TODO
 // ############################# NOTIFICATIONS #############################
 // function notification($type, $key = null) {

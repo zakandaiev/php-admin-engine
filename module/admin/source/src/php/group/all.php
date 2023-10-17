@@ -21,6 +21,12 @@ $interface_builder = new InterfaceBuilder([
 			'type' => 'text',
 			'title' => __('admin.group.name')
 		],
+		'translations' => [
+			'type' => function($value, $item) {
+				return getInterfaceTranslationsColumn('group', $value, $item);
+			},
+			'title' => __('admin.group.translations')
+		],
 		'count_routes' => [
 			'type' => function($value, $item) {
 				if($item->access_all) {

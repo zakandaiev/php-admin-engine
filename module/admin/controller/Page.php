@@ -94,7 +94,7 @@ class Page extends AdminController {
 			'seo_image' => $page->seo_image
 		];
 
-		if($this->model->createTranslation($translation)) {
+		if($this->model->createTranslation('page_translation', $translation)) {
 			Server::redirect(site('url_language') . '/admin/page/edit/' . $page_id . '/translation/edit/' . $translation_language);
 		}
 		else {

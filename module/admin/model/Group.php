@@ -6,13 +6,14 @@ use Engine\Statement;
 use Engine\Module;
 use Engine\User;
 
-class Group {
+class Group extends \Engine\Model {
 	public function getGroups() {
 		$sql = '
 			SELECT
 				*,
 				(SELECT COUNT(*) FROM {group_route} WHERE group_id = t_group.id) as count_routes,
-				(SELECT COUNT(*) FROM {group_user} WHERE group_id = t_group.id) as count_users
+				(SELECT COUNT(*) FROM {group_user} WHERE group_id = t_group.id) as count_users,
+				(SELECT GROUP_CONCAT(language) FROM {group_translation} WHERE group_id = t_group.id AND language<>:language) as translations
 			FROM
 				{group} t_group
 			INNER JOIN
@@ -34,7 +35,11 @@ class Group {
 
 		$groups = new Statement($sql);
 
-		$groups = $groups->filter('group')->paginate()->execute(['language' => site('language_current')])->fetchAll();
+		$groups = $groups->filter('group')->paginate()->execute(['language' => site('language')])->fetchAll();
+
+		foreach($groups as $group) {
+			$group->translations = !empty($group->translations) ? explode(',', $group->translations) : [];
+		}
 
 		return $groups;
 	}
@@ -77,7 +82,7 @@ class Group {
 		return $users;
 	}
 
-	public function getGroupById($id) {
+	public function getGroupById($id, $language = null) {
 		$sql = '
 			SELECT
 				*,
@@ -106,7 +111,7 @@ class Group {
 
 		$group = new Statement($sql);
 
-		return $group->execute(['id' => $id, 'language' => site('language_current')])->fetch();
+		return $group->execute(['id' => $id, 'language' => $language ?? site('language')])->fetch();
 	}
 
 	public function getGroupRoutesById($group_id) {

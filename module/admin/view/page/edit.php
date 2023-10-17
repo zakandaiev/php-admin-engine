@@ -6,7 +6,6 @@ Page::set('title', $title);
 
 Page::breadcrumb('add', ['name' => __('admin.page.pages'), 'url' => '/admin/page']);
 
-
 if($is_translation) {
 	$crumb_edit_url = '/admin/page/edit/' . $page_origin->id;
 

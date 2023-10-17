@@ -55,6 +55,8 @@ Router::register('get', '/admin/user/edit/$id', 'User@getEdit');
 Router::register('get', '/admin/group', 'Group@getAll');
 Router::register('get', '/admin/group/add', 'Group@getAdd');
 Router::register('get', '/admin/group/edit/$id', 'Group@getEdit');
+Router::register('get', '/admin/group/edit/$id/translation/add/$language', 'Group@getAddTranslation');
+Router::register('get', '/admin/group/edit/$id/translation/edit/$language', 'Group@getEdit');
 
 // ############################# SETTING #############################
 Router::register('get', '/admin/setting/$section', 'Setting@getSection');

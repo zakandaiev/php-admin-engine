@@ -283,6 +283,10 @@ class InterfaceBuilder {
 				$html .= $value;
 				break;
 			}
+			case 'json': {
+				$html .= json_encode($value);
+				break;
+			}
 			default: {
 				$html .= '<i class="icon icon-minus"></i>';
 				break;

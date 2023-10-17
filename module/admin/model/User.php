@@ -4,7 +4,7 @@ namespace Module\Admin\Model;
 
 use Engine\Statement;
 
-class User {
+class User extends \Engine\Model {
 	public function getUsers() {
 		$sql = '
 			SELECT
