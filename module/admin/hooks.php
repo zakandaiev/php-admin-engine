@@ -50,32 +50,32 @@ Hook::register('admin_sidebar_append_after', function($position, $append_route) 
 
 // ############################# TRANSLATION #############################
 // Hook::register('translation_add', function($data) {
-// 	Log::write('Translation: ' . $data['file'] . ' added for ' . $data['module'] . ' module by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'translation');
+// 	Log::write('Translation: ' . $data['file'] . ' added for ' . $data['module'] . ' module by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'translation');
 // });
 // Hook::register('translation_edit', function($data) {
-// 	Log::write('Translation: ' . $data['file'] . ' edited for ' . $data['module'] . ' module by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'translation');
+// 	Log::write('Translation: ' . $data['file'] . ' edited for ' . $data['module'] . ' module by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'translation');
 // });
 
 // ############################# GROUP #############################
 // Hook::register('group_add', function($data) {
-// 	Log::write('Group ID: ' . $data->form_data['item_id'] . ' added by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'group');
+// 	Log::write('Group ID: ' . $data->form_data['item_id'] . ' added by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'group');
 // });
 // Hook::register('group_edit', function($data) {
-// 	Log::write('Group ID: ' . $data->form_data['item_id'] . ' edited by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'group');
+// 	Log::write('Group ID: ' . $data->form_data['item_id'] . ' edited by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'group');
 // });
 // Hook::register('group_delete', function($data) {
-// 	Log::write('Group ID: ' . $data->form_data['item_id'] . ' deleted by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'group');
+// 	Log::write('Group ID: ' . $data->form_data['item_id'] . ' deleted by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'group');
 // });
 
 // ############################# USER #############################
 // Hook::register('user_add', function($data) {
-// 	Log::write('User ID: ' . $data->form_data['item_id'] . ' added by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'user');
+// 	Log::write('User ID: ' . $data->form_data['item_id'] . ' added by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'user');
 // });
 // Hook::register('user_edit', function($data) {
-// 	Log::write('User ID: ' . $data->form_data['item_id'] . ' edited by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'user');
+// 	Log::write('User ID: ' . $data->form_data['item_id'] . ' edited by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'user');
 // });
 // Hook::register('user_delete', function($data) {
-// 	Log::write('User ID: ' . $data->form_data['item_id'] . ' deleted by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'user');
+// 	Log::write('User ID: ' . $data->form_data['item_id'] . ' deleted by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'user');
 // });
 
 // ############################# COMMENT #############################
@@ -103,39 +103,39 @@ Hook::register('admin_sidebar_append_after', function($position, $append_route) 
 // 		Notification::create($notification_type, $page->author, $comment_data);
 // 	}
 
-// 	Log::write('Comment ID: ' . $data->form_data['item_id'] . ' added by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'comment');
+// 	Log::write('Comment ID: ' . $data->form_data['item_id'] . ' added by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'comment');
 // });
 // Hook::register('comment_edit', function($data) {
-// 	Log::write('Comment ID: ' . $data->form_data['item_id'] . ' edited by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'comment');
+// 	Log::write('Comment ID: ' . $data->form_data['item_id'] . ' edited by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'comment');
 // });
 // Hook::register('comment_delete', function($data) {
-// 	Log::write('Comment ID: ' . $data->form_data['item_id'] . ' deleted by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'comment');
+// 	Log::write('Comment ID: ' . $data->form_data['item_id'] . ' deleted by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'comment');
 // });
 // Hook::register('comment_toggle', function($data) {
 // 	$type = $data->fields['is_approved'] ? 'approved' : 'disapproved';
 
-// 	Log::write('Comment ID: ' . $data->form_data['item_id'] . ' ' . $type . ' by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'comment');
+// 	Log::write('Comment ID: ' . $data->form_data['item_id'] . ' ' . $type . ' by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'comment');
 // });
 
 // ############################# MENU #############################
 // Hook::register('menu_add', function($data) {
-// 	Log::write('Menu ID: ' . $data->form_data['item_id'] . ' added by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'menu');
+// 	Log::write('Menu ID: ' . $data->form_data['item_id'] . ' added by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'menu');
 // });
 // Hook::register('menu_edit', function($data) {
-// 	Log::write('Menu ID: ' . $data->form_data['item_id'] . ' edited by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'menu');
+// 	Log::write('Menu ID: ' . $data->form_data['item_id'] . ' edited by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'menu');
 // });
 // Hook::register('menu_delete', function($data) {
-// 	Log::write('Menu ID: ' . $data->form_data['item_id'] . ' deleted by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'menu');
+// 	Log::write('Menu ID: ' . $data->form_data['item_id'] . ' deleted by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'menu');
 // });
 // Hook::register('menu_items_edit', function($data) {
-// 	Log::write('Menu ID: ' . $data->form_data['item_id'] . ' changed items by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'menu');
+// 	Log::write('Menu ID: ' . $data->form_data['item_id'] . ' changed items by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'menu');
 // });
 
 // ############################# PAGE #############################
 // Hook::register('page_add', function($data) {
 // 	Sitemap::update();
 
-// 	Log::write('Page ID: ' . $data->form_data['item_id'] . ' added by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'page');
+// 	Log::write('Page ID: ' . $data->form_data['item_id'] . ' added by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'page');
 
 // 	$page_origin = \Module\Admin\Model\Page::getInstance()->getPage($data->form_data['item_id']);
 
@@ -156,13 +156,13 @@ Hook::register('admin_sidebar_append_after', function($position, $append_route) 
 // Hook::register('page_edit', function($data) {
 // 	Sitemap::update();
 
-// 	Log::write('Page ID: ' . $data->form_data['item_id'] . ' edited by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'page');
+// 	Log::write('Page ID: ' . $data->form_data['item_id'] . ' edited by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'page');
 // });
 
 // Hook::register('page_delete', function($data) {
 // 	Sitemap::update();
 
-// 	Log::write('Page ID: ' . $data->form_data['item_id'] . ' deleted by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'page');
+// 	Log::write('Page ID: ' . $data->form_data['item_id'] . ' deleted by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'page');
 // });
 
 // ############################# PROFILE #############################
@@ -171,29 +171,29 @@ Hook::register('admin_sidebar_append_after', function($position, $append_route) 
 
 // 	Notification::create('user_change_login', $data->id, $data);
 
-// 	Log::write('User ID: ' . $data->id . ' changed login from IP: ' . Request::$ip, 'user');
+// 	Log::write('User ID: ' . $data->id . ' changed login from IP: ' . Request::ip(), 'user');
 // });
 // Hook::register('user_change_password', function($data) {
 // 	Mail::send('ChangePassword', $data->email, $data);
 
 // 	Notification::create('user_change_password', $data->id, $data);
 
-// 	Log::write('User ID: ' . $data->id . ' changed password from IP: ' . Request::$ip, 'user');
+// 	Log::write('User ID: ' . $data->id . ' changed password from IP: ' . Request::ip(), 'user');
 // });
 // Hook::register('user_change_email', function($data) {
 // 	Mail::send('ChangeEmail', $data->email, $data);
 
 // 	Notification::create('user_change_email', $data->id, $data);
 
-// 	Log::write('User ID: ' . $data->id . ' changed email from IP: ' . Request::$ip, 'user');
+// 	Log::write('User ID: ' . $data->id . ' changed email from IP: ' . Request::ip(), 'user');
 // });
 // Hook::register('user_change_name', function($data) {
 // 	Notification::create('user_change_name', $data->id, $data);
 
-// 	Log::write('User ID: ' . $data->id . ' changed name from IP: ' . Request::$ip, 'user');
+// 	Log::write('User ID: ' . $data->id . ' changed name from IP: ' . Request::ip(), 'user');
 // });
 // Hook::register('user_change_contacts', function($data) {
-// 	Log::write('User ID: ' . $data->form_data['item_id'] . ' changed contact information from IP: ' . Request::$ip, 'user');
+// 	Log::write('User ID: ' . $data->form_data['item_id'] . ' changed contact information from IP: ' . Request::ip(), 'user');
 // });
 
 // ############################# RUN #############################

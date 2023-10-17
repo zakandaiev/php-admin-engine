@@ -3,7 +3,7 @@
 namespace Engine;
 
 class Router {
-	public static $route = [];
+	protected static $route = [];
 
 	public static function initialize() {
 		self::loadModuleRoutes();
@@ -13,7 +13,42 @@ class Router {
 		self::setController();
 	}
 
-	private static function loadModuleRoutes() {
+	public static function register($method, $path, $controller, $option = []) {
+		if(!in_array($method, ['get', 'post', 'put', 'patch', 'delete', 'options', 'any'])) {
+			throw new \Exception(sprintf('Invalid method declaration for %s route in %s module.', $path, Module::getName()));
+			return false;
+		}
+
+		if(is_closure($controller)) {
+			$route_controller = $controller;
+			$route_action = null;
+		}
+		else {
+			@list($route_controller, $route_action) = explode('@', $controller, 2);
+
+			if(empty($route_controller) || empty($route_action)) {
+				throw new \Exception(sprintf('Invalid controller declaration for %s route in %s module.', $path, Module::getName()));
+				return false;
+			}
+		}
+
+		$route = [
+			'method' => $method,
+			'path' => $path,
+			'controller' => $route_controller,
+			'action' => $route_action,
+			'option' => $option
+		];
+
+		$routes = Module::get('routes');
+		$routes[] = $route;
+
+		Module::set('routes', $routes);
+
+		return true;
+	}
+
+	protected static function loadModuleRoutes() {
 		foreach(Module::get() as $module) {
 			if(!$module['is_enabled']) {
 				continue;
@@ -36,7 +71,7 @@ class Router {
 		return true;
 	}
 
-	private static function checkRoutes() {
+	protected static function checkRoutes() {
 		foreach(Module::get() as $module) {
 			if(!$module['is_enabled']) {
 				continue;
@@ -54,10 +89,10 @@ class Router {
 		return false;
 	}
 
-	private static function checkRoute($module, $route) {
+	protected static function checkRoute($module, $route) {
 		Module::setName($module);
 
-		$language = Request::$uri_parts[0];
+		$language = Request::uri_parts(0);
 
 		if(Language::has($language)) {
 			Language::setCurrent($language);
@@ -66,7 +101,7 @@ class Router {
 		$method = strtolower(trim($route['method'] ?? ''));
 
 		if(
-			($method === 'any' || $method === Request::$method)
+			($method === 'any' || $method === Request::method())
 			&& self::isRouteMatched($route['path'])
 		) {
 			foreach($route as $key => $value) {
@@ -86,21 +121,21 @@ class Router {
 		return false;
 	}
 
-	private static function isRouteMatched($route) {
+	protected static function isRouteMatched($route) {
 		$parameter = [];
 
 		self::$route['parameter'] = $parameter;
 
-		if($route === '/' && Request::$uri === '/') {
+		if($route === '/' && Request::uri() === '/') {
 			return true;
 		}
 
 		$route = $route === '/' ? $route : rtrim($route ?? '', '/');
-		$uri = Request::$uri === '/' ? Request::$uri : rtrim(Request::$uri ?? '', '/');
+		$uri = Request::uri() === '/' ? Request::uri() : rtrim(Request::uri() ?? '', '/');
 
 		$route_parts = explode('/', $route);
 		array_shift($route_parts);
-		$uri_parts = Request::$uri_parts;
+		$uri_parts = Request::uri_parts();
 
 		if(Language::has($uri_parts[0])) {
 			array_shift($uri_parts);
@@ -130,20 +165,20 @@ class Router {
 		return true;
 	}
 
-	private static function checkForm() {
-		if(Request::$method === 'get') {
+	protected static function checkForm() {
+		if(Request::method() === 'get') {
 			return false;
 		}
 
 		$statement = new Statement('SELECT * FROM {form} WHERE token = :token ORDER BY date_created DESC LIMIT 1');
 
-		$form = $statement->execute(['token' => Request::$uri_parts[0]])->fetch();
+		$form = $statement->execute(['token' => Request::uri_parts(0)])->fetch();
 
 		if(empty($form)) {
 			return false;
 		}
 
-		if(Request::$ip !== $form->ip) {
+		if(Request::ip() !== $form->ip) {
 			Server::answer(null, 'error', __('engine.form.forbidden'), 403);
 		}
 
@@ -168,9 +203,9 @@ class Router {
 		return true;
 	}
 
-	private static function check404() {
+	protected static function check404() {
 		if(empty(self::$route)) {
-			if(Request::$method !== 'get') {
+			if(Request::method() !== 'get') {
 				Server::answer(null, 'error', 'Request not found', 404);
 			}
 
@@ -179,7 +214,7 @@ class Router {
 			foreach(Module::get() as $module) {
 				Module::setName($module['name']);
 
-				$uri_parts = Request::$uri_parts;
+				$uri_parts = Request::uri_parts();
 				if(Language::has($uri_parts[0])) {
 					array_shift($uri_parts);
 				}
@@ -194,8 +229,8 @@ class Router {
 
 			Module::setName($module_name);
 
-			self::$route['method'] = Request::$method;
-			self::$route['path'] = Request::$uri;
+			self::$route['method'] = Request::method();
+			self::$route['path'] = Request::uri();
 			self::$route['controller'] = 'Error';
 			self::$route['action'] = 'get404';
 			self::$route['option'] = [];
@@ -207,15 +242,15 @@ class Router {
 		return false;
 	}
 
-	private static function initRoute() {
+	protected static function initRoute() {
 		foreach(self::$route as $key => $value) {
-			Route::$$key = $value;
+			Route::set($key, $value);
 		}
 
 		return true;
 	}
 
-	private static function setController() {
+	protected static function setController() {
 		self::initRoute();
 
 		if(is_closure(self::$route['controller'])) {

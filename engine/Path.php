@@ -124,7 +124,7 @@ class Path {
 	}
 
 	public static function url($section = '', $module = null) {
-		$url_base = Request::$base;
+		$url_base = Request::base();
 
 		$module = $module ?? Module::getName();
 

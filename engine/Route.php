@@ -3,42 +3,23 @@
 namespace Engine;
 
 class Route {
-	public static $method = '';
-	public static $path = '';
-	public static $controller = '';
-	public static $action = '';
-	public static $option = [];
-	public static $parameter = [];
+	protected static $data = [];
 
-	public static function get($path, $controller, $option = []) {
-		self::initRoute(__FUNCTION__, $path, $controller, $option);
+	public static function get($key = null) {
+		return isset($key) ? @self::$data[$key] : self::$data;
 	}
 
-	public static function post($path, $controller, $option = []) {
-		self::initRoute(__FUNCTION__, $path, $controller, $option);
-	}
+	public static function set($key, $data = null) {
+		self::$data[$key] = $data;
 
-	public static function put($path, $controller, $option = []) {
-		self::initRoute(__FUNCTION__, $path, $controller, $option);
-	}
-
-	public static function patch($path, $controller, $option = []) {
-		self::initRoute(__FUNCTION__, $path, $controller, $option);
-	}
-
-	public static function delete($path, $controller, $option = []) {
-		self::initRoute(__FUNCTION__, $path, $controller, $option);
-	}
-
-	public static function options($path, $controller, $option = []) {
-		self::initRoute(__FUNCTION__, $path, $controller, $option);
-	}
-
-	public static function any($path, $controller, $option = []) {
-		self::initRoute(__FUNCTION__, $path, $controller, $option);
+		return true;
 	}
 
 	public static function isRouteActive($route) {
+		// TODO
+		// - refactor
+		// - handle route part with * or **
+
 		if(is_array($route)) {
 			$state = false;
 
@@ -53,7 +34,7 @@ class Route {
 
 		$route_parts = explode('/', $route);
 		array_shift($route_parts);
-		$uri_parts = Request::$uri_parts;
+		$uri_parts = Request::uri_parts();
 
 		if(Language::has($uri_parts[0])) {
 			array_shift($uri_parts);
@@ -63,43 +44,11 @@ class Route {
 			}
 		}
 
-		// TODO - handle route part with * or **
-
 		foreach($uri_parts as $key => $part) {
 			if($part !== @$route_parts[$key]) {
 				return false;
 			}
 		}
-
-		return true;
-	}
-
-	private static function initRoute($method, $path, $controller, $option = []) {
-		if(is_closure($controller)) {
-			$route_controller = $controller;
-			$route_action = null;
-		}
-		else {
-			@list($route_controller, $route_action) = explode('@', $controller, 2);
-
-			if(empty($route_controller) || empty($route_action)) {
-				throw new \Exception(sprintf('Invalid controller declaration for %s route in %s module.', $path, Module::getName()));
-				return false;
-			}
-		}
-
-		$route = [
-			'method' => $method,
-			'path' => $path,
-			'controller' => $route_controller,
-			'action' => $route_action,
-			'option' => $option
-		];
-
-		$routes = Module::get('routes');
-		$routes[] = $route;
-
-		Module::set('routes', $routes);
 
 		return true;
 	}

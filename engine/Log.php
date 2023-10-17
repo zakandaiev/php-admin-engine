@@ -3,7 +3,7 @@
 namespace Engine;
 
 class Log {
-	private static $logs = [];
+	protected static $logs = [];
 
 	public static function write($string, $folder = '') {
 		return self::saveToFile(self::format($string), $folder);
@@ -23,7 +23,7 @@ class Log {
 	// 	return is_file($path);
 	// }
 
-	private static function saveToFile($string, $folder) {
+	protected static function saveToFile($string, $folder) {
 		$path = Path::file('log');
 
 		if(!empty($folder)) {
@@ -39,7 +39,7 @@ class Log {
 		return file_put_contents($path, $string, FILE_APPEND | LOCK_EX);
 	}
 
-	private static function format($string) {
+	protected static function format($string) {
 		if(is_array($string)) {
 			$string = json_encode($string, JSON_UNESCAPED_UNICODE);
 		}

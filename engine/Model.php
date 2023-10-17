@@ -3,7 +3,7 @@
 namespace Engine;
 
 abstract class Model {
-	private static $instances = [];
+	protected static $instances = [];
 
 	public function __construct() {
 		self::$instances[get_called_class()] = $this;

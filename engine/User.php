@@ -34,7 +34,7 @@ class User {
 			$binding = ['auth_token' => $auth_key];
 
 			if(AUTH['bind_session_to_ip']) {
-				$binding['auth_ip'] = Request::$ip;
+				$binding['auth_ip'] = Request::ip();
 			}
 
 			$user = $user->execute($binding)->fetch();
@@ -96,7 +96,7 @@ class User {
 	public static function authorize($user, $lifetime = null) {
 		// $auth_token = Hash::token();
 
-		// $user->ip = Request::$ip;
+		// $user->ip = Request::ip();
 
 		// $authorize = '
 		// 	UPDATE {user} SET
@@ -128,7 +128,7 @@ class User {
 		// Session::unsetCookie(COOKIE_KEY['auth']);
 
 		$user_id = self::$current->id;
-		$user_ip = Request::$ip;
+		$user_ip = Request::ip();
 		Log::write("User ID: $user_id logged out from IP: $user_ip", 'user');
 
 		Hook::run('user.unauthorize', self::$current);
@@ -196,11 +196,11 @@ class User {
 
 		// $user->password = $new_password;
 
-		// Notification::create('user_restore', $user->id, ['ip' => Request::$ip]);
+		// Notification::create('user_restore', $user->id, ['ip' => Request::ip()]);
 
 		// Mail::send('Restore', $email, $user);
 
-		$user_ip = Request::$ip;
+		$user_ip = Request::ip();
 		Log::write("User ID: {$user->id} restored password from IP: $user_ip", 'user');
 
 		Hook::run('user.restore', $user);
@@ -219,7 +219,7 @@ class User {
 
 		// $statement->execute($binding);
 
-		$user_ip = Request::$ip;
+		$user_ip = Request::ip();
 
 		Log::write("User ID: $id updated $key from IP: $user_ip", 'user');
 
@@ -236,7 +236,7 @@ class User {
 
 		// $statement->execute(['id' => $id]);
 
-		$user_ip = Request::$ip;
+		$user_ip = Request::ip();
 
 		Log::write("User ID: $id deleted from DB from IP: $user_ip", 'user');
 

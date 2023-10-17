@@ -257,7 +257,7 @@ class FormBuilder {
 				$value = array_map(function($v) {
 					return [
 						'value' => $v,
-						'poster' => Request::$base . '/' . $v
+						'poster' => Request::base() . '/' . $v
 					];
 				}, $value);
 

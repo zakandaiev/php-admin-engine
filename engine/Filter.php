@@ -3,16 +3,16 @@
 namespace Engine;
 
 class Filter {
-	public $name;
-	public $data = [];
+	protected $name;
+	protected $data = [];
 
-	public $sql;
-	public $binding = [];
-	public $order = [];
+	protected $sql;
+	protected $binding = [];
+	protected $order = [];
 
-	public $options = [];
+	protected $options = [];
 
-	private static $instance;
+	protected static $instance;
 
 	public static function getInstance() {
 		return self::$instance;
@@ -27,7 +27,32 @@ class Filter {
 		self::$instance = $this;
 	}
 
-	private function load() {
+	public function get($key) {
+		switch($key) {
+			case 'name': {
+				return $this->name;
+			}
+			case 'data': {
+				return $this->data;
+			}
+			case 'sql': {
+				return $this->sql;
+			}
+			case 'binding': {
+				return $this->binding;
+			}
+			case 'order': {
+				return $this->order;
+			}
+			case 'options': {
+				return $this->options;
+			}
+		}
+
+		return null;
+	}
+
+	protected function load() {
 		$path = Path::file('filter') . '/' . $this->name . '.php';
 
 		if(!is_file($path)) {
@@ -45,7 +70,7 @@ class Filter {
 		return $filter;
 	}
 
-	private function process() {
+	protected function process() {
 		if(empty($this->data)) {
 			return false;
 		}

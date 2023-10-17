@@ -3,10 +3,10 @@
 namespace Engine;
 
 class Form {
-	private static $form = [];
-	private static $token;
-	private static $fields = [];
-	private static $form_formatted_fields = [];
+	protected static $form = [];
+	protected static $token;
+	protected static $fields = [];
+	protected static $form_formatted_fields = [];
 
 	public static function add($form_name, $is_translation = false) {
 		return self::generateToken(__FUNCTION__, $form_name, null, $is_translation);
@@ -46,8 +46,7 @@ class Form {
 		}
 
 		if(!in_array($form_name, self::$form_formatted_fields)) {
-			$method = Request::$method;
-			$income_data =  Request::$$method;
+			$income_data =  Request::get();
 			self::formatFields($form_name, $form['fields'], $income_data);
 		}
 
@@ -89,8 +88,7 @@ class Form {
 
 		$form = self::load($form_name, $is_translation);
 
-		$method = Request::$method;
-		$income_data =  Request::$$method;
+		$income_data =  Request::get();
 
 		if(is_closure($form)) {
 			$data = new \stdClass();
@@ -115,13 +113,13 @@ class Form {
 		return true;
 	}
 
-	private static function generateToken($action, $form_name, $item_id = null, $is_translation = false) {
+	protected static function generateToken($action, $form_name, $item_id = null, $is_translation = false) {
 		if(!self::exists($form_name)) {
 			return null;
 		}
 
 		if(self::tokenExistsAndActive($action, $form_name, $item_id, $is_translation)) {
-			return Request::$base . '/' . self::$token;
+			return Request::base() . '/' . self::$token;
 		}
 
 		$token = Hash::token();
@@ -131,7 +129,7 @@ class Form {
 			'token' => $token,
 			'action' => $action,
 			'form_name' => $form_name,
-			'ip' => Request::$ip,
+			'ip' => Request::ip(),
 			'is_translation' => $is_translation
 		];
 
@@ -153,17 +151,17 @@ class Form {
 		$statement = new Statement($sql);
 		$statement->execute($query_params);
 
-		return Request::$base . "/$token";
+		return Request::base() . "/$token";
 	}
 
-	private static function tokenExistsAndActive($action, $form_name = '', $item_id = '', $is_translation = false) {
+	protected static function tokenExistsAndActive($action, $form_name = '', $item_id = '', $is_translation = false) {
 		$query_defining = 'module = :module AND action = :action AND form_name = :form_name AND is_translation = :is_translation AND ip = :ip';
 		$query_params = [
 			'module' => Module::getName(),
 			'action' => $action,
 			'form_name' => $form_name,
 			'is_translation' => $is_translation,
-			'ip' => Request::$ip
+			'ip' => Request::ip()
 		];
 
 		if($action !== 'add') {
@@ -194,14 +192,14 @@ class Form {
 		return true;
 	}
 
-	private static function clearExpired() {
+	protected static function clearExpired() {
 		$statement = new Statement('DELETE FROM {form} WHERE date_created <= DATE_SUB(NOW(), INTERVAL ' . intval(LIFETIME['form']) * 2 . ' SECOND)');
 		$statement->execute();
 
 		return true;
 	}
 
-	private static function load($form_name, $is_translation = false) {
+	protected static function load($form_name, $is_translation = false) {
 		if(self::has($form_name)) {
 			return self::get($form_name);
 		}
@@ -248,7 +246,7 @@ class Form {
 		return $form_data;
 	}
 
-	private static function formatFields($form_name, $fields, $income_data = []) {
+	protected static function formatFields($form_name, $fields, $income_data = []) {
 		if(in_array($form_name, self::$form_formatted_fields)) {
 			return true;
 		}
@@ -278,7 +276,7 @@ class Form {
 					$field_data['to_upload'] = false;
 					$field_data['max_size'] = $field_data['max_size'] ?? Upload::getMaxSize();
 
-					$files = Request::$files[$field_data['name']] ?? [];
+					$files = Request::files($field_data['name']) ?? [];
 
 					if(empty($files) || !isset($files['tmp_name']) || empty($files['tmp_name'])) {
 						break;
@@ -325,7 +323,7 @@ class Form {
 		return true;
 	}
 
-	private static function isFieldTypeValid($type, $value, $field_data) {
+	protected static function isFieldTypeValid($type, $value, $field_data) {
 		$required = isset($field_data['required']) && $field_data['required'] === true ? true : false;
 
 		if($required && empty($value)) {
@@ -368,7 +366,7 @@ class Form {
 		return true;
 	}
 
-	private static function isFieldValid($operand, $operand_value, $field_data) {
+	protected static function isFieldValid($operand, $operand_value, $field_data) {
 		$type = $field_data['type'];
 		$value = $field_data['value'];
 		$required = isset($field_data['required']) && $field_data['required'] === true ? true : false;
@@ -500,7 +498,7 @@ class Form {
 		return true;
 	}
 
-	private static function modifyFields() {
+	protected static function modifyFields() {
 		foreach(self::$fields as $key => $field_data) {
 			if(isset($field_data['unset_null']) && $field_data['unset_null'] && empty($field_data['value']) && $field_data['value'] != 0 && $field_data['value'] != false) {
 				unset(self::$fields[$key]);
@@ -515,7 +513,7 @@ class Form {
 		return true;
 	}
 
-	private static function prepareMediaFields() {
+	protected static function prepareMediaFields() {
 		foreach(self::$fields as $key => $field_data) {
 			if($field_data['type'] !== 'file' || empty($field_data['value']) || !isset($field_data['value'][0]['tmp_name'])) {
 				continue;
@@ -542,7 +540,7 @@ class Form {
 		return true;
 	}
 
-	private static function uploadMediaFields() {
+	protected static function uploadMediaFields() {
 		foreach(self::$fields as $key => $field_data) {
 			if($field_data['type'] !== 'file' || !isset($field_data['upload']) || empty($field_data['upload'])) {
 				continue;
@@ -554,7 +552,7 @@ class Form {
 		return true;
 	}
 
-	private static function processFields($action, $form_name, $item_id = null, $force_no_answer = false) {
+	protected static function processFields($action, $form_name, $item_id = null, $force_no_answer = false) {
 		$form = self::load($form_name);
 
 		if(is_closure($form) || empty($form)) {
@@ -668,7 +666,7 @@ class Form {
 		return true;
 	}
 
-	private static function getForeignFields() {
+	protected static function getForeignFields() {
 		$data = [];
 
 		foreach(self::$fields as $key => $field_data) {
@@ -702,7 +700,7 @@ class Form {
 		return $data;
 	}
 
-	private static function processForeignFields($foreign_data, $form_data) {
+	protected static function processForeignFields($foreign_data, $form_data) {
 		if(empty($foreign_data) || empty($form_data)) {
 			return false;
 		}
@@ -746,7 +744,7 @@ class Form {
 		return true;
 	}
 
-	private static function getTranslationFields($form_name) {
+	protected static function getTranslationFields($form_name) {
 		$data = [];
 
 		$form_data = self::get($form_name);
@@ -768,7 +766,7 @@ class Form {
 		return $data;
 	}
 
-	private static function processTranslationFields($fields, $form_data) {
+	protected static function processTranslationFields($fields, $form_data) {
 		if(!is_array($fields) || empty($form_data) || empty($form_data['item_id']) || ($form_data['action'] !== 'delete' && empty($fields)) || str_contains($form_data['table'], '_translation')) {
 			return false;
 		}

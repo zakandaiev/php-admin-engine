@@ -57,8 +57,8 @@
 		]
 	},
 	"devDependencies": {
-		"@babel/core": "^7.23.0",
-		"@babel/preset-env": "^7.22.20",
+		"@babel/core": "^7.23.2",
+		"@babel/preset-env": "^7.23.2",
 		"browser-sync": "^2.29.3",
 		"del": "^6.1.1",
 		"gulp": "^4.0.2",
@@ -74,7 +74,7 @@
 		"gulp-newer": "^1.4.0",
 		"gulp-sass": "^5.1.0",
 		"gulp-terser": "^2.1.0",
-		"sass": "^1.69.0"
+		"sass": "^1.69.3"
 	},
 	"dependencies": {
 		"@fancyapps/ui": "^5.0.24",

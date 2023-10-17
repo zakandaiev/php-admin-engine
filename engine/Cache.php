@@ -32,7 +32,7 @@ class Cache {
 		}
 
 		$user_id = @User::get()->id ?? 'unlogged';
-		$user_ip = Request::$ip;
+		$user_ip = Request::ip();
 		Log::write("Cache key: $key created by user ID: $user_id from IP: $user_ip", 'cache');
 
 		return true;
@@ -64,7 +64,7 @@ class Cache {
 		unlink($path);
 
 		$user_id = @User::get()->id ?? 'unlogged';
-		$user_ip = Request::$ip;
+		$user_ip = Request::ip();
 		Log::write("Cache key: $key deleted by user ID: $user_id from IP: $user_ip", 'cache');
 
 		return true;
@@ -86,7 +86,7 @@ class Cache {
 		}
 
 		$user_id = @User::get()->id ?? 'unlogged';
-		$user_ip = Request::$ip;
+		$user_ip = Request::ip();
 		Log::write("Cache: flushed by user ID: $user_id from IP: $user_ip", 'cache');
 
 		Hook::run('cache.flush');

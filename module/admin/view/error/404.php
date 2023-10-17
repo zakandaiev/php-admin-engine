@@ -17,9 +17,9 @@
 			<h4 class="color-text"><?= __('admin.404.subtitle') ?></h4>
 
 			<div class="d-flex gap-2 mt-4">
-				<?php if(isset(Request::$referer)): ?>
-					<a href="<?= Request::$referer ?>" class="btn btn_lg btn_secondary"><?= __('admin.404.go_back') ?></a>
-					<?php if(trim(Request::$referer ?? '', '/') !== Request::$base): ?>
+				<?php if(isset(Request::referer())): ?>
+					<a href="<?= Request::referer() ?>" class="btn btn_lg btn_secondary"><?= __('admin.404.go_back') ?></a>
+					<?php if(trim(Request::referer() ?? '', '/') !== Request::base()): ?>
 						<a href="<?= site('url_language') ?>/admin/dashboard" class="btn btn_lg btn_primary"><?= __('admin.404.go_dashboard') ?></a>
 					<?php endif; ?>
 				<?php else: ?>

@@ -2,7 +2,7 @@
 
 /*
 	SYNTAX:
-		Route::$method('/$url/$dynamic_variable', '$controller_name@$controller_method|$closure', $options);
+		Router::register('$method', '/$url/$dynamic_variable', '$controller_name@$controller_method|$closure', $options);
 			where:
 			- [required] $method: 'get|post|put|patch|delete|options|any'
 			- [required] $url: should start with slash, can contain dynamic variables in every part
@@ -14,12 +14,12 @@
 */
 
 ############################# DIVIDE SECTION #############################
-Route::get('/user/$id/payments', 'User@getUserPayments', ['dummy_option' => 'dummy_data']);
+Router::register('get', '/user/$id/payments', 'User@getUserPayments', ['dummy_option' => 'dummy_data']);
 
-Route::get('/closure-example', function($data) {
+Router::register('get', '/closure-example', function($data) {
 	debug($data);
 });
 
-Route::post('/post-example', 'Api@getPost');
+Router::register('post', '/post-example', 'Api@getPost');
 
-Route::put('/put-example', 'Api@getPut');
+Router::register('put', '/put-example', 'Api@getPut');

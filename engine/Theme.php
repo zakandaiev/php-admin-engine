@@ -14,7 +14,7 @@ class Theme {
 		'pagination'	=> 'pagination-%s'
 	];
 
-	private static $theme_page_templates = [];
+	protected static $theme_page_templates = [];
 
 	public static function header($name = '', $data = []) {
 		self::loadTemplate(__FUNCTION__, $name, $data);
@@ -52,7 +52,7 @@ class Theme {
 		self::loadTemplate(__FUNCTION__, $name, $data);
 	}
 
-	private static function loadTemplate($type, $name = '', $data = []) {
+	protected static function loadTemplate($type, $name = '', $data = []) {
 		$file = self::detectNameFile($name, $type);
 		$file = self::PART_DIR . '/' . $file;
 
@@ -87,7 +87,7 @@ class Theme {
 		return self::$theme_page_templates;
 	}
 
-	private static function detectNameFile($name, $function) {
+	protected static function detectNameFile($name, $function) {
 		if(empty($name)) {
 			return $function;
 		}

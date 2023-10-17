@@ -239,7 +239,7 @@ class Page {
 							},
 							csrf: {
 								key: "' . COOKIE_KEY['csrf'] . '",
-								token: "' . Request::$csrf . '"
+								token: "' . Request::csrf_token() . '"
 							},
 							pagination_limit: ' . site('pagination_limit') . ',
 							translation: {},

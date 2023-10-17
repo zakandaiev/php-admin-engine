@@ -7,7 +7,8 @@ use \PDOException;
 use \Exception;
 
 class Database {
-	public static $connection;
+	protected static $connection;
+	protected static $is_connected = false;
 
 	public static function initialize() {
 		if(!self::$connection instanceof PDO) {
@@ -23,7 +24,15 @@ class Database {
 		return true;
 	}
 
-	private static function connect() {
+	public static function connection() {
+		return self::$connection;
+	}
+
+	public static function is_connected() {
+		return self::$is_connected;
+	}
+
+	protected static function connect() {
 		if(!defined('DATABASE')) {
 			throw new Exception('Database config is missed');
 		}
@@ -42,6 +51,8 @@ class Database {
 
 		try {
 			$connection = new PDO($dsn, $username, $password, @$options);
+
+			self::$is_connected = true;
 		}
 		catch(PDOException $error) {
 			throw new Exception($error->getMessage());

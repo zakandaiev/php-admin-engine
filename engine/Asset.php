@@ -7,8 +7,8 @@ class Asset {
 		'css' => '<link href="%s" rel="stylesheet"%s>'
 	];
 
-	private static $container = [];
-	private static $optimization = [
+	protected static $container = [];
+	protected static $optimization = [
 		'js' => [
 			'attributes' => null,
 			'routes' => null
@@ -19,7 +19,7 @@ class Asset {
 		]
 	];
 
-	private static function add($extension, $file_name, $attributes = '', $routes = null, $module = null) {
+	protected static function add($extension, $file_name, $attributes = '', $routes = null, $module = null) {
 		$file_path = Path::file('asset') . "/$file_name.$extension";
 
 		if(is_file($file_path)) {
@@ -108,7 +108,7 @@ class Asset {
 		return true;
 	}
 
-	private static function checkRoute($routes = null) {
+	protected static function checkRoute($routes = null) {
 		if(empty($routes)) {
 			return true;
 		}
@@ -119,7 +119,7 @@ class Asset {
 			return trim(trim($string ?? ''), '/');
 		}, $routes);
 
-		$route = trim(trim(Router::$route['uri'] ?? ''), '/');
+		$route = trim(trim(Route::get('uri') ?? ''), '/');
 
 		if(in_array($route, $routes)) {
 			return true;

@@ -146,7 +146,7 @@ class Upload {
 		}
 
 		$user_id = @User::get()->id ?? 'unlogged';
-		$user_ip = Request::$ip;
+		$user_ip = Request::ip();
 
 		foreach($this->result['files'] as $file) {
 			Log::write(Path::url() . "/$file uploaded by user ID: $user_id from IP: $user_ip", 'upload');

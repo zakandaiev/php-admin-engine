@@ -9,36 +9,40 @@ use Engine\Server;
 
 class Install extends \Engine\Controller {
 	public function getInstallModule() {
-		$module = Module::getAll($this->route['parameter']['name']);
+		// TODO
+		// $this->modules ...
+		// $module = Module::getAll($this->route['parameter']['name']);
 
-		if(empty($module)) {
-			Module::setName('admin');
-			$this->view->error('404');
-		}
+		// if(empty($module)) {
+		// 	Module::setName('admin');
+		// 	$this->view->error('404');
+		// }
 
-		$install = Module::install($module['name']);
+		// $install = Module::install($module['name']);
 
-		if($install === true) {
-			Server::answer(null, 'success');
-		}
+		// if($install === true) {
+		// 	Server::answer(null, 'success');
+		// }
 
-		Server::answer(null, 'error', $install);
+		// Server::answer(null, 'error', $install);
 	}
 
 	public function getUninstallModule() {
-		$module = Module::getAll($this->route['parameter']['name']);
+		// TODO
+		// $this->modules ...
+		// $module = Module::getAll($this->route['parameter']['name']);
 
-		if(empty($module)) {
-			Module::setName('admin');
-			$this->view->error('404');
-		}
+		// if(empty($module)) {
+		// 	Module::setName('admin');
+		// 	$this->view->error('404');
+		// }
 
-		$uninstall = Module::uninstall($module['name']);
+		// $uninstall = Module::uninstall($module['name']);
 
-		if($uninstall === true) {
-			Server::answer(null, 'success');
-		}
+		// if($uninstall === true) {
+		// 	Server::answer(null, 'success');
+		// }
 
-		Server::answer(null, 'error', $uninstall);
+		// Server::answer(null, 'error', $uninstall);
 	}
 }

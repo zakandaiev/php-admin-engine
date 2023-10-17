@@ -3,9 +3,9 @@
 namespace Engine;
 
 class Optimization {
-	private static $type;
-	private static $files = [];
-	private static $destination;
+	protected static $type;
+	protected static $files = [];
+	protected static $destination;
 
 	public static function css($files, $destination) {
 		self::$type = strtolower(__FUNCTION__);
@@ -48,7 +48,7 @@ class Optimization {
 		return self::saveToFile($output);
 	}
 
-	private static function minifyJS($input) {
+	protected static function minifyJS($input) {
 		$input = trim($input ?? '');
 
 		if(empty($input)) {
@@ -81,7 +81,7 @@ class Optimization {
 		);
 	}
 
-	private static function minifyCSS($input) {
+	protected static function minifyCSS($input) {
 		$input = trim($input ?? '');
 
 		if(empty($input)) {
@@ -129,7 +129,7 @@ class Optimization {
 		);
 	}
 
-	private static function validateFile($file_name) {
+	protected static function validateFile($file_name) {
 		if(file_extension($file_name) !== self::$type) {
 			return false;
 		}
@@ -141,7 +141,7 @@ class Optimization {
 		return true;
 	}
 
-	private static function saveToFile($content) {
+	protected static function saveToFile($content) {
 		if(!file_exists(self::$destination)) {
 			mkdir($path, 0755, true);
 		}

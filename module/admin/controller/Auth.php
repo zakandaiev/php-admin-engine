@@ -33,7 +33,7 @@ class Auth extends \Engine\Controller {
 		$this->view->render('auth/reset-password');
 	}
 
-	private function checkAuth() {
+	protected function checkAuth() {
 		if($this->user->get()->authorized) {
 			Server::redirect('/admin');
 		}

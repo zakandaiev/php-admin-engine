@@ -122,7 +122,7 @@ function images($json, $attributes = '') {
 	$images = json_decode($json) ?? [];
 
 	foreach($images as $image) {
-		$output .= '<img src="' . Request::$base . '/' . $image . '" ' . $attributes . '>';
+		$output .= '<img src="' . Request::base() . '/' . $image . '" ' . $attributes . '>';
 	}
 
 	return $output;
@@ -364,22 +364,22 @@ function site($key, $module = 'engine') {
 			break;
 		}
 		case 'url': {
-			$value = Request::$base;
+			$value = Request::base();
 			break;
 		}
 		case 'url_language': {
-			$value = Request::$base . '/' . site('language_current');
+			$value = Request::base() . '/' . site('language_current');
 
 			break;
 		}
 		case 'uri': {
-			$value = Request::$uri;
+			$value = Request::uri();
 
 			break;
 		}
 		case 'uri_no_language': {
-			$uri = Request::$uri;
-			$uri_parts = Request::$uri_parts;
+			$uri = Request::uri();
+			$uri_parts = Request::uri_parts();
 			$language = $uri_parts[0];
 
 			if(Language::has($language)) {
@@ -392,7 +392,7 @@ function site($key, $module = 'engine') {
 			break;
 		}
 		case 'permalink': {
-			$value = Request::$url;
+			$value = Request::url();
 			break;
 		}
 		case 'languages': {
@@ -439,7 +439,7 @@ function is_closure($i) {
 }
 
 function link_filter($key, $value = 1) {
-	$query = Request::$get;
+	$query = Request::get();
 
 	$query[$key] = $value;
 
@@ -451,7 +451,7 @@ function link_filter($key, $value = 1) {
 }
 
 function link_unfilter($key) {
-	$query = Request::$get;
+	$query = Request::get();
 
 	unset($query[$key]);
 
@@ -463,7 +463,7 @@ function link_unfilter($key) {
 }
 
 function link_sort($key) {
-	$query = Request::$get;
+	$query = Request::get();
 
 	foreach($query as $k => $v) {
 		if($v === 'asc' || $v === 'desc') {

@@ -25,14 +25,14 @@ class FilterBuilder {
 
 		$this->filter_name = $filter_name;
 
-		$filter_options = Filter::getInstance()->options ?? [];
+		$filter_options = Filter::getInstance()->get('options') ?? [];
 
 		foreach($fields as $field_alias => $field) {
 			if(!is_array($field)) continue;
 
 			$field['alias'] = $field_alias;
 			$field['options'] = $filter_options[$field_alias] ?? [];
-			$field['value'] = Request::$get[$field_alias] ?? @$field['default'];
+			$field['value'] = Request::get($field_alias) ?? @$field['default'];
 
 			$this->fields[$field_alias] = $field;
 		}
@@ -75,7 +75,7 @@ class FilterBuilder {
 
 		$html .= '</div>';
 
-		foreach(Request::$get as $hidden_alias => $hidden_value) {
+		foreach(Request::get() as $hidden_alias => $hidden_value) {
 			if($this->has($hidden_alias)) {
 				continue;
 			}
@@ -97,7 +97,7 @@ class FilterBuilder {
 
 	public function getSelected() {
 		return array_filter($this->fields, function($field) {
-			if(!isset(Request::$get[$field['alias']])) {
+			if(!Request::has($field['alias'])) {
 				return false;
 			}
 
@@ -111,7 +111,7 @@ class FilterBuilder {
 		}
 
 		$field = $this->fields[$field_alias];
-		$field['value'] = Request::$get[$field_alias] ?? @$field['default'];
+		$field['value'] = Request::get($field_alias) ?? @$field['default'];
 
 		return $this->getColHTML($field_alias, $field);
 	}

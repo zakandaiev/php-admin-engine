@@ -568,7 +568,7 @@ class Page extends \Engine\Model {
 		return $this->getPreparedRows($sql, $options);
 	}
 
-	private function getPreparedRows($sql, $options = []) {
+	protected function getPreparedRows($sql, $options = []) {
 		$options['limit'] = $options['limit'] ?? false;
 		$options['offset'] = $options['offset'] ?? false;
 		$options['filter'] = $options['filter'] ?? false;

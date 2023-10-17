@@ -3,8 +3,8 @@
 namespace Engine;
 
 class Hook {
-	private static $actions = [];
-	private static $data = [];
+	protected static $actions = [];
+	protected static $data = [];
 
 	public static function register($name, $function) {
 		if(is_string($name) && !empty($name) && is_closure($function)) {

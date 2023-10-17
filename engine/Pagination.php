@@ -3,15 +3,15 @@
 namespace Engine;
 
 class Pagination {
-	public $uri_key;
-	public $uri;
-	public $limit;
-	public $total_rows;
-	public $total_pages;
-	public $current_page;
-	public $offset;
+	protected $uri_key;
+	protected $uri;
+	protected $limit;
+	protected $total_rows;
+	protected $total_pages;
+	protected $current_page;
+	protected $offset;
 
-	private static $instance;
+	protected static $instance;
 
 	public static function getInstance() {
 		if(!self::$instance instanceof self) {
@@ -34,8 +34,36 @@ class Pagination {
 		self::$instance = $this;
 	}
 
-	private function handleUri() {
-		$uri = explode('?', Request::$uri_full, 2);
+	public function get($key) {
+		switch($key) {
+			case 'uri_key': {
+				return $this->uri_key;
+			}
+			case 'uri': {
+				return $this->uri;
+			}
+			case 'limit': {
+				return $this->limit;
+			}
+			case 'total_rows': {
+				return $this->total_rows;
+			}
+			case 'total_pages': {
+				return $this->total_pages;
+			}
+			case 'current_page': {
+				return $this->current_page;
+			}
+			case 'offset': {
+				return $this->offset;
+			}
+		}
+
+		return null;
+	}
+
+	protected function handleUri() {
+		$uri = explode('?', Request::uri_full(), 2);
 		$uri_handle = $uri[0] . '?';
 
 		if(isset($uri[1]) && !empty($uri[1])) {
@@ -51,11 +79,11 @@ class Pagination {
 		return html($uri_handle);
 	}
 
-	private function countPages() {
+	protected function countPages() {
 		return ceil($this->total_rows / $this->limit) ?? 1;
 	}
 
-	private function currentPage() {
+	protected function currentPage() {
 		$page = Request::get($this->uri_key);
 
 		if(isset($page) && !empty($page) && is_numeric($page)) {

@@ -3,9 +3,9 @@
 namespace Engine;
 
 class Module {
-	private static $name;
-	private static $list = [];
-	private static $is_hooks_loaded = false;
+	protected static $name;
+	protected static $list = [];
+	protected static $is_hooks_loaded = false;
 
 	public static function initialize() {
 		self::loadModules();
@@ -67,7 +67,7 @@ class Module {
 		return true;
 	}
 
-	private static function loadModules() {
+	protected static function loadModules() {
 		$module_path = Path::file('module');
 
 		$modules = [];
@@ -190,7 +190,7 @@ class Module {
 
 		// if(file_put_contents($config_file, $config_content, LOCK_EX)) {
 		// 	if(!$is_edited) {
-		// 		Log::write('Module: ' . $name. ' edited by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'module');
+		// 		Log::write('Module: ' . $name. ' edited by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'module');
 				Hook::run('module.update', $name);
 		// 	}
 
@@ -203,7 +203,7 @@ class Module {
 	}
 
 	public static function delete($name) {
-		// Log::write('Module: ' . $name. ' deleted by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'module');
+		// Log::write('Module: ' . $name. ' deleted by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'module');
 
 		Hook::run('module.delete', $name);
 
@@ -224,7 +224,7 @@ class Module {
 		// 	require $path_install;
 		// }
 
-		// Log::write('Module: ' . $name. ' installed by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'module');
+		// Log::write('Module: ' . $name. ' installed by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'module');
 
 		Hook::run('module.install', $name);
 
@@ -245,7 +245,7 @@ class Module {
 		// 	require $path_uninstall;
 		// }
 
-		// Log::write('Module: ' . $name. ' uninstalled by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'module');
+		// Log::write('Module: ' . $name. ' uninstalled by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'module');
 
 		Hook::run('module.uninstall', $name);
 

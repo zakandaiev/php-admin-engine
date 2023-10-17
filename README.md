@@ -19,6 +19,7 @@
 4. Create & enjoy ;)
 
 ## TODO
+* engine: replace Class::$var to Class::get('var')
 * engine: remove language from functions, request uri_parts etc.
 * engine: refactor Router checkForm()
 * engine: modules install

@@ -37,15 +37,15 @@ class Session {
 	}
 
 	public static function getCookie($key = null) {
-		return isset($key) ? @Request::$cookie[$key] : Request::$cookie;
+		return isset($key) ? @$_COOKIE[$key] : $_COOKIE;
 	}
 
 	public static function hasCookie($key) {
-		return isset(Request::$cookie[$key]);
+		return isset($_COOKIE[$key]);
 	}
 
 	public static function setCookie($key, $value = null, $lifetime = null) {
-		Request::$cookie[$key] = $value;
+		$_COOKIE[$key] = $value;
 
 		return setcookie($key, $value, time() + intval($lifetime ?? LIFETIME['auth']), '/', '', false, true);
 	}
@@ -55,7 +55,7 @@ class Session {
 			self::setCookie($key, '', 0);
 		}
 		else {
-			foreach(Request::$cookie as $key => $value) {
+			foreach($_COOKIE as $key => $value) {
 				self::setCookie($key, '', 0);
 			}
 		}

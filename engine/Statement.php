@@ -6,19 +6,19 @@ use \PDO;
 use \PDOException;
 
 class Statement {
-	private $sql;
-	private $cache;
-	private $debug;
-	private $prefix;
-	private $statement;
-	private $binding = [];
-	private $filter;
-	private $filter_sql;
-	private $filter_binding = [];
-	private $pagination = [];
-	private $is_select;
-	private $is_paginate = false;
-	private $is_filter = false;
+	protected $sql;
+	protected $cache;
+	protected $debug;
+	protected $prefix;
+	protected $statement;
+	protected $binding = [];
+	protected $filter;
+	protected $filter_sql;
+	protected $filter_binding = [];
+	protected $pagination = [];
+	protected $is_select;
+	protected $is_paginate = false;
+	protected $is_filter = false;
 
 	public function __construct($sql, $cache = null, $debug = null) {
 		$is_cached = false;
@@ -68,20 +68,20 @@ class Statement {
 
 		$this->filter = new Filter($name);
 
-		if(empty($this->filter->sql) && empty($this->filter->order)) {
+		if(empty($this->filter->get('sql')) && empty($this->filter->get('order'))) {
 			return $this;
 		}
 
-		$sql = !empty($this->filter->sql) ? "WHERE {$this->filter->sql}" : '';
+		$sql = !empty($this->filter->get('sql')) ? "WHERE {$this->filter->get('sql')}" : '';
 		$sql = "SELECT * FROM ({$this->filter_sql}) t_filter $sql";
 
-		foreach($this->filter->binding as $key => $value) {
+		foreach($this->filter->get('binding') as $key => $value) {
 			$this->filter_binding[$key] = $key;
 			$this->addBinding($key, $value);
 		}
 
-		if(!empty($this->filter->order)) {
-			$sql .= " ORDER BY {$this->filter->order}";
+		if(!empty($this->filter->get('order'))) {
+			$sql .= " ORDER BY {$this->filter->get('order')}";
 		}
 
 		$this->sql = $sql;
@@ -89,15 +89,15 @@ class Statement {
 		return $this;
 	}
 
-	private function setFilterValues() {
-		if(!$this->is_paginate || empty($this->filter_sql) || empty($this->filter->data) || preg_match('/GROUP\s+BY/mi',  $this->filter_sql)) {
+	protected function setFilterValues() {
+		if(!$this->is_paginate || empty($this->filter_sql) || empty($this->filter->get('data')) || preg_match('/GROUP\s+BY/mi',  $this->filter_sql)) {
 			return false;
 		}
 
 		$sql_cuted = $this->cutSelectionPartFromSQL($this->filter_sql);
 		$sql_cuted = preg_replace('/\s*ORDER\s+BY\s+[\w\s\@\<\>\.\,\=\-\'\"\`]+$/mi', '', $sql_cuted);
 
-		foreach($this->filter->data as $alias => $filter_data) {
+		foreach($this->filter->get('data') as $alias => $filter_data) {
 			if(is_array($filter_data['column']) || !in_array($filter_data['type'], ['checkbox','radio','select'])) {
 				continue;
 			}
@@ -106,10 +106,10 @@ class Statement {
 
 			$filter_data['show_all_options'] = $filter_data['show_all_options'] ?? false;
 
-			if(!$filter_data['show_all_options'] && !empty($this->filter->sql)) {
-				$filter_sql .= " WHERE {$this->filter->sql}";
+			if(!$filter_data['show_all_options'] && !empty($this->filter->get('sql'))) {
+				$filter_sql .= " WHERE {$this->filter->get('sql')}";
 
-				foreach($this->filter->binding as $key => $value) {
+				foreach($this->filter->get('binding') as $key => $value) {
 					$this->filter_binding[$key] = $value;
 				}
 			}
@@ -144,7 +144,7 @@ class Statement {
 		return $this;
 	}
 
-	private function initializePagination() {
+	protected function initializePagination() {
 		if(!$this->is_paginate) {
 			return false;
 		}
@@ -172,13 +172,13 @@ class Statement {
 
 		$this->sql = rtrim($this->sql, ';') . ' LIMIT :limit OFFSET :offset';
 
-		$this->addBinding('limit', $pagination->limit);
-		$this->addBinding('offset', $pagination->offset);
+		$this->addBinding('limit', $pagination->get('limit'));
+		$this->addBinding('offset', $pagination->get('offset'));
 
 		return true;
 	}
 
-	private function cutSelectionPartFromSQL($sql) {
+	protected function cutSelectionPartFromSQL($sql) {
 		$output = '';
 
 		$sql_to_array = str_split($sql);
@@ -272,7 +272,7 @@ class Statement {
 				$error_message = 'duplicate.' . $error_message;
 			}
 
-			if(Request::$method === 'get') {
+			if(Request::method() === 'get') {
 				if(DEBUG['is_enabled']) {
 					debug(__($error_message), $this->sql, $this->binding); // TODO translation
 				}
@@ -293,7 +293,7 @@ class Statement {
 		return $this;
 	}
 
-	private function fetchCache($type, $mode) {
+	protected function fetchCache($type, $mode) {
 		if($this->cache) {
 			$cache_key =  $this->sql . '@' . json_encode($this->binding, JSON_UNESCAPED_UNICODE);
 
@@ -331,20 +331,20 @@ class Statement {
 	}
 
 	public function insertId() {
-		return Database::$connection->lastInsertId();
+		return Database::connection()->lastInsertId();
 	}
 
 	public function rowCount() {
 		return $this->statement->rowCount();
 	}
 
-	private function prepare() {
-		$this->statement = Database::$connection->prepare($this->sql);
+	protected function prepare() {
+		$this->statement = Database::connection()->prepare($this->sql);
 
 		return true;
 	}
 
-	private function addBinding($key_or_array, $value = null) {
+	protected function addBinding($key_or_array, $value = null) {
 		if(empty($key_or_array)) {
 			return false;
 		}
@@ -361,7 +361,7 @@ class Statement {
 		return true;
 	}
 
-	private function bind() {
+	protected function bind() {
 		if(empty($this->binding)) {
 			return false;
 		}

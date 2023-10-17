@@ -9,7 +9,7 @@ class Engine {
 	const AUTHOR = 'Zakandaiev';
 	const AUTHOR_URL = 'https://zakandaiev.com';
 
-	private static $time_start;
+	protected static $time_start;
 
 	public static function start() {
 		if(DEBUG['is_enabled']) {

@@ -27,7 +27,7 @@ class Setting {
 		$statement->execute($params);
 
 		$user_id = @User::get()->id ?? 'unlogged';
-		$user_ip = Request::$ip;
+		$user_ip = Request::ip();
 		Log::write("Setting: $name changed by user ID: $user_id from IP: $user_ip", 'setting');
 
 		Hook::run('setting.update', $params);

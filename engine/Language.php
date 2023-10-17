@@ -3,10 +3,10 @@
 namespace Engine;
 
 class Language {
-	private static $language = [];
-	private static $translation = [];
-	private static $translation_flat = [];
-	private static $loaded_modules = [];
+	protected static $language = [];
+	protected static $translation = [];
+	protected static $translation_flat = [];
+	protected static $loaded_modules = [];
 
 	public static function initialize() {
 		foreach(Module::get() as $module) {
@@ -130,7 +130,7 @@ class Language {
 		return true;
 	}
 
-	private static function loadTranslations($module) {
+	protected static function loadTranslations($module) {
 		$path_lang = Path::file('language', $module) . '/' . self::get('file_name');
 
 		if(!is_file($path_lang)) {
@@ -152,7 +152,7 @@ class Language {
 		return true;
 	}
 
-	private static function getFlattenTranslations($input_arr, $return_arr = array(), $prev_key = '') {
+	protected static function getFlattenTranslations($input_arr, $return_arr = array(), $prev_key = '') {
 		foreach ($input_arr as $key => $value) {
 			$new_key = $prev_key . $key;
 
