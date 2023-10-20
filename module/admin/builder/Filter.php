@@ -1,12 +1,12 @@
 <?php
 
-namespace Module\Admin\Controller;
+namespace Module\Admin\Builder;
 
 use Engine\Filter;
 use Engine\Path;
 use Engine\Request;
 
-class FilterBuilder {
+class Filter {
 	protected $filter_name;
 	protected $fields = [];
 

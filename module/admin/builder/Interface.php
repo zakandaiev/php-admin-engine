@@ -1,11 +1,11 @@
 <?php
 
-namespace Module\Admin\Controller;
+namespace Module\Admin\Builder;
 
 use Engine\Request;
 use Engine\Pagination;
 
-class InterfaceBuilder {
+class Interface {
 	protected $filter;
 	protected $filter_builder;
 	protected $header;

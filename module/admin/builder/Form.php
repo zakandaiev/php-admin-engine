@@ -1,12 +1,12 @@
 <?php
 
-namespace Module\Admin\Controller;
+namespace Module\Admin\Builder;
 
 use Engine\Form;
 use Engine\Path;
 use Engine\Request;
 
-class FormBuilder {
+class Form {
 	protected $form_name;
 	protected $form_data = [];
 	protected $fields = [];
