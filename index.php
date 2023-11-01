@@ -9,6 +9,7 @@ if(!is_file(ROOT_DIR . '/config.php')) {
 require_once ROOT_DIR . '/vendor/autoload.php';
 
 use Engine\Engine;
+use Engine\Server;
 
 $is_php_version_unsuppurted = version_compare($version = phpversion(), $required = Engine::PHP_MIN, '<');
 
@@ -23,13 +24,11 @@ if($is_php_version_unsuppurted) {
 $is_install = (strtok($_SERVER['REQUEST_URI'], '?') === '/install');
 
 if(!defined('DATABASE') && !$is_install) {
-	header('Location: /install', true, 307);
-	exit;
+	Server::redirect('/install');
 }
 
 if(defined('DATABASE') && $is_install) {
-	header('Location: /', true, 307);
-	exit;
+	Server::redirect('/');
 }
 
 if($is_install) {

@@ -8,10 +8,11 @@ define('LOG', [
 define('COOKIE_KEY', ['auth' => 'auth_token']);
 define('LIFETIME', ['auth' => 60 * 60 * 24 * 7]);
 
-use \Engine\Engine;
-use \Engine\Hash;
-use \Engine\Log;
-use \Engine\Session;
+use Engine\Engine;
+use Engine\Hash;
+use Engine\Log;
+use Engine\Server;
+use Engine\Session;
 
 Session::initialize();
 
@@ -38,7 +39,7 @@ if(isset($_GET['step']) && $_GET['step'] == 'install') {
 
 if($step == 'install' && install()) {
 	Session::flush();
-	header('Location: /admin/dashboard', true, 307);
+	Server::redirect('/admin/dashboard');
 }
 
 function tableExists($connection, $table) {
@@ -115,13 +116,13 @@ function executeSQL($data, $connection, $sql) {
 	$replace_from = [
 		'%prefix%',
 		'%site_name%', '%contact_email%',
-		'%admin_login%', '%admin_password%', '%admin_email%',
+		'%admin_email%', '%admin_password%',
 		'%auth_token%', '%auth_ip%'
 	];
 	$replace_to = [
 		$data['db_prefix'],
 		$data['site_name'], $data['contact_email'],
-		$data['admin_login'], Hash::password($data['admin_password']), $data['admin_email'],
+		$data['admin_email'], Hash::password($data['admin_password']),
 		generateAuthToken(), $_SERVER['REMOTE_ADDR']
 	];
 
@@ -320,14 +321,11 @@ function installSEO($data) {
 								<div class="box__body">
 									<?php if($step == 'auth'): ?>
 
-										<label>Login</label>
-										<input type="text" name="admin_login" placeholder="Login" required minlength="2" maxlength="100" autofocus>
+										<label>Email</label>
+										<input type="email" name="admin_email" placeholder="Email" required minlength="6" maxlength="200" autofocus>
 
 										<label>Password</label>
 										<input type="text" name="admin_password" placeholder="Password" required minlength="8" maxlength="200">
-
-										<label>Email</label>
-										<input type="email" name="admin_email" placeholder="Email" required minlength="6" maxlength="200">
 
 									<?php elseif($step == 'site'): ?>
 
