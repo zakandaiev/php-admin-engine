@@ -2,29 +2,33 @@
 
 namespace Engine;
 
-class Route {
+class Route
+{
 	protected static $data = [];
 
-	public static function get($key = null) {
+	public static function get($key = null)
+	{
 		return isset($key) ? @self::$data[$key] : self::$data;
 	}
 
-	public static function set($key, $data = null) {
+	public static function set($key, $data = null)
+	{
 		self::$data[$key] = $data;
 
 		return true;
 	}
 
-	public static function isRouteActive($route) {
+	public static function isRouteActive($route)
+	{
 		// TODO
 		// - refactor
 		// - handle route part with * or **
 
-		if(is_array($route)) {
+		if (is_array($route)) {
 			$state = false;
 
-			foreach($route as $r) {
-				if(self::isRouteActive($r)) {
+			foreach ($route as $r) {
+				if (self::isRouteActive($r)) {
 					$state = true;
 				}
 			}
@@ -36,16 +40,16 @@ class Route {
 		array_shift($route_parts);
 		$uri_parts = Request::uri_parts();
 
-		if(Language::has($uri_parts[0])) {
+		if (Language::has($uri_parts[0])) {
 			array_shift($uri_parts);
 
-			if($route === '/' && count($uri_parts) === 0) {
+			if ($route === '/' && count($uri_parts) === 0) {
 				return true;
 			}
 		}
 
-		foreach($uri_parts as $key => $part) {
-			if($part !== @$route_parts[$key]) {
+		foreach ($uri_parts as $key => $part) {
+			if ($part !== @$route_parts[$key]) {
 				return false;
 			}
 		}

@@ -11,8 +11,8 @@ return [
 		'moderate_comments' => $moderate_comments,
 		'pagination_limit' => $pagination_limit
 	],
-	'execute_pre' => function($fields, $data) {
-		foreach($fields as $field) {
+	'execute_pre' => function ($fields, $data) {
+		foreach ($fields as $field) {
 			Setting::update('engine', $field['name'], $field['value']);
 		}
 

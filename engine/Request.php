@@ -2,7 +2,8 @@
 
 namespace Engine;
 
-class Request {
+class Request
+{
 	protected static $request = [];
 	protected static $cookie = [];
 	protected static $files = [];
@@ -20,7 +21,8 @@ class Request {
 	protected static $ip;
 	protected static $csrf_token;
 
-	public static function initialize() {
+	public static function initialize()
+	{
 		self::$request		= $_REQUEST;
 		self::$cookie			= $_COOKIE;
 		self::$files			= $_FILES;
@@ -32,90 +34,107 @@ class Request {
 		self::$base 			= self::$protocol . '://' . self::$host;
 		self::$uri 				= strtok($_SERVER['REQUEST_URI'], '?');
 		self::$uri_full 	= $_SERVER['REQUEST_URI'];
-		self::$uri_parts 	= explode('/', self::$uri); array_shift(self::$uri_parts);
+		self::$uri_parts 	= explode('/', self::$uri);
+		array_shift(self::$uri_parts);
 		self::$url 				= self::$base . self::$uri;
 		self::$referer 		= $_SERVER['HTTP_REFERER'] ?? null;
 		self::$ip 				= $_SERVER['REMOTE_ADDR'];
 
-		if(self::$method === 'get') {
+		if (self::$method === 'get') {
 			self::$csrf_token = self::setCSRF();
-		}
-		else if(!self::verifyCSRF()) {
+		} else if (!self::verifyCSRF()) {
 			Server::answer(null, 'error', 'Forbidden', 403);
 		}
 
 		return true;
 	}
 
-	public static function get($key = null) {
+	public static function get($key = null)
+	{
 		return isset($key) ? @self::$request[$key] : self::$request;
 	}
 
-	public static function has($key) {
+	public static function has($key)
+	{
 		return isset(self::$request[$key]);
 	}
 
-	public static function cookie($key = null) {
+	public static function cookie($key = null)
+	{
 		return isset($key) ? @self::$cookie[$key] : self::$cookie;
 	}
 
-	public static function files($key = null) {
+	public static function files($key = null)
+	{
 		return isset($key) ? @self::$files[$key] : self::$files;
 	}
 
-	public static function server($key = null) {
+	public static function server($key = null)
+	{
 		return isset($key) ? @self::$server[$key] : self::$server;
 	}
 
-	public static function method() {
+	public static function method()
+	{
 		return self::$method;
 	}
 
-	public static function protocol() {
+	public static function protocol()
+	{
 		return self::$protocol;
 	}
 
-	public static function host() {
+	public static function host()
+	{
 		return self::$host;
 	}
 
-	public static function base() {
+	public static function base()
+	{
 		return self::$base;
 	}
 
-	public static function uri() {
+	public static function uri()
+	{
 		return self::$uri;
 	}
 
-	public static function uri_full() {
+	public static function uri_full()
+	{
 		return self::$uri_full;
 	}
 
-	public static function uri_parts($key = null) {
+	public static function uri_parts($key = null)
+	{
 		return isset($key) ? @self::$uri_parts[$key] : self::$uri_parts;
 	}
 
-	public static function url() {
+	public static function url()
+	{
 		return self::$url;
 	}
 
-	public static function referer() {
+	public static function referer()
+	{
 		return self::$referer;
 	}
 
-	public static function ip() {
+	public static function ip()
+	{
 		return self::$ip;
 	}
 
-	public static function csrf_token() {
+	public static function csrf_token()
+	{
 		return self::$csrf_token;
 	}
 
-	public static function setCSRF() {
+	public static function setCSRF()
+	{
 		$token_key = COOKIE_KEY['csrf'];
 		$token = Session::has($token_key) ? Session::get($token_key) : null;
 
-		if(empty($token)) {
+		if (empty($token)) {
 			$token = Hash::token();
 			Session::set($token_key, $token);
 		}
@@ -123,12 +142,13 @@ class Request {
 		return $token;
 	}
 
-	public static function verifyCSRF() {
+	public static function verifyCSRF()
+	{
 		$token_key = COOKIE_KEY['csrf'];
 		$token_request = self::$request[$token_key] ?? '';
 		$token_session = Session::get($token_key) ?? '';
 
-		if(hash_equals($token_request, $token_session)) {
+		if (hash_equals($token_request, $token_session)) {
 			return true;
 		}
 

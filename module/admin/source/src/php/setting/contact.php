@@ -12,11 +12,10 @@ $form_attributes = 'data-validate';
 
 $languages = site('languages');
 
-foreach($setting as $field_name => $value) {
-	if(in_array($field_name, ['name', 'description', 'address', 'hours'])) {
+foreach ($setting as $field_name => $value) {
+	if (in_array($field_name, ['name', 'description', 'address', 'hours'])) {
 		$form_builder->setFieldValue($field_name, site($field_name));
-	}
-	else {
+	} else {
 		$form_builder->setFieldValue($field_name, $value);
 	}
 }

@@ -1,5 +1,5 @@
 <?php
-	Page::set('title', __('admin.dashboard.title'));
+Page::set('title', __('admin.dashboard.title'));
 ?>
 
 <?php Theme::header(); ?>
@@ -13,7 +13,7 @@
 	<section class="section section_grow section_offset">
 		<div class="container-fluid">
 
-			<h2 class="section__title"><?=  __('admin.dashboard.title') ?></h2>
+			<h2 class="section__title"><?= __('admin.dashboard.title') ?></h2>
 
 			<div class="row fill cols-xs-1 cols-md-2 gap-xs">
 
@@ -101,7 +101,7 @@
 							<h4 class="box__title">Last logins</h4>
 						</div>
 						<div class="box__body">
-						<table class="table table_sm">
+							<table class="table table_sm">
 								<thead>
 									<tr>
 										<th>Name</th>

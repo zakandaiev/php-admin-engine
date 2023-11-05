@@ -1,7 +1,9 @@
 <?php
+
 namespace Engine;
 
-class Asset {
+class Asset
+{
 	const EXTENSION_MASK = [
 		'js' => '<script src="%s"%s></script>',
 		'css' => '<link href="%s" rel="stylesheet"%s>'
@@ -19,10 +21,11 @@ class Asset {
 		]
 	];
 
-	protected static function add($extension, $file_name, $attributes = '', $routes = null, $module = null) {
+	protected static function add($extension, $file_name, $attributes = '', $routes = null, $module = null)
+	{
 		$file_path = Path::file('asset') . "/$file_name.$extension";
 
-		if(is_file($file_path)) {
+		if (is_file($file_path)) {
 			self::$container[$extension][] = [
 				'module' => $module ?? Module::getName(),
 				'file' => "$file_name.$extension",
@@ -36,25 +39,29 @@ class Asset {
 		return false;
 	}
 
-	public static function css($asset, $attributes = null, $routes = null, $module = null) {
+	public static function css($asset, $attributes = null, $routes = null, $module = null)
+	{
 		return self::add(__FUNCTION__, $asset, $attributes, $routes, $module);
 	}
 
-	public static function js($asset, $attributes = null, $routes = null, $module = null) {
+	public static function js($asset, $attributes = null, $routes = null, $module = null)
+	{
 		return self::add(__FUNCTION__, $asset, $attributes, $routes, $module);
 	}
 
-	public static function optimization($extension, $attributes = null, $routes = null) {
+	public static function optimization($extension, $attributes = null, $routes = null)
+	{
 		self::$optimization[$extension]['attributes'] = $attributes;
 		self::$optimization[$extension]['routes'] = $routes;
 
 		return true;
 	}
 
-	public static function render($extension) {
+	public static function render($extension)
+	{
 		$assets = self::$container[$extension] ?? [];
 
-		if(empty($assets)) {
+		if (empty($assets)) {
 			return false;
 		}
 
@@ -73,7 +80,7 @@ class Asset {
 
 		$output = '';
 
-		foreach($assets as $asset) {
+		foreach ($assets as $asset) {
 			// TODO
 			// add * support
 			// if(!self::checkRoute($asset['routes'])) {
@@ -90,38 +97,43 @@ class Asset {
 		return $output;
 	}
 
-	public static function url($module = null) {
+	public static function url($module = null)
+	{
 		return Path::url('asset', $module ?? Module::get('extends'));
 	}
 
-	public static function getContainer($extension = null) {
+	public static function getContainer($extension = null)
+	{
 		return isset($extension) ? @self::$container[$extension] : self::$container;
 	}
 
-	public static function hasContainer($extension) {
+	public static function hasContainer($extension)
+	{
 		return isset(self::$container[$extension]);
 	}
 
-	public static function setContainer($key, $data = null) {
+	public static function setContainer($key, $data = null)
+	{
 		self::$container[$key] = $data;
 
 		return true;
 	}
 
-	protected static function checkRoute($routes = null) {
-		if(empty($routes)) {
+	protected static function checkRoute($routes = null)
+	{
+		if (empty($routes)) {
 			return true;
 		}
 
 		$routes = is_array($routes) ? $routes : (!empty($routes) ? [$routes] : []);
 
-		$routes = array_map(function($string) {
+		$routes = array_map(function ($string) {
 			return trim(trim($string ?? ''), '/');
 		}, $routes);
 
 		$route = trim(trim(Route::get('uri') ?? ''), '/');
 
-		if(in_array($route, $routes)) {
+		if (in_array($route, $routes)) {
 			return true;
 		}
 

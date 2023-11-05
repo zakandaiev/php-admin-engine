@@ -7,7 +7,7 @@ return [
 	'fields' => [
 		'is_enabled' => $is_enabled
 	],
-	'execute_post' => function($rowCount, $fields, $data) {
+	'execute_post' => function ($rowCount, $fields, $data) {
 		Hook::run('group.toggle', $fields);
 	}
 ];

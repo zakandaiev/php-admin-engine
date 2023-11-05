@@ -6,11 +6,9 @@
     "de": "German",
     "es": "Spanish"
   },
-
   "num": {
     "product": "{s} товар | {s} товари | {s} товарів"
   },
-
   "datepicker": {
     "day": {
       "sunday": "Sunday",
@@ -60,11 +58,10 @@
     },
     "today": "Today",
     "clear": "Clear",
-		"dateFormat": "dd.MM.yyyy",
-		"timeFormat": "HH:mm",
-		"firstDay": 1
+    "dateFormat": "dd.MM.yyyy",
+    "timeFormat": "HH:mm",
+    "firstDay": 1
   },
-
   "admin": {
     "classifier": {
       "sort": {

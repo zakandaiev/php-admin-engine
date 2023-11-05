@@ -6,44 +6,50 @@ use \PDO;
 use \PDOException;
 use \Exception;
 
-class Database {
+class Database
+{
 	protected static $connection;
 	protected static $is_connected = false;
 
-	public static function initialize() {
-		if(!self::$connection instanceof PDO) {
+	public static function initialize()
+	{
+		if (!self::$connection instanceof PDO) {
 			self::$connection = self::connect();
 		}
 
 		return true;
 	}
 
-	public static function finalize() {
+	public static function finalize()
+	{
 		self::$connection = null;
 
 		return true;
 	}
 
-	public static function connection() {
+	public static function connection()
+	{
 		return self::$connection;
 	}
 
-	public static function is_connected() {
+	public static function is_connected()
+	{
 		return self::$is_connected;
 	}
 
-	protected static function connect() {
-		if(!defined('DATABASE')) {
+	protected static function connect()
+	{
+		if (!defined('DATABASE')) {
 			throw new Exception('Database config is missed');
 		}
 
-		if(empty(DATABASE)) {
+		if (empty(DATABASE)) {
 			throw new Exception('Database config is empty');
 		}
 
 		extract(DATABASE);
 
-		if(!isset($host) || !isset($name) || !isset($username) || !isset($password) || !isset($charset) || !isset($prefix)) {
+		if (!isset($host) || !isset($name) || !isset($username) || !isset($password) || !isset($charset) || !isset($prefix)) {
 			throw new Exception('Database config is invalid');
 		}
 
@@ -53,8 +59,7 @@ class Database {
 			$connection = new PDO($dsn, $username, $password, @$options);
 
 			self::$is_connected = true;
-		}
-		catch(PDOException $error) {
+		} catch (PDOException $error) {
 			throw new Exception($error->getMessage());
 		}
 

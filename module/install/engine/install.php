@@ -21,45 +21,46 @@ storePostData();
 $step = 'db';
 $step_next = 'site';
 
-if(isset($_GET['step']) && $_GET['step'] == 'site') {
+if (isset($_GET['step']) && $_GET['step'] == 'site') {
 	$step = 'site';
 	$step_next = 'auth';
 }
-if(isset($_GET['step']) && $_GET['step'] == 'auth') {
+if (isset($_GET['step']) && $_GET['step'] == 'auth') {
 	$step = 'auth';
 	$step_next = 'demo';
 }
-if(isset($_GET['step']) && $_GET['step'] == 'demo') {
+if (isset($_GET['step']) && $_GET['step'] == 'demo') {
 	$step = 'demo';
 	$step_next = 'install';
 }
-if(isset($_GET['step']) && $_GET['step'] == 'install') {
+if (isset($_GET['step']) && $_GET['step'] == 'install') {
 	$step = 'install';
 }
 
-if($step == 'install' && install()) {
+if ($step == 'install' && install()) {
 	Session::flush();
 	Server::redirect('/admin/dashboard');
 }
 
-function tableExists($connection, $table) {
+function tableExists($connection, $table)
+{
 	try {
 		$result = $connection->query("SELECT 1 FROM $table LIMIT 1");
-	}
-	catch(Exception $e) {
+	} catch (Exception $e) {
 		return false;
 	}
 	return $result !== false;
 }
 
-function install() {
+function install()
+{
 	$data = Session::get();
 
 	// FOLDERS
-	if(!file_exists(ROOT_DIR . '/theme')) {
+	if (!file_exists(ROOT_DIR . '/theme')) {
 		mkdir(ROOT_DIR . '/theme', 0755, true);
 	}
-	if(!file_exists(ROOT_DIR . '/upload')) {
+	if (!file_exists(ROOT_DIR . '/upload')) {
 		mkdir(ROOT_DIR . '/upload', 0755, true);
 	}
 
@@ -80,29 +81,28 @@ function install() {
 	executeSQL($data, $connection, $install_file);
 
 	// DEMO DATA
-	if(isset($data['demo_data']) && $data['demo_data'] === 'on') {
+	if (isset($data['demo_data']) && $data['demo_data'] === 'on') {
 		$demo_file = file_get_contents(ROOT_DIR . '/module/install/engine/demo/demo.sql');
 		executeSQL($data, $connection, $demo_file);
 
-		if(file_exists(ROOT_DIR . '/upload/demo')) {
+		if (file_exists(ROOT_DIR . '/upload/demo')) {
 			unlink(ROOT_DIR . '/upload/demo');
-		}
-		else {
+		} else {
 			mkdir(ROOT_DIR . '/upload/demo', 0755, true);
 		}
 
-		foreach(glob_recursive(ROOT_DIR . '/module/install/engine/demo/theme/*.*') as $file) {
+		foreach (glob_recursive(ROOT_DIR . '/module/install/engine/demo/theme/*.*') as $file) {
 			$dest_folder = str_replace('/module/install/engine/demo', '', $file);
 			$dest_folder = str_replace('/' . file_name($file) . '.' . file_extension($file), '', $dest_folder);
 
-			if(!file_exists($dest_folder)) {
+			if (!file_exists($dest_folder)) {
 				mkdir($dest_folder, 0755, true);
 			}
 
 			copy($file, $dest_folder . '/' . file_name($file) . '.' . file_extension($file));
 		}
 
-		foreach(glob(ROOT_DIR . '/module/install/engine/demo/upload/*.*') as $file) {
+		foreach (glob(ROOT_DIR . '/module/install/engine/demo/upload/*.*') as $file) {
 			copy($file, ROOT_DIR . '/upload/demo/' . file_name($file) . '.' . file_extension($file));
 		}
 	}
@@ -112,7 +112,8 @@ function install() {
 	return true;
 }
 
-function executeSQL($data, $connection, $sql) {
+function executeSQL($data, $connection, $sql)
+{
 	$replace_from = [
 		'%prefix%',
 		'%site_name%', '%contact_email%',
@@ -131,14 +132,16 @@ function executeSQL($data, $connection, $sql) {
 	$connection->query($sql_formatted);
 }
 
-function storePostData() {
-	foreach($_POST as $key => $value) {
+function storePostData()
+{
+	foreach ($_POST as $key => $value) {
 		${$key} = $value;
 		Session::set($key, $value);
 	}
 }
 
-function generateAuthToken() {
+function generateAuthToken()
+{
 	$auth_key = COOKIE_KEY['auth'];
 	$auth_token = Session::hasCookie($auth_key) ? Session::getCookie($auth_key) : Hash::token();
 
@@ -147,7 +150,8 @@ function generateAuthToken() {
 	return $auth_token;
 }
 
-function installConfig($data) {
+function installConfig($data)
+{
 	$path = ROOT_DIR . '/config.php';
 
 	// CONFIG START
@@ -246,8 +250,9 @@ function installConfig($data) {
 	return true;
 }
 
-function installSEO($data) {
-	$site_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http').'://'.$_SERVER['HTTP_HOST'];
+function installSEO($data)
+{
+	$site_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'];
 
 	// ROBOTS
 	$robots_txt = 'User-agent: *' . PHP_EOL;
@@ -306,20 +311,20 @@ function installSEO($data) {
 							<div class="box">
 								<div class="box__header">
 									<h4 class="box__title">
-										<?php if($step == 'site'): ?>
+										<?php if ($step == 'site') : ?>
 											Setup site
-										<?php elseif($step == 'auth'): ?>
+										<?php elseif ($step == 'auth') : ?>
 											Setup administrator's account
-										<?php elseif($step == 'demo'): ?>
+										<?php elseif ($step == 'demo') : ?>
 											Demo data
-										<?php else: ?>
+										<?php else : ?>
 											Setup database
 										<?php endif; ?>
 									</h4>
 								</div>
 
 								<div class="box__body">
-									<?php if($step == 'auth'): ?>
+									<?php if ($step == 'auth') : ?>
 
 										<label>Email</label>
 										<input type="email" name="admin_email" placeholder="Email" required minlength="6" maxlength="200" autofocus>
@@ -327,38 +332,38 @@ function installSEO($data) {
 										<label>Password</label>
 										<input type="text" name="admin_password" placeholder="Password" required minlength="8" maxlength="200">
 
-									<?php elseif($step == 'site'): ?>
+									<?php elseif ($step == 'site') : ?>
 
 										<?php
-											$dsn = sprintf('mysql:host=%s;dbname=%s;charset=%s', $_POST['db_host'], $_POST['db_name'], $_POST['db_charset']);
+										$dsn = sprintf('mysql:host=%s;dbname=%s;charset=%s', $_POST['db_host'], $_POST['db_name'], $_POST['db_charset']);
 
-											$options = [
-												PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-												PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . $_POST['db_charset']
-											];
+										$options = [
+											PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+											PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . $_POST['db_charset']
+										];
 
-											try {
-												$connection = new PDO($dsn, $_POST['db_user'], $_POST['db_pass'], $options);
-											} catch(PDOException $e) {
-												echo "<p>Error! Reason: {$e->getMessage()}</p>";
-												echo '<a href="/install" class="btn btn_fit btn_primary mt-2">Try again</a>';
-												exit;
-											}
+										try {
+											$connection = new PDO($dsn, $_POST['db_user'], $_POST['db_pass'], $options);
+										} catch (PDOException $e) {
+											echo "<p>Error! Reason: {$e->getMessage()}</p>";
+											echo '<a href="/install" class="btn btn_fit btn_primary mt-2">Try again</a>';
+											exit;
+										}
 
-											if(tableExists($connection, $_POST['db_prefix'] . '_setting') == 1) {
-												echo '<p>Error! Remove all tables from DB <b>' . $_POST['db_name'] . '</b> and try again.</p>';
-												echo '<a href="/install" class="btn btn_fit btn_primary mt-2">Try again</a>';
-												exit;
-											}
+										if (tableExists($connection, $_POST['db_prefix'] . '_setting') == 1) {
+											echo '<p>Error! Remove all tables from DB <b>' . $_POST['db_name'] . '</b> and try again.</p>';
+											echo '<a href="/install" class="btn btn_fit btn_primary mt-2">Try again</a>';
+											exit;
+										}
 										?>
 
 										<label>Site name</label>
 										<input type="text" name="site_name" placeholder="Site name" required autofocus>
 
 										<label>Contact email</label>
-										<input type="email" name="contact_email" value="admin@<?=$_SERVER['HTTP_HOST']?>" placeholder="Contact email" required>
+										<input type="email" name="contact_email" value="admin@<?= $_SERVER['HTTP_HOST'] ?>" placeholder="Contact email" required>
 
-									<?php elseif($step == 'demo'): ?>
+									<?php elseif ($step == 'demo') : ?>
 
 										<label class="switch">
 											<input type="checkbox" name="demo_data">
@@ -366,7 +371,7 @@ function installSEO($data) {
 											<span>Fill up with demo data</span>
 										</label>
 
-									<?php else: ?>
+									<?php else : ?>
 
 										<label>Timezone</label>
 										<input type="text" name="timezone" value="Europe/Kiev" placeholder="Timezone" required>
@@ -394,9 +399,9 @@ function installSEO($data) {
 
 								<div class="box__footer">
 									<button type="submit" class="btn btn_fit btn_primary">
-										<?php if($step == 'demo'): ?>
+										<?php if ($step == 'demo') : ?>
 											Install
-										<?php else: ?>
+										<?php else : ?>
 											Next step
 										<?php endif; ?>
 									</button>

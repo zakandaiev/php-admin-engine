@@ -2,19 +2,20 @@
 
 namespace Engine;
 
-class Template {
-	public static function load($template, $is_required = true, $module = null) {
+class Template
+{
+	public static function load($template, $is_required = true, $module = null)
+	{
 		$template_path = Path::file('view', $module) . "/$template.php";
 
-		if(!is_file($template_path) && Module::get('extends')) {
+		if (!is_file($template_path) && Module::get('extends')) {
 			$template_path = Path::file('view', Module::get('extends')) . "/$template.php";
 		}
 
-		if(!is_file($template_path)) {
-			if($is_required) {
+		if (!is_file($template_path)) {
+			if ($is_required) {
 				throw new \Exception(sprintf('Template %s not found in %s.', $template, $template_path));
-			}
-			else {
+			} else {
 				return false;
 			}
 		}
@@ -26,8 +27,7 @@ class Template {
 
 		try {
 			include $template_path;
-		}
-		catch(\Exception $e){
+		} catch (\Exception $e) {
 			ob_end_clean();
 			throw $e;
 		}
@@ -37,14 +37,15 @@ class Template {
 		return true;
 	}
 
-	public static function has($template, $module = null) {
+	public static function has($template, $module = null)
+	{
 		$template_path = Path::file('view', $module) . "/$template.php";
 
-		if(!is_file($template_path) && Module::get('extends')) {
+		if (!is_file($template_path) && Module::get('extends')) {
 			$template_path = Path::file('view', Module::get('extends')) . "/$template.php";
 		}
 
-		if(!is_file($template_path)) {
+		if (!is_file($template_path)) {
 			return false;
 		}
 

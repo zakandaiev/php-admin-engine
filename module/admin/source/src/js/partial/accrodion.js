@@ -18,14 +18,14 @@ document.addEventListener('click', event => {
 	const is_collapse = (accordion.parentElement && (accordion.parentElement.hasAttribute('data-collapse') || accordion.parentElement.getAttribute('data-collapse') == true));
 	if (is_collapse) {
 		accordion.parentElement.querySelectorAll('.accordion').forEach(a => {
-			if(a === accordion) {
+			if (a === accordion) {
 				return false;
 			}
 
 			a.classList.remove('active');
 
 			const b = a.querySelector('.accordion__body');
-			if(b) {
+			if (b) {
 				b.style.height = '0px';
 			}
 		});

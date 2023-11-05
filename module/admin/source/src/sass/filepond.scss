@@ -55,7 +55,8 @@
 	cursor: pointer;
 	transition: var(--transition);
 
-	&:hover, &:focus {
+	&:hover,
+	&:focus {
 		box-shadow: 0 0 0 0.1em rgba(255, 255, 255, 0.9);
 		color: #fff;
 	}
@@ -65,7 +66,8 @@
 	margin: 0.25em;
 }
 
-.filepond--item-panel, .filepond--drip {
+.filepond--item-panel,
+.filepond--drip {
 	border-radius: var(--radius);
 	background: var(--color-box);
 }
@@ -118,16 +120,19 @@
 		width: calc(50% - 0.5em);
 	}
 }
+
 @include query(lg) {
 	.filepond--grid .filepond--item {
 		width: calc(33.333333% - 0.5em);
 	}
 }
+
 @include query(xl) {
 	.filepond--grid .filepond--item {
 		width: calc(25% - 0.5em);
 	}
 }
+
 @include query(xxl) {
 	.filepond--grid .filepond--item {
 		width: calc(20% - 0.5em);

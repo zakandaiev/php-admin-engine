@@ -2,7 +2,8 @@
 
 namespace Engine;
 
-class Engine {
+class Engine
+{
 	const PHP_MIN = '7.4.0';
 	const NAME = 'PHP Admin Engine';
 	const VERSION = '1.0.0';
@@ -11,8 +12,9 @@ class Engine {
 
 	protected static $time_start;
 
-	public static function start() {
-		if(DEBUG['is_enabled']) {
+	public static function start()
+	{
+		if (DEBUG['is_enabled']) {
 			ini_set('display_errors', '1');
 			ini_set('display_startup_errors', '1');
 			error_reporting(E_ALL);
@@ -64,10 +66,11 @@ class Engine {
 		Router::initialize();
 	}
 
-	public static function stop() {
+	public static function stop()
+	{
 		Database::finalize();
 
-		if(DEBUG['is_enabled']) {
+		if (DEBUG['is_enabled']) {
 			$time_end = hrtime(true);
 			$time_result = $time_end - self::$time_start;
 			$time_result /= 1e+6; // convert ns to ms

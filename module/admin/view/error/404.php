@@ -1,6 +1,6 @@
 <?php
-	Page::set('no_index_no_follow', true);
-	Page::set('title', __('admin.404.title'));
+Page::set('no_index_no_follow', true);
+Page::set('title', __('admin.404.title'));
 ?>
 
 <?php Theme::header(); ?>
@@ -17,12 +17,12 @@
 			<h4 class="color-text"><?= __('admin.404.subtitle') ?></h4>
 
 			<div class="d-flex gap-2 mt-4">
-				<?php if(isset(Request::referer())): ?>
+				<?php if (isset(Request::referer())) : ?>
 					<a href="<?= Request::referer() ?>" class="btn btn_lg btn_secondary"><?= __('admin.404.go_back') ?></a>
-					<?php if(trim(Request::referer() ?? '', '/') !== Request::base()): ?>
+					<?php if (trim(Request::referer() ?? '', '/') !== Request::base()) : ?>
 						<a href="<?= site('url_language') ?>/admin/dashboard" class="btn btn_lg btn_primary"><?= __('admin.404.go_dashboard') ?></a>
 					<?php endif; ?>
-				<?php else: ?>
+				<?php else : ?>
 					<a href="<?= site('url_language') ?>/admin/dashboard" class="btn btn_lg btn_primary"><?= __('admin.404.go_dashboard') ?></a>
 				<?php endif; ?>
 			</div>

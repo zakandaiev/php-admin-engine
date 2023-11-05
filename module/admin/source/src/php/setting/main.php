@@ -12,11 +12,11 @@ $form_attributes = 'data-validate';
 
 $languages = site('languages');
 
-foreach($setting as $field_name => $value) {
+foreach ($setting as $field_name => $value) {
 	$form_builder->setFieldValue($field_name, $value);
 }
 
-$form_builder->setFieldValue('language', array_map(function($language) use($setting) {
+$form_builder->setFieldValue('language', array_map(function ($language) use ($setting) {
 	$l = new \stdClass();
 
 	$l->value = $language['key'];

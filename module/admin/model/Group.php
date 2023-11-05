@@ -6,8 +6,10 @@ use Engine\Statement;
 use Engine\Module;
 use Engine\User;
 
-class Group extends \Engine\Model {
-	public function getGroups() {
+class Group extends \Engine\Model
+{
+	public function getGroups()
+	{
 		$sql = '
 			SELECT
 				*,
@@ -37,24 +39,25 @@ class Group extends \Engine\Model {
 
 		$groups = $groups->filter('group')->paginate()->execute(['language' => site('language')])->fetchAll();
 
-		foreach($groups as $group) {
+		foreach ($groups as $group) {
 			$group->translations = !empty($group->translations) ? explode(',', $group->translations) : [];
 		}
 
 		return $groups;
 	}
 
-	public function getRoutes() {
+	public function getRoutes()
+	{
 		$routes_grouped = [];
 		$modules = Module::get();
 
-		foreach($modules as $module) {
-			if(!$module['is_enabled'] || ($module['name'] !== 'admin' && $module['extends'] !== 'admin')) {
+		foreach ($modules as $module) {
+			if (!$module['is_enabled'] || ($module['name'] !== 'admin' && $module['extends'] !== 'admin')) {
 				continue;
 			}
 
-			foreach($module['routes'] as $route) {
-				if(isset($route['is_public']) && $route['is_public'] === true) {
+			foreach ($module['routes'] as $route) {
+				if (isset($route['is_public']) && $route['is_public'] === true) {
 					continue;
 				}
 
@@ -67,22 +70,29 @@ class Group extends \Engine\Model {
 
 		ksort($routes_grouped, SORT_NATURAL | SORT_FLAG_CASE);
 
-		return array_map(function($a) {sort($a, SORT_NATURAL | SORT_FLAG_CASE);return $a;}, $routes_grouped);
+		return array_map(function ($a) {
+			sort($a, SORT_NATURAL | SORT_FLAG_CASE);
+			return $a;
+		}, $routes_grouped);
 	}
 
-	public function getUsers() {
+	public function getUsers()
+	{
 		$sql = "SELECT * FROM {user} ORDER BY name ASC, id ASC";
 
 		$users = new Statement($sql);
 
 		$users = $users->execute()->fetchAll();
 
-		$users = array_map(function($user) { return \Engine\User::format($user); }, $users);
+		$users = array_map(function ($user) {
+			return \Engine\User::format($user);
+		}, $users);
 
 		return $users;
 	}
 
-	public function getGroupById($id, $language = null) {
+	public function getGroupById($id, $language = null)
+	{
 		$sql = '
 			SELECT
 				*,
@@ -114,14 +124,15 @@ class Group extends \Engine\Model {
 		return $group->execute(['id' => $id, 'language' => $language ?? site('language')])->fetch();
 	}
 
-	public function getGroupRoutesById($group_id) {
+	public function getGroupRoutesById($group_id)
+	{
 		$routes = new \stdClass();
 
 		$sql = 'SELECT route FROM {group_route} WHERE group_id = :group_id';
 
 		$statement = new Statement($sql);
 
-		foreach($statement->execute(['group_id' => $group_id])->fetchAll() as $route) {
+		foreach ($statement->execute(['group_id' => $group_id])->fetchAll() as $route) {
 			list($method, $uri) = explode('@', $route->route, 2);
 			$routes->{$method}[] = $uri;
 		}
@@ -129,14 +140,15 @@ class Group extends \Engine\Model {
 		return $routes;
 	}
 
-	public function getGroupUsersById($group_id) {
+	public function getGroupUsersById($group_id)
+	{
 		$users = [];
 
 		$sql = 'SELECT user_id FROM {group_user} WHERE group_id = :group_id';
 
 		$statement = new Statement($sql);
 
-		foreach($statement->execute(['group_id' => $group_id])->fetchAll() as $user) {
+		foreach ($statement->execute(['group_id' => $group_id])->fetchAll() as $user) {
 			$users[] = $user->user_id;
 		}
 

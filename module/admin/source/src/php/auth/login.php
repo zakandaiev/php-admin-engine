@@ -9,9 +9,9 @@
 				<div class="col-xs-12 col-sm-10 col-md-6 col-lg-4 mx-auto">
 
 					<div class="text-center mb-2">
-						<?php if(!empty(site('logo'))): ?>
+						<?php if (!empty(site('logo'))) : ?>
 							<img class="d-inline-block w-25 mb-2" src="<?= site('url') ?>/<?= site('logo') ?>" data-src-dark="<?= site('url') ?>/<?= site('logo_alt') ?>" alt="Logo">
-						<?php else: ?>
+						<?php else : ?>
 							<h1 class="font-size-32 mb-2"><?= site('name') ?></h1>
 						<?php endif; ?>
 

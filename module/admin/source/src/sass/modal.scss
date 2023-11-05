@@ -1,12 +1,12 @@
 .modals {
 	position: fixed;
-  z-index: var(--zi-below);
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+	z-index: var(--zi-below);
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
 	transition: var(--transition);
 	visibility: hidden;
 
@@ -83,7 +83,9 @@
 		cursor: pointer;
 		transition: var(--transition);
 
-		&:hover, &:focus, &:active {
+		&:hover,
+		&:focus,
+		&:active {
 			text-decoration: none;
 			color: var(--color-heading);
 		}

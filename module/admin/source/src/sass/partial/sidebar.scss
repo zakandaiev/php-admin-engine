@@ -47,7 +47,8 @@
 		padding: 1.5em;
 		background: #222e3c;
 
-		& > img, & > svg {
+		& > img,
+		& > svg {
 			display: block;
 			width: auto;
 			height: 2.5em;
@@ -90,7 +91,7 @@
 		}
 
 		&.active {
-			background: linear-gradient(90deg,rgba(59,125,221,.1),rgba(59,125,221,.088) 50%,transparent);
+			background: linear-gradient(90deg, rgba(59, 125, 221, .1), rgba(59, 125, 221, .088) 50%, transparent);
 			color: #e9ecef;
 
 			&::before {
@@ -105,7 +106,9 @@
 			}
 		}
 
-		&:hover, &:focus, &:active {
+		&:hover,
+		&:focus,
+		&:active {
 			color: rgba(233, 236, 239, 0.75);
 
 			&.active {
@@ -201,7 +204,9 @@
 			color: #518be1;
 		}
 
-		&:hover, &:focus, &:active {
+		&:hover,
+		&:focus,
+		&:active {
 			color: #e9ecef;
 
 			&.active {

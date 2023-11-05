@@ -2,4 +2,6 @@
 
 namespace Module\Public\Controller;
 
-class Error extends Controller {}
+class Error extends Controller
+{
+}

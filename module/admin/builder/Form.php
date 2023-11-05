@@ -6,40 +6,41 @@ use Engine\Form;
 use Engine\Path;
 use Engine\Request;
 
-class Form {
+class Form
+{
 	protected $form_name;
 	protected $form_data = [];
 	protected $fields = [];
 	protected $is_translation;
 
-	public function __construct($forms, $is_translation = false, $module = null) {
+	public function __construct($forms, $is_translation = false, $module = null)
+	{
 		$_forms = [];
 
-		if(!is_array($forms)) {
+		if (!is_array($forms)) {
 			$_forms[] = $forms;
-		}
-		else {
+		} else {
 			$_forms = $forms;
 		}
 
-		foreach($_forms as $form_name) {
+		foreach ($_forms as $form_name) {
 			$form = Path::file('form', $module) . "/$form_name.php";
 
-			if(!is_file($form)) {
+			if (!is_file($form)) {
 				continue;
 			}
 
 			$form_data = require $form;
 
-			if(empty($form_data) || !isset($form_data['table']) || !isset($form_data['fields'])) {
+			if (empty($form_data) || !isset($form_data['table']) || !isset($form_data['fields'])) {
 				continue;
 			}
 
 			$this->form_name = $form_name;
 			$this->form_data = $form_data;
 
-			foreach($form_data['fields'] as $field_name => $field) {
-				if($is_translation && isset($form_data['translation']) && !in_array($field_name, $form_data['translation'])) {
+			foreach ($form_data['fields'] as $field_name => $field) {
+				if ($is_translation && isset($form_data['translation']) && !in_array($field_name, $form_data['translation'])) {
 					continue;
 				}
 
@@ -52,8 +53,9 @@ class Form {
 		return $this;
 	}
 
-	public function setFieldValue($field_name, $value = null) {
-		if(empty($this->form_data) || !isset($this->fields[$field_name])) {
+	public function setFieldValue($field_name, $value = null)
+	{
+		if (empty($this->form_data) || !isset($this->fields[$field_name])) {
 			return false;
 		}
 
@@ -62,14 +64,15 @@ class Form {
 		return true;
 	}
 
-	public function render($action = 'add', $item_id = null, $form_attributes = null) {
-		if(empty($this->form_data)) {
+	public function render($action = 'add', $item_id = null, $form_attributes = null)
+	{
+		if (empty($this->form_data)) {
 			return false;
 		}
 
 		$token = Form::$action($this->form_name, $item_id, $this->is_translation);
 
-		if(empty($token)) {
+		if (empty($token)) {
 			return false;
 		}
 
@@ -81,7 +84,7 @@ class Form {
 		$html = "<form action=\"$token\"$form_class$form_attributes>";
 		$html .= "<div$row_class>";
 
-		foreach($this->fields as $field_name => $field) {
+		foreach ($this->fields as $field_name => $field) {
 			$html .= $this->renderCol($field_name);
 		}
 
@@ -92,8 +95,9 @@ class Form {
 		return $html;
 	}
 
-	public function renderCol($field_name, $value = null) {
-		if(empty($this->form_data) || !isset($this->fields[$field_name])) {
+	public function renderCol($field_name, $value = null)
+	{
+		if (empty($this->form_data) || !isset($this->fields[$field_name])) {
 			return false;
 		}
 
@@ -103,8 +107,9 @@ class Form {
 		return $this->getColHTML($field_name, $field);
 	}
 
-	public function renderSubmit() {
-		if(empty($this->form_data)) {
+	public function renderSubmit()
+	{
+		if (empty($this->form_data)) {
 			return false;
 		}
 
@@ -112,7 +117,7 @@ class Form {
 
 		$html = '<div class="' . (isset($submit_button['col_class']) ? $submit_button['col_class'] : 'col-xs-12') . '" data-form-row="submit">';
 
-		if(isset($submit_button['html'])) {
+		if (isset($submit_button['html'])) {
 			return $submit_button['html'];
 		}
 
@@ -125,14 +130,15 @@ class Form {
 		return $html;
 	}
 
-	protected function getColHTML($field_name, $field) {
-		if(empty($field_name) || !is_array($field)) {
+	protected function getColHTML($field_name, $field)
+	{
+		if (empty($field_name) || !is_array($field)) {
 			return false;
 		}
 
 		$col_class = isset($field['col_class']) ? $field['col_class'] : 'col-xs-12';
 
-		if(!isset($field['col_class']) && $field['type'] === 'hidden') {
+		if (!isset($field['col_class']) && $field['type'] === 'hidden') {
 			$col_class .= ' hidden';
 		}
 
@@ -140,7 +146,7 @@ class Form {
 
 		$html_input = $this->getColHTMLInput($field_name, $field);
 
-		if(!$html_input) {
+		if (!$html_input) {
 			return false;
 		}
 
@@ -151,23 +157,22 @@ class Form {
 		return $html;
 	}
 
-	protected function getColHTMLInput($field_name, $field) {
-		if(empty($field_name) || !is_array($field)) {
+	protected function getColHTMLInput($field_name, $field)
+	{
+		if (empty($field_name) || !is_array($field)) {
 			return false;
 		}
 
 		$html = '';
 
 		// SET LABEL
-		if(isset($field['label_html'])) {
+		if (isset($field['label_html'])) {
 			$html .= $field['label_html'];
-		}
-		else if(isset($field['label'])) {
+		} else if (isset($field['label'])) {
 			$html .= '<label';
-			if(isset($field['label_class'])) {
+			if (isset($field['label_class'])) {
 				$html .= ' class="' . $field['label_class'] . '">';
-			}
-			else {
+			} else {
 				$html .= '>';
 			}
 			$html .= $field['label'];
@@ -177,35 +182,35 @@ class Form {
 		// SET ATTRIBUTES
 		$attributes = [];
 		$attributes['name'] = isset($field['multiple']) && $field['multiple'] ? 'name="' . $field_name . '[]"' : 'name="' . $field_name . '"';
-		$enabled_attributes = ['required','min','max','pattern','multiple','range','extensions','autofocus','placeholder','rows','step'];
-		$valueless_attributes = ['required','multiple','range','autofocus'];
-		$min_max_to_datamin_datamax_replace_types = ['date','datetime','month','select'];
-		$min_max_to_minlength_maxlength_replace_types = ['email','hidden','password','tel','text','url','textarea','wysiwyg'];
+		$enabled_attributes = ['required', 'min', 'max', 'pattern', 'multiple', 'range', 'extensions', 'autofocus', 'placeholder', 'rows', 'step'];
+		$valueless_attributes = ['required', 'multiple', 'range', 'autofocus'];
+		$min_max_to_datamin_datamax_replace_types = ['date', 'datetime', 'month', 'select'];
+		$min_max_to_minlength_maxlength_replace_types = ['email', 'hidden', 'password', 'tel', 'text', 'url', 'textarea', 'wysiwyg'];
 
-		foreach($field as $attr => $attr_value) {
-			if(!in_array($attr, $enabled_attributes) && !str_starts_with($attr, 'data-')) {
+		foreach ($field as $attr => $attr_value) {
+			if (!in_array($attr, $enabled_attributes) && !str_starts_with($attr, 'data-')) {
 				continue;
 			}
 
-			if(in_array($attr, $valueless_attributes)) {
-				if($attr_value) {
+			if (in_array($attr, $valueless_attributes)) {
+				if ($attr_value) {
 					$attributes[$attr] = $attr;
 				}
 				continue;
 			}
 
-			if(($attr === 'min' || $attr === 'max') && in_array($field['type'], $min_max_to_datamin_datamax_replace_types)) {
+			if (($attr === 'min' || $attr === 'max') && in_array($field['type'], $min_max_to_datamin_datamax_replace_types)) {
 				$attributes[$attr] = 'data-' . $attr . '="' . addslashes(strval($attr_value)) . '"';
 				continue;
 			}
 
-			if(($attr === 'min' || $attr === 'max') && in_array($field['type'], $min_max_to_minlength_maxlength_replace_types)) {
+			if (($attr === 'min' || $attr === 'max') && in_array($field['type'], $min_max_to_minlength_maxlength_replace_types)) {
 				$attributes[$attr] = $attr . 'length="' . addslashes(strval($attr_value)) . '"';
 				continue;
 			}
 
-			if($attr === 'extensions') {
-				$accept = array_map(function($v) {
+			if ($attr === 'extensions') {
+				$accept = array_map(function ($v) {
 					return self::getMimeByExtension($v) ?? '.' . $v;
 				}, $attr_value);
 
@@ -221,135 +226,131 @@ class Form {
 
 		$value = $field['value'] ?? $field['default'] ?? null;
 
-		if(isset($field['multiple']) && $field['multiple'] && is_string($value) && ($value[0] === '[' || $value[0] === '{')) {
+		if (isset($field['multiple']) && $field['multiple'] && is_string($value) && ($value[0] === '[' || $value[0] === '{')) {
 			$value = json_decode($value);
-		}
-		else if(is_string($value)) {
+		} else if (is_string($value)) {
 			$value = addcslashes($value, '"');
 		}
 
 		// FORMAT ATTRIBUTES & INIT HTML BY RIGHT TAG
-		switch($field['type']) {
+		switch ($field['type']) {
 			case 'checkbox':
 			case 'radio': {
-				$field['value'] = $field['value'] ?? [];
+					$field['value'] = $field['value'] ?? [];
 
-				foreach($field['value'] as $key => $value) {
-					$selected = isset($value->selected) && $value->selected ? ' checked' : '';
+					foreach ($field['value'] as $key => $value) {
+						$selected = isset($value->selected) && $value->selected ? ' checked' : '';
 
-					$html .= '<label><input type="' . $field['type'] . '" ' . implode(' ', $attributes) . ' value="' . $value->value . '"' . $selected . '><span>' . $value->name . '</span></label>';
+						$html .= '<label><input type="' . $field['type'] . '" ' . implode(' ', $attributes) . ' value="' . $value->value . '"' . $selected . '><span>' . $value->name . '</span></label>';
+					}
+
+					break;
 				}
-
-				break;
-			}
 			case 'date':
 			case 'datetime':
 			case 'month':
 			case 'time': {
-				if(isset($attributes['name'])) $attributes['name'] = 'name="' . $field_name . '"';
-				if(isset($attributes['range'])) $attributes['range'] = 'data-' . $attributes['range'];
-				if(isset($attributes['multiple'])) $attributes['multiple'] = 'data-' . $attributes['multiple'];
+					if (isset($attributes['name'])) $attributes['name'] = 'name="' . $field_name . '"';
+					if (isset($attributes['range'])) $attributes['range'] = 'data-' . $attributes['range'];
+					if (isset($attributes['multiple'])) $attributes['multiple'] = 'data-' . $attributes['multiple'];
 
-				$value = !empty($value) ? ' value="' . $value . '"' : '';
+					$value = !empty($value) ? ' value="' . $value . '"' : '';
 
-				$html .= '<input type="text" data-picker="' . $field['type'] . '" ' . implode(' ', $attributes) . $value . '>';
+					$html .= '<input type="text" data-picker="' . $field['type'] . '" ' . implode(' ', $attributes) . $value . '>';
 
-				break;
-			}
+					break;
+				}
 			case 'file': {
-				$value = is_array($value) ? $value : ($value ? [$value] : []);
+					$value = is_array($value) ? $value : ($value ? [$value] : []);
 
-				if(isset($attributes['placeholder'])) {
-					$attributes['data-placeholder'] = 'data-' . $attributes['placeholder'];
-					unset($attributes['placeholder']);
+					if (isset($attributes['placeholder'])) {
+						$attributes['data-placeholder'] = 'data-' . $attributes['placeholder'];
+						unset($attributes['placeholder']);
+					}
+
+					$value = array_map(function ($v) {
+						return [
+							'value' => $v,
+							'poster' => Request::base() . '/' . $v
+						];
+					}, $value);
+
+					$value = !empty($value) ? json_encode($value, JSON_UNESCAPED_SLASHES) : '';
+
+					$value = $value ? " data-value='$value'" : '';
+
+					$html .= '<input type="file" ' . implode(' ', $attributes) . $value . '>';
+
+					break;
 				}
-
-				$value = array_map(function($v) {
-					return [
-						'value' => $v,
-						'poster' => Request::base() . '/' . $v
-					];
-				}, $value);
-
-				$value = !empty($value) ? json_encode($value, JSON_UNESCAPED_SLASHES) : '';
-
-				$value = $value ? " data-value='$value'" : '';
-
-				$html .= '<input type="file" ' . implode(' ', $attributes) . $value . '>';
-
-				break;
-			}
 			case 'textarea': {
-				if(!isset($attributes['rows'])) {
-					$attributes['rows'] = 'rows="1"';
+					if (!isset($attributes['rows'])) {
+						$attributes['rows'] = 'rows="1"';
+					}
+
+					$html .= '<textarea ' . implode(' ', $attributes) . '>' . $value . '</textarea>';
+
+					break;
 				}
-
-				$html .= '<textarea ' . implode(' ', $attributes) . '>' . $value . '</textarea>';
-
-				break;
-			}
 			case 'wysiwyg': {
-				$html .= '<textarea data-wysiwyg ' . implode(' ', $attributes) . '>' . $value . '</textarea>';
+					$html .= '<textarea data-wysiwyg ' . implode(' ', $attributes) . '>' . $value . '</textarea>';
 
-				break;
-			}
+					break;
+				}
 			case 'select': {
-				if(isset($attributes['placeholder'])) $attributes['placeholder'] = 'data-' . $attributes['placeholder'];
+					if (isset($attributes['placeholder'])) $attributes['placeholder'] = 'data-' . $attributes['placeholder'];
 
-				$html .= '<select ' . implode(' ', $attributes) . '>';
+					$html .= '<select ' . implode(' ', $attributes) . '>';
 
-				if(isset($attributes['placeholder'])) {
-					$html .= '<option data-placeholder="true"></option>';
-				}
+					if (isset($attributes['placeholder'])) {
+						$html .= '<option data-placeholder="true"></option>';
+					}
 
-				$field['value'] = $field['value'] ?? [];
+					$field['value'] = $field['value'] ?? [];
 
-				foreach($field['value'] as $key => $value) {
-					if(is_array($value)) {
-						$html .= '<optgroup label="' . $key . '">';
+					foreach ($field['value'] as $key => $value) {
+						if (is_array($value)) {
+							$html .= '<optgroup label="' . $key . '">';
 
-						foreach($value as $vf => $vv) {
-							$selected = isset($vv->selected) && $vv->selected ? ' selected' : '';
-							$html .= '<option value="' . $vv->value . '"' . $selected . '>' . $vv->name . '</option>';
+							foreach ($value as $vf => $vv) {
+								$selected = isset($vv->selected) && $vv->selected ? ' selected' : '';
+								$html .= '<option value="' . $vv->value . '"' . $selected . '>' . $vv->name . '</option>';
+							}
+
+							$html .= '</optgroup>';
+						} else {
+							$selected = isset($value->selected) && $value->selected ? ' selected' : '';
+							$html .= '<option value="' . $value->value . '"' . $selected . '>' . $value->name . '</option>';
 						}
+					}
 
-						$html .= '</optgroup>';
-					}
-					else {
-						$selected = isset($value->selected) && $value->selected ? ' selected' : '';
-						$html .= '<option value="' . $value->value . '"' . $selected . '>' . $value->name . '</option>';
-					}
+					$html .= '</select>';
+
+					break;
 				}
-
-				$html .= '</select>';
-
-				break;
-			}
 			case 'switch': {
-				$value = ($value === true || $value === 'true' || $value === 1 || $value === '1') ? ' checked' : '';
+					$value = ($value === true || $value === 'true' || $value === 1 || $value === '1') ? ' checked' : '';
 
-				$html = '<label class="switch">';
-				$html .= '<input type="checkbox"  ' . implode(' ', $attributes) . $value . '>';
-				$html .= '<span class="switch__slider"></span>';
+					$html = '<label class="switch">';
+					$html .= '<input type="checkbox"  ' . implode(' ', $attributes) . $value . '>';
+					$html .= '<span class="switch__slider"></span>';
 
-				if(isset($field['label_html'])) {
-					$html .= $field['label_html'];
-				}
-				else if(isset($field['label'])) {
-					$html .= '<span';
-					if(isset($field['label_class'])) {
-						$html .= ' class="' . $field['label_class'] . '">';
+					if (isset($field['label_html'])) {
+						$html .= $field['label_html'];
+					} else if (isset($field['label'])) {
+						$html .= '<span';
+						if (isset($field['label_class'])) {
+							$html .= ' class="' . $field['label_class'] . '">';
+						} else {
+							$html .= '>';
+						}
+						$html .= $field['label'];
+						$html .= '</span>';
 					}
-					else {
-						$html .= '>';
-					}
-					$html .= $field['label'];
-					$html .= '</span>';
-				}
 
-				$html .= '</label>';
-				break;
-			}
+					$html .= '</label>';
+					break;
+				}
 			case 'color':
 			case 'email':
 			case 'hidden':
@@ -359,21 +360,22 @@ class Form {
 			case 'tel':
 			case 'text':
 			case 'url': {
-				$value = !empty($value) ? ' value="' . $value . '"' : '';
+					$value = !empty($value) ? ' value="' . $value . '"' : '';
 
-				$html .= '<input type="' . $field['type'] . '" ' . implode(' ', $attributes) . $value . '>';
+					$html .= '<input type="' . $field['type'] . '" ' . implode(' ', $attributes) . $value . '>';
 
-				break;
-			}
+					break;
+				}
 			default: {
-				return false;
-			}
+					return false;
+				}
 		}
 
 		return $html;
 	}
 
-	protected function getMimeByExtension($extension) {
+	protected function getMimeByExtension($extension)
+	{
 		$map = [
 			'123' => 'application/vnd.lotus-1-2-3',
 			'1km' => 'application/vnd.1000minds.decision-model+xml',

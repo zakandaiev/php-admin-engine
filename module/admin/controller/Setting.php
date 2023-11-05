@@ -4,12 +4,14 @@ namespace Module\Admin\Controller;
 
 use Engine\Template;
 
-class Setting extends AdminController {
-	public function getSection() {
+class Setting extends AdminController
+{
+	public function getSection()
+	{
 		$section = $this->route['parameter']['section'];
 		$template = 'setting/' . $section;
 
-		if(!Template::has($template)) {
+		if (!Template::has($template)) {
 			$this->view->error('404');
 		}
 

@@ -3,26 +3,26 @@
 ############################# ADMIN SIDEBAR #############################
 Hook::setData('admin.sidebar', []);
 
-Hook::register('admin_sidebar_append', function($route) {
+Hook::register('admin_sidebar_append', function ($route) {
 	$sidebar = Hook::getData('admin.sidebar') ?? [];
 	$sidebar[] = $route;
 	Hook::setData('admin.sidebar', $sidebar);
 });
 
-Hook::register('admin_sidebar_prepend', function($route) {
+Hook::register('admin_sidebar_prepend', function ($route) {
 	$sidebar = Hook::getData('admin.sidebar') ?? [];
 	array_unshift($sidebar, $route);
 	Hook::setData('admin.sidebar', $sidebar);
 });
 
-Hook::register('admin_sidebar_append_after', function($position, $append_route) {
+Hook::register('admin_sidebar_append_after', function ($position, $append_route) {
 	$sidebar = Hook::getData('admin.sidebar') ?? [];
 	$sidebar_new = [];
 
-	foreach($sidebar as $route) {
+	foreach ($sidebar as $route) {
 		$sidebar_new[] = $route;
 
-		if(is_string($route['route']) && trim($route['route'], '/') === trim($position, '/')) {
+		if (is_string($route['route']) && trim($route['route'], '/') === trim($position, '/')) {
 			$sidebar_new[] = $append_route;
 		}
 	}
@@ -282,7 +282,7 @@ Hook::run('admin_sidebar_append', [
 ]);
 Hook::run('admin_sidebar_append', [
 	'icon' => 'user-circle',
-	'label' => function() {
+	'label' => function () {
 		$notifications_count = User::get()->notifications_count;
 		return $notifications_count > 0 ? $notifications_count : null;
 	},
@@ -297,7 +297,7 @@ Hook::run('admin_sidebar_append', [
 ]);
 Hook::run('admin_sidebar_append', [
 	'icon' => 'message-circle',
-	'label' => function() {
+	'label' => function () {
 		$count = \Module\Admin\Model\Contact::getInstance()->countUnreadContacts();
 		return $count > 0 ? $count : null;
 	},
@@ -316,7 +316,7 @@ Hook::run('admin_sidebar_append', [
 ]);
 Hook::run('admin_sidebar_append', [
 	'icon' => 'message',
-	'label' => function() {
+	'label' => function () {
 		$count = \Module\Admin\Model\Comment::getInstance()->countUnapprovedComments();
 		return $count > 0 ? $count : null;
 	},

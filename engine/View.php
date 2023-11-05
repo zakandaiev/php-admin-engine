@@ -2,14 +2,16 @@
 
 namespace Engine;
 
-class View {
+class View
+{
 	protected static $data = [];
 
-	public function render($template, $is_required = true) {
+	public function render($template, $is_required = true)
+	{
 		$module_name = Module::getName();
 		$module_extends = Module::get('extends');
 
-		if($module_extends) {
+		if ($module_extends) {
 			Module::setName($module_extends);
 			Template::load('functions', false, $module_extends);
 			Module::setName($module_name);
@@ -20,7 +22,8 @@ class View {
 		Template::load($template, $is_required, $module_name);
 	}
 
-	public function error($code) {
+	public function error($code)
+	{
 		http_response_code($code);
 
 		$this->render('error/' . $code);
@@ -28,19 +31,21 @@ class View {
 		exit;
 	}
 
-	public static function getData($key = null) {
+	public static function getData($key = null)
+	{
 		return isset($key) ? @self::$data[$key] : self::$data;
 	}
 
-	public static function hasData($key) {
+	public static function hasData($key)
+	{
 		return isset(self::$data[$key]);
 	}
 
-	public static function setData($key, $data = null) {
-		if(is_string($key)) {
+	public static function setData($key, $data = null)
+	{
+		if (is_string($key)) {
 			self::$data[$key] = $data;
-		}
-		else {
+		} else {
 			self::$data = array_merge(self::$data, $key);
 		}
 

@@ -44,12 +44,15 @@
 			color: var(--color-text);
 		}
 
-		&.disabled, &:disabled {
+		&.disabled,
+		&:disabled {
 			color: var(--color-text-muted);
 			cursor: default;
 		}
 
-		&.active, &.active.disabled, &.active:disabled {
+		&.active,
+		&.active.disabled,
+		&.active:disabled {
 			background: var(--color-primary);
 			color: #fff;
 		}
@@ -72,10 +75,10 @@
 	// .dropdown__divider
 	&__divider {
 		border-top: var(--border);
-    height: 0;
-    margin: 0.5rem 0;
-    opacity: 1;
-    overflow: hidden;
+		height: 0;
+		margin: 0.5rem 0;
+		opacity: 1;
+		overflow: hidden;
 		cursor: default;
 		user-select: initial;
 	}

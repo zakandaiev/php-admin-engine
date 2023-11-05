@@ -6,15 +6,18 @@ use Engine\Language;
 use Engine\Server;
 use Engine\Theme;
 
-class Page extends AdminController {
-	public function getAll() {
+class Page extends AdminController
+{
+	public function getAll()
+	{
 		$this->view->setData('pages', $this->model->getPages());
 
 		$this->view->render('page/all');
 	}
 
-	public function getCategory() {
-		if(!isset($this->route['parameter']['id'])) {
+	public function getCategory()
+	{
+		if (!isset($this->route['parameter']['id'])) {
 			$this->view->error('404');
 		}
 
@@ -24,7 +27,8 @@ class Page extends AdminController {
 		$this->view->render('page/all');
 	}
 
-	public function getAdd() {
+	public function getAdd()
+	{
 		$this->view->setData('authors', $this->model->getAuthors());
 		$this->view->setData('categories', $this->model->getCategories());
 		$this->view->setData('templates', Theme::pageTemplates());
@@ -32,24 +36,25 @@ class Page extends AdminController {
 		$this->view->render('page/add');
 	}
 
-	public function getEdit() {
+	public function getEdit()
+	{
 		$page_id = $this->route['parameter']['id'];
 
 		$is_translation = false;
 
-		if(isset($this->route['parameter']['language'])) {
+		if (isset($this->route['parameter']['language'])) {
 			$is_translation = true;
 
 			$data['page_origin'] = $this->model->getPage($page_id);
 
-			if(empty($data['page_origin'])) {
+			if (empty($data['page_origin'])) {
 				$this->view->error('404');
 			}
 		}
 
 		$data['page'] = $this->model->getPage($page_id, $is_translation ? $this->route['parameter']['language'] : null);
 
-		if(empty($data['page'])) {
+		if (empty($data['page'])) {
 			$this->view->error('404');
 		}
 
@@ -68,17 +73,18 @@ class Page extends AdminController {
 		$this->view->render('page/edit');
 	}
 
-	public function getAddTranslation() {
+	public function getAddTranslation()
+	{
 		$page_id = $this->route['parameter']['id'];
 		$translation_language = $this->route['parameter']['language'];
 
-		if(!Language::has($translation_language)) {
+		if (!Language::has($translation_language)) {
 			Server::redirect(site('url_language') . '/admin/page');
 		}
 
 		$page = $this->model->getPage($page_id);
 
-		if(empty($page)) {
+		if (empty($page)) {
 			Server::redirect(site('url_language') . '/admin/page');
 		}
 
@@ -94,10 +100,9 @@ class Page extends AdminController {
 			'seo_image' => $page->seo_image
 		];
 
-		if($this->model->createTranslation('page_translation', $translation)) {
+		if ($this->model->createTranslation('page_translation', $translation)) {
 			Server::redirect(site('url_language') . '/admin/page/edit/' . $page_id . '/translation/edit/' . $translation_language);
-		}
-		else {
+		} else {
 			Server::redirect(site('url_language') . '/admin/page');
 		}
 	}

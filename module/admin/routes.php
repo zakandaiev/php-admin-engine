@@ -6,7 +6,7 @@ Router::register('get', '/admin/logout', 'Auth@getLogout', ['is_public' => true]
 Router::register('get', '/admin/reset-password', 'Auth@getRestore', ['is_public' => true]);
 
 ############################# DASHBOARD #############################
-Router::register('get', '/admin', function() {
+Router::register('get', '/admin', function () {
 	Server::redirect('/admin/dashboard');
 });
 Router::register('get', '/admin/dashboard', 'Dashboard@getDashboard', ['is_public' => true]);

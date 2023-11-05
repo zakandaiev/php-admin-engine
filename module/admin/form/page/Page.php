@@ -28,8 +28,8 @@ return [
 		// 'custom_fields' => $custom_fields
 	],
 	'translation' => ['language', 'title', 'excerpt', 'content', 'image', 'seo_description', 'seo_keywords', 'seo_image'],
-	'execute_pre' => function($fields, $data) {
-		if($data['action'] === 'delete' && !empty($data['item_id'])) {
+	'execute_pre' => function ($fields, $data) {
+		if ($data['action'] === 'delete' && !empty($data['item_id'])) {
 			$sql = '
 				SELECT
 					page_id,
@@ -44,8 +44,8 @@ return [
 
 			$children = $children->execute(['category_id' => $data['item_id']])->fetchAll();
 
-			foreach($children as $child) {
-				if($child->count_parent_categories > 1) {
+			foreach ($children as $child) {
+				if ($child->count_parent_categories > 1) {
 					continue;
 				}
 
@@ -53,7 +53,7 @@ return [
 			}
 		}
 	},
-	'execute_post' => function($rowCount, $fields, $data) {
+	'execute_post' => function ($rowCount, $fields, $data) {
 		Hook::run('page.' . $data['action'], $fields);
 	}
 ];

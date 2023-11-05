@@ -5,7 +5,8 @@ namespace Engine;
 use \PDO;
 use \PDOException;
 
-class Statement {
+class Statement
+{
 	protected $sql;
 	protected $cache;
 	protected $debug;
@@ -20,14 +21,14 @@ class Statement {
 	protected $is_paginate = false;
 	protected $is_filter = false;
 
-	public function __construct($sql, $cache = null, $debug = null) {
+	public function __construct($sql, $cache = null, $debug = null)
+	{
 		$is_cached = false;
 		$this->is_select = preg_match('/^\s*SELECT/mi', $sql) ? true : false;
 
-		if(isset($cache) && $cache && $this->is_select) {
+		if (isset($cache) && $cache && $this->is_select) {
 			$is_cached = true;
-		}
-		else if(!isset($cache) && $this->is_select && Module::getName() === 'public' && Setting::get('engine')->cache_db == 'true') {
+		} else if (!isset($cache) && $this->is_select && Module::getName() === 'public' && Setting::get('engine')->cache_db == 'true') {
 			$is_cached = true;
 		}
 
@@ -37,8 +38,8 @@ class Statement {
 		$this->prefix = DATABASE['prefix'];
 
 		$replacement = '$1';
-		if(!empty($this->prefix)) {
-			$replacement = $this->prefix.'_$1';
+		if (!empty($this->prefix)) {
+			$replacement = $this->prefix . '_$1';
 		}
 
 		$this->sql = preg_replace('/{([\w\d\-\_]+)}/miu', $replacement, $sql);
@@ -46,8 +47,9 @@ class Statement {
 		return $this;
 	}
 
-	public function filter($name, $mixed = null) {
-		if(!$this->is_select) {
+	public function filter($name, $mixed = null)
+	{
+		if (!$this->is_select) {
 			return $this;
 		}
 
@@ -57,30 +59,29 @@ class Statement {
 		$this->filter_sql = $this->sql;
 		$this->filter_binding = [];
 
-		if($mixed === true) {
+		if ($mixed === true) {
 			$this->is_filter = true;
-		}
-		else if(is_array($mixed) && !empty($mixed)) {
-			foreach($mixed as $alias => $options) {
+		} else if (is_array($mixed) && !empty($mixed)) {
+			foreach ($mixed as $alias => $options) {
 				$this->filter->setOptions($alias, $options);
 			}
 		}
 
 		$this->filter = new Filter($name);
 
-		if(empty($this->filter->get('sql')) && empty($this->filter->get('order'))) {
+		if (empty($this->filter->get('sql')) && empty($this->filter->get('order'))) {
 			return $this;
 		}
 
 		$sql = !empty($this->filter->get('sql')) ? "WHERE {$this->filter->get('sql')}" : '';
 		$sql = "SELECT * FROM ({$this->filter_sql}) t_filter $sql";
 
-		foreach($this->filter->get('binding') as $key => $value) {
+		foreach ($this->filter->get('binding') as $key => $value) {
 			$this->filter_binding[$key] = $key;
 			$this->addBinding($key, $value);
 		}
 
-		if(!empty($this->filter->get('order'))) {
+		if (!empty($this->filter->get('order'))) {
 			$sql .= " ORDER BY {$this->filter->get('order')}";
 		}
 
@@ -89,16 +90,17 @@ class Statement {
 		return $this;
 	}
 
-	protected function setFilterValues() {
-		if(!$this->is_paginate || empty($this->filter_sql) || empty($this->filter->get('data')) || preg_match('/GROUP\s+BY/mi',  $this->filter_sql)) {
+	protected function setFilterValues()
+	{
+		if (!$this->is_paginate || empty($this->filter_sql) || empty($this->filter->get('data')) || preg_match('/GROUP\s+BY/mi',  $this->filter_sql)) {
 			return false;
 		}
 
 		$sql_cuted = $this->cutSelectionPartFromSQL($this->filter_sql);
 		$sql_cuted = preg_replace('/\s*ORDER\s+BY\s+[\w\s\@\<\>\.\,\=\-\'\"\`]+$/mi', '', $sql_cuted);
 
-		foreach($this->filter->get('data') as $alias => $filter_data) {
-			if(is_array($filter_data['column']) || !in_array($filter_data['type'], ['checkbox','radio','select'])) {
+		foreach ($this->filter->get('data') as $alias => $filter_data) {
+			if (is_array($filter_data['column']) || !in_array($filter_data['type'], ['checkbox', 'radio', 'select'])) {
 				continue;
 			}
 
@@ -106,10 +108,10 @@ class Statement {
 
 			$filter_data['show_all_options'] = $filter_data['show_all_options'] ?? false;
 
-			if(!$filter_data['show_all_options'] && !empty($this->filter->get('sql'))) {
+			if (!$filter_data['show_all_options'] && !empty($this->filter->get('sql'))) {
 				$filter_sql .= " WHERE {$this->filter->get('sql')}";
 
-				foreach($this->filter->get('binding') as $key => $value) {
+				foreach ($this->filter->get('binding') as $key => $value) {
 					$this->filter_binding[$key] = $value;
 				}
 			}
@@ -126,16 +128,17 @@ class Statement {
 		return true;
 	}
 
-	public function paginate($total = null, $options = []) {
-		if(!$this->is_select) {
+	public function paginate($total = null, $options = [])
+	{
+		if (!$this->is_select) {
 			return $this;
 		}
 
-		if(isset($total)) {
+		if (isset($total)) {
 			$this->pagination['total'] = $total;
 		}
 
-		foreach($options as $key => $option) {
+		foreach ($options as $key => $option) {
 			$this->pagination[$key] = $option;
 		}
 
@@ -144,21 +147,22 @@ class Statement {
 		return $this;
 	}
 
-	protected function initializePagination() {
-		if(!$this->is_paginate) {
+	protected function initializePagination()
+	{
+		if (!$this->is_paginate) {
 			return false;
 		}
 
 		$this->sql = preg_replace('/\s+(LIMIT|OFFSET)[\w\s\@\<\>\.\,\=\-\'\"\`]+$/mi', ' ', $this->sql);
 
-		if(!isset($this->pagination['total'])) {
+		if (!isset($this->pagination['total'])) {
 			// $total = "SELECT COUNT(*) FROM ({$this->sql}) as total";
 			$total_sql = "SELECT COUNT(*) as total FROM " . $this->cutSelectionPartFromSQL($this->sql);
 
 			$total_binding = [];
 
-			foreach($this->binding as $key => $value) {
-				if(str_contains($total_sql, ':' . $key)) {
+			foreach ($this->binding as $key => $value) {
+				if (str_contains($total_sql, ':' . $key)) {
 					$total_binding[$key] = $value;
 				}
 			}
@@ -178,7 +182,8 @@ class Statement {
 		return true;
 	}
 
-	protected function cutSelectionPartFromSQL($sql) {
+	protected function cutSelectionPartFromSQL($sql)
+	{
 		$output = '';
 
 		$sql_to_array = str_split($sql);
@@ -189,22 +194,22 @@ class Statement {
 
 		$sql_to_array_length = count($sql_to_array);
 
-		for($i = 0; $i < $sql_to_array_length; $i++) {
-			if($sql_to_array[$i] == '(') {
+		for ($i = 0; $i < $sql_to_array_length; $i++) {
+			if ($sql_to_array[$i] == '(') {
 				$left_bracket_count += 1;
 			}
 
-			if($sql_to_array[$i] == ')') {
+			if ($sql_to_array[$i] == ')') {
 				$right_bracket_count += 1;
 			}
 
-			if($sql_to_array[$i] == 'f' || $sql_to_array[$i] == 'F') {
+			if ($sql_to_array[$i] == 'f' || $sql_to_array[$i] == 'F') {
 				$checkString = $sql_to_array[$i] . $sql_to_array[$i + 1] . $sql_to_array[$i + 2] . $sql_to_array[$i + 3];
 
-				if($checkString == 'from' || $checkString == 'FROM') {
+				if ($checkString == 'from' || $checkString == 'FROM') {
 					$from_position = $i;
 
-					if($left_bracket_count == $right_bracket_count) {
+					if ($left_bracket_count == $right_bracket_count) {
 						$output = mb_substr($sql, $from_position + 4);
 
 						break;
@@ -218,36 +223,37 @@ class Statement {
 		// SLOWER
 		// $output = '';
 
-    // $paren_count = 0;
-    // $from_position = false;
+		// $paren_count = 0;
+		// $from_position = false;
 
-    // for ($i = 0; $i < strlen($sql); $i++) {
-    //   if ($sql[$i] == '(') {
-    //     $paren_count++;
-    //   }
+		// for ($i = 0; $i < strlen($sql); $i++) {
+		//   if ($sql[$i] == '(') {
+		//     $paren_count++;
+		//   }
 		// 	elseif ($sql[$i] == ')') {
-    //     $paren_count--;
-    //   }
+		//     $paren_count--;
+		//   }
 		// 	elseif (!$from_position && strtolower(mb_substr($sql, $i, 4)) == 'from' && $paren_count == 0) {
-    //     $from_position = $i;
-    //   }
-    // }
+		//     $from_position = $i;
+		//   }
+		// }
 
-    // if ($from_position !== false) {
-    //   $output = mb_substr($sql, $from_position + 4);
-    // }
+		// if ($from_position !== false) {
+		//   $output = mb_substr($sql, $from_position + 4);
+		// }
 
-    // return trim($output);
+		// return trim($output);
 	}
 
-	public function execute($params = []) {
+	public function execute($params = [])
+	{
 		$this->addBinding($params);
 
-		if($this->debug) {
+		if ($this->debug) {
 			debug(trim($this->sql ?? ''), $this->binding);
 		}
 
-		if($this->cache) {
+		if ($this->cache) {
 			return $this;
 		}
 
@@ -262,47 +268,44 @@ class Statement {
 		try {
 			$this->statement->execute();
 			$is_execute_success = true;
-		}
-		catch(PDOException $error) {
+		} catch (PDOException $error) {
 			// TODO all codes
 			$error_message = $error->getMessage();
 
-			if(preg_match("/Duplicate entry .+ for key '(.+)'/", $error_message, $matches)) {
+			if (preg_match("/Duplicate entry .+ for key '(.+)'/", $error_message, $matches)) {
 				$error_message = str_replace(DATABASE['prefix'] . '_', '', $matches[1]);
 				$error_message = 'duplicate.' . $error_message;
 			}
 
-			if(Request::method() === 'get') {
-				if(DEBUG['is_enabled']) {
+			if (Request::method() === 'get') {
+				if (DEBUG['is_enabled']) {
 					debug(__($error_message), $this->sql, $this->binding); // TODO translation
-				}
-				else {
+				} else {
 					debug(__($error_message)); // TODO translation
 				}
-			}
-			else {
+			} else {
 				$debug_sql = DEBUG['is_enabled'] ? ['query' => preg_replace('/(\v|\s)+/', ' ', trim($this->sql ?? ''))] : null;
 				Server::answer($debug_sql, 'error', __($error_message), '409'); // TODO translation
 			}
 		}
 
-		if($is_execute_success) {
+		if ($is_execute_success) {
 			$this->setFilterValues();
 		}
 
 		return $this;
 	}
 
-	protected function fetchCache($type, $mode) {
-		if($this->cache) {
+	protected function fetchCache($type, $mode)
+	{
+		if ($this->cache) {
 			$cache_key =  $this->sql . '@' . json_encode($this->binding, JSON_UNESCAPED_UNICODE);
 
 			$cache = Cache::get($cache_key);
 
-			if($cache) {
+			if ($cache) {
 				return $cache;
-			}
-			else {
+			} else {
 				$this->prepare();
 				$this->bind();
 				$this->statement->execute();
@@ -318,62 +321,69 @@ class Statement {
 		return $this->statement->{$type}($mode);
 	}
 
-	public function fetchAll($mode = PDO::FETCH_OBJ) {
+	public function fetchAll($mode = PDO::FETCH_OBJ)
+	{
 		return $this->fetchCache(__FUNCTION__, $mode);
 	}
 
-	public function fetch($mode = PDO::FETCH_OBJ) {
+	public function fetch($mode = PDO::FETCH_OBJ)
+	{
 		return $this->fetchCache(__FUNCTION__, $mode);
 	}
 
-	public function fetchColumn($column = 0) {
+	public function fetchColumn($column = 0)
+	{
 		return intval($this->fetchCache(__FUNCTION__, $column));
 	}
 
-	public function insertId() {
+	public function insertId()
+	{
 		return Database::connection()->lastInsertId();
 	}
 
-	public function rowCount() {
+	public function rowCount()
+	{
 		return $this->statement->rowCount();
 	}
 
-	protected function prepare() {
+	protected function prepare()
+	{
 		$this->statement = Database::connection()->prepare($this->sql);
 
 		return true;
 	}
 
-	protected function addBinding($key_or_array, $value = null) {
-		if(empty($key_or_array)) {
+	protected function addBinding($key_or_array, $value = null)
+	{
+		if (empty($key_or_array)) {
 			return false;
 		}
 
-		if(is_array($key_or_array)) {
-			foreach($key_or_array as $k => $v) {
+		if (is_array($key_or_array)) {
+			foreach ($key_or_array as $k => $v) {
 				$this->binding[strval($k)] = $v;
 			}
-		}
-		else {
+		} else {
 			$this->binding[strval($key_or_array)] = $value;
 		}
 
 		return true;
 	}
 
-	protected function bind() {
-		if(empty($this->binding)) {
+	protected function bind()
+	{
+		if (empty($this->binding)) {
 			return false;
 		}
 
 		$pdo_param = PDO::PARAM_NULL;
 
-		foreach($this->binding as $key => $value) {
-			if(is_bool($value)) $pdo_param = PDO::PARAM_BOOL;
-			if(is_int($value)) $pdo_param = PDO::PARAM_INT;
-			if(is_string($value)) $pdo_param = PDO::PARAM_STR;
+		foreach ($this->binding as $key => $value) {
+			if (is_bool($value)) $pdo_param = PDO::PARAM_BOOL;
+			if (is_int($value)) $pdo_param = PDO::PARAM_INT;
+			if (is_string($value)) $pdo_param = PDO::PARAM_STR;
 
-			if(is_array($value) || is_object($value)) {
+			if (is_array($value) || is_object($value)) {
 				$pdo_param = PDO::PARAM_STR;
 				$value = json_encode($value, JSON_UNESCAPED_UNICODE);
 			}

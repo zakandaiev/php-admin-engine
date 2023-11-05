@@ -2,7 +2,8 @@
 
 namespace Engine;
 
-class Filter {
+class Filter
+{
 	protected $name;
 	protected $data = [];
 
@@ -14,11 +15,13 @@ class Filter {
 
 	protected static $instance;
 
-	public static function getInstance() {
+	public static function getInstance()
+	{
 		return self::$instance;
 	}
 
-	public function __construct($name) {
+	public function __construct($name)
+	{
 		$this->name = $name;
 
 		$this->load();
@@ -27,41 +30,43 @@ class Filter {
 		self::$instance = $this;
 	}
 
-	public function get($key) {
-		switch($key) {
+	public function get($key)
+	{
+		switch ($key) {
 			case 'name': {
-				return $this->name;
-			}
+					return $this->name;
+				}
 			case 'data': {
-				return $this->data;
-			}
+					return $this->data;
+				}
 			case 'sql': {
-				return $this->sql;
-			}
+					return $this->sql;
+				}
 			case 'binding': {
-				return $this->binding;
-			}
+					return $this->binding;
+				}
 			case 'order': {
-				return $this->order;
-			}
+					return $this->order;
+				}
 			case 'options': {
-				return $this->options;
-			}
+					return $this->options;
+				}
 		}
 
 		return null;
 	}
 
-	protected function load() {
+	protected function load()
+	{
 		$path = Path::file('filter') . '/' . $this->name . '.php';
 
-		if(!is_file($path)) {
+		if (!is_file($path)) {
 			return false;
 		}
 
 		$filter = include $path;
 
-		if(!is_array($filter) || empty($filter)) {
+		if (!is_array($filter) || empty($filter)) {
 			return false;
 		}
 
@@ -70,8 +75,9 @@ class Filter {
 		return $filter;
 	}
 
-	protected function process() {
-		if(empty($this->data)) {
+	protected function process()
+	{
+		if (empty($this->data)) {
 			return false;
 		}
 
@@ -79,14 +85,14 @@ class Filter {
 		$binding = [];
 		$order = [];
 
-		foreach($this->data as $alias => $filter) {
-			if(!Request::has($alias) || empty($filter['type']) || empty($filter['column'])) {
+		foreach ($this->data as $alias => $filter) {
+			if (!Request::has($alias) || empty($filter['type']) || empty($filter['column'])) {
 				continue;
 			}
 
 			$value = Request::get($alias);
 
-			if((is_array($value) && empty($value)) || (is_string($value) && mb_strlen($value) <= 0)) {
+			if ((is_array($value) && empty($value)) || (is_string($value) && mb_strlen($value) <= 0)) {
 				continue;
 			}
 
@@ -96,145 +102,143 @@ class Filter {
 
 			$sql_part = [];
 
-			foreach($columns as $column_name) {
-				switch($type) {
+			foreach ($columns as $column_name) {
+				switch ($type) {
 					case 'checkbox':
 					case 'radio':
 					case 'switch': {
-						$value = !is_array($value) ? [$value] : $value;
+							$value = !is_array($value) ? [$value] : $value;
 
-						foreach($value as $key => $v) {
-							if(!is_numeric($v)){
-								continue;
+							foreach ($value as $key => $v) {
+								if (!is_numeric($v)) {
+									continue;
+								}
+
+								$token = $key === 0 ? $sql_token : Hash::token(8);
+
+								$sql_part[] = "$column_name = :$token";
+								$binding[$token] = ($v === 'true' || $v === '1') ? true : false;
 							}
 
-							$token = $key === 0 ? $sql_token : Hash::token(8);
-
-							$sql_part[] = "$column_name = :$token";
-							$binding[$token] = ($v === 'true' || $v === '1') ? true : false;
+							break;
 						}
-
-						break;
-					}
 					case 'number':
 					case 'range': {
-						$value = !is_array($value) ? [$value] : $value;
+							$value = !is_array($value) ? [$value] : $value;
 
-						if((isset($filter['range']) && $filter['range']) || (isset($filter['data-range']) && $filter['data-range'])) {
-							$value_from = $value[0];
-							$value_to = $value[1] ?? $value[0];
+							if ((isset($filter['range']) && $filter['range']) || (isset($filter['data-range']) && $filter['data-range'])) {
+								$value_from = $value[0];
+								$value_to = $value[1] ?? $value[0];
 
-							if(!is_numeric($value_from) || !is_numeric($value_to)){
+								if (!is_numeric($value_from) || !is_numeric($value_to)) {
+									break;
+								}
+
+								$key_from = $sql_token;
+								$key_to = Hash::token(8);
+
+								$sql_part[] = "$column_name BETWEEN :$key_from AND :$key_to";
+
+								$binding[$key_from] = $value_from;
+								$binding[$key_to] = $value_to;
+
 								break;
 							}
 
-							$key_from = $sql_token;
-							$key_to = Hash::token(8);
+							foreach ($value as $key => $number) {
+								if (!is_numeric($number)) {
+									continue;
+								}
 
-							$sql_part[] = "$column_name BETWEEN :$key_from AND :$key_to";
+								$token = $key === 0 ? $sql_token : Hash::token(8);
 
-							$binding[$key_from] = $value_from;
-							$binding[$key_to] = $value_to;
+								$sql_part[] = "$column_name = :$token";
+								$binding[$token] = $number;
+							}
 
 							break;
 						}
-
-						foreach($value as $key => $number) {
-							if(!is_numeric($number)){
-								continue;
-							}
-
-							$token = $key === 0 ? $sql_token : Hash::token(8);
-
-							$sql_part[] = "$column_name = :$token";
-							$binding[$token] = $number;
-						}
-
-						break;
-					}
 					case 'date': {
-						$value = !is_array($value) ? explode(' - ', $value) : $value;
+							$value = !is_array($value) ? explode(' - ', $value) : $value;
 
-						if((isset($filter['range']) && $filter['range']) || (isset($filter['data-range']) && $filter['data-range'])) {
-							$value_from = $value[0];
-							$value_to = $value[1] ?? $value[0];
+							if ((isset($filter['range']) && $filter['range']) || (isset($filter['data-range']) && $filter['data-range'])) {
+								$value_from = $value[0];
+								$value_to = $value[1] ?? $value[0];
 
-							if(!strtotime($value_from) || !strtotime($value_to)){
+								if (!strtotime($value_from) || !strtotime($value_to)) {
+									break;
+								}
+
+								$key_from = $sql_token;
+								$key_to = Hash::token(8);
+
+								$sql_part[] = "CAST($column_name AS DATE) BETWEEN CAST(:$key_from AS DATE) AND CAST(:$key_to AS DATE)";
+
+								$binding[$key_from] = $value_from;
+								$binding[$key_to] = $value_to;
+
 								break;
 							}
 
-							$key_from = $sql_token;
-							$key_to = Hash::token(8);
+							foreach ($value as $key => $date) {
+								if (!strtotime($date)) {
+									continue;
+								}
 
-							$sql_part[] = "CAST($column_name AS DATE) BETWEEN CAST(:$key_from AS DATE) AND CAST(:$key_to AS DATE)";
+								$token = $key === 0 ? $sql_token : Hash::token(8);
 
-							$binding[$key_from] = $value_from;
-							$binding[$key_to] = $value_to;
+								$sql_part[] = "CAST($column_name AS DATE) = CAST(:$token AS DATE)";
+								$binding[$token] = $date;
+							}
 
 							break;
 						}
-
-						foreach($value as $key => $date) {
-							if(!strtotime($date)){
-								continue;
-							}
-
-							$token = $key === 0 ? $sql_token : Hash::token(8);
-
-							$sql_part[] = "CAST($column_name AS DATE) = CAST(:$token AS DATE)";
-							$binding[$token] = $date;
-						}
-
-						break;
-					}
 					case 'select': {
-						$value = !is_array($value) ? [$value] : $value;
+							$value = !is_array($value) ? [$value] : $value;
 
-						foreach($value as $key => $v) {
-							if(!is_scalar($v)){
-								continue;
+							foreach ($value as $key => $v) {
+								if (!is_scalar($v)) {
+									continue;
+								}
+
+								$token = $key === 0 ? $sql_token : Hash::token(8);
+
+								$sql_part[] = "$column_name = :$token";
+								$binding[$token] = $v;
 							}
 
-							$token = $key === 0 ? $sql_token : Hash::token(8);
-
-							$sql_part[] = "$column_name = :$token";
-							$binding[$token] = $v;
-						}
-
-						break;
-					}
-					case 'order': {
-						$order[$column_name] = $value;
-						break;
-					}
-					default: { // text etc.
-						if(!is_scalar($value)){
 							break;
 						}
+					case 'order': {
+							$order[$column_name] = $value;
+							break;
+						}
+					default: { // text etc.
+							if (!is_scalar($value)) {
+								break;
+							}
 
-						$sql_part[] = "$column_name LIKE :$sql_token";
+							$sql_part[] = "$column_name LIKE :$sql_token";
 
-						$binding[$sql_token] = '%' . addcslashes($value, '%') . '%';
+							$binding[$sql_token] = '%' . addcslashes($value, '%') . '%';
 
-						break;
-					}
+							break;
+						}
 				}
 			}
 
-			if(!empty($sql_part)) {
+			if (!empty($sql_part)) {
 				$sql[] = '(' . implode(' OR ', $sql_part) . ')';
 			}
 		}
 
 		$order_sql = [];
-		foreach($order as $column_name => $value) {
-			if(strtolower($value ?? '') === 'asc') {
+		foreach ($order as $column_name => $value) {
+			if (strtolower($value ?? '') === 'asc') {
 				$order_sql[] = "$column_name ASC";
-			}
-			else if(strtolower($value ?? '') === 'desc') {
+			} else if (strtolower($value ?? '') === 'desc') {
 				$order_sql[] = "$column_name DESC";
-			}
-			else {
+			} else {
 				$token = Hash::token(8);
 				$binding[$token] = $value;
 				$order_sql[] = "$column_name = :$token";
@@ -248,16 +252,17 @@ class Filter {
 		return true;
 	}
 
-	public function setOptions($alias, $options = []) {
+	public function setOptions($alias, $options = [])
+	{
 		$this->options[$alias] = $options;
 
-		if(!isset($this->data[$alias]['classifier'])) {
+		if (!isset($this->data[$alias]['classifier'])) {
 			return true;
 		}
 
 		$classifier = $this->data[$alias]['classifier'];
 
-		$this->options[$alias] = array_map(function($opt) use($classifier, $options) {
+		$this->options[$alias] = array_map(function ($opt) use ($classifier, $options) {
 			$opt->text = is_closure($classifier) ? $classifier($opt->id) : $classifier . '.' . $opt->id;
 
 			return $opt;

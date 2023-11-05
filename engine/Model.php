@@ -2,25 +2,29 @@
 
 namespace Engine;
 
-abstract class Model {
+abstract class Model
+{
 	protected static $instances = [];
 
-	public function __construct() {
+	public function __construct()
+	{
 		self::$instances[get_called_class()] = $this;
 	}
 
-	public static function getInstance() {
+	public static function getInstance()
+	{
 		$class = get_called_class();
 
-		if(!array_key_exists($class, self::$instances)) {
+		if (!array_key_exists($class, self::$instances)) {
 			self::$instances[$class] = new $class();
 		}
 
 		return self::$instances[$class];
 	}
 
-	public function createTranslation($table, $data) {
-		if(!is_array($data) || empty($data) || !isset($data['language'])) {
+	public function createTranslation($table, $data)
+	{
+		if (!is_array($data) || empty($data) || !isset($data['language'])) {
 			return false;
 		}
 
@@ -33,23 +37,24 @@ abstract class Model {
 
 		$statement->execute($data);
 
-		if($statement->rowCount() > 0) {
+		if ($statement->rowCount() > 0) {
 			return true;
 		}
 
 		return false;
 	}
 
-	protected function executeStatementWithOptions($sql, $options = []) {
+	protected function executeStatementWithOptions($sql, $options = [])
+	{
 		// TODO
-		foreach(['fields', 'where', 'order'] as $replacement_type) {
+		foreach (['fields', 'where', 'order'] as $replacement_type) {
 			$replacement = '$2';
 			$replacement_pattern = '/\/' . $replacement_type . '(\+)?\/([\s\S]+)\/' . $replacement_type . '[\+]?\//miu';
 
-			if(isset($options[$replacement_type])) {
+			if (isset($options[$replacement_type])) {
 				$replacement_match = preg_match($replacement_pattern, $sql, $replacement_matches);
 
-				if($replacement_match && is_array($replacement_matches) && count($replacement_matches) > 1) {
+				if ($replacement_match && is_array($replacement_matches) && count($replacement_matches) > 1) {
 					$replacement = ($replacement_matches[1] == '+') ? "{$replacement_matches[2]}, {$options[$replacement_type]}" : $options[$replacement_type];
 				}
 			}
@@ -64,25 +69,24 @@ abstract class Model {
 		$options['cache'] = @$options['cache'];
 		$options['debug'] = @$options['debug'];
 
-		if($options['limit'] && !$options['paginate']) {
+		if ($options['limit'] && !$options['paginate']) {
 			$sql .= " LIMIT {$options['limit']}";
 		}
 
-		if($options['offset'] && !$options['paginate']) {
+		if ($options['offset'] && !$options['paginate']) {
 			$sql .= " OFFSET {$options['offset']}";
 		}
 
 		$statement = new Statement($sql, $options['cache'], $options['debug']);
 
-		if($options['filter']) {
+		if ($options['filter']) {
 			$statement->filter($options['filter']);
 		}
 
-		if($options['paginate']) {
-			if($options['limit']) {
+		if ($options['paginate']) {
+			if ($options['limit']) {
 				$statement->paginate(null, ['limit' => $options['limit']]);
-			}
-			else {
+			} else {
 				$statement->paginate();
 			}
 		}

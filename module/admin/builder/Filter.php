@@ -6,20 +6,22 @@ use Engine\Filter;
 use Engine\Path;
 use Engine\Request;
 
-class Filter {
+class Filter
+{
 	protected $filter_name;
 	protected $fields = [];
 
-	public function __construct($filter_name, $module = null) {
+	public function __construct($filter_name, $module = null)
+	{
 		$path = Path::file('filter', $module) . "/$filter_name.php";
 
-		if(!is_file($path)) {
+		if (!is_file($path)) {
 			return false;
 		}
 
 		$fields = require $path;
 
-		if(empty($fields)) {
+		if (empty($fields)) {
 			return false;
 		}
 
@@ -27,8 +29,8 @@ class Filter {
 
 		$filter_options = Filter::getInstance()->get('options') ?? [];
 
-		foreach($fields as $field_alias => $field) {
-			if(!is_array($field)) continue;
+		foreach ($fields as $field_alias => $field) {
+			if (!is_array($field)) continue;
 
 			$field['alias'] = $field_alias;
 			$field['options'] = $filter_options[$field_alias] ?? [];
@@ -40,16 +42,19 @@ class Filter {
 		return $this;
 	}
 
-	public function get($key = null) {
+	public function get($key = null)
+	{
 		return isset($key) ? @$this->fields[$key] : $this->fields;
 	}
 
-	public function has($key) {
+	public function has($key)
+	{
 		return isset($this->fields[$key]);
 	}
 
-	public function setOptions($field_alias, $value = null) {
-		if(!isset($this->fields[$field_alias])) {
+	public function setOptions($field_alias, $value = null)
+	{
+		if (!isset($this->fields[$field_alias])) {
 			return false;
 		}
 
@@ -58,8 +63,9 @@ class Filter {
 		return true;
 	}
 
-	public function render($row_class = null, $row_attributes = null) {
-		if(empty($this->fields)) {
+	public function render($row_class = null, $row_attributes = null)
+	{
+		if (empty($this->fields)) {
 			return false;
 		}
 
@@ -69,23 +75,22 @@ class Filter {
 		$html = '<form action="' . site('permalink') . '" method="get" data-submit-onchange data-submit-native data-unset-null>';
 		$html .= "<div$row_class$row_attributes>";
 
-		foreach($this->fields as $field_alias => $field) {
+		foreach ($this->fields as $field_alias => $field) {
 			$html .= $this->renderCol($field_alias);
 		}
 
 		$html .= '</div>';
 
-		foreach(Request::get() as $hidden_alias => $hidden_value) {
-			if($this->has($hidden_alias)) {
+		foreach (Request::get() as $hidden_alias => $hidden_value) {
+			if ($this->has($hidden_alias)) {
 				continue;
 			}
 
-			if(is_array($hidden_value)) {
-				foreach($hidden_value as $v) {
+			if (is_array($hidden_value)) {
+				foreach ($hidden_value as $v) {
 					$html .= '<input type="hidden" class="hidden" name="' . $hidden_alias . '[]" value="' . $v . '">';
 				}
-			}
-			else {
+			} else {
 				$html .= '<input type="hidden" class="hidden" name="' . $hidden_alias . '" value="' . $hidden_value . '">';
 			}
 		}
@@ -95,9 +100,10 @@ class Filter {
 		return $html;
 	}
 
-	public function getSelected() {
-		return array_filter($this->fields, function($field) {
-			if(!Request::has($field['alias'])) {
+	public function getSelected()
+	{
+		return array_filter($this->fields, function ($field) {
+			if (!Request::has($field['alias'])) {
 				return false;
 			}
 
@@ -105,8 +111,9 @@ class Filter {
 		});
 	}
 
-	public function renderCol($field_alias, $value = null) {
-		if(!isset($this->fields[$field_alias])) {
+	public function renderCol($field_alias, $value = null)
+	{
+		if (!isset($this->fields[$field_alias])) {
 			return false;
 		}
 
@@ -116,8 +123,9 @@ class Filter {
 		return $this->getColHTML($field_alias, $field);
 	}
 
-	protected function getColHTML($field_alias, $field) {
-		if(empty($field_alias) || !is_array($field)) {
+	protected function getColHTML($field_alias, $field)
+	{
+		if (empty($field_alias) || !is_array($field)) {
 			return false;
 		}
 
@@ -125,7 +133,7 @@ class Filter {
 
 		$html_input = $this->getColHTMLInput($field_alias, $field);
 
-		if(!$html_input) {
+		if (!$html_input) {
 			return false;
 		}
 
@@ -136,23 +144,22 @@ class Filter {
 		return $html;
 	}
 
-	protected function getColHTMLInput($field_alias, $field) {
-		if(empty($field_alias) || !is_array($field)) {
+	protected function getColHTMLInput($field_alias, $field)
+	{
+		if (empty($field_alias) || !is_array($field)) {
 			return false;
 		}
 
 		$html = '';
 
 		// SET LABEL
-		if(isset($field['label_html'])) {
+		if (isset($field['label_html'])) {
 			$html .= $field['label_html'];
-		}
-		else if(isset($field['label'])) {
+		} else if (isset($field['label'])) {
 			$html .= '<label';
-			if(isset($field['label_class'])) {
+			if (isset($field['label_class'])) {
 				$html .= ' class="' . $field['label_class'] . '">';
-			}
-			else {
+			} else {
 				$html .= '>';
 			}
 			$html .= $field['label'];
@@ -162,16 +169,16 @@ class Filter {
 		// SET ATTRIBUTES
 		$attributes = [];
 		$attributes['name'] = (isset($field['multiple']) && $field['multiple']) || $field['type'] === 'checkbox' ? 'name="' . $field_alias . '[]"' : 'name="' . $field_alias . '"';
-		$enabled_attributes = ['pattern','multiple','range','placeholder','step','min','max','minlength','maxlength'];
-		$valueless_attributes = ['multiple','range'];
+		$enabled_attributes = ['pattern', 'multiple', 'range', 'placeholder', 'step', 'min', 'max', 'minlength', 'maxlength'];
+		$valueless_attributes = ['multiple', 'range'];
 
-		foreach($field as $attr => $attr_value) {
-			if(!in_array($attr, $enabled_attributes) && !str_starts_with($attr, 'data-')) {
+		foreach ($field as $attr => $attr_value) {
+			if (!in_array($attr, $enabled_attributes) && !str_starts_with($attr, 'data-')) {
 				continue;
 			}
 
-			if(in_array($attr, $valueless_attributes)) {
-				if($attr_value) {
+			if (in_array($attr, $valueless_attributes)) {
+				if ($attr_value) {
 					$attributes[$attr] = $attr;
 				}
 				continue;
@@ -184,110 +191,109 @@ class Filter {
 		$value = is_scalar($value) ? addcslashes(strval($value), '"') : $value;
 
 		// FORMAT ATTRIBUTES & INIT HTML BY RIGHT TAG
-		switch($field['type']) {
+		switch ($field['type']) {
 			case 'checkbox':
 			case 'radio': {
-				foreach($field['options'] as $key => $option) {
-					$checked = '';
-					if(
-						(isset($field['multiple']) && $field['multiple'] && is_array($field['value']) && in_array($option->id, $field['value']))
-						|| ($field['type'] === 'checkbox' && is_array($field['value']) && in_array($option->id, $field['value']))
-						|| ($option->id == $field['value'] && is_scalar($field['value']))
-					) {
-						$checked = ' checked';
+					foreach ($field['options'] as $key => $option) {
+						$checked = '';
+						if (
+							(isset($field['multiple']) && $field['multiple'] && is_array($field['value']) && in_array($option->id, $field['value']))
+							|| ($field['type'] === 'checkbox' && is_array($field['value']) && in_array($option->id, $field['value']))
+							|| ($option->id == $field['value'] && is_scalar($field['value']))
+						) {
+							$checked = ' checked';
+						}
+
+						$class = $key === 0 ? 'd-block' : 'd-block mt-1';
+
+						$html .= '<label class="' . $class . '">';
+						$html .= '<input type="' . $field['type'] . '" value="' . $option->id . '" ' . implode(' ', $attributes) . $checked . '>';
+						$html .= '<span>' . $option->text . '</span>';
+						$html .= '</label>';
 					}
 
-					$class = $key === 0 ? 'd-block' : 'd-block mt-1';
-
-					$html .= '<label class="' . $class . '">';
-					$html .= '<input type="' . $field['type'] . '" value="' . $option->id . '" ' . implode(' ', $attributes) . $checked . '>';
-					$html .= '<span>' . $option->text . '</span>';
-					$html .= '</label>';
+					break;
 				}
-
-				break;
-			}
 			case 'date': {
-				if(isset($attributes['name'])) $attributes['name'] = 'name="' . $field_alias . '"';
-				if(isset($attributes['range'])) $attributes['range'] = 'data-' . $attributes['range'];
-				if(isset($attributes['multiple'])) $attributes['multiple'] = 'data-' . $attributes['multiple'];
+					if (isset($attributes['name'])) $attributes['name'] = 'name="' . $field_alias . '"';
+					if (isset($attributes['range'])) $attributes['range'] = 'data-' . $attributes['range'];
+					if (isset($attributes['multiple'])) $attributes['multiple'] = 'data-' . $attributes['multiple'];
 
-				$value = isset($value) ? ' value="' . $value . '"' : '';
+					$value = isset($value) ? ' value="' . $value . '"' : '';
 
-				$html .= '<input type="text" data-picker="date" ' . implode(' ', $attributes) . $value . '>';
+					$html .= '<input type="text" data-picker="date" ' . implode(' ', $attributes) . $value . '>';
 
-				break;
-			}
+					break;
+				}
 			case 'number': {
-				$value = isset($value) ? ' value="' . $value . '"' : '';
-				$html .= '<input type="number" ' . implode(' ', $attributes) . $value . '>';
-				break;
-			}
+					$value = isset($value) ? ' value="' . $value . '"' : '';
+					$html .= '<input type="number" ' . implode(' ', $attributes) . $value . '>';
+					break;
+				}
 			case 'range': {
-				$value = isset($value) ? ' value="' . $value . '"' : '';
-				$html .= '<input type="range" ' . implode(' ', $attributes) . $value . '>';
-				break;
-			}
+					$value = isset($value) ? ' value="' . $value . '"' : '';
+					$html .= '<input type="range" ' . implode(' ', $attributes) . $value . '>';
+					break;
+				}
 			case 'text': {
-				$value = isset($value) ? ' value="' . $value . '"' : '';
-				$html .= '<input type="text" ' . implode(' ', $attributes) . $value . '>';
-				break;
-			}
+					$value = isset($value) ? ' value="' . $value . '"' : '';
+					$html .= '<input type="text" ' . implode(' ', $attributes) . $value . '>';
+					break;
+				}
 			case 'select': {
-				if(isset($attributes['placeholder'])) $attributes['placeholder'] = 'data-' . $attributes['placeholder'];
+					if (isset($attributes['placeholder'])) $attributes['placeholder'] = 'data-' . $attributes['placeholder'];
 
-				$html .= '<select ' . implode(' ', $attributes) . '>';
+					$html .= '<select ' . implode(' ', $attributes) . '>';
 
-				if(isset($attributes['placeholder'])) {
-					$html .= '<option data-placeholder="true"></option>';
+					if (isset($attributes['placeholder'])) {
+						$html .= '<option data-placeholder="true"></option>';
+					}
+
+					foreach ($field['options'] as $option) {
+						$selected = $option->id == $field['value'] && is_scalar($field['value']) ? ' selected' : '';
+						$html .= '<option value="' . $option->id . '"' . $selected . '>' . $option->text . '</option>';
+					}
+
+					$html .= '</select>';
+
+					break;
 				}
-
-				foreach($field['options'] as $option) {
-					$selected = $option->id == $field['value'] && is_scalar($field['value']) ? ' selected' : '';
-					$html .= '<option value="' . $option->id . '"' . $selected . '>' . $option->text . '</option>';
-				}
-
-				$html .= '</select>';
-
-				break;
-			}
 			case 'switch': {
-				$value = isset($value) ? ' checked' : '';
+					$value = isset($value) ? ' checked' : '';
 
-				$html = '<label class="switch">';
-				$html .= '<input type="checkbox" value="1" ' . implode(' ', $attributes) . $value . '>';
-				$html .= '<span class="switch__slider"></span>';
+					$html = '<label class="switch">';
+					$html .= '<input type="checkbox" value="1" ' . implode(' ', $attributes) . $value . '>';
+					$html .= '<span class="switch__slider"></span>';
 
-				if(isset($field['label_html'])) {
-					$html .= $field['label_html'];
-				}
-				else if(isset($field['label'])) {
-					$html .= '<span';
-					if(isset($field['label_class'])) {
-						$html .= ' class="' . $field['label_class'] . '">';
+					if (isset($field['label_html'])) {
+						$html .= $field['label_html'];
+					} else if (isset($field['label'])) {
+						$html .= '<span';
+						if (isset($field['label_class'])) {
+							$html .= ' class="' . $field['label_class'] . '">';
+						} else {
+							$html .= '>';
+						}
+						$html .= $field['label'];
+						$html .= '</span>';
 					}
-					else {
-						$html .= '>';
-					}
-					$html .= $field['label'];
-					$html .= '</span>';
-				}
 
-				$html .= '</label>';
-				break;
-			}
+					$html .= '</label>';
+					break;
+				}
 			default: {
-				return false;
-			}
+					return false;
+				}
 		}
 
 		return $html;
 	}
 
-	public function renderSelected($row_class = null, $row_attributes = null) {
+	public function renderSelected($row_class = null, $row_attributes = null)
+	{
 		$filter_selected = $this->getSelected();
 
-		if(empty($filter_selected)) {
+		if (empty($filter_selected)) {
 			return false;
 		}
 
@@ -296,7 +302,7 @@ class Filter {
 
 		$html = "<div$row_class$row_attributes>";
 
-		foreach($filter_selected as $selected) {
+		foreach ($filter_selected as $selected) {
 			$html .= $this->renderColSelected($selected);
 		}
 
@@ -307,15 +313,16 @@ class Filter {
 		return $html;
 	}
 
-	public function renderColSelected($selected) {
-		if(empty($selected)) {
+	public function renderColSelected($selected)
+	{
+		if (empty($selected)) {
 			return false;
 		}
 
 		$html = '';
 
-		if(is_array($selected['value'])) {
-			foreach($selected['value'] as $value) {
+		if (is_array($selected['value'])) {
+			foreach ($selected['value'] as $value) {
 				$selected['value'] = $value;
 
 				$html .= $this->renderColSelected($selected);
@@ -326,11 +333,11 @@ class Filter {
 
 		$text = $selected['value'];
 
-		if(isset($selected['classifier'])) {
+		if (isset($selected['classifier'])) {
 			$text = is_closure($selected['classifier']) ? $selected['classifier']($selected['value']) : __($selected['classifier'] . '.' . $selected['value']);
 		}
 
-		if(isset($selected['selected_label']) && $selected['selected_label']) {
+		if (isset($selected['selected_label']) && $selected['selected_label']) {
 			$text = ($selected['label'] ?? $selected['selected_label']) . ': ' . $text;
 		}
 

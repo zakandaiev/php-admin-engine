@@ -6,34 +6,33 @@ Page::set('title', $title);
 
 Page::breadcrumb('add', ['name' => __('admin.group.groups'), 'url' => '/admin/group']);
 
-if($is_translation) {
+if ($is_translation) {
 	$crumb_edit_url = '/admin/group/edit/' . $group_origin->id;
 
 	$crumb_add_name = '<img class="d-inline-block w-1em h-1em vertical-align-middle radius-circle" src="' . Asset::url() . '/' . lang('icon', $group->language) . '" alt="' . __('locale.' . $group->language) . '"> ' . __('admin.group.edit_translation');
 
 	Page::breadcrumb('add', ['name' => $title, 'url' => $crumb_edit_url]);
 	Page::breadcrumb('add', ['name' => $crumb_add_name]);
-}
-else {
+} else {
 	Page::breadcrumb('add', ['name' => $title]);
 }
 
 $form_builder = new FormBuilder('group/group', $is_translation);
 $form_attributes = 'data-redirect="' . site('url_language') . '/admin/group" data-validate';
 
-foreach($group as $field_name => $value) {
+foreach ($group as $field_name => $value) {
 	$form_builder->setFieldValue($field_name, $value);
 }
 
-if(!$is_translation) {
-	foreach($group as $field_name => $value) {
+if (!$is_translation) {
+	foreach ($group as $field_name => $value) {
 		$form_builder->setFieldValue($field_name, $value);
 	}
 
 	$routes_all = $routes;
-	foreach($group->routes as $gr_method => $gr_routes) {
-		foreach($gr_routes as $gr_r) {
-			if(isset($routes_all[$gr_method]) && in_array($gr_r, $routes_all[$gr_method])) {
+	foreach ($group->routes as $gr_method => $gr_routes) {
+		foreach ($gr_routes as $gr_r) {
+			if (isset($routes_all[$gr_method]) && in_array($gr_r, $routes_all[$gr_method])) {
 				continue;
 			}
 
@@ -42,8 +41,8 @@ if(!$is_translation) {
 	}
 	$routes_formatted = [];
 
-	foreach($routes_all as $method => $r) {
-		foreach($r as $p) {
+	foreach ($routes_all as $method => $r) {
+		foreach ($r as $p) {
 			$r = new \stdClass();
 
 			$r->value = $method . '@' . $p;
@@ -55,7 +54,7 @@ if(!$is_translation) {
 	}
 
 	$form_builder->setFieldValue('routes', $routes_formatted);
-	$form_builder->setFieldValue('users', array_map(function($user) use($group) {
+	$form_builder->setFieldValue('users', array_map(function ($user) use ($group) {
 		$u = new \stdClass();
 
 		$u->value = $user->id;
@@ -82,8 +81,8 @@ if(!$is_translation) {
 
 			<h2 class="section__title">
 				<span><?= $title ?></span>
-				<?php if($group->date_edited): ?>
-				<span class="label label_info align-self-center"><?= __('admin.group.last_edit_at', format_date($group->date_edited)) ?></span>
+				<?php if ($group->date_edited) : ?>
+					<span class="label label_info align-self-center"><?= __('admin.group.last_edit_at', format_date($group->date_edited)) ?></span>
 				<?php endif; ?>
 			</h2>
 

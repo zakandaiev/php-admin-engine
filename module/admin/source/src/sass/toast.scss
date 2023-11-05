@@ -102,7 +102,8 @@ $toast-color-error: var(--color-error);
 		background: var(--color-heading);
 		position: relative;
 
-		&::before, &::after {
+		&::before,
+		&::after {
 			content: "";
 			display: block;
 			position: absolute;
@@ -130,8 +131,11 @@ $toast-color-error: var(--color-error);
 
 		// .toasts__icon.warning
 		// .toasts__icon.error
-		&.warning, &.error {
-			&::before, &::after {
+		&.warning,
+		&.error {
+
+			&::before,
+			&::after {
 				width: 3px;
 				height: 12px;
 				top: 50%;
@@ -151,7 +155,8 @@ $toast-color-error: var(--color-error);
 		&.success {
 			background: #fff;
 
-			&::before, &::after {
+			&::before,
+			&::after {
 				background: $toast-color-success;
 			}
 		}
@@ -160,7 +165,8 @@ $toast-color-error: var(--color-error);
 		&.info {
 			background: #fff;
 
-			&::before, &::after {
+			&::before,
+			&::after {
 				background: $toast-color-info;
 			}
 		}
@@ -169,7 +175,8 @@ $toast-color-error: var(--color-error);
 		&.warning {
 			background: #fff;
 
-			&::before, &::after {
+			&::before,
+			&::after {
 				background: $toast-color-warning;
 			}
 		}
@@ -178,7 +185,8 @@ $toast-color-error: var(--color-error);
 		&.error {
 			background: #fff;
 
-			&::before, &::after {
+			&::before,
+			&::after {
 				background: $toast-color-error;
 			}
 		}
@@ -197,16 +205,19 @@ $toast-color-error: var(--color-error);
 		opacity: 0;
 		transform: translateY(25%);
 	}
+
 	100% {
 		opacity: 1;
 		transform: translateY(0);
 	}
 }
+
 @keyframes toast_disappear {
 	0% {
 		opacity: 1;
 		transform: translateY(0);
 	}
+
 	100% {
 		opacity: 0;
 		transform: translateY(25%);

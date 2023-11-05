@@ -4,8 +4,10 @@ namespace Module\Admin\Model;
 
 use Engine\Statement;
 
-class User extends \Engine\Model {
-	public function getUsers() {
+class User extends \Engine\Model
+{
+	public function getUsers()
+	{
 		$sql = '
 			SELECT
 				*,
@@ -19,16 +21,20 @@ class User extends \Engine\Model {
 
 		$users = $users->filter('user')->paginate()->execute()->fetchAll();
 
-		$users = array_map(function($user) { return \Engine\User::format($user); }, $users);
+		$users = array_map(function ($user) {
+			return \Engine\User::format($user);
+		}, $users);
 
 		return $users;
 	}
 
-	public function getUserById($id) {
+	public function getUserById($id)
+	{
 		return \Engine\User::get($id);
 	}
 
-	public function getGroups() {
+	public function getGroups()
+	{
 		$sql = '
 			SELECT
 				*
@@ -58,14 +64,15 @@ class User extends \Engine\Model {
 		return $groups;
 	}
 
-	public function getUserGroups($user_id) {
+	public function getUserGroups($user_id)
+	{
 		$sql = 'SELECT group_id FROM {group_user} WHERE user_id = :user_id';
 
 		$groups = new Statement($sql);
 
 		$groups = $groups->execute(['user_id' => $user_id])->fetchAll();
 
-		$groups = array_map(function($group) {
+		$groups = array_map(function ($group) {
 			return $group->group_id;
 		}, $groups);
 

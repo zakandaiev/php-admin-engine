@@ -2,12 +2,14 @@
 
 namespace Engine;
 
-class Optimization {
+class Optimization
+{
 	protected static $type;
 	protected static $files = [];
 	protected static $destination;
 
-	public static function css($files, $destination) {
+	public static function css($files, $destination)
+	{
 		self::$type = strtolower(__FUNCTION__);
 		self::$files = $files;
 		self::$destination = $destination;
@@ -15,7 +17,8 @@ class Optimization {
 		return self::minify();
 	}
 
-	public static function js($files, $destination) {
+	public static function js($files, $destination)
+	{
 		self::$type = strtolower(__FUNCTION__);
 		self::$files = $files;
 		self::$destination = $destination;
@@ -23,24 +26,24 @@ class Optimization {
 		return self::minify();
 	}
 
-	public static function minify() {
+	public static function minify()
+	{
 		$output = '';
 
-		if(empty(self::$files)) {
+		if (empty(self::$files)) {
 			return false;
 		}
 
-		foreach(self::$files as $file) {
+		foreach (self::$files as $file) {
 			try {
-				if(!self::validateFile($file)) {
+				if (!self::validateFile($file)) {
 					continue;
 				}
 
 				$content = file_get_contents($file);
 
 				$output .= self::{'minify' . strtoupper(self::$type)}($content);
-			}
-			catch(\Exception $error) {
+			} catch (\Exception $error) {
 				throw new \Exception(sprintf('Error: %s.', $error->getMessage()));
 			}
 		}
@@ -48,10 +51,11 @@ class Optimization {
 		return self::saveToFile($output);
 	}
 
-	protected static function minifyJS($input) {
+	protected static function minifyJS($input)
+	{
 		$input = trim($input ?? '');
 
-		if(empty($input)) {
+		if (empty($input)) {
 			return $input;
 		}
 
@@ -81,10 +85,11 @@ class Optimization {
 		);
 	}
 
-	protected static function minifyCSS($input) {
+	protected static function minifyCSS($input)
+	{
 		$input = trim($input ?? '');
 
-		if(empty($input)) {
+		if (empty($input)) {
 			return $input;
 		}
 
@@ -129,20 +134,22 @@ class Optimization {
 		);
 	}
 
-	protected static function validateFile($file_name) {
-		if(file_extension($file_name) !== self::$type) {
+	protected static function validateFile($file_name)
+	{
+		if (file_extension($file_name) !== self::$type) {
 			return false;
 		}
 
-		if(!is_file($file_name)) {
+		if (!is_file($file_name)) {
 			return false;
 		}
 
 		return true;
 	}
 
-	protected static function saveToFile($content) {
-		if(!file_exists(self::$destination)) {
+	protected static function saveToFile($content)
+	{
+		if (!file_exists(self::$destination)) {
 			mkdir($path, 0755, true);
 		}
 

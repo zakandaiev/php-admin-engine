@@ -6,15 +6,14 @@ Page::set('title', $title);
 
 Page::breadcrumb('add', ['name' => __('admin.page.pages'), 'url' => '/admin/page']);
 
-if($is_translation) {
+if ($is_translation) {
 	$crumb_edit_url = '/admin/page/edit/' . $page_origin->id;
 
 	$crumb_add_name = '<img class="d-inline-block w-1em h-1em vertical-align-middle radius-circle" src="' . Asset::url() . '/' . lang('icon', $page->language) . '" alt="' . __('locale.' . $page->language) . '"> ' . __('admin.page.edit_translation');
 
 	Page::breadcrumb('add', ['name' => $title, 'url' => $crumb_edit_url]);
 	Page::breadcrumb('add', ['name' => $crumb_add_name]);
-}
-else {
+} else {
 	Page::breadcrumb('add', ['name' => $title]);
 }
 
@@ -23,11 +22,11 @@ $form_name = 'page/page';
 $form_builder = new FormBuilder($form_name);
 $form_attributes = 'data-redirect="' . site('url_language') . '/admin/page" data-validate';
 
-foreach($page as $field_name => $value) {
+foreach ($page as $field_name => $value) {
 	$form_builder->setFieldValue($field_name, $value);
 }
 
-$form_builder->setFieldValue('author', array_map(function($author) use($page) {
+$form_builder->setFieldValue('author', array_map(function ($author) use ($page) {
 	$a = new \stdClass();
 
 	$a->value = $author->id;
@@ -37,7 +36,7 @@ $form_builder->setFieldValue('author', array_map(function($author) use($page) {
 	return $a;
 }, $authors));
 
-$form_builder->setFieldValue('category', array_map(function($category) use($page) {
+$form_builder->setFieldValue('category', array_map(function ($category) use ($page) {
 	$c = new \stdClass();
 
 	$c->value = $category->id;
@@ -47,7 +46,7 @@ $form_builder->setFieldValue('category', array_map(function($category) use($page
 	return $c;
 }, $categories));
 
-$form_builder->setFieldValue('template', array_map(function($template) {
+$form_builder->setFieldValue('template', array_map(function ($template) {
 	$t = new \stdClass();
 
 	$t->value = $template;
@@ -99,7 +98,7 @@ $form_builder->setFieldValue('template', array_map(function($template) {
 									<?= $form_builder->renderCol('seo_description'); ?>
 									<?= $form_builder->renderCol('seo_keywords'); ?>
 									<?= $form_builder->renderCol('seo_image'); ?>
-									<?php if(!$is_translation): ?>
+									<?php if (!$is_translation) : ?>
 										<?= $form_builder->renderCol('no_index_no_follow'); ?>
 									<?php endif; ?>
 								</div>
@@ -128,7 +127,7 @@ $form_builder->setFieldValue('template', array_map(function($template) {
 							</div>
 						</div>
 
-						<?php if(!$is_translation): ?>
+						<?php if (!$is_translation) : ?>
 							<div class="box">
 								<div class="box__header">
 									<h4 class="box__title"><?= __('admin.page.settings') ?></h4>

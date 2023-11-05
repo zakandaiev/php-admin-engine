@@ -16,7 +16,7 @@ return [
 		'setting' => $setting,
 		'is_enabled' => $is_enabled
 	],
-	'execute_post' => function($rowCount, $fields, $data) {
+	'execute_post' => function ($rowCount, $fields, $data) {
 		Hook::run('user.' . $data['action'], $fields);
 	}
 ];

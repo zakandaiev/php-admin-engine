@@ -3,7 +3,8 @@
 $sidebar = Hook::getData('admin.sidebar');
 
 // TODO
-function checkRouteAccess($route) {
+function checkRouteAccess($route)
+{
 	return true;
 	// if(User::get()->access_all) {
 	// 	return true;
@@ -40,45 +41,45 @@ function checkRouteAccess($route) {
 
 <aside class="sidebar">
 	<a class="sidebar__logo" href="<?= site('url_language') ?>/admin/dashboard">
-		<?php if(!empty(site('logo_alt'))): ?>
+		<?php if (!empty(site('logo_alt'))) : ?>
 			<img src="<?= site('url') ?>/<?= site('logo_alt') ?>" alt="Logo">
-		<?php else: ?>
+		<?php else : ?>
 			<span><?= site('name') ?></span>
 		<?php endif; ?>
 	</a>
 
 	<nav class="sidebar__nav">
-		<?php foreach($sidebar as $item): ?>
+		<?php foreach ($sidebar as $item) : ?>
 			<?php
-				if(!@$item['is_public'] && !checkRouteAccess(@$item['route'])) {
-					continue;
-				}
+			if (!@$item['is_public'] && !checkRouteAccess(@$item['route'])) {
+				continue;
+			}
 			?>
 
-			<?php if(isset($item['is_separator']) && $item['is_separator']): ?>
+			<?php if (isset($item['is_separator']) && $item['is_separator']) : ?>
 				<span class="sidebar__separator"><?= $item['name'] ?></span>
-			<?php elseif(is_array($item['route'])): ?>
-				<div class="sidebar__collapse <?php if(Route::isRouteActive($item['route'])): ?>active<?php endif; ?>">
-					<span class="sidebar__item <?php if(Route::isRouteActive($item['route'])): ?>active<?php endif; ?>">
+			<?php elseif (is_array($item['route'])) : ?>
+				<div class="sidebar__collapse <?php if (Route::isRouteActive($item['route'])) : ?>active<?php endif; ?>">
+					<span class="sidebar__item <?php if (Route::isRouteActive($item['route'])) : ?>active<?php endif; ?>">
 						<i class="icon icon-<?= $item['icon'] ?>"></i>
 						<span class="sidebar__text"><?= $item['name'] ?></span>
 					</span>
 
 					<div class="sidebar__collapse-menu">
-						<?php foreach($item['route'] as $key => $value): ?>
-							<a href="<?= site('url_language') . $value ?>" class="sidebar__collapse-item <?php if(Route::isRouteActive($value)): ?>active<?php endif; ?>">
+						<?php foreach ($item['route'] as $key => $value) : ?>
+							<a href="<?= site('url_language') . $value ?>" class="sidebar__collapse-item <?php if (Route::isRouteActive($value)) : ?>active<?php endif; ?>">
 								<span class="sidebar__text"><?= $key ?></span>
 								<!-- <span class="label label_primary">2</span> -->
 							</a>
 						<?php endforeach; ?>
 					</div>
 				</div>
-			<?php else: ?>
-				<a href="<?= site('url_language') . $item['route'] ?>" class="sidebar__item <?php if(Route::isRouteActive($item['route'])): ?>active<?php endif; ?>">
+			<?php else : ?>
+				<a href="<?= site('url_language') . $item['route'] ?>" class="sidebar__item <?php if (Route::isRouteActive($item['route'])) : ?>active<?php endif; ?>">
 					<i class="icon icon-<?= $item['icon'] ?>"></i>
 					<span class="sidebar__text"><?= $item['name'] ?></span>
 					<?php
-						if(false):
+					if (false) :
 						// TODO
 						// if(
 						// 	isset($item['label'])
@@ -89,10 +90,10 @@ function checkRouteAccess($route) {
 						// 	)
 						// ):
 					?>
-						<span class="label label_<?php if(isset($item['label_color'])): ?><?= $item['label_color'] ?><?php else: ?>primary<?php endif; ?>">
-							<?php if(is_closure($item['label'])): ?>
+						<span class="label label_<?php if (isset($item['label_color'])) : ?><?= $item['label_color'] ?><?php else : ?>primary<?php endif; ?>">
+							<?php if (is_closure($item['label'])) : ?>
 								<?= $item['label']() ?>
-							<?php else: ?>
+							<?php else : ?>
 								<?= $item['label'] ?>
 							<?php endif; ?>
 						</span>

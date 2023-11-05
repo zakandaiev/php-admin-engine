@@ -192,7 +192,8 @@
 									<div class="input-group">
 										<span>www.</span>
 										<select data-placeholder="Select...">
-											<option data-placeholder="true"><option>
+											<option data-placeholder="true">
+											<option>
 											<option>google.com</option>
 											<option>microsoft.com</option>
 											<option>bing.com</option>
@@ -270,112 +271,112 @@
 						</div>
 
 						<div class="col">
-						<div class="box">
-							<div class="box__header">
-								<h5 class="box__title">Dates</h5>
-							</div>
-							<div class="box__body">
+							<div class="box">
+								<div class="box__header">
+									<h5 class="box__title">Dates</h5>
+								</div>
+								<div class="box__body">
 
-								<div class="row cols-xs-2 gap-xs">
+									<div class="row cols-xs-2 gap-xs">
 
-									<div class="col">
-										<label>Date</label>
-										<input type="text" data-picker="date">
-									</div>
+										<div class="col">
+											<label>Date</label>
+											<input type="text" data-picker="date">
+										</div>
 
-									<div class="col">
-										<label>DateTime</label>
-										<input type="text" data-picker="datetime">
-									</div>
+										<div class="col">
+											<label>DateTime</label>
+											<input type="text" data-picker="datetime">
+										</div>
 
-									<div class="col">
-										<label>Multiple</label>
-										<input type="text" data-picker="date" data-multiple>
-									</div>
+										<div class="col">
+											<label>Multiple</label>
+											<input type="text" data-picker="date" data-multiple>
+										</div>
 
-									<div class="col">
-										<label>Range</label>
-										<input type="text" data-picker="date" data-range>
-									</div>
+										<div class="col">
+											<label>Range</label>
+											<input type="text" data-picker="date" data-range>
+										</div>
 
-									<div class="col">
-										<label>Month picker</label>
-										<input type="text" data-picker="month">
-									</div>
+										<div class="col">
+											<label>Month picker</label>
+											<input type="text" data-picker="month">
+										</div>
 
-									<div class="col">
-										<label>Time picker</label>
-										<input type="text" data-picker="time">
+										<div class="col">
+											<label>Time picker</label>
+											<input type="text" data-picker="time">
+										</div>
+
 									</div>
 
 								</div>
-
 							</div>
 						</div>
-					</div>
 
-					<div class="col">
-						<div class="box">
-							<div class="box__header">
-								<h5 class="box__title">Input Masks</h5>
-							</div>
-							<div class="box__body">
+						<div class="col">
+							<div class="box">
+								<div class="box__header">
+									<h5 class="box__title">Input Masks</h5>
+								</div>
+								<div class="box__body">
 
-								<div class="row cols-xs-2 gap-xs">
+									<div class="row cols-xs-2 gap-xs">
 
-									<div class="col">
-										<label>Phone</label>
-										<input type="text" data-maska="+38 (###) ### ## ##">
-									</div>
+										<div class="col">
+											<label>Phone</label>
+											<input type="text" data-maska="+38 (###) ### ## ##">
+										</div>
 
-									<div class="col">
-										<label>HEX-color</label>
-										<input type="text" data-maska="!#HHHHHH" data-maska-tokens="H:[0-9a-fA-F]">
-									</div>
+										<div class="col">
+											<label>HEX-color</label>
+											<input type="text" data-maska="!#HHHHHH" data-maska-tokens="H:[0-9a-fA-F]">
+										</div>
 
-									<div class="col">
-										<label>IP-address</label>
-										<input type="text" data-maska="#00.#00.#00.#00" data-maska-tokens="0:[0-9]:optional">
-									</div>
+										<div class="col">
+											<label>IP-address</label>
+											<input type="text" data-maska="#00.#00.#00.#00" data-maska-tokens="0:[0-9]:optional">
+										</div>
 
-									<div class="col">
-										<label>Money</label>
-										<input type="text" data-maska="0.99" data-maska-tokens="0:\d:multiple|9:\d:optional">
+										<div class="col">
+											<label>Money</label>
+											<input type="text" data-maska="0.99" data-maska-tokens="0:\d:multiple|9:\d:optional">
+										</div>
+
 									</div>
 
 								</div>
-
 							</div>
 						</div>
-					</div>
 
-					<div class="col">
-						<div class="box">
-							<div class="box__header">
-								<h5 class="box__title">Сolor picker</h5>
-							</div>
-							<div class="box__body">
-								<input type="color" placeholder="Input">
+						<div class="col">
+							<div class="box">
+								<div class="box__header">
+									<h5 class="box__title">Сolor picker</h5>
+								</div>
+								<div class="box__body">
+									<input type="color" placeholder="Input">
+								</div>
 							</div>
 						</div>
-					</div>
 
-					<div class="col">
-						<div class="box">
-							<div class="box__header">
-								<h5 class="box__title">Range slider</h5>
-							</div>
-							<div class="box__body">
-								<input type="range" min="1" max="100" step="1" value="1">
+						<div class="col">
+							<div class="box">
+								<div class="box__header">
+									<h5 class="box__title">Range slider</h5>
+								</div>
+								<div class="box__body">
+									<input type="range" min="1" max="100" step="1" value="1">
+								</div>
 							</div>
 						</div>
+
 					</div>
 
 				</div>
 
 			</div>
-
-		</div>
 	</section>
 
 	<?php Theme::block('navbar-bottom'); ?>

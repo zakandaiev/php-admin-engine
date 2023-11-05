@@ -12,7 +12,7 @@ $form_name = 'page/page';
 $form_builder = new FormBuilder($form_name);
 $form_attributes = 'data-redirect="' . site('url_language') . '/admin/page" data-validate';
 
-$form_builder->setFieldValue('author', array_map(function($author) {
+$form_builder->setFieldValue('author', array_map(function ($author) {
 	$a = new \stdClass();
 
 	$a->value = $author->id;
@@ -22,7 +22,7 @@ $form_builder->setFieldValue('author', array_map(function($author) {
 	return $a;
 }, $authors));
 
-$form_builder->setFieldValue('category', array_map(function($category) {
+$form_builder->setFieldValue('category', array_map(function ($category) {
 	$c = new \stdClass();
 
 	$c->value = $category->id;
@@ -32,7 +32,7 @@ $form_builder->setFieldValue('category', array_map(function($category) {
 	return $c;
 }, $categories));
 
-$form_builder->setFieldValue('template', array_map(function($template) {
+$form_builder->setFieldValue('template', array_map(function ($template) {
 	$t = new \stdClass();
 
 	$t->value = $template;

@@ -12,8 +12,8 @@ $form_attributes = 'data-redirect="' . site('url_language') . '/admin/group" dat
 
 $routes_formatted = [];
 
-foreach($routes as $method => $r) {
-	foreach($r as $p) {
+foreach ($routes as $method => $r) {
+	foreach ($r as $p) {
 		$r = new \stdClass();
 
 		$r->value = $method . '@' . $p;
@@ -25,7 +25,7 @@ foreach($routes as $method => $r) {
 }
 
 $form_builder->setFieldValue('routes', $routes_formatted);
-$form_builder->setFieldValue('users', array_map(function($user) {
+$form_builder->setFieldValue('users', array_map(function ($user) {
 	$u = new \stdClass();
 
 	$u->value = $user->id;

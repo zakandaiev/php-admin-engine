@@ -6,7 +6,9 @@
 			"email": "zakandaiev@gmail.com"
 		}
 	],
-	"require": {},
+	"require": {
+		"php": "^7.4.0"
+	},
 	"autoload": {
 		"psr-4": {
 			"Engine\\": "engine",

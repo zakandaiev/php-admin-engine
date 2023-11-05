@@ -115,7 +115,7 @@
 							<h4 class="box__title">Calendar</h4>
 						</div>
 						<div class="box__body">
-						<div class="calendar" data-calendar></div>
+							<div class="calendar" data-calendar></div>
 						</div>
 					</div>
 				</div>

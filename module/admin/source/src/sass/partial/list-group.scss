@@ -21,7 +21,10 @@
 	}
 
 	& > a.list-group__item {
-		&:hover, &:focus, &:active {
+
+		&:hover,
+		&:focus,
+		&:active {
 			background: var(--color-border);
 		}
 

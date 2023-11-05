@@ -4,11 +4,13 @@ namespace Engine;
 
 use Engine\Database\Statement;
 
-class Sitemap {
-	public static function update($custom_pages = [], $is_only_custom_pages = false) {
+class Sitemap
+{
+	public static function update($custom_pages = [], $is_only_custom_pages = false)
+	{
 		$pages = [];
 
-		if(!$is_only_custom_pages) {
+		if (!$is_only_custom_pages) {
 			$sql = '
 				SELECT
 					*
@@ -32,7 +34,7 @@ class Sitemap {
 		$path = ROOT_DIR . '/sitemap.xml';
 		$sitemap = self::format($pages);
 
-		if(file_put_contents($path, $sitemap, LOCK_EX)) {
+		if (file_put_contents($path, $sitemap, LOCK_EX)) {
 			Log::write('Sitmap updated by user ID: ' . User::get()->id . ' from IP: ' . Request::$ip, 'sitemap');
 
 			Hook::run('sitemap.update');
@@ -43,23 +45,24 @@ class Sitemap {
 		return false;
 	}
 
-	private static function format($pages) {
+	private static function format($pages)
+	{
 		$output = '<?xml version="1.0" encoding="UTF-8"?>';
 		$output .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">';
 
-		foreach($pages as $page) {
-			if(is_array($page)) {
+		foreach ($pages as $page) {
+			if (is_array($page)) {
 				$page = json_decode(json_encode($page));
 			}
 
-			if($page->language === Setting::get('main')->language) {
+			if ($page->language === Setting::get('main')->language) {
 				$language = '';
 			} else {
 				$language = $page->language . '/';
 			}
 
-			if($page->url === 'home') {
-				if(!empty($language)) $language = '/' . trim($language ?? '', '/');
+			if ($page->url === 'home') {
+				if (!empty($language)) $language = '/' . trim($language ?? '', '/');
 				$url = Request::$base . $language;
 				$priority = '1.00';
 			} else {

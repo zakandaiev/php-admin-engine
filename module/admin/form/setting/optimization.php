@@ -9,25 +9,23 @@ return [
 		'group_js' => $group_js,
 		'cache_db' => $cache_db
 	],
-	'execute_pre' => function($fields, $data) {
+	'execute_pre' => function ($fields, $data) {
 		$group_css = $fields['group_css']['value'] ?? false;
 		$group_js = $fields['group_js']['value'] ?? false;
 
-		if($group_css === true && !site('group_css')) {
+		if ($group_css === true && !site('group_css')) {
 			$fields['group_css']['value'] = launchOptimization('css');
-		}
-		else if($group_css === true && is_string(site('group_css'))) {
+		} else if ($group_css === true && is_string(site('group_css'))) {
 			$fields['group_css']['value'] = site('group_css');
 		}
 
-		if($group_js === true && !site('group_js')) {
+		if ($group_js === true && !site('group_js')) {
 			$fields['group_js']['value'] = launchOptimization('js');
-		}
-		else if($group_js === true && is_string(site('group_js'))) {
+		} else if ($group_js === true && is_string(site('group_js'))) {
 			$fields['group_js']['value'] = site('group_js');
 		}
 
-		foreach($fields as $field) {
+		foreach ($fields as $field) {
 			Setting::update('engine', $field['name'], $field['value']);
 		}
 
@@ -35,12 +33,13 @@ return [
 	}
 ];
 
-function launchOptimization($type) {
+function launchOptimization($type)
+{
 	$files = [];
 	$modules = [];
 
-	foreach(Module::get() as $module) {
-		if(!$module['is_enabled'] || $module['extends'] !== 'public' || $module['name'] === 'public') {
+	foreach (Module::get() as $module) {
+		if (!$module['is_enabled'] || $module['extends'] !== 'public' || $module['name'] === 'public') {
 			continue;
 		}
 
@@ -49,19 +48,19 @@ function launchOptimization($type) {
 
 	$modules[] = 'public';
 
-	foreach($modules as $module) {
+	foreach ($modules as $module) {
 		Module::setName($module);
 
 		$functions = Path::file('view') . '/functions.php';
 
-		if(!is_file($functions)) {
+		if (!is_file($functions)) {
 			continue;
 		}
 
 		require_once $functions;
 
-		foreach(Asset::getContainer($type) as $file) {
-			if($file['module'] !== $module) {
+		foreach (Asset::getContainer($type) as $file) {
+			if ($file['module'] !== $module) {
 				continue;
 			}
 
@@ -69,7 +68,7 @@ function launchOptimization($type) {
 		}
 	}
 
-	if(empty($files)) {
+	if (empty($files)) {
 		return false;
 	}
 

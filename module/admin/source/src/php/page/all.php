@@ -6,25 +6,23 @@ Page::set('title', $title);
 
 $breadcrumbs = Request::has('breadcrumbs') ? Request::get('breadcrumbs') : [];
 
-if(!empty($breadcrumbs)) {
+if (!empty($breadcrumbs)) {
 	Page::breadcrumb('add', ['name' => $title, 'url' => '/admin/page']);
 
 	$cb = [];
 
-	foreach($breadcrumbs as $key => $crumb) {
+	foreach ($breadcrumbs as $key => $crumb) {
 		$cb[] = $crumb;
 
 		$crumb['url'] = $crumb['url'] . '?' . http_build_query(['breadcrumbs' => $cb]);
 
-		if(isset($breadcrumbs[$key + 1])) {
+		if (isset($breadcrumbs[$key + 1])) {
 			Page::breadcrumb('add', ['name' => $crumb['name'], 'url' => $crumb['url']]);
-		}
-		else {
+		} else {
 			Page::breadcrumb('add', ['name' => $crumb['name']]);
 		}
 	}
-}
-else {
+} else {
 	Page::breadcrumb('add', ['name' => $title]);
 }
 
@@ -37,11 +35,11 @@ $interface_builder = new InterfaceBuilder([
 	],
 	'fields' => [
 		'title' => [
-			'type' => function($value, $item) use($breadcrumbs) {
+			'type' => function ($value, $item) use ($breadcrumbs) {
 				$icon = '<i class="icon icon-file-text"></i>';
 				$url = site('url_language') . '/admin/page/edit/' . $item->id;
 
-				if($item->is_category) {
+				if ($item->is_category) {
 					$uri = '/admin/page/category/' . $item->id;
 
 					$breadcrumbs[] = [
@@ -58,13 +56,15 @@ $interface_builder = new InterfaceBuilder([
 			'title' => __('admin.page.title')
 		],
 		'translations' => [
-			'type' => function($value, $item) {
+			'type' => function ($value, $item) {
 				return getInterfaceTranslationsColumn('page', $value, $item);
 			},
 			'title' => __('admin.page.translations')
 		],
 		'author' => [
-			'type' => function($value, $item) {return $value->fullname;},
+			'type' => function ($value, $item) {
+				return $value->fullname;
+			},
 			'title' => __('admin.page.author')
 		],
 		'date_created' => [
@@ -73,8 +73,8 @@ $interface_builder = new InterfaceBuilder([
 			'title' => __('admin.page.date_created')
 		],
 		'is_enabled' => [
-			'type' => function($value, $item) {
-				if($item->is_pending) {
+			'type' => function ($value, $item) {
+				if ($item->is_pending) {
 					return '<span data-tooltip="top" title="' . __('admin.page.is_pending', format_date($item->date_publish)) . '"><i class="icon icon-clock"></i></span>';
 				}
 
@@ -90,10 +90,10 @@ $interface_builder = new InterfaceBuilder([
 		],
 		'table_actions' => [
 			'td_class' => 'table__actions',
-			'type' => function($value, $item) {
+			'type' => function ($value, $item) {
 				$html = '<a href="' . site('url_language') . '/' . ($item->url === 'home' ? '' : $item->url) . '" target="_blank" data-tooltip="top" title="' . __('admin.view') . '" class="table__action"><i class="icon icon-eye"></i></a>';
 
-				$html .= ' <a href="' . site('url_language') . '/admin/page/edit/' . $item->id .'" data-tooltip="top" title="' . __('admin.edit') . '" class="table__action"><i class="icon icon-edit"></i></a>';
+				$html .= ' <a href="' . site('url_language') . '/admin/page/edit/' . $item->id . '" data-tooltip="top" title="' . __('admin.edit') . '" class="table__action"><i class="icon icon-edit"></i></a>';
 
 				$html .= ' <button type="button" data-action="' . Form::delete('page/page', $item->id) . '" data-confirm="' . __('admin.page.delete_confirm', $item->author->fullname) . '" data-remove="trow" data-decrement=".pagination-output" data-tooltip="top" title="' . __('admin.delete') . '" class="table__action">';
 				$html .= '<i class="icon icon-trash"></i>';
@@ -123,17 +123,17 @@ $interface_builder = new InterfaceBuilder([
 
 			<?= $interface_builder->render() ?>
 
-			<?php if(!empty($breadcrumbs)): ?>
+			<?php if (!empty($breadcrumbs)) : ?>
 				<?php
-					$cb = $breadcrumbs;
-					array_pop($cb);
-					$cb = array_reverse($cb);
-					$uri_back = !empty($cb) ? $cb[0]['url'] : '/admin/page';
+				$cb = $breadcrumbs;
+				array_pop($cb);
+				$cb = array_reverse($cb);
+				$uri_back = !empty($cb) ? $cb[0]['url'] : '/admin/page';
 				?>
 				<script>
 					const tbody = document.querySelector('tbody');
 
-					if(tbody) {
+					if (tbody) {
 						const trow = document.createElement('tr');
 						const tcol = document.createElement('td');
 

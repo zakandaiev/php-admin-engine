@@ -6,8 +6,10 @@ use Engine\Path;
 use Engine\Statement;
 use Engine\User;
 
-class Page extends \Engine\Model {
-	public function getPages() {
+class Page extends \Engine\Model
+{
+	public function getPages()
+	{
 		$sql = '
 			SELECT
 				*,
@@ -30,7 +32,7 @@ class Page extends \Engine\Model {
 
 		$pages = $pages->filter('page')->paginate()->execute(['language' => site('language')])->fetchAll();
 
-		foreach($pages as $page) {
+		foreach ($pages as $page) {
 			$page->author = User::get($page->author);
 			$page->translations = !empty($page->translations) ? explode(',', $page->translations) : [];
 		}
@@ -38,7 +40,8 @@ class Page extends \Engine\Model {
 		return $pages;
 	}
 
-	public function getPagesByCategory($id) {
+	public function getPagesByCategory($id)
+	{
 		$sql = '
 			SELECT
 				*,
@@ -65,7 +68,7 @@ class Page extends \Engine\Model {
 
 		$pages = $pages->filter('page')->paginate()->execute(['category_id' => $id, 'language' => site('language')])->fetchAll();
 
-		foreach($pages as $page) {
+		foreach ($pages as $page) {
 			$page->author = User::get($page->author);
 			$page->translations = !empty($page->translations) ? explode(',', $page->translations) : [];
 		}
@@ -73,11 +76,11 @@ class Page extends \Engine\Model {
 		return $pages;
 	}
 
-	public static function getPage($key, $language = null) {
-		if(is_numeric($key)) {
+	public static function getPage($key, $language = null)
+	{
+		if (is_numeric($key)) {
 			$binding_key = 'id';
-		}
-		else {
+		} else {
 			$binding_key = 'url';
 		}
 
@@ -104,28 +107,30 @@ class Page extends \Engine\Model {
 
 		$page = $page->execute($binding)->fetch();
 
-		if(!empty($page)) {
+		if (!empty($page)) {
 			$page->author = User::get($page->author);
 		}
 
 		return $page;
 	}
 
-	public function getAuthors() {
+	public function getAuthors()
+	{
 		$sql = 'SELECT * FROM {user} ORDER BY name ASC, email ASC';
 
 		$authors = new Statement($sql);
 
 		$authors = $authors->execute()->fetchAll();
 
-		foreach($authors as $key => $author) {
+		foreach ($authors as $key => $author) {
 			$authors[$key] = User::format($author);
 		}
 
 		return $authors;
 	}
 
-	public function getCategories($current = 0) {
+	public function getCategories($current = 0)
+	{
 		$sql = '
 			SELECT
 				*
@@ -148,21 +153,23 @@ class Page extends \Engine\Model {
 		return $categories->execute(['id' => $current, 'language' => site('language')])->fetchAll();
 	}
 
-	public function getPageCategories($page_id) {
+	public function getPageCategories($page_id)
+	{
 		$categories = [];
 
 		$sql = 'SELECT category_id FROM {page_category} WHERE page_id = :page_id';
 
 		$statement = new Statement($sql);
 
-		foreach($statement->execute(['page_id' => $page_id])->fetchAll() as $category) {
+		foreach ($statement->execute(['page_id' => $page_id])->fetchAll() as $category) {
 			$categories[] = $category->category_id;
 		}
 
 		return $categories;
 	}
 
-	public function getPageCustomFields($page_id, $language = null) {
+	public function getPageCustomFields($page_id, $language = null)
+	{
 		$sql = '
 			SELECT
 				name, value
@@ -177,48 +184,49 @@ class Page extends \Engine\Model {
 
 		$fields = new \stdClass();
 
-		foreach($custom_fields->execute(['page_id' => $page_id, 'language' => $language ?? site('language')])->fetchAll() as $field) {
+		foreach ($custom_fields->execute(['page_id' => $page_id, 'language' => $language ?? site('language')])->fetchAll() as $field) {
 			$fields->{$field->name} = $field->value;
 		}
 
 		return $fields;
 	}
 
-	public function getPageCustomFieldSets($page = null) {
+	public function getPageCustomFieldSets($page = null)
+	{
 		$fieldsets = [];
 
 		$path_fields = Path::file('custom_fields');
 
-		if(!file_exists($path_fields)) {
+		if (!file_exists($path_fields)) {
 			return $fieldsets;
 		}
 
-		foreach(scandir($path_fields) as $fieldset) {
-			if(in_array($fieldset, ['.', '..'], true)) continue;
+		foreach (scandir($path_fields) as $fieldset) {
+			if (in_array($fieldset, ['.', '..'], true)) continue;
 
-			if(file_extension($fieldset) !== 'php') continue;
+			if (file_extension($fieldset) !== 'php') continue;
 
 			$file_name = strtolower(file_name($fieldset));
 
 			@list($type, $value) = explode('-', $file_name, 2);
 
-			if($type === 'all') {
+			if ($type === 'all') {
 				$fieldsets[] = $path_fields . '/' . $fieldset;
 			}
 
-			if(empty((array) $page)) {
+			if (empty((array) $page)) {
 				continue;
 			}
 
-			if(!is_object($page) && is_numeric($page)) {
+			if (!is_object($page) && is_numeric($page)) {
 				$page = $this->getPage($page);
 			}
 
-			if(!isset($page->categories)) {
+			if (!isset($page->categories)) {
 				$page->categories = $this->getPageCategories($page->id);
 			}
 
-			if(
+			if (
 				($type === 'id' && $value === $page->id)
 				|| ($type === 'category' && in_array($value, $page->categories))
 				|| ($type === 'template' && $value === $page->template)

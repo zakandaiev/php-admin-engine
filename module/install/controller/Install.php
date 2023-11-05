@@ -7,8 +7,10 @@ use Engine\Path;
 use Engine\Request;
 use Engine\Server;
 
-class Install extends \Engine\Controller {
-	public function getInstallModule() {
+class Install extends \Engine\Controller
+{
+	public function getInstallModule()
+	{
 		// TODO
 		// $this->modules ...
 		// $module = Module::getAll($this->route['parameter']['name']);
@@ -27,7 +29,8 @@ class Install extends \Engine\Controller {
 		// Server::answer(null, 'error', $install);
 	}
 
-	public function getUninstallModule() {
+	public function getUninstallModule()
+	{
 		// TODO
 		// $this->modules ...
 		// $module = Module::getAll($this->route['parameter']['name']);

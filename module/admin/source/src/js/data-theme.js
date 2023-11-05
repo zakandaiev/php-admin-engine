@@ -39,7 +39,7 @@ const DATA_THEME = {
 
   dataSrcDark: () => {
     const currentTheme = DATA_THEME.getCurrentTheme();
-    
+
     document.querySelectorAll('[data-src-dark]').forEach(item => {
       if (!item.srcLight) {
         item.srcLight = item.src;

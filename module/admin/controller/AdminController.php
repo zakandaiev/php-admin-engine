@@ -5,10 +5,12 @@ namespace Module\Admin\Controller;
 use Engine\Controller;
 use Engine\Server;
 
-class AdminController extends Controller {
+class AdminController extends Controller
+{
 	protected $model_admin;
 
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct();
 
 		$this->model_admin = $this->loadModel('AdminModel', 'admin');

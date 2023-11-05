@@ -1,13 +1,13 @@
 @import "air-datepicker/air-datepicker";
 
 [data-picker] {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 .air-datepicker {
-	--adp-font-family: var(--font);
+  --adp-font-family: var(--font);
   --adp-font-size: 1.4rem;
-	--adp-transition-duration: var(--transition-time);
+  --adp-transition-duration: var(--transition-time);
   --adp-background-color: var(--color-box);
   --adp-background-color-hover: var(--color-border);
   --adp-background-color-active: var(--color-primary);
@@ -48,34 +48,38 @@
   --adp-time-track-color-hover: var(--color-border);
   --adp-time-day-period-color: var(--color-secondary);
 
-	.air-datepicker-cell.-disabled- {
-		cursor: not-allowed;
-	}
+  .air-datepicker-cell.-disabled- {
+    cursor: not-allowed;
+  }
 
-	.air-datepicker-nav--action,
-	.air-datepicker-nav--title,
-	.air-datepicker-button {
-		color: var(--color-text);
-		background: var(--color-box);
-		border-color: var(--color-border);
+  .air-datepicker-nav--action,
+  .air-datepicker-nav--title,
+  .air-datepicker-button {
+    color: var(--color-text);
+    background: var(--color-box);
+    border-color: var(--color-border);
 
-		&:hover, &:focus, &:active {
-			color: var(--color-text);
-			background: var(--color-body);
-			border-color: var(--color-border);
-		}
-	}
+    &:hover,
+    &:focus,
+    &:active {
+      color: var(--color-text);
+      background: var(--color-body);
+      border-color: var(--color-border);
+    }
+  }
 
-	.air-datepicker--pointer::after {
-		background: var(--color-box);
-	}
+  .air-datepicker--pointer::after {
+    background: var(--color-box);
+  }
 
-  .-in-range-.air-datepicker-cell.-year-.-other-decade-, .-in-range-.air-datepicker-cell.-day-.-other-month- {
+  .-in-range-.air-datepicker-cell.-year-.-other-decade-,
+  .-in-range-.air-datepicker-cell.-day-.-other-month- {
     color: var(--adp-color-other-month);
     background: var(--adp-cell-background-color-in-range);
   }
 
-  .air-datepicker-cell.-year-.-other-decade-:hover, .air-datepicker-cell.-day-.-other-month-:hover {
+  .air-datepicker-cell.-year-.-other-decade-:hover,
+  .air-datepicker-cell.-day-.-other-month-:hover {
     color: var(--adp-color-other-month);
   }
 }

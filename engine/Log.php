@@ -2,10 +2,12 @@
 
 namespace Engine;
 
-class Log {
+class Log
+{
 	protected static $logs = [];
 
-	public static function write($string, $folder = '') {
+	public static function write($string, $folder = '')
+	{
 		return self::saveToFile(self::format($string), $folder);
 	}
 
@@ -23,14 +25,15 @@ class Log {
 	// 	return is_file($path);
 	// }
 
-	protected static function saveToFile($string, $folder) {
+	protected static function saveToFile($string, $folder)
+	{
 		$path = Path::file('log');
 
-		if(!empty($folder)) {
+		if (!empty($folder)) {
 			$path .= '/' . trim($folder ?? '', '/');
 		}
 
-		if(!file_exists($path)) {
+		if (!file_exists($path)) {
 			mkdir($path, 0755, true);
 		}
 
@@ -39,14 +42,13 @@ class Log {
 		return file_put_contents($path, $string, FILE_APPEND | LOCK_EX);
 	}
 
-	protected static function format($string) {
-		if(is_array($string)) {
+	protected static function format($string)
+	{
+		if (is_array($string)) {
 			$string = json_encode($string, JSON_UNESCAPED_UNICODE);
-		}
-		else if(is_bool($string)) {
+		} else if (is_bool($string)) {
 			$string = $string === true ? 'true' : 'false';
-		}
-		else if(!is_string($string)) {
+		} else if (!is_string($string)) {
 			$string = strval($string);
 		}
 
@@ -55,8 +57,9 @@ class Log {
 		return $string;
 	}
 
-	public static function getAll() {
-		if(!empty(self::$logs)) {
+	public static function getAll()
+	{
+		if (!empty(self::$logs)) {
 			return self::$logs;
 		}
 
@@ -102,7 +105,8 @@ class Log {
 		return self::$logs;
 	}
 
-	public static function get($id) {
+	public static function get($id)
+	{
 		$log = new \stdClass();
 		// TODO
 		// $log_id = str_replace('@', '/', trim($id ?? '', '/'));

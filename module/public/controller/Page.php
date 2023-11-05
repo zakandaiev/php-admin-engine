@@ -2,13 +2,15 @@
 
 namespace Module\Public\Controller;
 
-class Page extends Controller {
-	public function getPage() {
+class Page extends Controller
+{
+	public function getPage()
+	{
 		$page_url = 'home';
 		$page_template = 'home';
 
-		if(isset($this->route['parameter']['url'])) {
-			if($this->route['parameter']['url'] === 'home') {
+		if (isset($this->route['parameter']['url'])) {
+			if ($this->route['parameter']['url'] === 'home') {
 				$this->view->error('404');
 				return true;
 			}
@@ -24,20 +26,17 @@ class Page extends Controller {
 
 		$data['page'] = $this->model->getPage($page_url);
 
-		if(empty($data['page'])) {
+		if (empty($data['page'])) {
 			$this->view->error('404');
 		}
 
-		if(!empty($data['page']->template)) {
+		if (!empty($data['page']->template)) {
 			$page_template = $data['page']->template;
-		}
-		else if($data['page']->is_category) {
+		} else if ($data['page']->is_category) {
 			$page_template = 'category';
-		}
-		else if(!$data['page']->is_static) {
+		} else if (!$data['page']->is_static) {
 			$page_template = 'post';
-		}
-		else if($page_url !== 'home') {
+		} else if ($page_url !== 'home') {
 			$page_template = 'page';
 		}
 
@@ -54,12 +53,13 @@ class Page extends Controller {
 		return true;
 	}
 
-	public function getAuthor() {
+	public function getAuthor()
+	{
 		$author_id = $this->route['parameter']['id'];
 
 		$data['author'] = $this->model->getAuthor($author_id);
 
-		if(empty($data['author'])) {
+		if (empty($data['author'])) {
 			$this->view->error('404');
 		}
 

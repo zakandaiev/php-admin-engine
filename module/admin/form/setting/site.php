@@ -20,9 +20,9 @@ return [
 		'analytics_gtag' => $analytics_gtag,
 		'no_index_no_follow' => $no_index_no_follow
 	],
-	'execute_pre' => function($fields, $data) {
-		foreach($fields as $field) {
-			if(in_array($field['name'], ['name', 'description', 'address', 'hours'])) {
+	'execute_pre' => function ($fields, $data) {
+		foreach ($fields as $field) {
+			if (in_array($field['name'], ['name', 'description', 'address', 'hours'])) {
 				$value = Setting::get('engine')->{$field['name']} ?? new \stdClass();
 				$value->{site('language_current')} = $field['value'];
 				$field['value'] = $value;

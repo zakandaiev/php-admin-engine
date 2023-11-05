@@ -59,7 +59,10 @@
 
 	// .accordion_underline
 	&_underline > .accordion__header {
-		&:hover, &:focus, &:active {
+
+		&:hover,
+		&:focus,
+		&:active {
 			& > *:not([class]) {
 				text-decoration: underline;
 			}

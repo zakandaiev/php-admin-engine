@@ -2,16 +2,18 @@
 
 namespace Engine;
 
-class User {
+class User
+{
 	protected static $current;
 	protected static $stored = [];
 
-	public function __construct() {
+	public function __construct()
+	{
 		self::$current = new \stdClass();
 		self::$current->id = null;
 		self::$current->authorized = false;
 
-		if(Session::hasCookie(COOKIE_KEY['auth'])) {
+		if (Session::hasCookie(COOKIE_KEY['auth'])) {
 			$auth_key = Session::getCookie(COOKIE_KEY['auth']);
 			$bind_ip = AUTH['bind_session_to_ip'] ? 'AND auth_ip = :auth_ip' : '';
 
@@ -33,13 +35,13 @@ class User {
 
 			$binding = ['auth_token' => $auth_key];
 
-			if(AUTH['bind_session_to_ip']) {
+			if (AUTH['bind_session_to_ip']) {
 				$binding['auth_ip'] = Request::ip();
 			}
 
 			$user = $user->execute($binding)->fetch();
 
-			if($user) {
+			if ($user) {
 				self::$current = self::format($user, true);
 				self::$stored[$user->id] = self::$current;
 			}
@@ -48,18 +50,18 @@ class User {
 		return $this;
 	}
 
-	public static function get($id = null) {
-		if(isset($id) && isset(self::$stored[$id])) {
+	public static function get($id = null)
+	{
+		if (isset($id) && isset(self::$stored[$id])) {
 			return self::$stored[$id];
-		}
-		else if(isset($id)) {
+		} else if (isset($id)) {
 			$sql = 'SELECT * FROM {user} WHERE id = :id ORDER BY date_created DESC LIMIT 1';
 
 			$user = new Statement($sql);
 
 			$user = $user->execute(['id' => $id])->fetch();
 
-			if(!$user) {
+			if (!$user) {
 				return $user;
 			}
 
@@ -73,14 +75,16 @@ class User {
 		return self::$current;
 	}
 
-	public static function set($key, $data = null) {
+	public static function set($key, $data = null)
+	{
 		self::$current->{$key} = $data;
 
 		return true;
 	}
 
-	public static function format($user, $authorized = false) {
-		if(!$user) {
+	public static function format($user, $authorized = false)
+	{
+		if (!$user) {
 			return $user;
 		}
 
@@ -93,7 +97,8 @@ class User {
 	}
 
 	// TODO
-	public static function authorize($user, $lifetime = null) {
+	public static function authorize($user, $lifetime = null)
+	{
 		// $auth_token = Hash::token();
 
 		// $user->ip = Request::ip();
@@ -124,7 +129,8 @@ class User {
 		return true;
 	}
 
-	public static function unauthorize() {
+	public static function unauthorize()
+	{
 		// Session::unsetCookie(COOKIE_KEY['auth']);
 
 		$user_id = self::$current->id;
@@ -139,7 +145,8 @@ class User {
 		return true;
 	}
 
-	public static function register($user) {
+	public static function register($user)
+	{
 		// if(is_array($user)) {
 		// 	$user = json_decode(json_encode($user, JSON_UNESCAPED_UNICODE));
 		// }
@@ -173,7 +180,8 @@ class User {
 		return true;
 	}
 
-	public static function restore($email) {
+	public static function restore($email)
+	{
 		// $statement = new Statement('SELECT * FROM {user} WHERE email = :email LIMIT 1');
 
 		// $user = $statement->execute(['email' => $email])->fetch();
@@ -208,7 +216,8 @@ class User {
 		return true;
 	}
 
-	public static function update($key, $value = null, $id = null) {
+	public static function update($key, $value = null, $id = null)
+	{
 		// $id = $id ?? self::get()->id;
 
 		// $binding = [$key => $value, 'id' => $id];
@@ -229,7 +238,8 @@ class User {
 		return true;
 	}
 
-	public static function delete($id) {
+	public static function delete($id)
+	{
 		// $sql = "DELETE FROM {user} WHERE id = :id";
 
 		// $statement = new Statement($sql);

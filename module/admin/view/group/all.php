@@ -22,14 +22,14 @@ $interface_builder = new InterfaceBuilder([
 			'title' => __('admin.group.name')
 		],
 		'translations' => [
-			'type' => function($value, $item) {
+			'type' => function ($value, $item) {
 				return getInterfaceTranslationsColumn('group', $value, $item);
 			},
 			'title' => __('admin.group.translations')
 		],
 		'count_routes' => [
-			'type' => function($value, $item) {
-				if($item->access_all) {
+			'type' => function ($value, $item) {
+				if ($item->access_all) {
 					return __('admin.group.access_all');
 				}
 
@@ -38,7 +38,9 @@ $interface_builder = new InterfaceBuilder([
 			'title' => __('admin.group.count_routes')
 		],
 		'count_users' => [
-			'type' => function($value, $item) {return '<a href="/admin/user">' . $value . '</a>';},
+			'type' => function ($value, $item) {
+				return '<a href="/admin/user">' . $value . '</a>';
+			},
 			'title' => __('admin.group.count_users')
 		],
 		'date_created' => [
@@ -47,7 +49,7 @@ $interface_builder = new InterfaceBuilder([
 			'title' => __('admin.group.date_created')
 		],
 		'is_enabled' => [
-			'type' => function($value, $item) {
+			'type' => function ($value, $item) {
 				$tooltip = $item->is_enabled ? __('admin.group.deactivate_this_group') : __('admin.group.activate_this_group');
 
 				$html = '<button type="button" data-action="' . Form::edit('group/toggle', $item->id) . '" data-fields="is_enabled:' . !$value . '" data-redirect="this" data-tooltip="top" title="' . $tooltip . '" class="table__action">';
@@ -60,8 +62,8 @@ $interface_builder = new InterfaceBuilder([
 		],
 		'table_actions' => [
 			'td_class' => 'table__actions',
-			'type' => function($value, $item) {
-				$html = ' <a href="' . site('url_language') . '/admin/group/edit/' . $item->id .'" data-tooltip="top" title="' . __('admin.edit') . '" class="table__action"><i class="icon icon-edit"></i></a>';
+			'type' => function ($value, $item) {
+				$html = ' <a href="' . site('url_language') . '/admin/group/edit/' . $item->id . '" data-tooltip="top" title="' . __('admin.edit') . '" class="table__action"><i class="icon icon-edit"></i></a>';
 
 				$html .= ' <button type="button" data-action="' . Form::delete('group/group', $item->id) . '" data-confirm="' . __('admin.group.delete_confirm', $item->name) . '" data-remove="trow" data-decrement=".pagination-output" data-tooltip="top" title="' . __('admin.delete') . '" class="table__action">';
 				$html .= '<i class="icon icon-trash"></i>';

@@ -10,15 +10,15 @@ Page::breadcrumb('add', ['name' => $title]);
 $form_builder = new FormBuilder('user/edit');
 $form_attributes = 'data-redirect="' . site('url_language') . '/admin/user" data-validate';
 
-foreach($user as $field_name => $value) {
-	if($field_name === 'password') {
+foreach ($user as $field_name => $value) {
+	if ($field_name === 'password') {
 		continue;
 	}
 
 	$form_builder->setFieldValue($field_name, $value);
 }
 
-$form_builder->setFieldValue('group', array_map(function($group) use($user) {
+$form_builder->setFieldValue('group', array_map(function ($group) use ($user) {
 	$g = new \stdClass();
 
 	$g->value = $group->id;
@@ -45,8 +45,8 @@ $form_builder->setFieldValue('group', array_map(function($group) use($user) {
 
 			<h2 class="section__title">
 				<span><?= $title ?></span>
-				<?php if($user->date_edited): ?>
-				<span class="label label_info align-self-center"><?= __('admin.user.last_edit_at', format_date($user->date_edited)) ?></span>
+				<?php if ($user->date_edited) : ?>
+					<span class="label label_info align-self-center"><?= __('admin.user.last_edit_at', format_date($user->date_edited)) ?></span>
 				<?php endif; ?>
 			</h2>
 

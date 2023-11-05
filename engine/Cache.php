@@ -2,16 +2,18 @@
 
 namespace Engine;
 
-class Cache {
+class Cache
+{
 	const CACHE_KEY = [
 		'data' => 'data',
 		'expires' => 'expires'
 	];
 
-	public static function set($key, $data = null, $lifetime = null) {
+	public static function set($key, $data = null, $lifetime = null)
+	{
 		$path = Path::file('cache');
 
-		if(!file_exists($path)) {
+		if (!file_exists($path)) {
 			mkdir($path, 0755, true);
 		}
 
@@ -26,8 +28,7 @@ class Cache {
 
 		try {
 			file_put_contents($path, $content);
-		}
-		catch(\Exception $error) {
+		} catch (\Exception $error) {
 			throw new \Exception(sprintf('Cache error: %s.', $error->getMessage()));
 		}
 
@@ -38,13 +39,14 @@ class Cache {
 		return true;
 	}
 
-	public static function get($key) {
+	public static function get($key)
+	{
 		$path = Path::file('cache') . '/' . md5($key) . '.' . trim(CACHE['extension'], '.');
 
-		if(is_file($path)) {
+		if (is_file($path)) {
 			$content = unserialize(file_get_contents($path));
 
-			if(time() <= $content[self::CACHE_KEY['expires']]) {
+			if (time() <= $content[self::CACHE_KEY['expires']]) {
 				return $content[self::CACHE_KEY['data']];
 			}
 		}
@@ -52,12 +54,13 @@ class Cache {
 		return false;
 	}
 
-	public static function delete($key) {
+	public static function delete($key)
+	{
 		$key = md5($key);
 
 		$path = Path::file('cache') . '/' . $key . '.' . trim(CACHE['extension'], '.');
 
-		if(!is_file($path)) {
+		if (!is_file($path)) {
 			return false;
 		}
 
@@ -70,17 +73,18 @@ class Cache {
 		return true;
 	}
 
-	public static function flush() {
+	public static function flush()
+	{
 		$path = Path::file('cache');
 
-		if(!file_exists($path)) {
+		if (!file_exists($path)) {
 			return false;
 		}
 
-		foreach(scandir($path) as $file) {
-			if(in_array($file, ['.', '..'], true)) continue;
+		foreach (scandir($path) as $file) {
+			if (in_array($file, ['.', '..'], true)) continue;
 
-			if(file_extension($file) !== trim(CACHE['extension'], '.')) continue;
+			if (file_extension($file) !== trim(CACHE['extension'], '.')) continue;
 
 			unlink($path . '/' . $file);
 		}

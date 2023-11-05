@@ -7,7 +7,7 @@ return [
 	'fields' => [
 		'is_enabled' => $is_enabled
 	],
-	'execute_pre' => function($fields, $data) {
+	'execute_pre' => function ($fields, $data) {
 		$sql = '
 			SELECT
 				page_id,
@@ -22,15 +22,15 @@ return [
 
 		$children = $children->execute(['category_id' => $data['item_id']])->fetchAll();
 
-		foreach($children as $child) {
-			if($child->count_parent_categories > 1) {
+		foreach ($children as $child) {
+			if ($child->count_parent_categories > 1) {
 				continue;
 			}
 
 			Form::execute($data['action'], $data['form_name'], $child->page_id, false, true);
 		}
 	},
-	'execute_post' => function($rowCount, $fields, $data) {
+	'execute_post' => function ($rowCount, $fields, $data) {
 		Hook::run('page.toggle', $fields);
 	}
 ];

@@ -6,6 +6,6 @@
 	<?php Theme::block('script/i18n-filepond'); ?>
 	<?php Theme::block('script/i18n-modal'); ?>
 
-</body>
+	</body>
 
-</html>
+	</html>

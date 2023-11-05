@@ -16,7 +16,8 @@
 
 	// .header__burger
 	// .header__item
-	&__burger, &__item {
+	&__burger,
+	&__item {
 		@include reset-btn;
 		flex-shrink: 0;
 		display: inline-flex;
@@ -37,7 +38,8 @@
 			font-size: 2.8rem;
 		}
 
-		& > img, & > svg {
+		& > img,
+		& > svg {
 			display: inline-block;
 			width: 2.2rem;
 			height: 2.2rem;
@@ -82,7 +84,8 @@
 
 		// .header__burger
 		// .header__item
-		&__burger, &__item {
+		&__burger,
+		&__item {
 			color: #a7abb1;
 
 			&:hover {

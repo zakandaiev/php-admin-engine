@@ -28,14 +28,14 @@ module.exports = {
 
 	// IMAGE
 	imagemin: {
-		gifsicle: {interlaced: true},
-		mozjpeg: {quality: 75, progressive: true},
-		optipng: {optimizationLevel: 5},
+		gifsicle: { interlaced: true },
+		mozjpeg: { quality: 75, progressive: true },
+		optipng: { optimizationLevel: 5 },
 		svgo: {
 			plugins: [
-				{removeViewBox: false},
-				{convertShapeToPath: false},
-				{convertEllipseToCircle: false}
+				{ removeViewBox: false },
+				{ convertShapeToPath: false },
+				{ convertEllipseToCircle: false }
 			]
 		}
 	},

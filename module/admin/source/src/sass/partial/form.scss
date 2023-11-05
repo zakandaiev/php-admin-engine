@@ -1,4 +1,5 @@
-form, .form {
+form,
+.form {
 	display: block;
 	width: 100%;
 	position: relative;
@@ -62,8 +63,12 @@ label:not([class]) {
 	}
 }
 
-input, textarea, select,
-.input, .textarea, .select {
+input,
+textarea,
+select,
+.input,
+.textarea,
+.select {
 	@include reset-btn;
 	display: block;
 	width: 100%;
@@ -82,7 +87,8 @@ input, textarea, select,
 		margin-bottom: 0;
 	}
 
-	&.disabled, &:disabled {
+	&.disabled,
+	&:disabled {
 		background: var(--color-border);
 	}
 
@@ -103,6 +109,7 @@ textarea {
 }
 
 label:not(.switch) {
+
 	input[type="checkbox"],
 	input[type="radio"] {
 		position: absolute;
@@ -154,7 +161,8 @@ label:not(.switch) {
 			color: #fff;
 		}
 
-		&.disabled, &:disabled {
+		&.disabled,
+		&:disabled {
 			& ~ * {
 				opacity: 0.5;
 				cursor: default;
@@ -240,7 +248,8 @@ label:not(.switch) {
 			}
 		}
 
-		&.disabled, &:disabled {
+		&.disabled,
+		&:disabled {
 			& ~ * {
 				opacity: 0.5;
 				cursor: default;
@@ -311,7 +320,12 @@ label:not(.switch) {
 		}
 	}
 
-	& > input, & > textarea, & > select, & > .input, & > .textarea, & > .select {
+	& > input,
+	& > textarea,
+	& > select,
+	& > .input,
+	& > .textarea,
+	& > .select {
 		flex-grow: 1;
 		width: auto;
 		margin: 0;
@@ -341,14 +355,14 @@ input[type="color"] {
 	width: 2.543em;
 	height: 2.543em;
 	padding: 0.5em;
-  cursor: pointer;
+	cursor: pointer;
 
 	&::-webkit-color-swatch-wrapper {
 		padding: 0;
 		border-color: none;
 	}
 
-	&::-webkit-color-swatch{
+	&::-webkit-color-swatch {
 		border: var(--border);
 		border-radius: 50%;
 	}
@@ -358,5 +372,5 @@ input[type="range"] {
 	display: block;
 	height: 2.543em;
 	accent-color: var(--color-primary);
-  cursor: pointer;
+	cursor: pointer;
 }

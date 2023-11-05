@@ -13,7 +13,7 @@ return [
 		'is_enabled' => $is_enabled
 	],
 	'translation' => ['language', 'name'],
-	'execute_post' => function($rowCount, $fields, $data) {
+	'execute_post' => function ($rowCount, $fields, $data) {
 		Hook::run('group.' . $data['action'], $fields);
 	}
 ];

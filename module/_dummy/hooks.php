@@ -7,7 +7,7 @@ Hook::setData('dummy.key', 'dummy.data');
 debug(Hook::getData('dummy.key'));
 
 ############################# REGISTER #############################
-Hook::register('dummy.hook', function($data1, $data2) {
+Hook::register('dummy.hook', function ($data1, $data2) {
 	debug($data1, $data2);
 });
 

@@ -52,14 +52,18 @@
 		white-space: nowrap;
 		transition: var(--transition);
 
-		&:hover, &:focus, &:active {
+		&:hover,
+		&:focus,
+		&:active {
 			color: var(--color-link);
 		}
 
 		&.active {
 			background: var(--color-box);
 
-			&:hover, &:focus, &:active {
+			&:hover,
+			&:focus,
+			&:active {
 				color: var(--color-text);
 			}
 		}

@@ -10,7 +10,7 @@ Page::breadcrumb('add', ['name' => $title]);
 $form_builder = new FormBuilder('user/add');
 $form_attributes = 'data-redirect="' . site('url_language') . '/admin/user" data-validate';
 
-$form_builder->setFieldValue('group', array_map(function($group) {
+$form_builder->setFieldValue('group', array_map(function ($group) {
 	$g = new \stdClass();
 
 	$g->value = $group->id;

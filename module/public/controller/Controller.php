@@ -4,8 +4,10 @@ namespace Module\Public\Controller;
 
 use Engine\View;
 
-class Controller extends \Engine\Controller {
-	public function __construct() {
+class Controller extends \Engine\Controller
+{
+	public function __construct()
+	{
 		parent::__construct();
 
 		// TODO

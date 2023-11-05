@@ -2,7 +2,8 @@
 
 namespace Engine;
 
-abstract class Controller {
+abstract class Controller
+{
 	protected $module;
 	protected $modules;
 	protected $route;
@@ -13,7 +14,8 @@ abstract class Controller {
 	protected $view;
 	protected $model;
 
-	public function __construct() {
+	public function __construct()
+	{
 		$this->module = Module::get('all');
 		$this->modules = Module::get();
 		$this->route = Route::get();
@@ -25,17 +27,19 @@ abstract class Controller {
 		$this->model = $this->loadModel($this->route['controller']);
 	}
 
-	protected function loadModel($model_name, $module = null) {
+	protected function loadModel($model_name, $module = null)
+	{
 		$model = Path::class('model', $module) . '\\' . ucfirst($model_name);
 
-		if(class_exists($model)) {
+		if (class_exists($model)) {
 			return new $model;
 		}
 
 		return null;
 	}
 
-	public function get404() {
+	public function get404()
+	{
 		$this->view->error('404');
 
 		return true;

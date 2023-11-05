@@ -62,15 +62,15 @@
 <?php Theme::footer(); ?>
 
 <script>
-const notificationForm = document.getElementById('notification-form');
+	const notificationForm = document.getElementById('notification-form');
 
-notificationForm.addEventListener('submit', event => {
-  event.preventDefault();
+	notificationForm.addEventListener('submit', event => {
+		event.preventDefault();
 
-	const message = notificationForm.querySelector('[name="message"]').value || 'Lorem ipsum dolor sit amet consectetur adipisicing elit.';
-	const type = notificationForm.querySelector('[name="type"]').value;
-	const duration = notificationForm.querySelector('[name="duration"]').value;
+		const message = notificationForm.querySelector('[name="message"]').value || 'Lorem ipsum dolor sit amet consectetur adipisicing elit.';
+		const type = notificationForm.querySelector('[name="type"]').value;
+		const duration = notificationForm.querySelector('[name="duration"]').value;
 
-	toast(type, message, duration);
-});
+		toast(type, message, duration);
+	});
 </script>

@@ -4,17 +4,19 @@ namespace Engine\Theme;
 
 use Engine\Database\Statement;
 
-class Menu {
+class Menu
+{
 	private static $menu = [];
 
-	public static function get($key) {
+	public static function get($key)
+	{
 		$key = trim($key, '/');
 
-		if(isset(self::$menu[$key])) {
+		if (isset(self::$menu[$key])) {
 			return self::$menu[$key];
 		}
 
-		if(is_numeric($key)) {
+		if (is_numeric($key)) {
 			$binding_key = 'id';
 		} else {
 			$binding_key = 'name';
@@ -28,7 +30,7 @@ class Menu {
 
 		$menu = $menu->execute($binding)->fetch();
 
-		if(!$menu) {
+		if (!$menu) {
 			return $menu;
 		}
 
@@ -37,8 +39,9 @@ class Menu {
 		return $menu;
 	}
 
-	public static function getAll() {
-		if(!empty(self::$menu)) {
+	public static function getAll()
+	{
+		if (!empty(self::$menu)) {
 			return self::$menu;
 		}
 
@@ -46,7 +49,7 @@ class Menu {
 
 		$menus = new Statement($sql);
 
-		foreach($menus->execute()->fetchAll() as $menu) {
+		foreach ($menus->execute()->fetchAll() as $menu) {
 			$menu->items = self::getItems($menu->id);
 			self::$menu[] = $menu;
 		}
@@ -54,7 +57,8 @@ class Menu {
 		return self::$menu;
 	}
 
-	public static function getItems($id, $language = null) {
+	public static function getItems($id, $language = null)
+	{
 		$binding = ['id' => $id, 'language' => $language ?? site('language_current')];
 
 		$sql = "
@@ -82,7 +86,7 @@ class Menu {
 
 		$items = $items->execute($binding)->fetch();
 
-		if(!$items) {
+		if (!$items) {
 			return [];
 		}
 

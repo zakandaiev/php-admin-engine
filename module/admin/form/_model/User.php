@@ -24,7 +24,7 @@ $password = [
 	'required' => true,
 	'min' => 8,
 	'max' => 200,
-	'modify' => function($pass) {
+	'modify' => function ($pass) {
 		return Hash::password($pass);
 	},
 	'label' => __('admin.user.password'),

@@ -18,11 +18,15 @@ $interface_builder = new InterfaceBuilder([
 			'title' => 'ID'
 		],
 		'name' => [
-			'type' => function($value, $item) {return $item->fullname;},
+			'type' => function ($value, $item) {
+				return $item->fullname;
+			},
 			'title' => __('admin.user.name')
 		],
 		'count_groups' => [
-			'type' => function($value, $item) {return '<a href="/admin/group">' . $value . '</a>';},
+			'type' => function ($value, $item) {
+				return '<a href="/admin/group">' . $value . '</a>';
+			},
 			'title' => __('admin.user.count_groups')
 		],
 		'date_created' => [
@@ -31,8 +35,8 @@ $interface_builder = new InterfaceBuilder([
 			'title' => __('admin.user.date_created')
 		],
 		'auth_date' => [
-			'type' => function($value, $item) {
-				if(!empty($value) && $item->auth_ip) {
+			'type' => function ($value, $item) {
+				if (!empty($value) && $item->auth_ip) {
 					return '<a href="' . sprintf(SERVICE['ip_checker'], $item->auth_ip) . '" target="_blank">' . date_when($value, 'd.m.Y H:i') . '</a>';
 				}
 				return '<i class="icon icon-minus"></i>';
@@ -40,7 +44,7 @@ $interface_builder = new InterfaceBuilder([
 			'title' => __('admin.user.auth_date')
 		],
 		'is_enabled' => [
-			'type' => function($value, $item) {
+			'type' => function ($value, $item) {
 				$tooltip = $item->is_enabled ? __('admin.user.deactivate_this_user') : __('admin.user.activate_this_user');
 
 				$html = '<button type="button" data-action="' . Form::edit('user/toggle', $item->id) . '" data-fields="is_enabled:' . !$value . '" data-redirect="this" data-tooltip="top" title="' . $tooltip . '" class="table__action">';
@@ -53,10 +57,10 @@ $interface_builder = new InterfaceBuilder([
 		],
 		'table_actions' => [
 			'td_class' => 'table__actions',
-			'type' => function($value, $item) {
-				$html = '<a href="' . site('url_language') . '/admin/profile/' . $item->id .'" data-tooltip="top" title="' . __('admin.view') . '" class="table__action"><i class="icon icon-eye"></i></a>';
+			'type' => function ($value, $item) {
+				$html = '<a href="' . site('url_language') . '/admin/profile/' . $item->id . '" data-tooltip="top" title="' . __('admin.view') . '" class="table__action"><i class="icon icon-eye"></i></a>';
 
-				$html .= ' <a href="' . site('url_language') . '/admin/user/edit/' . $item->id .'" data-tooltip="top" title="' . __('admin.edit') . '" class="table__action"><i class="icon icon-edit"></i></a>';
+				$html .= ' <a href="' . site('url_language') . '/admin/user/edit/' . $item->id . '" data-tooltip="top" title="' . __('admin.edit') . '" class="table__action"><i class="icon icon-edit"></i></a>';
 
 				$html .= ' <button type="button" data-action="' . Form::delete('user/edit', $item->id) . '" data-confirm="' . __('admin.user.delete_confirm', $item->fullname) . '" data-remove="trow" data-decrement=".pagination-output" data-tooltip="top" title="' . __('admin.delete') . '" class="table__action">';
 				$html .= '<i class="icon icon-trash"></i>';

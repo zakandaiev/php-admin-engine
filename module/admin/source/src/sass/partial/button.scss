@@ -17,15 +17,20 @@
 	position: relative;
 	transition: var(--transition);
 
-	&:hover, &:focus, &:active {
+	&:hover,
+	&:focus,
+	&:active {
 		text-decoration: none;
 	}
 
-	& > .icon, & > svg, & > img {
+	& > .icon,
+	& > svg,
+	& > img {
 		flex-shrink: 0;
 	}
 
-	& > svg, & > img {
+	& > svg,
+	& > img {
 		display: inline-block;
 		width: 2rem;
 		height: 2rem;
@@ -38,7 +43,9 @@
 		background: var(--color-box);
 		border-color: var(--color-border);
 
-		&:hover, &:focus, &:active {
+		&:hover,
+		&:focus,
+		&:active {
 			color: var(--color-text);
 			background: var(--color-body);
 			border-color: var(--color-border);
@@ -51,7 +58,9 @@
 		background: var(--color-border);
 		border-color: var(--color-border);
 
-		&:hover, &:focus, &:active {
+		&:hover,
+		&:focus,
+		&:active {
 			color: var(--color-text);
 			background: var(--color-border-hover);
 			border-color: var(--color-border);
@@ -62,7 +71,8 @@
 				background: var(--color-border);
 			}
 
-			&:focus, &:active {
+			&:focus,
+			&:active {
 				background: var(--color-border-hover);
 			}
 		}
@@ -73,7 +83,9 @@
 		background: var(--color-primary);
 		border-color: var(--color-primary);
 
-		&:hover, &:focus, &:active {
+		&:hover,
+		&:focus,
+		&:active {
 			background: var(--color-primary-hover);
 			border-color: var(--color-primary-hover);
 		}
@@ -87,7 +99,8 @@
 				color: #fff;
 			}
 
-			&:focus, &:active {
+			&:focus,
+			&:active {
 				background: var(--color-primary-hover);
 				border-color: var(--color-primary-hover);
 				color: #fff;
@@ -100,7 +113,9 @@
 		background: var(--color-secondary);
 		border-color: var(--color-secondary);
 
-		&:hover, &:focus, &:active {
+		&:hover,
+		&:focus,
+		&:active {
 			background: var(--color-secondary-hover);
 			border-color: var(--color-secondary-hover);
 		}
@@ -114,7 +129,8 @@
 				color: #fff;
 			}
 
-			&:focus, &:active {
+			&:focus,
+			&:active {
 				background: var(--color-secondary-hover);
 				border-color: var(--color-secondary-hover);
 				color: #fff;
@@ -127,7 +143,9 @@
 		background: var(--color-success);
 		border-color: var(--color-success);
 
-		&:hover, &:focus, &:active {
+		&:hover,
+		&:focus,
+		&:active {
 			background: var(--color-success-hover);
 			border-color: var(--color-success-hover);
 		}
@@ -141,7 +159,8 @@
 				color: #fff;
 			}
 
-			&:focus, &:active {
+			&:focus,
+			&:active {
 				background: var(--color-success-hover);
 				border-color: var(--color-success-hover);
 				color: #fff;
@@ -154,7 +173,9 @@
 		background: var(--color-info);
 		border-color: var(--color-info);
 
-		&:hover, &:focus, &:active {
+		&:hover,
+		&:focus,
+		&:active {
 			background: var(--color-info-hover);
 			border-color: var(--color-info-hover);
 		}
@@ -168,7 +189,8 @@
 				color: #fff;
 			}
 
-			&:focus, &:active {
+			&:focus,
+			&:active {
 				background: var(--color-info-hover);
 				border-color: var(--color-info-hover);
 				color: #fff;
@@ -181,7 +203,9 @@
 		background: var(--color-warning);
 		border-color: var(--color-warning);
 
-		&:hover, &:focus, &:active {
+		&:hover,
+		&:focus,
+		&:active {
 			background: var(--color-warning-hover);
 			border-color: var(--color-warning-hover);
 		}
@@ -195,7 +219,8 @@
 				color: #fff;
 			}
 
-			&:focus, &:active {
+			&:focus,
+			&:active {
 				background: var(--color-warning-hover);
 				border-color: var(--color-warning-hover);
 				color: #fff;
@@ -208,7 +233,9 @@
 		background: var(--color-error);
 		border-color: var(--color-error);
 
-		&:hover, &:focus, &:active {
+		&:hover,
+		&:focus,
+		&:active {
 			background: var(--color-error-hover);
 			border-color: var(--color-error-hover);
 		}
@@ -222,7 +249,8 @@
 				color: #fff;
 			}
 
-			&:focus, &:active {
+			&:focus,
+			&:active {
 				background: var(--color-error-hover);
 				border-color: var(--color-error-hover);
 				color: #fff;
@@ -236,7 +264,8 @@
 	}
 
 	// .btn_disabled
-	&_disabled, &:disabled {
+	&_disabled,
+	&:disabled {
 		cursor: not-allowed;
 		opacity: 0.7;
 	}
@@ -271,10 +300,12 @@
 		justify-content: flex-start;
 		text-align: left;
 
-		& > svg, & > img {
+		& > svg,
+		& > img {
 			margin-right: 0.5em;
 		}
 	}
+
 	// .btn_google
 	&_google {
 		background: #fff;
@@ -282,7 +313,9 @@
 		color: rgba(0, 0, 0, 0.54);
 		font-weight: var(--font-medium);
 
-		&:hover, &:focus, &:active {
+		&:hover,
+		&:focus,
+		&:active {
 			background: #fff;
 			border-color: #fff;
 			color: rgba(0, 0, 0, 0.54);
@@ -296,7 +329,9 @@
 		color: #fff;
 		font-weight: var(--font-medium);
 
-		&:hover, &:focus, &:active {
+		&:hover,
+		&:focus,
+		&:active {
 			background: #1877F2;
 			border-color: #1877F2;
 			color: #fff;
@@ -310,7 +345,9 @@
 		color: #fff;
 		font-weight: var(--font-medium);
 
-		&:hover, &:focus, &:active {
+		&:hover,
+		&:focus,
+		&:active {
 			background: #000;
 			border-color: #000;
 			color: #fff;

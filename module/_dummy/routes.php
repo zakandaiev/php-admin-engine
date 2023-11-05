@@ -16,7 +16,7 @@
 ############################# DIVIDE SECTION #############################
 Router::register('get', '/user/$id/payments', 'User@getUserPayments', ['dummy_option' => 'dummy_data']);
 
-Router::register('get', '/closure-example', function($data) {
+Router::register('get', '/closure-example', function ($data) {
 	debug($data);
 });
 

@@ -42,27 +42,27 @@
 				<div class="col">
 					<div class="row fill gap-xs cols-xs-1">
 
-					<div class="col">
-						<?php Theme::block('../ui/part/breadcrumb'); ?>
-					</div>
+						<div class="col">
+							<?php Theme::block('../ui/part/breadcrumb'); ?>
+						</div>
 
-					<div class="col">
-						<?php Theme::block('../ui/part/label'); ?>
-					</div>
+						<div class="col">
+							<?php Theme::block('../ui/part/label'); ?>
+						</div>
 
-					<div class="col">
-						<?php Theme::block('../ui/part/dropdown'); ?>
-					</div>
+						<div class="col">
+							<?php Theme::block('../ui/part/dropdown'); ?>
+						</div>
 
-					<div class="col">
-						<?php Theme::block('../ui/part/pagination'); ?>
+						<div class="col">
+							<?php Theme::block('../ui/part/pagination'); ?>
+						</div>
+
 					</div>
 
 				</div>
 
 			</div>
-
-		</div>
 	</section>
 
 	<?php Theme::block('navbar-bottom'); ?>

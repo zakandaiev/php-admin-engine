@@ -12,24 +12,21 @@ $form_attributes = 'data-validate data-redirect="this"';
 
 $languages = site('languages');
 
-if(site('group_css') != 'false' && !empty(site('group_css'))) {
+if (site('group_css') != 'false' && !empty(site('group_css'))) {
 	$form_builder->setFieldValue('group_css', true);
-}
-else {
+} else {
 	$form_builder->setFieldValue('group_css', false);
 }
 
-if(site('group_js') != 'false' && !empty(site('group_js'))) {
+if (site('group_js') != 'false' && !empty(site('group_js'))) {
 	$form_builder->setFieldValue('group_js', true);
-}
-else {
+} else {
 	$form_builder->setFieldValue('group_js', false);
 }
 
-if(site('cache_db') == 'true') {
+if (site('cache_db') == 'true') {
 	$form_builder->setFieldValue('cache_db', true);
-}
-else {
+} else {
 	$form_builder->setFieldValue('cache_db', false);
 }
 

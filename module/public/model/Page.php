@@ -4,8 +4,10 @@ namespace Module\Public\Model;
 
 use Engine\Statement;
 
-class Page extends \Engine\Model {
-	public function updateViewsCounter($page_id) {
+class Page extends \Engine\Model
+{
+	public function updateViewsCounter($page_id)
+	{
 		$sql = 'UPDATE {page} SET views = views + 1 WHERE id = :page_id';
 
 		$statement = new Statement($sql);
@@ -15,8 +17,9 @@ class Page extends \Engine\Model {
 		return true;
 	}
 
-	public static function getPage($key, $language = null) {
-		if(is_numeric($key)) {
+	public static function getPage($key, $language = null)
+	{
+		if (is_numeric($key)) {
 			$binding_key = 'id';
 		} else {
 			$binding_key = 'url';
@@ -56,7 +59,8 @@ class Page extends \Engine\Model {
 		return $page->execute($binding)->fetch();
 	}
 
-	public function getPageCategories($page_id, $language = null) {
+	public function getPageCategories($page_id, $language = null)
+	{
 		$sql = "
 			SELECT
 				*
@@ -89,7 +93,8 @@ class Page extends \Engine\Model {
 		return $statement->execute(['page_id' => $page_id, 'language' => $language ?? site('language_current')])->fetchAll();
 	}
 
-	public function getPageCommentsCount($page_id) {
+	public function getPageCommentsCount($page_id)
+	{
 		$sql = "
 			SELECT
 				count(*)
@@ -112,7 +117,8 @@ class Page extends \Engine\Model {
 		return $count->execute(['page_id' => $page_id])->fetchColumn();
 	}
 
-	public function getPageComments($page_id) {
+	public function getPageComments($page_id)
+	{
 		$sql = "
 			SELECT
 				t_comment.*,
@@ -141,20 +147,20 @@ class Page extends \Engine\Model {
 		$comments = $statement->execute(['page_id' => $page_id])->fetchAll(\PDO::FETCH_ASSOC);
 
 		$comments_formatted = [];
-		foreach($comments as $item) {
+		foreach ($comments as $item) {
 			$item['children'] = [];
 			$comments_formatted[$item['id']] = $item;
 		}
 
-		foreach($comments_formatted as $k => &$v) {
-			if(@$v['parent'] != 0) {
-				$comments_formatted[$v['parent']]['children'][] =& $v;
+		foreach ($comments_formatted as $k => &$v) {
+			if (@$v['parent'] != 0) {
+				$comments_formatted[$v['parent']]['children'][] = &$v;
 			}
 		}
 		unset($v);
 
-		foreach($comments_formatted as $k => $v) {
-			if(@$v['parent'] != 0 || !isset($v['id'])) {
+		foreach ($comments_formatted as $k => $v) {
+			if (@$v['parent'] != 0 || !isset($v['id'])) {
 				unset($comments_formatted[$k]);
 			}
 		}
@@ -162,7 +168,8 @@ class Page extends \Engine\Model {
 		return $comments_formatted;
 	}
 
-	public function getPageCustomFields($page_id, $language = null) {
+	public function getPageCustomFields($page_id, $language = null)
+	{
 		$sql = '
 			SELECT
 				name, value
@@ -177,14 +184,15 @@ class Page extends \Engine\Model {
 
 		$fields = new \stdClass();
 
-		foreach($custom_fields->execute(['page_id' => $page_id, 'language' => $language ?? site('language_current')])->fetchAll() as $field) {
+		foreach ($custom_fields->execute(['page_id' => $page_id, 'language' => $language ?? site('language_current')])->fetchAll() as $field) {
 			$fields->{$field->name} = $field->value;
 		}
 
 		return $fields;
 	}
 
-	public function getPagePrevNext($page_id, $language = null) {
+	public function getPagePrevNext($page_id, $language = null)
+	{
 		$sql_prev = '
 			SELECT
 				*,
@@ -261,7 +269,8 @@ class Page extends \Engine\Model {
 		return $prev_next;
 	}
 
-	public function getAuthor($user_id) {
+	public function getAuthor($user_id)
+	{
 		$sql = 'SELECT id, name, address, avatar, about, socials FROM {user} WHERE id = :user_id';
 
 		$author = new Statement($sql);
@@ -269,7 +278,8 @@ class Page extends \Engine\Model {
 		return $author->execute(['user_id' => $user_id])->fetch();
 	}
 
-	public function getLastComments($options = []) {
+	public function getLastComments($options = [])
+	{
 		$options['where'] = isset($options['where']) ? 'AND ' . $options['where'] : '';
 		$options['order'] = $options['order'] ?? 'date_created DESC';
 		$options['language'] = $options['language'] ?? site('language_current');
@@ -293,7 +303,8 @@ class Page extends \Engine\Model {
 		return $this->getPreparedRows($sql, $options);
 	}
 
-	public function getPages($options = []) {
+	public function getPages($options = [])
+	{
 		$options['fields'] = $options['fields'] ?? 't_page.*, t_page_translation.*';
 		$options['where'] = isset($options['where']) ? 'AND ' . $options['where'] : '';
 		$options['order'] = $options['order'] ?? 't_page.date_publish DESC';
@@ -328,7 +339,8 @@ class Page extends \Engine\Model {
 		return $this->getPreparedRows($sql, $options);
 	}
 
-	public function getPagesByCategory($category_id, $options = []) {
+	public function getPagesByCategory($category_id, $options = [])
+	{
 		$options['fields'] = $options['fields'] ?? 't_page.*, t_page_translation.*';
 		$options['where'] = isset($options['where']) ? 'AND ' . $options['where'] : '';
 		$options['order'] = $options['order'] ?? 't_page.date_publish DESC';
@@ -369,7 +381,8 @@ class Page extends \Engine\Model {
 		return $this->getPreparedRows($sql, $options);
 	}
 
-	public function getPagesByAuthor($author_id, $options = []) {
+	public function getPagesByAuthor($author_id, $options = [])
+	{
 		$options['fields'] = $options['fields'] ?? 't_page.*, t_page_translation.*';
 		$options['where'] = isset($options['where']) ? 'AND ' . $options['where'] : '';
 		$options['order'] = $options['order'] ?? 't_page.date_publish DESC';
@@ -408,7 +421,8 @@ class Page extends \Engine\Model {
 		return $this->getPreparedRows($sql, $options);
 	}
 
-	public function getRelatedPages($page, $options = []) {
+	public function getRelatedPages($page, $options = [])
+	{
 		$options['fields'] = $options['fields'] ?? 't_page.*, t_page_translation.*';
 		$options['where'] = isset($options['where']) ? 'AND ' . $options['where'] : '';
 		$options['order'] = $options['order'] ?? 't_page.date_publish DESC';
@@ -417,11 +431,11 @@ class Page extends \Engine\Model {
 
 		$page_categories = [];
 
-		foreach($page->categories as $category) {
+		foreach ($page->categories as $category) {
 			$page_categories[] = $category->id;
 		}
 
-		if(!empty($page_categories)) {
+		if (!empty($page_categories)) {
 			$options['where'] .= ' AND id IN (SELECT page_id FROM {page_category} WHERE category_id IN (' . implode(',', $page_categories) . ') AND page_id <> :page_id)';
 		}
 
@@ -456,7 +470,8 @@ class Page extends \Engine\Model {
 		return $this->getPreparedRows($sql, $options);
 	}
 
-	public function getMVP($options = []) {
+	public function getMVP($options = [])
+	{
 		$options['fields'] = $options['fields'] ?? 't_page.*, t_page_translation.*';
 		$options['where'] = isset($options['where']) ? 'AND ' . $options['where'] : '';
 		$options['order'] = $options['order'] ?? 'views DESC';
@@ -493,7 +508,8 @@ class Page extends \Engine\Model {
 		return $this->getPreparedRows($sql, $options);
 	}
 
-	public function getMCP($options = []) {
+	public function getMCP($options = [])
+	{
 		$options['fields'] = $options['fields'] ?? 't_page.*, t_page_translation.*';
 		$options['where'] = isset($options['where']) ? 'AND ' . $options['where'] : '';
 		$options['order'] = $options['order'] ?? 'count_comments DESC';
@@ -531,7 +547,8 @@ class Page extends \Engine\Model {
 		return $this->getPreparedRows($sql, $options);
 	}
 
-	public function getCategories($options = []) {
+	public function getCategories($options = [])
+	{
 		$options['fields'] = $options['fields'] ?? 't_page.*, t_page_translation.*';
 		$options['where'] = isset($options['where']) ? 'AND ' . $options['where'] : '';
 		$options['order'] = $options['order'] ?? 'count_pages DESC';
@@ -568,28 +585,29 @@ class Page extends \Engine\Model {
 		return $this->getPreparedRows($sql, $options);
 	}
 
-	protected function getPreparedRows($sql, $options = []) {
+	protected function getPreparedRows($sql, $options = [])
+	{
 		$options['limit'] = $options['limit'] ?? false;
 		$options['offset'] = $options['offset'] ?? false;
 		$options['filter'] = $options['filter'] ?? false;
 		$options['paginate'] = $options['paginate'] ?? false;
 		$options['debug'] = $options['debug'] ?? false;
 
-		if($options['limit']) {
+		if ($options['limit']) {
 			$sql .= " LIMIT {$options['limit']}";
 		}
 
-		if($options['offset']) {
+		if ($options['offset']) {
 			$sql .= " OFFSET {$options['offset']}";
 		}
 
 		$pages = new Statement($sql);
 
-		if($options['filter']) {
+		if ($options['filter']) {
 			$pages->filter($options['filter']);
 		}
 
-		if($options['paginate']) {
+		if ($options['paginate']) {
 			$pages->paginate();
 		}
 
@@ -603,7 +621,7 @@ class Page extends \Engine\Model {
 			$options['order']
 		);
 
-		if($options['debug']) {
+		if ($options['debug']) {
 			unset($options['debug']);
 			debug($options);
 			debug($sql);
