@@ -52,6 +52,7 @@ Router::register('get', '/admin/user/add', 'User@getAdd');
 Router::register('get', '/admin/user/edit/$id', 'User@getEdit');
 
 // ############################# GROUP #############################
+Router::register('get', '/admin/group2', 'Group@getAll2');
 Router::register('get', '/admin/group', 'Group@getAll');
 Router::register('get', '/admin/group/add', 'Group@getAdd');
 Router::register('get', '/admin/group/edit/$id', 'Group@getEdit');

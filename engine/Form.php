@@ -340,7 +340,7 @@ class Form
 	{
 		$required = isset($field_data['required']) && $field_data['required'] === true ? true : false;
 
-		if ($required && empty($value)) {
+		if ($required && ($value === null || $value === '')) {
 			return false;
 		} else if (!$required && empty($value)) {
 			return true;
@@ -385,19 +385,13 @@ class Form
 		$value = $field_data['value'];
 		$required = isset($field_data['required']) && $field_data['required'] === true ? true : false;
 
-		if (!$required && empty($value)) {
+		if ($required && ($value === null || $value === '')) {
+			return false;
+		} else if (!$required && empty($value)) {
 			return true;
 		}
 
 		switch ($operand) {
-			case 'required': {
-					if ($operand_value && !empty($value)) {
-						return true;
-					} else if (!$operand_value) {
-						return true;
-					}
-					return false;
-				}
 			case 'min': {
 					if (isset($field_data['multiple']) && $field_data['multiple'] && in_array($type, ['date', 'datetime', 'month'])) {
 						$result = true;
@@ -510,7 +504,7 @@ class Form
 	protected static function modifyFields()
 	{
 		foreach (self::$fields as $key => $field_data) {
-			if (isset($field_data['unset_null']) && $field_data['unset_null'] && empty($field_data['value']) && $field_data['value'] != 0 && $field_data['value'] != false) {
+			if (isset($field_data['unset_null']) && $field_data['unset_null'] && ($field_data['value'] === null || $field_data['value'] === '')) {
 				unset(self::$fields[$key]);
 				continue;
 			}

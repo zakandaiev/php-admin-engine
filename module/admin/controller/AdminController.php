@@ -15,9 +15,9 @@ class AdminController extends Controller
 
 		$this->model_admin = $this->loadModel('AdminModel', 'admin');
 
-		class_alias('\\Module\\Admin\\Builder\\Form', 'FormBuilder');
-		class_alias('\\Module\\Admin\\Builder\\Filter', 'FilterBuilder');
-		class_alias('\\Module\\Admin\\Builder\\Interface', 'InterfaceBuilder');
+		class_alias('\\Module\\Admin\\Builder\\FormBuilder', 'FormBuilder');
+		class_alias('\\Module\\Admin\\Builder\\FilterBuilder', 'FilterBuilder');
+		class_alias('\\Module\\Admin\\Builder\\InterfaceBuilder', 'InterfaceBuilder');
 
 		// TODO - make as function
 		// if(!$this->user->get()->authorized) {

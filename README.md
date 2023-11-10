@@ -19,6 +19,7 @@
 4. Create & enjoy ;)
 
 ## TODO
+* engine: replace all strtok with explode
 * engine: modules install
 * engine: remake Form from static to non-static concept (static should be only token creation methods)
 * admin: create form-behavior.js

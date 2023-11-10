@@ -173,8 +173,7 @@ function date_when($date = null, $format = 'd.m.Y')
 
 	if ($date_day === $today) {
 		$date = __('engine.date.today_at', date('H:i', $timestamp));
-	}
-	if ($yesterday === $date_day) {
+	} else if ($yesterday === $date_day) {
 		$date = __('engine.date.yesterday_at', date('H:i', $timestamp));
 	} else {
 		$date = format_date($timestamp, $format);

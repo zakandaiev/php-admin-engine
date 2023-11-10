@@ -216,6 +216,22 @@ $indent-step: 0.1;
 	}
 }
 
+.font-thin {
+	font-weight: var(--font-thin) !important;
+}
+
+.font-normal {
+	font-weight: var(--font-normal) !important;
+}
+
+.font-medium {
+	font-weight: var(--font-medium) !important;
+}
+
+.font-bold {
+	font-weight: var(--font-bold) !important;
+}
+
 .text-left {
 	text-align: left !important;
 }
@@ -264,20 +280,18 @@ $indent-step: 0.1;
 	text-decoration: line-through !important;
 }
 
-.font-thin {
-	font-weight: var(--font-thin) !important;
+.text-ellipsis {
+	overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
 }
 
-.font-normal {
-	font-weight: var(--font-normal) !important;
+.white-space-normal {
+	white-space: initial !important;
 }
 
-.font-medium {
-	font-weight: var(--font-medium) !important;
-}
-
-.font-bold {
-	font-weight: var(--font-bold) !important;
+.white-space-nowrap {
+	white-space: nowrap !important;
 }
 
 /* ==========  Decoration  ========== */

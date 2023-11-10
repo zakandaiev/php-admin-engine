@@ -211,7 +211,7 @@ function createModal(title, options = {}) {
 }
 
 async function confirmation(title, text = null) {
-  return await createModal(title, options = {
+  return await createModal(title, {
     text,
     class: 'modal_sm modal_center',
     actions: [

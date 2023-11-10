@@ -81,11 +81,9 @@ class Asset
 		$output = '';
 
 		foreach ($assets as $asset) {
-			// TODO
-			// add * support
-			// if(!self::checkRoute($asset['routes'])) {
-			// 	continue;
-			// }
+			if (!self::checkRoute($asset['routes'])) {
+				continue;
+			}
 
 			$output .= sprintf(
 				self::EXTENSION_MASK[$extension],
@@ -127,14 +125,10 @@ class Asset
 
 		$routes = is_array($routes) ? $routes : (!empty($routes) ? [$routes] : []);
 
-		$routes = array_map(function ($string) {
-			return trim(trim($string ?? ''), '/');
-		}, $routes);
-
-		$route = trim(trim(Route::get('uri') ?? ''), '/');
-
-		if (in_array($route, $routes)) {
-			return true;
+		foreach ($routes as $route) {
+			if (Route::isActive($route)) {
+				return true;
+			}
 		}
 
 		return false;
