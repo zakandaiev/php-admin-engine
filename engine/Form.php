@@ -62,31 +62,28 @@ class Form
 		$error_messages = [];
 
 		foreach (self::$fields as $field_data) {
-			$check = self::isFieldTypeValid($field_data['type'], $field_data['value'], $field_data);
-
-			if ($check !== true) {
-				$error_messages[$field_data['name']] = $field_data['type'];
+			$check_type = self::isFieldTypeValid($field_data['type'], $field_data['value'], $field_data);
+			if ($check_type !== true) {
+				$error_messages[$field_data['name']] = 'type';
 			}
 
 			foreach ($field_data as $key => $value) {
-				$check = self::isFieldValid($key, $value, $field_data);
+				$check_validation = self::isFieldValid($key, $value, $field_data);
 
-				if ($check !== true) {
-					$error_messages[$field_data['name']] = $key;
+				if ($check_validation !== true) {
+					$error_messages[$field_data['name']] = @$error_messages[$field_data['name']] === 'required' ? 'required' : $key;
 				}
 			}
 		}
 
-		$module_name = Module::getName();
-
 		foreach ($error_messages as $field_name => $message_key) {
-			$message = __("{$module_name}.{$form['table']}.{$field_name}.validation.{$message_key}");
+			$message = @self::$fields[$field_name]['validation'][$message_key];
 
-			if (isset($field_data['message'][$message_key])) {
-				$message = $field_data['message'][$message_key];
+			if (empty($message)) {
+				$message = __("{$module_name}.{$form['table']}.{$field_name}.validation.{$message_key}");
 			}
 
-			Server::answer(null, 'error', $message, 405);
+			Server::answer([$field_name], 'error', $message, 405);
 		}
 
 		return true;
@@ -338,11 +335,7 @@ class Form
 
 	protected static function isFieldTypeValid($type, $value, $field_data)
 	{
-		$required = isset($field_data['required']) && $field_data['required'] === true ? true : false;
-
-		if ($required && empty($value)) {
-			return false;
-		} else if (!$required && empty($value)) {
+		if ($value === null || $value === '') {
 			return true;
 		}
 
@@ -383,20 +376,16 @@ class Form
 	{
 		$type = $field_data['type'];
 		$value = $field_data['value'];
-		$required = isset($field_data['required']) && $field_data['required'] === true ? true : false;
-
-		if (!$required && empty($value)) {
-			return true;
-		}
 
 		switch ($operand) {
 			case 'required': {
-					if ($operand_value && !empty($value)) {
-						return true;
-					} else if (!$operand_value) {
-						return true;
+					$required = isset($field_data['required']) && $field_data['required'] === true ? true : false;
+
+					if ($required && ($value === null || $value === '')) {
+						return false;
 					}
-					return false;
+
+					return true;
 				}
 			case 'min': {
 					if (isset($field_data['multiple']) && $field_data['multiple'] && in_array($type, ['date', 'datetime', 'month'])) {

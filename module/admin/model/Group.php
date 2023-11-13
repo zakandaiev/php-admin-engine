@@ -52,7 +52,7 @@ class Group extends \Engine\Model
 		$modules = Module::get();
 
 		foreach ($modules as $module) {
-			if (!$module['is_enabled'] || ($module['name'] !== 'admin' && $module['extends'] !== 'admin')) {
+			if (!$module['is_enabled']) {
 				continue;
 			}
 
