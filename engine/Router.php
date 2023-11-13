@@ -15,10 +15,22 @@ class Router
 		self::setController();
 	}
 
+	public static function getAllowedMethods()
+	{
+		return ['get', 'post', 'put', 'patch', 'delete', 'options', 'any'];
+	}
+
+	public static function isMethodAllowed($method)
+	{
+		$methods = self::getAllowedMethods();
+
+		return in_array($method, $methods);
+	}
+
 	public static function register($method, $path, $controller, $option = [])
 	{
-		if (!in_array($method, ['get', 'post', 'put', 'patch', 'delete', 'options', 'any'])) {
-			throw new \Exception(sprintf('Invalid method declaration for %s route in %s module.', $path, Module::getName()));
+		if (!self::isMethodAllowed($method)) {
+			throw new \Exception(sprintf('Invalid method declaration for %s route in %s module. Method %s is not allowed.', $path, Module::getName(), $method));
 			return false;
 		}
 

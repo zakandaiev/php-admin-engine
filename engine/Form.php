@@ -499,7 +499,7 @@ class Form
 	protected static function modifyFields()
 	{
 		foreach (self::$fields as $key => $field_data) {
-			if (isset($field_data['unset_null']) && $field_data['unset_null'] && empty($field_data['value']) && $field_data['value'] != 0 && $field_data['value'] != false) {
+			if (isset($field_data['unset_null']) && $field_data['unset_null'] && ($field_data['value'] === null || $field_data['value'] === '')) {
 				unset(self::$fields[$key]);
 				continue;
 			}

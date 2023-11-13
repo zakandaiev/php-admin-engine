@@ -131,7 +131,7 @@ class User
 
 	public static function unauthorize()
 	{
-		// Session::unsetCookie(COOKIE_KEY['auth']);
+		// Session::flushCookie(COOKIE_KEY['auth']);
 
 		$user_id = self::$current->id;
 		$user_ip = Request::ip();

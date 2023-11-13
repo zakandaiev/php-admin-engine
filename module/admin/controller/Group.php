@@ -7,6 +7,17 @@ use Engine\Server;
 
 class Group extends AdminController
 {
+	public function getAll2()
+	{
+		$interface_builder = new \Module\Admin\Builder\InterfaceBuilder2('group');
+
+		$interface_builder->render();
+
+		$this->view->setData('groups', $this->model->getGroups());
+
+		$this->view->render('group/all');
+	}
+
 	public function getAll()
 	{
 		$this->view->setData('groups', $this->model->getGroups());

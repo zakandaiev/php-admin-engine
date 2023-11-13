@@ -18,42 +18,42 @@ class Route
 		return true;
 	}
 
-	public static function isRouteActive($route)
+	public static function compare($path1, $path2)
 	{
-		// TODO
-		// - refactor
-		// - handle route part with * or **
+		$path1 = trim($path1 ?? '', '/');
+		$path2 = trim($path2 ?? '', '/');
 
-		if (is_array($route)) {
-			$state = false;
+		$path1 = explode('?', $path1)[0];
+		$path2 = explode('?', $path2)[0];
 
-			foreach ($route as $r) {
-				if (self::isRouteActive($r)) {
-					$state = true;
-				}
-			}
+		$path_parts1 = explode('/', $path1);
+		$path_parts2 = explode('/', $path2);
 
-			return $state;
+		$parts_from = $path_parts1;
+		$parts_to = $path_parts2;
+
+		if (count($path_parts2) > count($path_parts1)) {
+			$parts_from = $path_parts2;
+			$parts_to = $path_parts1;
 		}
 
-		$route_parts = explode('/', $route);
-		array_shift($route_parts);
-		$uri_parts = Request::uri_parts();
+		foreach ($parts_from as $key => $part_from) {
+			$part_to = @$parts_to[$key];
 
-		if (Language::has($uri_parts[0])) {
-			array_shift($uri_parts);
-
-			if ($route === '/' && count($uri_parts) === 0) {
+			if ($part_from === '**' || $part_to === '**') {
 				return true;
 			}
-		}
 
-		foreach ($uri_parts as $key => $part) {
-			if ($part !== @$route_parts[$key]) {
+			if ($part_from !== $part_to && $part_from !== '*' && $part_to !== '*') {
 				return false;
 			}
 		}
 
 		return true;
+	}
+
+	public static function isActive($path)
+	{
+		return self::compare($path, Request::uri());
 	}
 }

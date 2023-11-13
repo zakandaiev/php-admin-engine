@@ -47,11 +47,10 @@
 		padding: 1.5em;
 		background: #222e3c;
 
-		& > img,
-		& > svg {
+		& > * {
 			display: block;
 			width: auto;
-			height: 2.5em;
+			height: 6em;
 			object-fit: contain;
 		}
 

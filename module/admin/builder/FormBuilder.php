@@ -6,7 +6,7 @@ use Engine\Form;
 use Engine\Path;
 use Engine\Request;
 
-class Form
+class FormBuilder
 {
 	protected $form_name;
 	protected $form_data = [];
@@ -224,7 +224,11 @@ class Form
 			$attributes[$attr] = $attr . '="' . addcslashes(strval($attr_value), '"') . '"';
 		}
 
-		$value = $field['value'] ?? $field['default'] ?? null;
+		$value = @$field['value'];
+
+		if ($value === null && isset($field['default'])) {
+			$value = $field['default'];
+		}
 
 		if (isset($field['multiple']) && $field['multiple'] && is_string($value) && ($value[0] === '[' || $value[0] === '{')) {
 			$value = json_decode($value);
@@ -360,7 +364,7 @@ class Form
 			case 'tel':
 			case 'text':
 			case 'url': {
-					$value = !empty($value) ? ' value="' . $value . '"' : '';
+					$value = isset($value) ? ' value="' . $value . '"' : '';
 
 					$html .= '<input type="' . $field['type'] . '" ' . implode(' ', $attributes) . $value . '>';
 
