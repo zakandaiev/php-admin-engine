@@ -62,6 +62,10 @@ class Form
 		$error_messages = [];
 
 		foreach (self::$fields as $field_data) {
+			if (isset($field_data['unset_null']) && $field_data['unset_null'] === true && ($field_data['value'] === null || $field_data['value'] === '')) {
+				continue;
+			}
+
 			$check_type = self::isFieldTypeValid($field_data['type'], $field_data['value'], $field_data);
 			if ($check_type !== true) {
 				$error_messages[$field_data['name']] = 'type';

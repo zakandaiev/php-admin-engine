@@ -284,7 +284,7 @@ class Statement
 					debug(__($error_message)); // TODO translation
 				}
 			} else {
-				$debug_sql = DEBUG['is_enabled'] ? ['query' => preg_replace('/(\v|\s)+/', ' ', trim($this->sql ?? ''))] : null;
+				$debug_sql = DEBUG['is_enabled'] ? ['query' => preg_replace('/(\v|\s)+/', ' ', trim($this->sql ?? '')), 'binding' => $this->binding] : null;
 				Server::answer($debug_sql, 'error', __($error_message), '409'); // TODO translation
 			}
 		}

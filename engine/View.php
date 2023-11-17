@@ -20,6 +20,8 @@ class View
 		Template::load('functions', false);
 
 		Template::load($template, $is_required, $module_name);
+
+		exit;
 	}
 
 	public function error($code)

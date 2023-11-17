@@ -50,6 +50,7 @@
 			"./src/js/air-datepicker.js",
 			"./src/js/chart.js",
 			"./src/js/fancybox.js",
+			"./src/js/filepond.js",
 			"./src/js/maska.js",
 			"./src/js/slimselect.js",
 			"./src/js/sortable.js",
