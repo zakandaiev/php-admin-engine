@@ -212,7 +212,15 @@ class DataAction {
 		if (this.data_remove === 'trow') {
 			const trow = this.node.closest('tr');
 
-			this.fade_out(trow);
+			this.fade_out(trow, (tr) => {
+				const tbody = tr.parentNode;
+
+				tr.remove();
+
+				if (tbody.childElementCount === 0) {
+					window.location.reload();
+				}
+			});
 
 			return true;
 		}
