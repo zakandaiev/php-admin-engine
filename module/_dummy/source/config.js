@@ -34,8 +34,8 @@ const path = {
   dist: pathDist,
   src: pathSrc,
 
-  // TODO all forders except src
-  del: pathDist,
+  // del: pathDist,
+  del: ['../**', '!../source'],
 
   font: {
     src: `${pathSrc}/font/**/*.{woff2,woff,svg,ttf,eot}`,
