@@ -1,24 +1,15 @@
-# PHP Admin Engine
-* Designed for developers
-* Flexible framework based on PHP
-* Supports MVC pattern
-* Coded in OOP style
-* Modular add-ons system
-* CMS-ready modules out of box
-* Multilingual
+# WORK IN PROGRESS, TODO:
 
-## Server environment requirements
-* PHP 7.4+
-  * extenstion: fileinfo, mbstring, pdo, pdo_mysql, timezonedb
-* MySQL 5.6+ or MariaDB 10.3+
+* **NEW todos below**:
+* engine: rewrite old classes
+* backend module: rewrite from scratch
+* frontend module: rewrite from scratch
+* install module: rewrite from scratch
+* dev module: rewrite from scratch
+* api module: rewrite from scratch
+* demo module that extends backend module: rewrite from scratch
 
-## Installation
-1. Download/clone this repository to your web server
-2. Install dependencies with `composer upgrade` command
-3. Open the site and fill out the installation form
-4. Create & enjoy ;)
-
-## TODO
+* **OLD todos below**:
 * engine: replace all strtok with explode
 * engine: modules install
 * engine: remake Form from static to non-static concept (static should be only token creation methods)
@@ -39,7 +30,26 @@
 * admin: fix data-copy from awesomecs + update gist
 * admin: quill add margin-bottom to every
 * dev: modules interface
-* all: Server::answer -> Request::answer
+
+# PHP Admin Engine
+* Designed for developers
+* Flexible framework based on PHP
+* Supports MVC pattern
+* Coded in OOP style
+* Modular add-ons system
+* CMS-ready modules out of box
+* Multilingual
+
+## Server environment requirements
+* PHP 7.4+
+  * extenstion: fileinfo, mbstring, pdo, pdo_mysql, timezonedb
+* MySQL 5.6+ or MariaDB 10.3+
+
+## Installation
+1. Download/clone this repository to your web server
+2. Install dependencies with `composer upgrade` command
+3. Open the site and fill out the installation form
+4. Create & enjoy ;)
 
 ## Roadmap
 * engine: refactor all classes

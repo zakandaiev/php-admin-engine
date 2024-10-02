@@ -1,23 +1,23 @@
 {
-	"name": "zakandaiev/php-admin-engine",
-	"authors": [
-		{
-			"name": "Oleksadr Zakandaiev",
-			"email": "zakandaiev@gmail.com"
-		}
-	],
-	"require": {
-		"php": "^7.4.0"
-	},
-	"autoload": {
-		"psr-4": {
-			"Engine\\": "engine",
-			"Module\\": "module",
-			"Theme\\": "theme"
-		},
-		"files": [
-			"config.php",
-			"engine/functions.php"
-		]
-	}
+  "name": "zakandaiev/php-admin-engine",
+  "version": "1.0.0",
+  "authors": [
+    {
+      "name": "Oleksandr Zakandaiev",
+      "email": "zakandaiev@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "engine\\": "engine",
+      "module\\": "module",
+      "theme\\": "theme"
+    },
+    "files": [
+      "engine/functions.php"
+    ]
+  }
 }

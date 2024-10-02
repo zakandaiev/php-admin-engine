@@ -2,44 +2,31 @@
 
 define('ROOT_DIR', $_SERVER['DOCUMENT_ROOT']);
 
-if (!is_file(ROOT_DIR . '/config.php')) {
-	file_put_contents(ROOT_DIR . '/config.php', '');
-}
-
 require_once ROOT_DIR . '/vendor/autoload.php';
 
-use Engine\Engine;
-use Engine\Server;
+use engine\Engine;
 
-$is_php_version_unsuppurted = version_compare($version = phpversion(), $required = Engine::PHP_MIN, '<');
+$isPhpVersionUnsuppurted = version_compare($currentVersion = phpversion(), $requiredVersion = Engine::PHP_MIN, '<');
 
-if ($is_php_version_unsuppurted) {
-	$error_message = '<div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">';
-	$error_message .= '<h1>' . Engine::NAME . '</h1>';
-	$error_message .= '<p>You are running <b>PHP ' . $version . '</b> version, but it needs at least <b>PHP ' . $required . '</b> version.</p>';
-	$error_message .= '</div>';
-	exit($error_message);
-}
+if ($isPhpVersionUnsuppurted) {
+  $errorMessage = "
+    <div style=\"position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:100%;text-align:center;\">
+      <h1>" . Engine::NAME . "</h1>
 
-$is_install = (strtok($_SERVER['REQUEST_URI'], '?') === '/install');
+      <p>
+        Your server is running <b>PHP $currentVersion</b> version,
+        the system requires at least <b>PHP $requiredVersion</b>.
+      </p>
+    </div>
+  ";
 
-if (!defined('DATABASE') && !$is_install) {
-	Server::redirect('/install');
-}
-
-if (defined('DATABASE') && $is_install) {
-	Server::redirect('/');
-}
-
-if ($is_install) {
-	require_once ROOT_DIR . '/module/install/engine/install.php';
-	exit;
+  exit($errorMessage);
 }
 
 try {
-	Engine::start();
+  Engine::start();
 } catch (\ErrorException $error) {
-	echo $error->getMessage();
+  echo $error->getMessage();
 }
 
 Engine::stop();

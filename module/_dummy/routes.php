@@ -1,25 +1,37 @@
 <?php
 
+use engine\router\Router;
+
 /*
-	SYNTAX:
-		Router::register('$method', '/$url/$dynamic_variable', '$controller_name@$controller_method|$closure', $options);
-			where:
-			- [required] $method: 'get|post|put|patch|delete|options|any'
-			- [required] $url: should start with slash, can contain dynamic variables in every part
-			- $dynamic_variable: dynamic variable read from url that could used in controller method with $this->route['parameter']
-			- [required if not closure] $controller_name: controller's name
-			- [required if not closure] $controller_method: controller's method that should be called
-			- [required if not controller] $closure: function closure that runs instantly instead of controller
-			- $options: array of options that could be read and used in controller method with $this->route['option']
+  SYNTAX:
+    Router::register('$method', '/$url/$dynamicVariable', '$controllerName@$controllerMethod|$closure', $name, $options);
+      where:
+      - [required] $method: 'get|post|put|patch|delete|options|any'
+      - [required] $url: should start with slash, can contain dynamic variables in every part
+      - $dynamicVariable: dynamic variable stored in controller at $this->route['parameter']
+      - [required if not closure] $controllerName: controller's name
+      - [required if not closure] $controllerMethod: controller's method that will be called
+      - [required if not controller] $closure: function closure that runs instantly instead of controller
+      - $name: route's name
+      - $options: array of options stored in controller at $this->route['option']
 */
 
 ############################# DIVIDE SECTION #############################
-Router::register('get', '/user/$id/payments', 'User@getUserPayments', ['dummy_option' => 'dummy_data']);
+Router::register('get', '/_dummy', 'Dummy@getHome', 'home');
 
-Router::register('get', '/closure-example', function ($data) {
-	debug($data);
-});
+Router::register('get', '/_dummy/guide', 'Dummy@getGuide', 'guide', ['dummyTestKey' => 'dummyTestValue']);
 
-Router::register('post', '/post-example', 'Api@getPost');
+Router::register('get', '/_dummy/user/$uid/payment/$pid', function ($parameter, $option, $route) {
+  echo '<h1>Parameters:</h1>';
+  debug($parameter);
 
-Router::register('put', '/put-example', 'Api@getPut');
+  echo '<br><h1>Options:</h1>';
+  debug($option);
+
+  echo '<br><h1>Route:</h1>';
+  debug($route);
+}, 'user-payment', ['dummyKey' => 'dummyValue']);
+
+Router::register('post', '/_dummy/post-example', 'Dummy@postExample', 'post-example');
+
+Router::register('put', '/_dummy/put-example', 'Dummy@putExample', 'put-example');
