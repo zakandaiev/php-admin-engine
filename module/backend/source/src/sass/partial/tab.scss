@@ -12,11 +12,11 @@
     }
 
     .tab__nav-item {
-      border-radius: var(--radius) 0 0 var(--radius);
+      border-radius: var(--radius-xs) 0 0 var(--radius-xs);
     }
 
     .tab__body {
-      border-radius: 0 var(--radius) var(--radius) var(--radius);
+      border-radius: 0 var(--radius-xs) var(--radius-xs) var(--radius-xs);
     }
   }
 
@@ -54,7 +54,7 @@
     white-space: nowrap;
 
     background: transparent;
-    border-radius: var(--radius) var(--radius) 0 0;
+    border-radius: var(--radius-xs) var(--radius-xs) 0 0;
 
     transition: var(--transition);
 
@@ -76,7 +76,7 @@
     display: none;
     padding: 1.5em;
     background: var(--color-box);
-    border-radius: 0 var(--radius) var(--radius) var(--radius);
+    border-radius: 0 var(--radius-xs) var(--radius-xs) var(--radius-xs);
 
     &.active {
       display: block;

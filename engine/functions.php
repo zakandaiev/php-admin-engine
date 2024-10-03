@@ -29,9 +29,24 @@ if (!function_exists('str_starts_with')) {
 function debug(...$data)
 {
   foreach ($data as $key => $item) {
-    if ($key === 0) echo '<hr>';
+    if ($key === 0) {
+      echo '<hr>';
+    }
 
-    echo '<pre>';
+    echo '<pre style="
+      display: block;
+      width: 100%;
+      overflow: auto;
+      margin: 0;
+      padding: 1em;
+      background: #1b1b1b;
+      color: #fff;
+      font-size: 1em;
+      font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+      font-weight: 400;
+      line-height: 1.4;
+      border-radius: 0.5em;
+    ">';
 
     var_dump($item);
 
@@ -456,12 +471,20 @@ function site($key, $module = null)
         $value = rtrim($value, '-');
         break;
       }
+    case 'languages': {
+        $value = I18n::list();
+        break;
+      }
     case 'language_current': {
         $value = I18n::getCurrent();
         break;
       }
-    case 'language_current_region': {
-        $value = I18n::getProperty('region');
+    case 'permalink': {
+        $value = Request::url();
+        break;
+      }
+    case 'uri': {
+        $value = Request::uri();
         break;
       }
     case 'url': {
@@ -470,12 +493,6 @@ function site($key, $module = null)
       }
     case 'url_language': {
         $value = Request::base() . '/' . site('language_current');
-
-        break;
-      }
-    case 'uri': {
-        $value = Request::uri();
-
         break;
       }
     case 'uri_no_language': {
@@ -489,15 +506,6 @@ function site($key, $module = null)
         }
 
         $value = $uri;
-
-        break;
-      }
-    case 'permalink': {
-        $value = Request::url();
-        break;
-      }
-    case 'languages': {
-        $value = I18n::get();
         break;
       }
     case 'version': {

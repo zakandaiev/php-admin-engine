@@ -62,7 +62,7 @@
 
 <?php Theme::footer(); ?>
 
-<script>
+<script defer>
   const notificationForm = document.getElementById('notification-form');
 
   notificationForm.addEventListener('submit', event => {
@@ -72,6 +72,6 @@
     const type = notificationForm.querySelector('[name="type"]').value;
     const duration = notificationForm.querySelector('[name="duration"]').value;
 
-    toast(type, message, duration);
+    window.toast(message, type, duration);
   });
 </script>

@@ -27,7 +27,12 @@ class I18n
 
   public static function list($moduleName = null)
   {
-    return Module::getProperty('languages', $moduleName);
+    $moduleExtends = Module::getProperty('extends');
+
+    $languagesCurrentModule = Module::getProperty('languages', $moduleName);
+    $languagesExtendedModule = Module::getProperty('languages', $moduleExtends);
+
+    return array_merge($languagesCurrentModule, $languagesExtendedModule);
   }
 
   public static function has($languageKey, $moduleName = null)
@@ -105,8 +110,13 @@ class I18n
 
   public static function translate($key, $data = null)
   {
-    $moduleName = Module::getName();
+    $moduleExtends = Module::getProperty('extends');
+    if (!in_array($moduleExtends, self::$loadedModules)) {
+      self::$loadedModules[] = $moduleExtends;
+      self::loadTranslations($moduleExtends);
+    };
 
+    $moduleName = Module::getName();
     if (!in_array($moduleName, self::$loadedModules)) {
       self::$loadedModules[] = $moduleName;
       self::loadTranslations($moduleName);

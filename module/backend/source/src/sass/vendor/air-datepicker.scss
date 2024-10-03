@@ -1,0 +1,94 @@
+@import "air-datepicker/air-datepicker";
+
+[data-picker] {
+  cursor: pointer;
+}
+
+.air-datepicker {
+  --adp-font-family: var(--font);
+  --adp-font-size: 1.4rem;
+  --adp-transition-duration: var(--transition-time);
+  --adp-background-color: var(--color-box);
+  --adp-background-color-hover: var(--color-border);
+  --adp-background-color-active: var(--color-primary);
+  --adp-background-color-in-range: var(--color-primary);
+  --adp-background-color-in-range-focused: var(--color-primary);
+  --adp-background-color-selected-other-month-focused: var(--color-primary);
+  --adp-background-color-selected-other-month: var(--color-primary);
+  --adp-color: var(--color-text);
+  --adp-color-secondary: var(--color-secondary);
+  --adp-accent-color: var(--color-primary);
+  --adp-color-current-date: var(--color-primary);
+  --adp-color-other-month: var(--color-text-muted);
+  --adp-color-disabled: var(--color-text);
+  --adp-color-disabled-in-range: var(--color-text);
+  --adp-color-other-month-hover: var(--color-border);
+  --adp-border-color: var(--color-border);
+  --adp-border-color-inner: var(--color-border);
+  --adp-border-radius: var(--radius-xs);
+  --adp-border-color-inline: var(--color-border);
+  --adp-nav-arrow-color: var(--color-secondary);
+  --adp-nav-color-secondary: var(--color-secondary);
+  --adp-day-name-color: var(--color-text-muted);
+  --adp-day-name-color-hover: var(--color-text-muted);
+  --adp-poiner-border-radius: var(--radius-xs);
+  --adp-cell-border-radius: var(--radius-xs);
+  --adp-cell-background-color-hover: var(--color-border);
+  --adp-cell-background-color-selected: var(--color-primary);
+  --adp-cell-background-color-selected-hover: var(--color-primary);
+  --adp-cell-background-color-in-range: rgb(92 196 239 / 10%);
+  --adp-cell-background-color-in-range-hover: rgb(92 196 239 / 20%);
+  --adp-cell-border-color-in-range: var(--adp-cell-background-color-selected);
+  --adp-btn-color: var(--color-primary);
+  --adp-btn-color-hover: var(--adp-color);
+  --adp-btn-border-radius: var(--adp-border-radius);
+  --adp-btn-background-color-hover: var(--color-border);
+  --adp-btn-background-color-active: var(--color-primary);
+  --adp-time-track-color: var(--color-border);
+  --adp-time-track-color-hover: var(--color-border);
+  --adp-time-day-period-color: var(--color-secondary);
+
+  .air-datepicker-cell.-disabled- {
+    cursor: not-allowed;
+  }
+
+  .air-datepicker-nav--action,
+  .air-datepicker-nav--title,
+  .air-datepicker-button {
+    color: var(--color-text);
+    background: var(--color-box);
+    border-color: var(--color-border);
+
+    &:hover, &:focus, &:active {
+      color: var(--color-text);
+      background: var(--color-body);
+      border-color: var(--color-border);
+    }
+  }
+
+  .air-datepicker--pointer::after {
+    background: var(--color-box);
+  }
+
+  .-in-range-.air-datepicker-cell.-year-.-other-decade-,
+  .-in-range-.air-datepicker-cell.-day-.-other-month- {
+    color: var(--adp-color-other-month);
+    background: var(--adp-cell-background-color-in-range);
+  }
+
+  .air-datepicker-cell.-year-.-other-decade-:hover,
+  .air-datepicker-cell.-day-.-other-month-:hover {
+    color: var(--adp-color-other-month);
+  }
+
+  .air-datepicker-cell.-current- {
+    font-weight: var(--font-medium);
+    color: var(--color-primary);
+    background: var(--color-body);
+  }
+
+  .air-datepicker-cell.-current-.-focus- {
+    color: var(--color-primary);
+    background: var(--color-border-hover);
+  }
+}

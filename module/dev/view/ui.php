@@ -1,7 +1,5 @@
 <?php
 
-use engine\theme\Asset;
-
 Theme::header(); ?>
 
 <?php Theme::block('sidebar'); ?>
@@ -26,21 +24,9 @@ Theme::header(); ?>
         </div>
 
         <nav class="list-group">
-          <?php
-          $uiSectionsPath = Path::resolve(Path::file('view'), 'ui');
-          $uiSections = is_dir($uiSectionsPath) ? scandir($uiSectionsPath) : [];
-
-          foreach ($uiSections as $uiSection) {
-            if (in_array($uiSection, ['.', '..'], true)) {
-              continue;
-            }
-
-            $uiSectionName = getFileName($uiSection);
-            $link = Route::link('ui-section', ['section' => $uiSectionName]);
-
-            echo '<a href="' . $link . '" class="list-group__item">' . ucfirst(str_replace('-', ' ', $uiSectionName)) . '</a>';
-          }
-          ?>
+          <?php foreach (getUiSectionFiles(true) as $sectionName => $sectionLink): ?>
+            <a href="<?= $sectionLink ?>" class="list-group__item"><?= $sectionName ?></a>
+          <?php endforeach; ?>
         </nav>
       </div>
   </section>

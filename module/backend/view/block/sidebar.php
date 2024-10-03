@@ -1,8 +1,8 @@
 <?php
 
-// TODO
-// $sidebar = Hook::getData('admin.sidebar');
-$sidebar = [];
+use \engine\module\Hook;
+
+$sidebar = Hook::getData('admin.sidebar');
 
 // TODO
 function checkRouteAccess($route)
@@ -42,11 +42,11 @@ function checkRouteAccess($route)
 ?>
 
 <aside class="sidebar">
-  <a class="sidebar__logo" href="<?= site('url_language') ?>/admin/dashboard">
+  <a class="sidebar__logo" href="<?= Route::link('dashboard', 'backend') ?>">
     <?php if (!empty(site('logo_alt'))) : ?>
-      <img src="<?= site('url') ?>/<?= site('logo_alt') ?>" alt="Logo">
+      <img class="sidebar__logo-image" src="<?= site('url') ?>/<?= site('logo_alt') ?>" alt="Logo">
     <?php else : ?>
-      <span><?= site('name') ?></span>
+      <span class="sidebar__logo-text"><?= site('name') ?></span>
     <?php endif; ?>
   </a>
 
@@ -61,15 +61,15 @@ function checkRouteAccess($route)
       <?php if (isset($item['is_separator']) && $item['is_separator']) : ?>
         <span class="sidebar__separator"><?= $item['name'] ?></span>
       <?php elseif (is_array($item['route'])) : ?>
-        <div class="sidebar__collapse <?php if (Route::isRouteActive($item['route'])) : ?>active<?php endif; ?>">
-          <span class="sidebar__item <?php if (Route::isRouteActive($item['route'])) : ?>active<?php endif; ?>">
+        <div class="sidebar__collapse <?php if (Route::isActive('todo' ?? $item['route'])) : ?>active<?php endif; ?>">
+          <span class="sidebar__item <?php if (Route::isActive('todo' ?? $item['route'])) : ?>active<?php endif; ?>">
             <i class="ti ti-<?= $item['icon'] ?>"></i>
             <span class="sidebar__text"><?= $item['name'] ?></span>
           </span>
 
           <div class="sidebar__collapse-menu">
             <?php foreach ($item['route'] as $key => $value) : ?>
-              <a href="<?= site('url_language') . $value ?>" class="sidebar__collapse-item <?php if (Route::isRouteActive($value)) : ?>active<?php endif; ?>">
+              <a href="<?= $value ?>" class="sidebar__collapse-item <?php if (Route::isActive('todo' ?? $value)) : ?>active<?php endif; ?>">
                 <span class="sidebar__text"><?= $key ?></span>
                 <!-- <span class="label label_primary">2</span> -->
               </a>
@@ -77,7 +77,7 @@ function checkRouteAccess($route)
           </div>
         </div>
       <?php else : ?>
-        <a href="<?= site('url_language') . $item['route'] ?>" class="sidebar__item <?php if (Route::isRouteActive($item['route'])) : ?>active<?php endif; ?>">
+        <a href="<?= $item['route'] ?>" class="sidebar__item <?php if (Route::isActive('todo' ?? $item['route'])) : ?>active<?php endif; ?>">
           <i class="ti ti-<?= $item['icon'] ?>"></i>
           <span class="sidebar__text"><?= $item['name'] ?></span>
           <?php

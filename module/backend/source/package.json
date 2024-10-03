@@ -49,6 +49,8 @@
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^5.1.0",
+    "@rollup/plugin-commonjs": "^28.0.0",
+    "@rollup/plugin-node-resolve": "^15.3.0",
     "@rollup/plugin-terser": "^0.4.4",
     "autoprefixer": "^10.4.17",
     "browser-sync": "^3.0.2",
@@ -76,7 +78,22 @@
     "stylelint-scss": "^6.1.0"
   },
   "dependencies": {
+    "@fancyapps/ui": "^5.0.36",
     "@tabler/icons-webfont": "^3.19.0",
-    "reseter.css": "^2.0.0"
+    "air-datepicker": "^3.5.3",
+    "chart.js": "^4.4.4",
+    "filepond": "^4.31.4",
+    "filepond-plugin-file-poster": "^2.5.1",
+    "filepond-plugin-file-validate-size": "^2.2.8",
+    "filepond-plugin-file-validate-type": "^1.2.9",
+    "filepond-plugin-image-exif-orientation": "^1.0.11",
+    "filepond-plugin-image-preview": "^4.6.12",
+    "filepond-plugin-media-preview": "^1.0.11",
+    "filepond-plugin-pdf-preview": "^1.0.4",
+    "maska": "^3.0.2",
+    "quill": "^2.0.2",
+    "reseter.css": "^2.0.0",
+    "slim-select": "^2.9.0",
+    "sortablejs": "^1.15.3"
   }
 }

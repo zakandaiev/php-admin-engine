@@ -203,7 +203,7 @@ code, kbd, pre, samp {
       width: 100%;
     }
 
-    overflow: hidden;
+    // overflow: hidden;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -221,7 +221,9 @@ code, kbd, pre, samp {
 @import "partial/grid";
 @import "partial/helper";
 @import "partial/label";
+@import "partial/loader";
 @import "partial/list-group";
+@import "partial/modal";
 @import "partial/pagination";
 @import "partial/popover";
 @import "partial/section";

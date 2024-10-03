@@ -1,5 +1,7 @@
 <?php
-Page::set('title', t('admin.dashboard.title'));
+$pageTitle = t('admin.dashboard.title');
+
+Page::set('title', $pageTitle);
 ?>
 
 <?php Theme::header(); ?>
@@ -13,7 +15,7 @@ Page::set('title', t('admin.dashboard.title'));
   <section class="section section_grow section_offset">
     <div class="container-fluid">
 
-      <h2 class="section__title"><?= t('admin.dashboard.title') ?></h2>
+      <h2 class="section__title"><?= $pageTitle ?></h2>
 
       <div class="mt-2">
         <div class="row fill cols-xs-1 cols-md-2 gap-xs">

@@ -1,5 +1,7 @@
 import toast from '@/js/util/toast';
 
+window.toast = toast;
+
 document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('click', (event) => {
     const toastNode = event.target.closest('[data-toast]');

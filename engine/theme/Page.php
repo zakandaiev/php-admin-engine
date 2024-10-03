@@ -88,23 +88,21 @@ class Page
 
   public static function meta($key = null)
   {
-    return '';
-
     if (!empty($key) && isset(self::$meta[$key])) {
       return self::$meta[$key];
     }
 
     switch ($key) {
       case 'no_index_no_follow': {
-          $no_index_no_follow = '';
+          $noIndexNoFollow = '';
 
           if (site('no_index_no_follow') || self::get('no_index_no_follow')) {
-            $no_index_no_follow = '<meta name="robots" content="noindex, nofollow">';
+            $noIndexNoFollow = '<meta name="robots" content="noindex, nofollow">';
           }
 
-          self::$meta['no_index_no_follow'] = $no_index_no_follow;
+          self::$meta['no_index_no_follow'] = $noIndexNoFollow;
 
-          return $no_index_no_follow;
+          return $noIndexNoFollow;
         }
       case 'title': {
           $title = self::get('title') . ' — ' . site('name');
@@ -114,32 +112,32 @@ class Page
           return $title;
         }
       case 'seo_description': {
-          $seo_description = self::get('seo_description') ?? site('name');
-          $site_description = site('description');
+          $seoDescription = self::get('seo_description') ?? site('name');
+          $siteDescription = site('description');
 
-          if (!empty($site_description)) {
-            $seo_description = '. ' . $site_description;
+          if (!empty($siteDescription)) {
+            $seoDescription = '. ' . $siteDescription;
           }
 
-          self::$meta['seo_description'] = $seo_description;
+          self::$meta['seo_description'] = $seoDescription;
 
-          return $seo_description;
+          return $seoDescription;
         }
       case 'seo_keywords': {
-          $seo_keywords = self::get('seo_keywords') ?? trim(preg_replace('/[\s\.;]+/', ',', self::meta('seo_description')) ?? '', ',');
+          $seoKeywords = self::get('seo_keywords') ?? trim(preg_replace('/[\s\.;]+/', ',', self::meta('seo_description')) ?? '', ',');
 
-          self::$meta['seo_keywords'] = $seo_keywords;
+          self::$meta['seo_keywords'] = $seoKeywords;
 
-          return $seo_keywords;
+          return $seoKeywords;
         }
       case 'seo_image': {
           $image = self::get('seo_image') ?? self::get('image') ?? site('logo');
 
-          $seo_image = !empty($image) ? site('url') . '/' . $image : null;
+          $seoImage = !empty($image) ? site('url') . '/' . $image : null;
 
-          self::$meta['seo_image'] = $seo_image;
+          self::$meta['seo_image'] = $seoImage;
 
-          return $seo_image;
+          return $seoImage;
         }
       case 'locale': {
           $locale = lang('locale', null, '_');
@@ -149,90 +147,79 @@ class Page
           return $locale;
         }
       case 'meta_og': {
-          $meta_og = '
-          <meta property="og:type" content="website">
-          <meta property="og:site_name" content="' . site('name') . '">
-          <meta property="og:locale" content="' . self::meta('locale') . '">
-          <meta property="og:url" content="' . site('permalink') . '">
-          <meta property="og:title" content="' . self::meta('title') . '">
-          <meta property="og:description" content="' . self::meta('seo_description') . '">
-          <meta property="og:keywords" content="' . self::meta('seo_keywords') . '">
-        ';
+          $metaOg = '<meta property="og:type" content="website">';
+          $metaOg .= '<meta property="og:site_name" content="' . site('name') . '">';
+          $metaOg .= '<meta property="og:locale" content="' . self::meta('locale') . '">';
+          $metaOg .= '<meta property="og:url" content="' . site('permalink') . '">';
+          $metaOg .= '<meta property="og:title" content="' . self::meta('title') . '">';
+          $metaOg .= '<meta property="og:description" content="' . self::meta('seo_description') . '">';
+          $metaOg .= '<meta property="og:keywords" content="' . self::meta('seo_keywords') . '">';
 
           if (!empty(self::meta('seo_image'))) {
-            $meta_og .= '
-            <meta property="og:image" content="' . self::meta('seo_image') . '">
-          ';
+            $metaOg .= '<meta property="og:image" content="' . self::meta('seo_image') . '">';
           }
 
-          self::$meta['meta_og'] = $meta_og;
+          self::$meta['meta_og'] = $metaOg;
 
-          return $meta_og;
+          return $metaOg;
         }
       case 'meta_twitter': {
-          $meta_twitter = '
-          <meta property="twitter:card" content="summary">
-          <meta property="twitter:url" content="' . site('permalink') . '">
-          <meta property="twitter:title" content="' . self::meta('title') . '">
-          <meta property="twitter:description" content="' . self::meta('seo_description') . '">
-        ';
+          $metaTwitter = '<meta property="twitter:card" content="summary">';
+          $metaTwitter .= '<meta property="twitter:url" content="' . site('permalink') . '">';
+          $metaTwitter .= '<meta property="twitter:title" content="' . self::meta('title') . '">';
+          $metaTwitter .= '<meta property="twitter:description" content="' . self::meta('seo_description') . '">';
 
           if (!empty(self::meta('seo_image'))) {
-            $meta_twitter .= '
-            <meta property="twitter:image" content="' . self::meta('seo_image') . '">
-          ';
+            $metaTwitter .= '<meta property="twitter:image" content="' . self::meta('seo_image') . '">';
           }
 
-          self::$meta['meta_twitter'] = $meta_twitter;
+          self::$meta['meta_twitter'] = $metaTwitter;
 
-          return $meta_twitter;
+          return $metaTwitter;
         }
       case 'alt_languages': {
           $languages = site('languages');
+          $currentLanguage = site('language_current');
 
-          $alt_languages = '<link rel="alternate" href="' . site('url') . '" hreflang="x-default">';
+          $altLanguages = '<link rel="alternate" href="' . site('url') . '" hreflang="x-default">';
 
           foreach ($languages as $language) {
-            if (site('language_current') !== $language['key']) {
-              $alt_languages .= '<link rel="alternate" href="' . site('url') . '/' . $language['key'] . '" hreflang="' . $language['key'] . '">';
+            if ($currentLanguage !== $language['key']) {
+              $altLanguages .= '<link rel="alternate" href="' . site('url') . '/' . $language['key'] . '" hreflang="' . $language['key'] . '">';
             }
           }
 
-          self::$meta['alt_languages'] = $alt_languages;
+          self::$meta['alt_languages'] = $altLanguages;
 
-          return $alt_languages;
+          return $altLanguages;
         }
       case 'favicon': {
-          $favicon = '
-            <link rel="icon" type="image/x-icon" sizes="any" href="' . Asset::url() . '/favicon.ico">
-            <link rel="icon" type="image/png" href="' . Asset::url() . '/favicon.png">
-            <link rel="icon" type="image/svg+xml" href="' . Asset::url() . '/favicon.svg">
-            <link rel="apple-touch-icon" href="' . Asset::url() . '/favicon.png">
-          ';
+          $favicon = '<link rel="icon" type="image/x-icon" sizes="any" href="' . Asset::url() . '/favicon.ico">';
+          $favicon .= '<link rel="icon" type="image/png" href="' . Asset::url() . '/favicon.png">';
+          $favicon .= '<link rel="icon" type="image/svg+xml" href="' . Asset::url() . '/favicon.svg">';
+          $favicon .= '<link rel="apple-touch-icon" href="' . Asset::url() . '/favicon.png">';
 
-          $icon_path = site('favicon');
+          $iconPath = site('favicon');
 
-          if (empty($icon_path)) {
+          if (empty($iconPath)) {
             self::$meta['favicon'] = $favicon;
             return $favicon;
           }
 
-          $icon_extension = getFileExtension($icon_path);
+          $iconExtension = getFileExtension($iconPath);
 
-          switch ($icon_extension) {
+          switch ($iconExtension) {
             case 'ico': {
-                $favicon = '<link rel="icon" type="image/x-icon" sizes="any" href="' . site('url') . '/' . $icon_path . '">';
+                $favicon = '<link rel="icon" type="image/x-icon" sizes="any" href="' . site('url') . '/' . $iconPath . '">';
                 break;
               }
             case 'svg': {
-                $favicon = '<link rel="icon" type="image/svg+xml" href="' . site('url') . '/' . $icon_path . '">';
+                $favicon = '<link rel="icon" type="image/svg+xml" href="' . site('url') . '/' . $iconPath . '">';
                 break;
               }
             default: {
-                $favicon = '
-              <link rel="icon" type="image/' . $icon_extension . '" href="' . site('url') . '/' . $icon_path . '">
-              <link rel="apple-touch-icon" href="' . site('url') . '/' . $icon_path . '">
-            ';
+                $favicon = '<link rel="icon" type="image/' . $iconExtension . '" href="' . site('url') . '/' . $iconPath . '">';
+                $favicon .= '<link rel="apple-touch-icon" href="' . site('url') . '/' . $iconPath . '">';
                 break;
               }
           }
@@ -242,102 +229,98 @@ class Page
           return $favicon;
         }
       case 'engine_script': {
-          $engine_script = '
-          <script>
-            const ENGINE = {
-              language: {
-                key: "' . site('language_current') . '",
-                region: "' . site('language_current_region') . '",
-              },
-              csrf: {
-                key: "' . Config::getProperty('csrfKey', 'cookie') . '",
-                token: "' . Request::csrfToken() . '"
-              },
-              paginationLimit: ' . site('pagination_limit') . ',
-              i18n: {},
-              theme: {},
-              backend: {
-                delayMs: ' . Config::getProperty('backendDelayMs', 'engine') . ',
-                timeoutMs: ' . Config::getProperty('backendTimeoutMs', 'engine') . '
-              }
-            };
-          </script>
-        ';
+          $engineScript = '
+<script>
+  const Engine = {
+    backend: {
+      delayMs: ' . Config::getProperty('backendDelayMs', 'engine') . ',
+      timeoutMs: ' . Config::getProperty('backendTimeoutMs', 'engine') . '
+    },
+    csrf: {
+      key: "' . Config::getProperty('csrfKey', 'cookie') . '",
+      token: "' . Request::csrfToken() . '"
+    },
+    language: {
+      key: "' . lang() . '",
+      region: "' . lang('region') . '",
+      locale: "' . lang('locale') . '",
+    },
+    i18n: {},
+    paginationLimit: ' . site('pagination_limit') . ',
+    site: {
+      charset: "' . site('charset') . '",
+      language: "' . site('language') . '",
+      languageCurrent: "' . site('language_current') . '",
+      name: "' . site('name') . '",
+      permalink: "' . site('permalink') . '",
+      uri: "' . site('uri') . '",
+      url: "' . site('url') . '",
+      urlLanguage: "' . site('url_language') . '",
+      version: "' . site('version') . '",
+    },
+    theme: {}
+  };
+</script>';
 
-          self::$meta['engine_script'] = $engine_script;
+          self::$meta['engine_script'] = $engineScript;
 
-          return $engine_script;
+          return $engineScript;
         }
       case 'analytics_gtag': {
-          $gtag_id = site('analytics_gtag');
-          $analytics_gtag = '';
+          $gtagId = site('analytics_gtag');
+          $analyticsGtag = '';
 
           if (!empty(site('analytics_gtag'))) {
-            $analytics_gtag = '
-            <script async src="https://www.googletagmanager.com/gtag/js?id=' . $gtag_id . '"></script>
-            <script>
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag("js", new Date());
-              gtag("config", "' . $gtag_id . '");
-            </script>
-          ';
+            $analyticsGtag = '
+<script async src="https://www.googletagmanager.com/gtag/js?id=' . $gtagId . '"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "' . $gtagId . '");
+</script>';
           }
 
-          self::$meta['analytics_gtag'] = $analytics_gtag;
+          self::$meta['analytics_gtag'] = $analyticsGtag;
 
-          return $analytics_gtag;
+          return $analyticsGtag;
         }
     }
 
     $title = self::meta('title');
     $charset = site('charset');
     $author = Engine::AUTHOR;
-    $seo_description = self::meta('seo_description');
-    $seo_keywords = self::meta('seo_keywords');
-    $seo_image = self::meta('seo_image');
-    $meta_og = self::meta('meta_og');
-    $meta_twitter = self::meta('meta_twitter');
+    $seoDescription = self::meta('seo_description');
+    $seoKeywords = self::meta('seo_keywords');
+    $seoImage = self::meta('seo_image');
+    $metaOg = self::meta('meta_og');
+    $metaTwitter = self::meta('meta_twitter');
     $permalink = site('permalink');
-    $alt_languages = self::meta('alt_languages');
+    $altLanguages = self::meta('alt_languages');
     $favicon = self::meta('favicon');
-    $engine_script = self::meta('engine_script');
-    $analytics_gtag = self::meta('analytics_gtag');
+    $engineScript = self::meta('engine_script');
+    $analyticsGtag = self::meta('analytics_gtag');
 
     $meta = self::meta('no_index_no_follow');
-    $meta .= '
-      <title>' . $title . '</title>
+    $meta .= '<title>' . $title . '</title>';
+    $meta .= '<meta charset="' . $charset . '">';
+    $meta .= '<meta name="author" content="' . $author . '">';
+    $meta .= '<meta http-equiv="X-UA-Compatible" content="IE=edge">';
+    $meta .= '<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">';
+    $meta .= '<meta name="description" content="' . $seoDescription . '">';
+    $meta .= '<meta name="keywords" content="' . $seoKeywords . '">';
+    $meta .= $metaOg;
+    $meta .= $metaTwitter;
+    $meta .= '<link rel="canonical" href="' . $permalink . '">';
+    $meta .= !empty($seoImage) ? '<link rel="image_src" href="' . $seoImage . '">' : '';
+    $meta .= $altLanguages;
+    $meta .= $favicon;
+    $meta .= $engineScript;
+    $meta .= $analyticsGtag;
 
-      <meta charset="' . $charset . '">
-      <meta name="author" content="' . $author . '">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-
-      <meta name="description" content="' . $seo_description . '">
-      <meta name="keywords" content="' . $seo_keywords . '">
-
-      ' . $meta_og . '
-
-      ' . $meta_twitter . '
-
-      <link rel="canonical" href="' . $permalink . '">
-    ';
-
-    if (!empty($seo_image)) {
-      $meta .= '
-        <link rel="image_src" href="' . $seo_image . '">
-      ';
+    if (Config::getProperty('isEnabled', 'debug')) {
+      $meta = str_replace("><", ">\n<", $meta);
     }
-
-    $meta .= '
-      ' . $alt_languages . '
-
-      ' . $favicon . '
-
-      ' . $engine_script . '
-
-      ' . $analytics_gtag . '
-    ';
 
     return $meta;
   }

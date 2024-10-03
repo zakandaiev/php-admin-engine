@@ -55,14 +55,16 @@
 
     background: var(--color-box-dark);
 
-    & > * {
+    // .sidebar__logo-image
+    &-image {
       display: block;
       width: auto;
       height: 6em;
       object-fit: contain;
     }
 
-    & > span {
+    // .sidebar__logo-text
+    &-text {
       font-size: 1.5em;
       color: #fff;
     }

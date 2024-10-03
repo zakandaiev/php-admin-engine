@@ -14,7 +14,7 @@ form,
 		visibility: hidden;
 		opacity: 0;
 		background: var(--color-box);
-		border-radius: var(--radius);
+		border-radius: var(--radius-xs);
 
 		transition: var(--transition);
 	}
@@ -90,7 +90,7 @@ select,
 
 	background: var(--color-box);
 	border: var(--border);
-	border-radius: var(--radius);
+	border-radius: var(--radius-xs);
 
 	&:last-child {
 		margin-bottom: 0;
@@ -167,7 +167,7 @@ label:not(.switch) {
 
 				background: var(--color-box);
 				border: var(--border);
-				border-radius: var(--radius);
+				border-radius: var(--radius-xs);
 
 				transition: background-color var(--transition-time), border-color var(--transition-time);
 			}
@@ -347,12 +347,12 @@ label:not(.switch) {
 
 		&:first-child {
 			border-right-width: 0;
-			border-radius: var(--radius) 0 0 var(--radius);
+			border-radius: var(--radius-xs) 0 0 var(--radius-xs);
 		}
 
 		&:last-child {
 			border-left-width: 0;
-			border-radius: 0 var(--radius) var(--radius) 0;
+			border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
 		}
 	}
 
@@ -365,14 +365,14 @@ label:not(.switch) {
 		flex-grow: 1;
 		width: auto;
 		margin: 0;
-		border-radius: 0 var(--radius) var(--radius) 0;
+		border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
 
 		&:first-child {
-			border-radius: var(--radius) 0 0 var(--radius);
+			border-radius: var(--radius-xs) 0 0 var(--radius-xs);
 		}
 
 		&:last-child {
-			border-radius: 0 var(--radius) var(--radius) 0;
+			border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
 		}
 
 		&:not(:first-child, :last-child) {

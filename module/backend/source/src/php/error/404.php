@@ -1,23 +1,42 @@
+<?php
+
+use \engine\http\Request;
+
+$pageTitle = t('admin.dashboard.title');
+$pageSubtitle = t('admin.dashboard.subtitle');
+
+Page::set('no_index_no_follow', true);
+Page::set('title', $pageTitle);
+
+$referer = Request::referer();
+?>
+
 <?php Theme::header(); ?>
 
-<div class="container">
-  <div class="hero section_offset">
-    <div class="hero__main">
-      <h1 class="hero__title">404</h1>
+<main class="page-content__inner">
 
-      <h2 class="hero__subtitle">Page not found</h2>
+  <section class="section section_grow section_offset">
+    <div class="container h-100 d-flex flex-column align-items-center justify-content-center text-center">
 
-      <h3 class="hero__text">The page you are looking for might have been removed</h3>
+      <h1 class="font-size-60 mb-4"><strong>404</strong></h1>
 
-      <div class="hero__actions">
-        <a href="<?= Route::link('home') ?>" class="btn btn_primary">Return to Homepage</a>
+      <h2 class="mt-0 mb-3"><?= $pageTitle ?></h2>
+
+      <h4 class="color-text"><?= $pageSubtitle ?></h4>
+
+      <div class="d-flex gap-2 mt-4">
+        <?php if ($referer && !Route::isActive($referer)) : ?>
+          <a href="<?= $referer ?>" class="btn btn_lg btn_secondary"><?= t('admin.404.go_back') ?></a>
+        <?php endif; ?>
+
+        <?php if ($referer !== Route::link('dashboard')) : ?>
+          <a href="<?= Route::link('dashboard') ?>" class="btn btn_lg btn_primary"><?= t('admin.404.go_dashboard') ?></a>
+        <?php endif; ?>
       </div>
-    </div>
 
-    <div class="hero__image">
-      <img src="<?= Path::resolveUrl(Asset::url(), 'favicon.svg') ?>" alt="HTML5 Logo" height="320">
     </div>
-  </div>
-</div>
+  </section>
+
+</main>
 
 <?php Theme::footer(); ?>

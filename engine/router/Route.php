@@ -72,8 +72,11 @@ class Route
     return self::compareUri($routeUri, Request::uri());
   }
 
-  public static function compareUri($path1, $path2)
+  public static function compareUri($url1, $url2)
   {
+    $path1 = parse_url($url1)['path'] ?? $url1;
+    $path2 = parse_url($url2)['path'] ?? $url2;
+
     $path1 = trim($path1 ?? '', '/');
     $path2 = trim($path2 ?? '', '/');
 
