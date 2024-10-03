@@ -5,14 +5,19 @@
 * backend module: rewrite from scratch
 * frontend module: rewrite from scratch
 * install module: rewrite from scratch
-* dev module: rewrite from scratch
-* api module: rewrite from scratch
+* dev module: refactor all uis
+* dev module: create interface that will generate I18n files for modules
+* dev module: create interface that will install/uninstall modules
 * demo module that extends backend module: rewrite from scratch
+* all: replace all tabs with spaces
+* all: replace all em to rem
+* all: replace all .active to .block_active
 
 * **OLD todos below**:
 * engine: replace all strtok with explode
 * engine: modules install
 * engine: remake Form from static to non-static concept (static should be only token creation methods)
+* engine: cached queries would fail with pagination
 * admin: create form-behavior.js
 * admin: create foreign-form.js
 * admin: create collapse.js
@@ -29,7 +34,10 @@
 * admin: change favicons, logos to branded
 * admin: fix data-copy from awesomecs + update gist
 * admin: quill add margin-bottom to every
-* dev: modules interface
+* admin: automatically set values to form input's in edit pages (setFieldValue)
+* admin: uploads interface (scan /upload directory)
+* admin: insert files from uploads interface to wysiwyg, forms etc.
+* dev: refactor charts initialization, add default double-theme colors etc.
 
 # PHP Admin Engine
 * Designed for developers
@@ -52,13 +60,8 @@
 4. Create & enjoy ;)
 
 ## Roadmap
-* engine: refactor all classes
-* engine: cache queries fails with pagination
-* admin: automatically set values to form input's in edit pages (setFieldValue)
-* admin: uploads interface (scan /upload directory)
-* admin: insert files from uploads interface to wysiwyg, forms etc.
-* dev: refactor charts initialization, add default double-theme colors etc.
-* api + swagger:
+* create an api module:
+  * swagger
   * /api/template/$path - load Template::loadT... for ajax/fetch
   * /api/data/$data - show data from DB
 * docs: create docs module and plug MkDocs or create own builder

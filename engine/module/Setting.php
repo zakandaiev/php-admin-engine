@@ -28,7 +28,6 @@ class Setting
 
   public static function get($moduleName = null)
   {
-    // TODO add support for extended modules
     $moduleName = $moduleName ?? Module::getName();
 
     return self::exists($moduleName) ? self::$setting->{$moduleName} : null;
@@ -36,7 +35,6 @@ class Setting
 
   public static function hasProperty($propertyName, $moduleName = null)
   {
-    // TODO add support for extended modules
     $moduleName = $moduleName ?? Module::getName();
 
     return property_exists(self::$setting->{$moduleName} ?? new \stdClass, $propertyName);
@@ -44,7 +42,6 @@ class Setting
 
   public static function setProperty($data, $propertyName, $moduleName = null)
   {
-    // TODO add support for extended modules
     $moduleName = $moduleName ?? Module::getName();
 
     if (!self::exists($moduleName)) {
@@ -60,7 +57,6 @@ class Setting
 
   public static function getProperty($propertyName, $moduleName = null)
   {
-    // TODO add support for extended modules
     $moduleName = $moduleName ?? Module::getName();
 
     return self::hasProperty($propertyName, $moduleName) ? self::$setting->{$moduleName}->{$propertyName} : null;

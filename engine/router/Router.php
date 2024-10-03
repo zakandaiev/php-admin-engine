@@ -38,12 +38,23 @@ class Router
   public static function has($routeName, $moduleName = null)
   {
     $moduleName = $moduleName ?? Module::getName();
+    $moduleExtends = Module::getProperty('extends');
 
-    return isset(self::$routeList[$moduleName][$routeName]);
+    if (isset(self::$routeList[$moduleName][$routeName])) {
+      return true;
+    }
+
+    return isset(self::$routeList[$moduleExtends][$routeName]);
   }
 
   public static function get($routeName = null, $moduleName = null)
   {
+    $moduleExtends = Module::getProperty('extends');
+
+    if ($moduleExtends && isset($routeName) && !isset($moduleName) && !isset(self::$routeList[$moduleName ?? Module::getName()][$routeName])) {
+      $moduleName = $moduleExtends;
+    }
+
     $moduleName = $moduleName ?? Module::getName();
 
     return isset($routeName) ? @self::$routeList[$moduleName][$routeName] : @self::$routeList[$moduleName];
@@ -54,7 +65,7 @@ class Router
     return in_array($method, self::$allowedMethods);
   }
 
-  public static function register($method, $path, $controller, $name = '', $option = [])
+  public static function register($method, $path, $controller, $name = null, $option = [])
   {
     $moduleName = Module::getName();
 
@@ -74,6 +85,7 @@ class Router
     }
 
     $route = [
+      'module' => $moduleName,
       'method' => $method,
       'path' => $path,
       'controller' => $routeController,
@@ -285,6 +297,7 @@ class Router
 
       Module::setName($moduleName);
 
+      self::$route['module'] = $moduleName;
       self::$route['method'] = Request::method();
       self::$route['path'] = Request::uri();
       self::$route['controller'] = 'Error';

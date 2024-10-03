@@ -15,7 +15,7 @@
     </div>
 
     <div class="hero__image">
-      <img src="<?= Asset::resolve(Asset::url(), 'favicon.svg') ?>" alt="HTML5 Logo" height="320">
+      <img src="<?= Path::resolveUrl(Asset::url(), 'favicon.svg') ?>" alt="HTML5 Logo" height="320">
     </div>
   </div>
 </div>

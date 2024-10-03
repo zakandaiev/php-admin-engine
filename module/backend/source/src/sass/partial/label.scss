@@ -1,0 +1,37 @@
+.label {
+  @include ellipsis;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  max-width: 100%;
+  padding: 0.25em 0.5em;
+
+  font-size: 1.125rem;
+  font-weight: var(--font-medium);
+  line-height: 1;
+  color: var(--color-text);
+  text-align: center;
+  vertical-align: middle;
+
+  background: var(--color-body);
+  border-radius: var(--radius-xs);
+
+  // .label_cancel
+  &_cancel {
+    background: var(--color-border);
+  }
+
+  @each $color in $accent-color-list {
+    &_#{$color} {
+      color: var(--color-#{$color}-text);
+      background: var(--color-#{$color});
+
+      &.label_light {
+        color: var(--color-#{$color});
+        background: var(--color-#{$color}-light);
+      }
+    }
+  }
+}

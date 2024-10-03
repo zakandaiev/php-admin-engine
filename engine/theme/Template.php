@@ -10,10 +10,11 @@ class Template
 {
   public static function load($template, $isRequired = true, $module = null)
   {
-    $templatePath = Path::file('view', $module) . "/$template.php";
+    $templatePath = Path::resolve(Path::file('view', $module), "$template.php");
+    $moduleExtends = Module::getProperty('extends');
 
-    if (!is_file($templatePath) && Module::getProperty('extends')) {
-      $templatePath = Path::file('view', Module::getProperty('extends')) . "/$template.php";
+    if (!is_file($templatePath) && $moduleExtends) {
+      $templatePath = Path::resolve(Path::file('view', $moduleExtends), "$template.php");
     }
 
     if (!is_file($templatePath)) {
@@ -43,10 +44,11 @@ class Template
 
   public static function has($template, $module = null)
   {
-    $templatePath = Path::file('view', $module) . "/$template.php";
+    $templatePath = Path::resolve(Path::file('view', $module), "$template.php");
+    $moduleExtends = Module::getProperty('extends');
 
-    if (!is_file($templatePath) && Module::getProperty('extends')) {
-      $templatePath = Path::file('view', Module::getProperty('extends')) . "/$template.php";
+    if (!is_file($templatePath) && $moduleExtends) {
+      $templatePath = Path::resolve(Path::file('view', $moduleExtends), "$template.php");
     }
 
     if (!is_file($templatePath)) {

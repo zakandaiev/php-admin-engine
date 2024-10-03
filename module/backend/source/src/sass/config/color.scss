@@ -1,0 +1,71 @@
+$accent-color-list: primary, secondary, success, info, warning, error;
+
+$color-list: (
+  body: #f5f7fb,
+  box: #fff,
+  box-dark: #222e3c,
+
+  heading: #000,
+  heading-inverse: #fff,
+
+  subheading: #939ba2,
+	subheading-inverse: #d3d5d8,
+
+  text: #495057,
+  text-inverse: #bdc0c5,
+  text-muted: #939ba2,
+
+  link: #3b7ddd,
+  link-hover: #2f64b1,
+
+  border: #dee2e6,
+  border-hover: #ced4da,
+
+  primary: #3b7ddd,
+	primary-hover: #326abc,
+	primary-light: rgb(59 125 221 / 15%),
+  primary-text: #fff,
+
+	secondary: #6c757d,
+	secondary-hover: #686f75,
+	secondary-light: hsl(208deg 7% 46% / 15%),
+  secondary-text: #fff,
+
+	success: #1cbb8c,
+	success-hover: #189f77,
+	success-light: rgb(28 187 140 / 15%),
+  success-text: #fff,
+
+	info: #17a2b8,
+	info-hover: #148a9c,
+	info-light: rgb(23 162 184 / 15%),
+  info-text: #fff,
+
+	warning: #fcb92c,
+	warning-hover: #d69d25,
+	warning-light: rgb(252 185 44 / 15%),
+  warning-text: #fff,
+
+	error: #dc3545,
+	error-hover: #bb2d3b,
+	error-light: rgb(220 53 69 / 15%),
+  error-text: #fff,
+);
+
+$color-dark-list: (
+  body: #19222c,
+	box: #222e3c,
+
+	heading: #fff,
+	heading-inverse: #000,
+
+	subheading: #d3d5d8,
+	subheading-inverse: #939ba2,
+
+	text: #bdc0c5,
+	text-inverse: #495057,
+	text-muted: #6c757d,
+
+	border: #4e5863,
+	border-hover: #384350,
+);

@@ -1,0 +1,159 @@
+.box {
+  display: flex;
+  flex-direction: column;
+
+  background: var(--color-box);
+  border-radius: var(--radius-xs);
+  box-shadow: var(--shadow);
+
+  &:not(:first-child) {
+    margin-top: 1rem;
+  }
+
+  & + .box {
+    margin-top: var(--gap);
+  }
+
+  // .box__image
+  &__image {
+    display: block;
+
+    & > * {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: var(--radius-xs) var(--radius-xs) 0 0;
+    }
+  }
+
+  // .box__header
+  &__header {
+    position: relative;
+    display: block;
+    padding: 1.5em;
+
+    // .box__header_actions
+    &_actions {
+      padding-right: 3.5em;
+    }
+
+    // .box__header_icon
+    &_icon {
+      padding-right: 5.5em;
+    }
+
+    // .box__header + .box__body
+    & + .box__body {
+      padding-top: 0.5em;
+    }
+  }
+
+  // .box__title
+  &__title {
+    display: flex;
+    gap: 0.5em;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    font-size: 1.5rem;
+    font-weight: var(--font-medium);
+    line-height: 1.2;
+    color: var(--color-subheading);
+
+    // .box__title + .box__subtitle
+    & + .box__subtitle {
+      margin-top: 0.5rem;
+    }
+  }
+
+  // .box__subtitle
+  &__subtitle {
+    display: block;
+    font-size: 1.4rem;
+    line-height: 1.2;
+    color: var(--color-text-muted);
+  }
+
+  // .box__body
+  &__body {
+    display: block;
+    padding: 1.5em;
+
+    // .box__body + .box__footer
+    & + .box__footer {
+      padding-top: 0.5em;
+    }
+  }
+
+  // .box__footer
+  &__footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    padding: 1.5em;
+  }
+
+  // .box__actions
+  &__actions {
+    @include reset-btn;
+    cursor: pointer;
+
+    position: absolute;
+    z-index: var(--zi-default);
+    top: 50%;
+    right: 1em;
+    transform: translateY(-50%);
+
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+
+    transition: var(--transition);
+
+    &:hover, &:focus, &:active {
+      & > .ti {
+        color: var(--color-text);
+      }
+    }
+
+    & > .ti {
+      font-size: 2rem;
+      color: var(--color-subheading);
+    }
+
+    &.dropdown {
+      position: absolute;
+    }
+  }
+
+  // .box__icon
+  &__icon {
+    position: absolute;
+    z-index: var(--zi-default);
+    top: 50%;
+    right: 1em;
+    transform: translateY(-50%);
+
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+
+    width: 2em;
+    height: 2em;
+
+    font-size: 2rem;
+    color: var(--color-subheading);
+
+    background: var(--color-border);
+    border-radius: 50%;
+
+    @each $color in $accent-color-list {
+      &_#{$color} {
+        color: var(--color-#{$color});
+        background: var(--color-#{$color}-light);
+      }
+    }
+  }
+}

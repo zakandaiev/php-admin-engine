@@ -1,0 +1,42 @@
+.list-group {
+  display: flex;
+  flex-direction: column;
+
+  // .list-group__item
+  &__item {
+    display: block;
+
+    padding: 1.5rem 2rem;
+
+    color: var(--color-text);
+
+    background: transparent;
+    border-bottom: var(--border);
+
+    &:first-child {
+      border-radius: var(--radius-xs) var(--radius-xs) 0 0;
+    }
+
+    &:last-child {
+      border-bottom-width: 0;
+      border-radius: 0 0 var(--radius-xs) var(--radius-xs);
+    }
+  }
+
+  & > a.list-group__item {
+    &:hover, &:focus, &:active {
+      color: var(--color-text);
+      background: var(--color-border);
+    }
+
+    &.active {
+      color: #fff;
+      background: var(--color-primary);
+    }
+  }
+
+  // .list-group_sm
+  &_sm > .list-group__item {
+    padding: 0.75rem 1rem;
+  }
+}

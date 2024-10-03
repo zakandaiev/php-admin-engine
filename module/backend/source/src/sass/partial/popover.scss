@@ -1,0 +1,122 @@
+.popover {
+	position: fixed;
+	z-index: var(--zi-tooltip);
+
+	display: inline-flex;
+	flex-direction: column;
+
+	min-width: 11em;
+	max-width: 22em;
+
+	box-shadow: var(--shadow);
+
+	animation-name: popover-appear;
+	animation-duration: var(--transition-time);
+	animation-fill-mode: both;
+
+	&::before {
+		content: "";
+
+		position: absolute;
+		z-index: var(--zi-default);
+
+		display: inline-block;
+
+		width: 1em;
+		height: 1em;
+
+		background: var(--color-body);
+		border-color: var(--color-border);
+		border-style: solid;
+		border-width: 0 1px 1px 0;
+	}
+
+	// .popover-disappear
+	&_disappear {
+		animation-name: popover-disappear;
+	}
+
+	// .popover__header
+	&__header {
+		padding: 0.5em 1em;
+
+		color: var(--color-heading);
+
+		background: var(--color-border);
+		border: var(--border);
+		border-top-left-radius: var(--radius);
+		border-top-right-radius: var(--radius);
+	}
+
+	// .popover__body
+	&__body {
+		display: flex;
+		align-items: center;
+
+		min-height: 4em;
+		margin-top: -1px;
+		padding: 0.85em 1em;
+
+		font-size: 1.2rem;
+		color: var(--color-text);
+
+		background: var(--color-body);
+		border: var(--border);
+		border-bottom-right-radius: var(--radius);
+		border-bottom-left-radius: var(--radius);
+	}
+
+	// .popover_top
+	&_top::before {
+		top: 100%;
+		left: 50%;
+		transform: translate(-50%, -0.5em) rotate(45deg);
+	}
+
+	// .popover_bottom
+	&_bottom::before {
+		bottom: 100%;
+		left: 50%;
+		transform: translate(-50%, 0.5em) rotate(45deg);
+
+		background: var(--color-border);
+		border-color: var(--color-border);
+		border-width: 1px;
+	}
+
+	// .popover_left
+	&_left::before {
+		top: 50%;
+		left: 100%;
+		transform: translate(-0.5em, -50%) rotate(45deg);
+		border-width: 1px 1px 0 0;
+	}
+
+	// .popover_right
+	&_right::before {
+		top: 50%;
+		right: 100%;
+		transform: translate(0.5em, -50%) rotate(45deg);
+		border-width: 0 0 1px 1px;
+	}
+}
+
+@keyframes popover-appear {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes popover-disappear {
+	0% {
+		opacity: 1;
+	}
+
+	100% {
+		opacity: 0;
+	}
+}

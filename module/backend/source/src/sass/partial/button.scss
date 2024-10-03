@@ -1,0 +1,304 @@
+.btn {
+  @include reset-btn;
+  cursor: pointer;
+
+  position: relative;
+
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0.9rem 1.15rem;
+
+  font-size: 1.4rem;
+  font-weight: var(--font-normal);
+  line-height: 1;
+  color: var(--color-text);
+  text-align: center;
+
+  background: transparent;
+  border: var(--border-width) solid transparent;
+  border-radius: var(--radius-xs);
+
+  transition: var(--transition);
+
+  &:hover, &:focus, &:active {
+    text-decoration: none;
+  }
+
+  & > .ti, & > svg, & > img {
+    flex-shrink: 0;
+  }
+
+  & > svg, & > img {
+    display: inline-block;
+    width: 1.4rem;
+    height: 1.4rem;
+  }
+
+  // .btn_default
+  &_default {
+    color: var(--color-text);
+    background: var(--color-box);
+    border-color: var(--color-border);
+
+    &:hover, &:focus, &:active {
+      color: var(--color-text);
+      background: var(--color-body);
+      border-color: var(--color-border);
+    }
+  }
+
+  // .btn_cancel
+  &_cancel {
+    color: var(--color-text);
+    background: var(--color-border);
+    border-color: var(--color-border);
+
+    &:hover, &:focus, &:active {
+      color: var(--color-text);
+      background: var(--color-border-hover);
+      border-color: var(--color-border);
+    }
+
+    &.btn_outline {
+      &:hover {
+        background: var(--color-border);
+      }
+
+      &:focus, &:active {
+        background: var(--color-border-hover);
+      }
+    }
+  }
+
+  @each $color in $accent-color-list {
+    &_#{$color} {
+      color: var(--color-#{$color}-text);
+      background: var(--color-#{$color});
+      border-color: var(--color-#{$color});
+
+      &:hover, &:focus, &:active {
+        color: var(--color-#{$color}-text);
+        background: var(--color-#{$color}-hover);
+        border-color: var(--color-#{$color}-hover);
+      }
+
+      &.btn_outline {
+        color: var(--color-#{$color});
+
+        &:hover {
+          color: var(--color-#{$color}-text);
+          background: var(--color-#{$color});
+          border-color: var(--color-#{$color});
+        }
+
+        &:focus, &:active {
+          color: var(--color-#{$color}-text);
+          background: var(--color-#{$color}-hover);
+          border-color: var(--color-#{$color}-hover);
+        }
+      }
+    }
+  }
+
+  // .btn_outline
+  &_outline {
+    background: transparent;
+  }
+
+  // .btn_disabled
+  &_disabled,
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  // .btn_fit
+  &_fit {
+    width: 100%;
+  }
+
+  // .btn_sm
+  &_sm {
+    padding: 0.6rem;
+    font-size: 1.2rem;
+
+    & > .ti {
+      font-size: 1.2rem;
+    }
+
+    & > svg, & > img {
+      width: 1.2rem;
+      height: 1.2rem;
+    }
+  }
+
+  // .btn_lg
+  &_lg {
+    padding: 1.2rem 1.3rem;
+    font-size: 1.6rem;
+
+    & > .ti {
+      font-size: 1.8rem;
+    }
+
+    & > svg, & > img {
+      width: 1.8rem;
+      height: 1.8rem;
+    }
+  }
+
+  // .btn_icon
+  &_icon {
+    padding: 0.8rem;
+    font-size: 1.6rem;
+
+    &.btn_sm {
+      padding: 0.5rem;
+      font-size: 1.4rem;
+    }
+
+    &.btn_lg {
+      padding: 1.1rem;
+      font-size: 1.8rem;
+    }
+  }
+
+  // .btn_apple
+  &_apple {
+    color: #fff;
+    background: #000;
+    border-color: #000;
+
+    &:hover, &:focus, &:active {
+      color: #fff;
+      background: #181717;
+      border-color: #181717;
+    }
+  }
+
+  // .btn_facebook
+  &_facebook {
+    color: #fff;
+    background: #3b5998;
+    border-color: #3b5998;
+
+    &:hover, &:focus, &:active {
+      color: #fff;
+      background: #5872a7;
+      border-color: #5872a7;
+    }
+  }
+
+  // .btn_google
+  &_google {
+    color: #fff;
+    background: #dc4e41;
+    border-color: #dc4e41;
+
+    &:hover, &:focus, &:active {
+      color: #fff;
+      background: #bb4237;
+      border-color: #bb4237;
+    }
+  }
+
+  // .btn_instagram
+  &_instagram {
+    color: #fff;
+    background: #e4405f;
+    border-color: #e4405f;
+
+    &:hover, &:focus, &:active {
+      color: #fff;
+      background: #c23651;
+      border-color: #c23651;
+    }
+  }
+
+  // .btn_telegram
+  &_telegram {
+    color: #fff;
+    background: #2481cc;
+    border-color: #2481cc;
+
+    &:hover, &:focus, &:active {
+      color: #fff;
+      background: #267ae1;
+      border-color: #267ae1;
+    }
+  }
+
+  // .btn_twitter
+  &_twitter {
+    color: #fff;
+    background: #1da1f2;
+    border-color: #1da1f2;
+
+    &:hover, &:focus, &:active {
+      color: #fff;
+      background: #1989ce;
+      border-color: #1989ce;
+    }
+  }
+
+  // .btn_youtube
+  &_youtube {
+    color: #fff;
+    background: #f00;
+    border-color: #f00;
+
+    &:hover, &:focus, &:active {
+      color: #fff;
+      background: #d90000;
+      border-color: #d90000;
+    }
+  }
+}
+
+.btn-group {
+  position: relative;
+  display: inline-flex;
+
+  & > .btn {
+    border-radius: 0;
+  }
+
+  // .btn-group_vertical
+  &_vertical {
+    flex-direction: column;
+
+    & > .btn:first-child {
+      border-top-left-radius: var(--radius-xs);
+      border-top-right-radius: var(--radius-xs);
+    }
+
+    & > .btn:last-child {
+      border-bottom-right-radius: var(--radius-xs);
+      border-bottom-left-radius: var(--radius-xs);
+    }
+  }
+
+  &:not(.btn-group_vertical) {
+    & > .btn:first-child {
+      border-top-left-radius: var(--radius-xs);
+      border-bottom-left-radius: var(--radius-xs);
+    }
+
+    & > .btn:last-child {
+      border-top-right-radius: var(--radius-xs);
+      border-bottom-right-radius: var(--radius-xs);
+    }
+  }
+
+  // .btn-group_fit
+  &_fit {
+    display: flex;
+
+    & > .btn {
+      flex: 1 0 0;
+    }
+  }
+}

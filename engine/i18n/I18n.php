@@ -32,28 +32,50 @@ class I18n
 
   public static function has($languageKey, $moduleName = null)
   {
-    return isset(Module::getProperty('languages', $moduleName)[$languageKey]);
+    $moduleName = $moduleName ?? Module::getName();
+    $moduleExtends = Module::getProperty('extends');
+
+    if (isset(Module::getProperty('languages', $moduleName)[$languageKey])) {
+      return true;
+    }
+
+    return isset(Module::getProperty('languages', $moduleExtends)[$languageKey]);
   }
 
   public static function get($languageKey = null, $moduleName = null)
   {
     $languageKey = self::getCurrent($moduleName);
+    $moduleExtends = Module::getProperty('extends');
 
-    return self::has($languageKey, $moduleName) ? Module::getProperty('languages', $moduleName)[$languageKey] : null;
+    if (self::has($languageKey, $moduleName)) {
+      return Module::getProperty('languages', $moduleName)[$languageKey] ?? Module::getProperty('languages', $moduleExtends)[$languageKey];
+    }
+
+    return null;
   }
 
   public static function hasProperty($propertyName, $languageKey = null, $moduleName = null)
   {
     $languageKey = self::getCurrent($moduleName);
+    $moduleExtends = Module::getProperty('extends');
 
-    return isset(Module::getProperty('languages', $moduleName)[$languageKey][$propertyName]);
+    if (isset(Module::getProperty('languages', $moduleName)[$languageKey][$propertyName])) {
+      return true;
+    }
+
+    return isset(Module::getProperty('languages', $moduleExtends)[$languageKey][$propertyName]);
   }
 
   public static function getProperty($propertyName, $languageKey = null, $moduleName = null)
   {
     $languageKey = self::getCurrent($moduleName);
+    $moduleExtends = Module::getProperty('extends');
 
-    return self::hasProperty($propertyName, $languageKey, $moduleName) ? Module::getProperty('languages', $moduleName)[$languageKey][$propertyName] : null;
+    if (self::hasProperty($propertyName, $languageKey, $moduleName)) {
+      return Module::getProperty('languages', $moduleName)[$languageKey][$propertyName] ?? Module::getProperty('languages', $moduleExtends)[$languageKey][$propertyName];
+    }
+
+    return null;
   }
 
   public static function getCurrent($moduleName = null)
@@ -171,6 +193,7 @@ class I18n
         }
 
         $languages[$languageKey] = [
+          'module' => $module['name'],
           'key' => $languageKey,
           'region' => $languageRegion,
           'fileName' => $language,

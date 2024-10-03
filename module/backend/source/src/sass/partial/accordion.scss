@@ -1,0 +1,80 @@
+.accordions {
+  display: flex;
+  flex-direction: column;
+}
+
+.accordion {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-box);
+
+  &:not(:last-child) {
+    border-bottom: var(--border);
+  }
+
+  // .accordion__header
+  &__header {
+    @include reset-btn;
+    cursor: pointer;
+
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 1.5rem 2rem;
+
+    font-size: 1.6rem;
+    font-weight: var(--font-medium);
+    color: var(--color-text);
+
+    & > .ti {
+      flex-shrink: 0;
+      font-size: 2rem;
+      transition: var(--transition);
+    }
+  }
+
+  // .accordion__body
+  &__body {
+    overflow: hidden;
+    display: block;
+
+    height: 0;
+
+    visibility: hidden;
+
+    transition: var(--transition);
+  }
+
+  // .accordion__content
+  &__content {
+    display: block;
+    padding: 1.5rem 2rem;
+  }
+
+  // .accordion_active
+  &_active {
+    & > .accordion__header > .ti {
+      transform: rotate(90deg);
+    }
+
+    & > .accordion__body {
+      visibility: visible;
+    }
+  }
+
+  // .accordion_underline
+  &_underline > .accordion__header {
+    &:hover, &:focus, &:active {
+      & > *:not([class]) {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  // .accordion_underline.accordion_active
+  &_underline.accordion_active > .accordion__header > *:not([class]) {
+    text-decoration: underline;
+  }
+}

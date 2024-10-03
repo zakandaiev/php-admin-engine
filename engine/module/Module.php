@@ -41,7 +41,6 @@ class Module
 
   public static function get($moduleName = null)
   {
-    // TODO add support for extended modules
     $moduleName = $moduleName ?? self::getName();
 
     return self::exists($moduleName) ? self::$moduleList[$moduleName] : null;
@@ -49,7 +48,6 @@ class Module
 
   public static function hasProperty($propertyName, $moduleName = null)
   {
-    // TODO add support for extended modules
     $moduleName = $moduleName ?? self::getName();
 
     return isset(self::$moduleList[$moduleName][$propertyName]);
@@ -57,7 +55,6 @@ class Module
 
   public static function setProperty($data, $propertyName, $moduleName = null)
   {
-    // TODO add support for extended modules
     $moduleName = $moduleName ?? self::getName();
 
     if (!self::exists($moduleName)) {
@@ -73,7 +70,6 @@ class Module
 
   public static function getProperty($propertyName, $moduleName = null)
   {
-    // TODO add support for extended modules
     $moduleName = $moduleName ?? self::getName();
 
     return self::hasProperty($propertyName, $moduleName) ? self::$moduleList[$moduleName][$propertyName] : null;
@@ -155,7 +151,7 @@ class Module
       $hooks = "$path/{$module['name']}/hooks.php";
 
       if ($module['name'] === 'frontend') {
-        $hooks = Path::file('theme') . '/hooks.php';
+        $hooks = Path::resolve(Path::file('theme'), 'hooks.php');
       }
 
       if (is_file($hooks)) {
@@ -177,7 +173,7 @@ class Module
   public static function update($key, $value, $module = null)
   {
     // $name = $module ?? self::$name;
-    // $config_file = Path::file('module') . '/' . $name . '/config.php';
+    // $config_file = Path::resolve(Path::file('module'), $name, 'config.php';
 
     // if(!is_file($config_file)) {
     // 	return false;
@@ -235,7 +231,7 @@ class Module
 
   public static function install($name)
   {
-    // $path = Path::file('module') . '/' . $name . '/Install';
+    // $path = Path::resolve(Path::file('module'), $name, 'install';
 
     // if(!file_exists($path)) {
     // 	return false;
@@ -257,7 +253,7 @@ class Module
 
   public static function uninstall($name)
   {
-    // $path = Path::file('module') . '/' . $name . '/Install';
+    // $path = Path::resolve(Path::file('module'), $name, 'install';
 
     // if(!file_exists($path)) {
     // 	return false;

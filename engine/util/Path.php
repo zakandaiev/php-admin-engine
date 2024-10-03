@@ -34,21 +34,6 @@ class Path
     return null;
   }
 
-  public static function resolve(...$args)
-  {
-    $base = ROOT_DIR;
-
-    if (empty($args)) {
-      return $base;
-    }
-
-    if (gettype($args[0]) !== 'string') {
-      $args[0] = $base;
-    }
-
-    return implode('/', $args);
-  }
-
   public static function file($section = '', $module = null)
   {
     $module = $module ?? Module::getName();
@@ -137,5 +122,35 @@ class Path
     }
 
     return $urlBase;
+  }
+
+  public static function resolve(...$args)
+  {
+    $base = ROOT_DIR;
+
+    if (empty($args)) {
+      return $base;
+    }
+
+    if (gettype($args[0]) !== 'string') {
+      $args[0] = $base;
+    }
+
+    return implode('/', $args);
+  }
+
+  public static function resolveUrl(...$args)
+  {
+    $base = Path::url();
+
+    if (empty($args)) {
+      return $base;
+    }
+
+    if (gettype($args[0]) !== 'string') {
+      $args[0] = $base;
+    }
+
+    return implode('/', $args);
   }
 }

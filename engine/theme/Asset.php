@@ -32,7 +32,7 @@ class Asset
     $filePath = Path::resolve(Path::file('asset', $module), "$fileName.$fileExtension");
 
     if (is_file($filePath)) {
-      $fileUrl = self::resolve(self::url($module), "$fileName.$fileExtension");
+      $fileUrl = Path::resolveUrl(self::url($module), "$fileName.$fileExtension");
 
       self::$container[$fileExtension][] = [
         'url' => $fileUrl,
@@ -115,21 +115,6 @@ class Asset
     return $output;
   }
 
-  public static function resolve(...$args)
-  {
-    $base = Path::url();
-
-    if (empty($args)) {
-      return $base;
-    }
-
-    if (gettype($args[0]) !== 'string') {
-      $args[0] = $base;
-    }
-
-    return implode('/', $args);
-  }
-
   public static function url($module = null)
   {
     return Path::url('asset', $module ?? Module::getProperty('extends'));
@@ -138,7 +123,7 @@ class Asset
   public static function getContent($fileName, $module = null)
   {
     $dir = Path::file('asset', $module);
-    $pathToFile = self::resolve($dir, $fileName);
+    $pathToFile = Path::resolveUrl($dir, $fileName);
 
     if (!is_file($pathToFile) && Module::getProperty('extends')) {
       return self::getContent($fileName, Module::getProperty('extends'));

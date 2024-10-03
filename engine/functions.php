@@ -6,6 +6,7 @@ use engine\http\Request;
 use engine\i18n\I18n;
 use engine\module\Module;
 use engine\module\Setting;
+use engine\theme\Asset;
 
 ############################# PHP POLYFILL #############################
 if (!function_exists('str_contains')) {
@@ -299,7 +300,11 @@ function lang($key = null, $language = null, $mixed = null)
         break;
       }
     case 'icon': {
-        $value = 'img/flag/' . $language . '.' . ($mixed ?? 'png');
+        $value = Path::resolveUrl('img', 'flag', $language . '.' . ($mixed ?? 'png'));
+        break;
+      }
+    case 'icon_url': {
+        $value = Path::resolveUrl(Asset::url(), 'img', 'flag', $language . '.' . ($mixed ?? 'png'));
         break;
       }
   }
@@ -424,8 +429,17 @@ function getModuleProperty($propertyName, $moduleName = null)
 
 function site($key, $module = null)
 {
-  // TODO add support for extended modules
-  $value = Setting::hasProperty($key) ? Setting::getProperty($key) : Setting::getProperty($key, 'engine');
+  $moduleExtends = Module::getProperty('extends');
+  $value = null;
+
+  if (Setting::hasProperty($key)) {
+    $value = Setting::getProperty($key);
+  } else if (Setting::hasProperty($key, $moduleExtends)) {
+    $value = Setting::getProperty($key, $moduleExtends);
+  } else if (Setting::hasProperty($key, 'engine')) {
+    $value = Setting::getProperty($key, 'engine');
+  }
+
   if (isset($module)) {
     $value = Setting::getProperty($key, $module);
   }
