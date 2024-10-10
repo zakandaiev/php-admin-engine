@@ -3,6 +3,8 @@
 namespace engine\theme;
 
 use engine\router\View;
+use engine\theme\Page;
+use engine\theme\Template;
 use engine\util\File;
 use engine\util\Path;
 
@@ -12,8 +14,7 @@ class Theme
 
   public static function breadcrumb($name = '', $data = [])
   {
-    $data['items'] = Page::get(__FUNCTION__)->items;
-    $data['options'] = Page::get(__FUNCTION__)->options;
+    $data['items'] = Page::get(__FUNCTION__);
 
     self::loadTemplate(__FUNCTION__, $name, $data);
   }
@@ -44,7 +45,7 @@ class Theme
 
   public static function template($name, $data = [])
   {
-    self::loadTemplate($name);
+    self::loadTemplate($name, null, $data);
   }
 
   public static function getPageTemplates()

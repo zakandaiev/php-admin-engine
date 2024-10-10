@@ -23,14 +23,9 @@ function getButtonSocials()
   return ['apple', 'facebook', 'google', 'instagram', 'telegram', 'twitter', 'youtube'];
 }
 
-function getUiSectionPath()
-{
-  return Path::resolve(Path::file('page'), 'ui');
-}
-
 function getUiSectionFiles($isFormatName = false)
 {
-  $uiSectionsPath = getUiSectionPath();
+  $uiSectionsPath = Path::resolve(Path::file('page'), 'ui');
   $uiSections = is_dir($uiSectionsPath) ? scandir($uiSectionsPath) : [];
   $uiSectionsFormatted = [];
 

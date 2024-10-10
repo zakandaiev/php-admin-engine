@@ -1,47 +1,24 @@
-<?php Theme::header(); ?>
+<?php Theme::template('ui-header', ['title' => 'Breadcrumbs']); ?>
 
-<?php Theme::template('sidebar'); ?>
+<div class="box">
+  <div class="box__body">
 
-<main class="page-content__inner">
+    <nav class="breadcrumb">
+      <span class="breadcrumb__item">Home</span>
+    </nav>
 
-  <?php Theme::template('navbar/top'); ?>
+    <nav class="breadcrumb">
+      <span class="breadcrumb__item"><a href="<?= Route::link('home') ?>">Home</a></span>
+      <span class="breadcrumb__item">Path</span>
+    </nav>
 
-  <section class="section section_grow section_offset">
-    <div class="container-fluid">
+    <nav class="breadcrumb">
+      <span class="breadcrumb__item"><a href="<?= Route::link('home') ?>">Home</a></span>
+      <span class="breadcrumb__item"><a href="<?= Route::link('path') ?>">Path</a></span>
+      <span class="breadcrumb__item">Data</span>
+    </nav>
 
-      <nav class="breadcrumb">
-        <span class="breadcrumb__item"><a href="<?= Route::link('dashboard') ?>">Home</a></span>
-        <span class="breadcrumb__item"><a href="<?= Route::link('ui-home') ?>">Dev UI</a></span>
-        <span class="breadcrumb__item">Breadcrumbs</span>
-      </nav>
+  </div>
+</div>
 
-      <h2 class="section__title">Breadcrumbs</h2>
-
-      <div class="box">
-        <div class="box__body">
-
-          <nav class="breadcrumb">
-            <span class="breadcrumb__item">Home</span>
-          </nav>
-
-          <nav class="breadcrumb">
-            <span class="breadcrumb__item"><a href="/">Home</a></span>
-            <span class="breadcrumb__item">Library</span>
-          </nav>
-
-          <nav class="breadcrumb">
-            <span class="breadcrumb__item"><a href="/">Home</a></span>
-            <span class="breadcrumb__item"><a href="/">Library</a></span>
-            <span class="breadcrumb__item">Data</span>
-          </nav>
-
-        </div>
-      </div>
-
-  </section>
-
-  <?php Theme::template('navbar/bottom'); ?>
-
-</main>
-
-<?php Theme::footer(); ?>
+<?php Theme::template('ui-footer'); ?>

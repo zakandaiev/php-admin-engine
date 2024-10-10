@@ -1,42 +1,19 @@
-<?php Theme::header(); ?>
+<?php Theme::template('ui-header', ['title' => 'Labels']); ?>
 
-<?php Theme::template('sidebar'); ?>
+<div class="box">
+  <div class="box__body">
+    <div>
+      <?php foreach (getButtonColors() as $color): ?>
+        <span class="label label_<?= $color ?>"><?= ucfirst($color) ?></span>
+      <?php endforeach; ?>
+    </div>
 
-<main class="page-content__inner">
+    <div class="mt-3">
+      <?php foreach (getButtonAccentColors() as $color): ?>
+        <span class="label label_light label_<?= $color ?>"><?= ucfirst($color) ?></span>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</div>
 
-  <?php Theme::template('navbar/top'); ?>
-
-  <section class="section section_grow section_offset">
-    <div class="container-fluid">
-
-      <nav class="breadcrumb">
-        <span class="breadcrumb__item"><a href="<?= Route::link('dashboard') ?>">Home</a></span>
-        <span class="breadcrumb__item"><a href="<?= Route::link('ui-home') ?>">Dev UI</a></span>
-        <span class="breadcrumb__item">Labels</span>
-      </nav>
-
-      <h2 class="section__title">Labels</h2>
-
-      <div class="box">
-        <div class="box__body">
-          <div>
-            <?php foreach (getButtonColors() as $color): ?>
-              <span class="label label_<?= $color ?>"><?= ucfirst($color) ?></span>
-            <?php endforeach; ?>
-          </div>
-
-          <div class="mt-3">
-            <?php foreach (getButtonAccentColors() as $color): ?>
-              <span class="label label_light label_<?= $color ?>"><?= ucfirst($color) ?></span>
-            <?php endforeach; ?>
-          </div>
-        </div>
-      </div>
-
-  </section>
-
-  <?php Theme::template('navbar/bottom'); ?>
-
-</main>
-
-<?php Theme::footer(); ?>
+<?php Theme::template('ui-footer'); ?>

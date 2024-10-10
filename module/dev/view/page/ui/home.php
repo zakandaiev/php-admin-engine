@@ -1,6 +1,14 @@
 <?php
 
-Theme::header(); ?>
+$pageTitle = 'Dev UI';
+
+Page::set('title', $pageTitle);
+
+Page::breadcrumb('set', $pageTitle);
+
+?>
+
+<?php Theme::header(); ?>
 
 <?php Theme::template('sidebar'); ?>
 
@@ -11,16 +19,13 @@ Theme::header(); ?>
   <section class="section section_grow section_offset">
     <div class="container-fluid">
 
-      <nav class="breadcrumb">
-        <span class="breadcrumb__item"><a href="<?= Route::link('dashboard') ?>">Home</a></span>
-        <span class="breadcrumb__item">Dev UI</span>
-      </nav>
+      <?php Theme::breadcrumb(); ?>
 
-      <h2 class="section__title">Dev UI</h2>
+      <h2 class="section__title"><?= $pageTitle ?></h2>
 
       <div class="box mt-2">
         <div class="box__header">
-          <h4 class="box__title">List of all UI sections</h4>
+          <h4 class="box__title">List of ready to use UI elements</h4>
         </div>
 
         <nav class="list-group">

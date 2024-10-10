@@ -18,12 +18,7 @@ class Page
 
     self::$page->title = Engine::NAME;
     self::$page->no_index_no_follow = false;
-
-    $breadcrumb = new \stdClass();
-    $breadcrumb->items = [];
-    $breadcrumb->options = [];
-
-    self::$page->breadcrumb = $breadcrumb;
+    self::$page->breadcrumb = [];
 
     return $this;
   }
@@ -45,42 +40,34 @@ class Page
     return isset($key) ? @self::$page->{$key} : self::$page;
   }
 
-  public static function breadcrumb($key = null, $mixed = null)
+  public static function breadcrumb(...$args)
   {
+    $key = @$args[0];
+
     if (!isset($key)) {
-      self::get('breadcrumb');
+      return self::get('breadcrumb');
     }
 
     switch ($key) {
-      case 'add': {
+      case 'set': {
           $crumb = new \stdClass();
 
-          $crumb->name = @$mixed['name'];
-          $crumb->url = @$mixed['url'];
+          $crumb->name = @$args[1];
+          $crumb->url = @$args[2];
 
-          if (isset($mixed['key'])) {
-            self::$page->breadcrumb->items[$mixed['key']] = $crumb;
+          if (self::breadcrumb('has', @$args[3])) {
+            self::$page->breadcrumb[$args[3]] = $crumb;
           } else {
-            self::$page->breadcrumb->items[] = $crumb;
+            self::$page->breadcrumb[] = $crumb;
           }
 
           break;
         }
       case 'has': {
-          return isset(self::$page->breadcrumb->items[$mixed]);
+          return isset(self::$page->breadcrumb[@$args[1]]);
         }
       case 'get': {
-          return isset($mixed) ? @self::$page->breadcrumb->items[$mixed] : self::$page->breadcrumb->items;
-        }
-      case 'edit': {
-          if (!self::breadcrumb('has', @$mixed['key'])) {
-            return false;
-          }
-
-          $crumb = self::breadcrumb('get', @$mixed['key']);
-
-          $crumb->name = @$mixed['name'];
-          $crumb->url = @$mixed['url'];
+          return isset($args[1]) ? @self::$page->breadcrumb[$args[1]] : self::$page->breadcrumb;
         }
     }
 
