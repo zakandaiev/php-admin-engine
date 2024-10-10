@@ -2,6 +2,7 @@
 
 namespace engine\theme;
 
+use engine\router\View;
 use engine\util\File;
 use engine\util\Path;
 

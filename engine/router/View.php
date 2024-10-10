@@ -1,6 +1,6 @@
 <?php
 
-namespace engine\theme;
+namespace engine\router;
 
 use engine\module\Module;
 use engine\theme\Template;
@@ -9,9 +9,14 @@ use engine\util\Path;
 class View
 {
   protected static $data = [];
+  protected static $isViewRendered;
 
   public function render($template, $isRequired = true)
   {
+    if (self::$isViewRendered) {
+      return false;
+    }
+
     $moduleName = Module::getName();
     $moduleExtends = Module::getProperty('extends');
 
@@ -23,13 +28,17 @@ class View
 
     Template::load('functions', false);
     Template::load(Path::resolve('page', $template), $isRequired, $moduleName);
+
+    self::$isViewRendered = true;
+
+    return true;
   }
 
   public function error($code)
   {
     http_response_code($code);
 
-    $this->render($code);
+    return $this->render($code);
   }
 
   public static function setData($key, $data = null)

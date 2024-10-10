@@ -3,7 +3,7 @@
 namespace engine\theme;
 
 use engine\module\Module;
-use engine\theme\View;
+use engine\router\View;
 use engine\util\Path;
 
 class Template

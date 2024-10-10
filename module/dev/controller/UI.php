@@ -23,8 +23,6 @@ class UI extends Backend
 
     if (!is_file($path)) {
       $this->view->error('404');
-
-      return false;
     }
 
     $this->view->setData($data);

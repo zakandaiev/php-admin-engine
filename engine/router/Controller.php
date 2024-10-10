@@ -5,9 +5,9 @@ namespace engine\router;
 use engine\module\Module;
 use engine\module\Setting;
 use engine\router\Route;
+use engine\router\View;
 use engine\util\Path;
 use engine\theme\Page;
-use engine\theme\View;
 
 abstract class Controller
 {
@@ -27,11 +27,11 @@ abstract class Controller
     class_alias('engine\\module\\Module', 'Module');
     class_alias('engine\\module\\Setting', 'Setting');
     class_alias('engine\\router\\Route', 'Route');
+    class_alias('engine\\router\\View', 'View');
     class_alias('engine\\theme\\Asset', 'Asset');
     class_alias('engine\\theme\\Page', 'Page');
     class_alias('engine\\theme\\Template', 'Template');
     class_alias('engine\\theme\\Theme', 'Theme');
-    class_alias('engine\\theme\\View', 'View');
     class_alias('engine\\util\\Path', 'Path');
 
     // TODO refactor
