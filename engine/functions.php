@@ -7,6 +7,12 @@ use engine\i18n\I18n;
 use engine\module\Module;
 use engine\module\Setting;
 use engine\theme\Asset;
+use engine\util\Date;
+use engine\util\Debug;
+use engine\util\File;
+use engine\util\Hash;
+use engine\util\Path;
+use engine\util\Text;
 
 ############################# PHP POLYFILL #############################
 if (!function_exists('str_contains')) {
@@ -25,269 +31,160 @@ if (!function_exists('str_starts_with')) {
   }
 }
 
+############################# DATE #############################
+function dateFormat($date = null, $format = 'd.m.Y')
+{
+  return Date::format($date, $format);
+}
+
+function dateWhen($date = null, $format = 'd.m.Y')
+{
+  return Date::when($date, $format);
+}
+
+function dateLeft($date)
+{
+  return Date::left($date);
+}
+
 ############################# DEBUG #############################
 function debug(...$data)
 {
-  foreach ($data as $key => $item) {
-    if ($key === 0) {
-      echo '<hr>';
-    }
-
-    echo '<pre style="
-      display: block;
-      width: 100%;
-      overflow: auto;
-      margin: 0;
-      padding: 1em;
-      background: #1b1b1b;
-      color: #fff;
-      font-size: 1em;
-      font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
-      font-weight: 400;
-      line-height: 1.4;
-      border-radius: 0.5em;
-    ">';
-
-    var_dump($item);
-
-    echo '</pre>';
-
-    if (isset($data[$key + 1])) {
-      echo '<br>';
-    } else {
-      echo '<hr>';
-    }
-  }
+  return Debug::dd($data);
 }
 
 function debugTrace($level = null)
 {
-  debug($level ? (isset(debug_backtrace()[$level]) ? debug_backtrace()[$level] : debug_backtrace()) : debug_backtrace());
+  return Debug::trace($level);
 }
 
 ############################# FILE #############################
 function getFileDirectory($path)
 {
-  return pathinfo($path, PATHINFO_DIRNAME);
+  return File::getDirectory($path);
 }
 
 function getFileName($path)
 {
-  return pathinfo($path, PATHINFO_FILENAME);
+  return File::getName($path);
 }
 
 function getFileBaseName($path)
 {
-  return pathinfo($path, PATHINFO_BASENAME);
+  return File::getBaseName($path);
 }
 
 function getFileExtension($path)
 {
-  return pathinfo($path, PATHINFO_EXTENSION);
+  return File::getExtension($path);
 }
 
 function getFileSize($path, $precision = 2)
 {
-  $size = 0;
-
-  if (is_file($path)) {
-    $size = filesize($path);
-  } else {
-    foreach (globRecursive($path . '/*.*') as $file) {
-      $size += filesize($file);
-    }
-  }
-
-  $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
-  for ($i = 0; $size > 1024; $i++) $size /= 1024;
-
-  return round($size, 2) . ' ' . $units[$i];
+  return File::getSize($path);
 }
 
-function createDirIfNotExist($directory, $permissions = 0755, $recursive = true)
+function createDir($directory, $permissions = 0755, $recursive = true)
 {
-  if (!file_exists($directory)) {
-    return mkdir($directory, $permissions, $recursive);
-  }
-
-  return false;
+  return File::createDir($directory, $permissions, $recursive);
 }
 
 function createFile($path, $content = PHP_EOL, $flags = 0)
 {
-  $directory = getFileDirectory($path);
-
-  createDirIfNotExist($directory);
-
-  return file_put_contents($path, $content, $flags);
+  return File::createFile($path, $content, $flags);
 }
 
 function globRecursive($pattern, $flags = 0)
 {
-  $files = glob($pattern, $flags);
-
-  foreach (glob(dirname($pattern) . '/*', GLOB_ONLYDIR | GLOB_NOSORT) as $dir) {
-    $files = array_merge($files, globRecursive($dir . '/' . basename($pattern), $flags));
-  }
-
-  return $files;
+  return File::globRecursive($pattern, $flags);
 }
 
 function rmdirRecursive($path)
 {
-  if (is_dir($path)) {
-    $files = array_diff(scandir($path), array('.', '..'));
+  return File::rmdirRecursive($path);
+}
 
-    foreach ($files as $file) {
-      rmdirRecursive(realpath($path) . '/' . $file);
-    }
+############################# HASH #############################
+function generateToken($length = 16)
+{
+  return Hash::token($length);
+}
 
-    return rmdir($path);
-  } else if (is_file($path)) {
-    return unlink($path);
-  }
+function generatePassword($password)
+{
+  return Hash::token($password);
+}
 
-  return false;
+function passwordVerify($password, $hash)
+{
+  return Hash::passwordVerify($password, $hash);
+}
+
+############################# PATH #############################
+function getPathClass($className = '', $module = null)
+{
+  return Path::class($className, $module);
+}
+
+function getPathFile($section = '', $module = null)
+{
+  return Path::class($section, $module);
+}
+
+function getPathUrl($section = '', $module = null)
+{
+  return Path::url($section, $module);
+}
+
+function resolvePath(...$args)
+{
+  return Path::resolve($args);
+}
+
+function resolveUrl(...$args)
+{
+  return Path::resolveUrl($args);
 }
 
 ############################# TEXT #############################
 function html($text = '')
 {
-  return htmlspecialchars($text ?? '');
+  return Text::html($text);
 }
 
 function url($url = '')
 {
-  return urlencode($url ?? '');
+  return Text::url($url);
 }
 
 function tel($tel = '')
 {
-  return preg_replace('/[^\d+]+/m', '', $tel ?? '');
+  return Text::tel($tel);
 }
 
-function cyrToLat($text)
+function cyrToLat($text = '')
 {
-  $replacement = [
-    'а' => 'a',
-    'б' => 'b',
-    'в' => 'v',
-    'г' => 'g',
-    'д' => 'd',
-    'е' => 'e',
-    'ё' => 'e',
-    'ж' => 'zh',
-    'з' => 'z',
-    'и' => 'i',
-    'й' => 'y',
-    'к' => 'k',
-    'л' => 'l',
-    'м' => 'm',
-    'н' => 'n',
-    'о' => 'o',
-    'п' => 'p',
-    'р' => 'r',
-    'с' => 's',
-    'т' => 't',
-    'у' => 'u',
-    'ф' => 'f',
-    'х' => 'kh',
-    'ц' => 'tz',
-    'ч' => 'ch',
-    'ш' => 'sh',
-    'щ' => 'sch',
-    'ы' => 'y',
-    'э' => 'e',
-    'ю' => 'iu',
-    'я' => 'ia',
-    'А' => 'A',
-    'Б' => 'B',
-    'В' => 'V',
-    'Г' => 'G',
-    'Д' => 'D',
-    'Е' => 'E',
-    'Ё' => 'E',
-    'Ж' => 'Zh',
-    'З' => 'Z',
-    'И' => 'I',
-    'Й' => 'Y',
-    'К' => 'K',
-    'Л' => 'L',
-    'М' => 'M',
-    'Н' => 'N',
-    'О' => 'O',
-    'П' => 'P',
-    'Р' => 'R',
-    'С' => 'S',
-    'Т' => 'T',
-    'У' => 'U',
-    'Ф' => 'F',
-    'Х' => 'Kh',
-    'Ц' => 'Tz',
-    'Ч' => 'Ch',
-    'Ш' => 'Sh',
-    'Щ' => 'Sch',
-    'Ы' => 'Y',
-    'Э' => 'E',
-    'Ю' => 'Iu',
-    'Я' => 'Ia',
-    'ь' => '',
-    'Ь' => '',
-    'ъ' => '',
-    'Ъ' => '',
-    'ї' => 'yi',
-    'і' => 'i',
-    'ґ' => 'g',
-    'є' => 'e',
-    'Ї' => 'Yi',
-    'І' => 'I',
-    'Ґ' => 'G',
-    'Є' => 'E'
-  ];
-
-  return strtr($text, $replacement);
+  return Text::cyrToLat($text);
 }
 
-function slug($text, $delimiter = '-')
+function slug($text = '', $delimiter = '-')
 {
-  $slug = cyrToLat($text);
-  $slug = preg_replace('/[^A-Za-z0-9' . $delimiter . ' ]+/', '', $slug);
-  $slug = trim($slug);
-  $slug = preg_replace('/\s+/', $delimiter, $slug);
-  $slug = strtolower($slug ?? '');
-
-  return $slug;
+  return Text::slug($text, $delimiter);
 }
 
-function word($text)
+function word($text = '')
 {
-  $word = preg_replace('/[^\p{L}\d ]+/iu', '', $text);
-  $word = preg_replace('/\s+/', ' ', $word);
-  $word = trim($word);
-
-  return $word;
+  return Text::word($text);
 }
 
-function excerpt($text, $maxchar, $end = "...")
+function excerpt($text = '', $maxchar = 100, $end = "...")
 {
-  if (strlen($text ?? '') > $maxchar) {
-    $words = preg_split('/\s/', $text);
-    $output = '';
-    $i = 0;
-    while (1) {
-      $length = strlen($output) + strlen($words[$i]);
-      if ($length > $maxchar) {
-        break;
-      } else {
-        $output .= ' ' . $words[$i];
-        ++$i;
-      }
-    }
-    $output .= $end;
-  } else {
-    $output = $text;
-  }
-  return $output;
+  return Text::excerpt($text, $maxchar, $end);
+}
+
+function pluralValue($number, $values = [])
+{
+  return Text::pluralValue($number, $values);
 }
 
 ############################# LANGUAGE #############################
@@ -325,74 +222,6 @@ function lang($key = null, $language = null, $mixed = null)
   }
 
   return $value;
-}
-
-############################# DATE #############################
-function formatDate($date = null, $format = 'd.m.Y')
-{
-  $timestamp = $date ?? time();
-  $timestamp = is_numeric($timestamp) ? $timestamp : strtotime($timestamp);
-  return date($format, $timestamp);
-}
-
-function dateWhen($date = null, $format = 'd.m.Y')
-{
-  $timestamp = $date ?? time();
-  $timestamp = is_numeric($date) ? $date : strtotime($date ?? time());
-
-  $date_day = date('d.m.Y', $timestamp);
-  $today = date('d.m.Y');
-  $yesterday = date('d.m.Y', mktime(0, 0, 0, date('m'), date('d') - 1, date('Y')));
-
-  if ($date_day === $today) {
-    $date = t('engine.date.today_at', date('H:i', $timestamp));
-  } else if ($yesterday === $date_day) {
-    $date = t('engine.date.yesterday_at', date('H:i', $timestamp));
-  } else {
-    $date = formatDate($timestamp, $format);
-  }
-
-  return $date;
-}
-
-function dateLeft($date)
-{
-  $now = time();
-  $then = is_numeric($date) ? $date : strtotime($date ?? time());
-
-  if ($then - $now < 0) {
-    return t('engine.date.left.expired');
-  }
-
-  $difference = abs($then - $now);
-  $left = [];
-
-  $month = floor($difference / 2592000);
-  if (0 < $month) {
-    $left['month'] = t('engine.date.left.month', $month);
-  }
-
-  $days = floor($difference / 86400) % 30;
-  if (0 < $days) {
-    $left['days'] = t('engine.date.left.days', $days);
-  }
-
-  $hours = floor($difference / 3600) % 24;
-  if (0 < $hours) {
-    $left['hours'] = t('engine.date.left.hours', $hours);
-  }
-
-  $minutes = floor($difference / 60) % 60;
-  if (0 < $minutes) {
-    $left['minutes'] = t('engine.date.left.minutes', $minutes);
-  }
-
-  if (0 < count($left)) {
-    $datediff = implode(' ', $left);
-    return $datediff;
-  }
-
-  return t('engine.date.left.few_seconds');
 }
 
 ############################# ENGINE & SITE DATA #############################
@@ -599,29 +428,4 @@ function getLinkSort($key)
   $query = !empty($query) ? '?' . $query : '';
 
   return site('permalink') . $query;
-}
-
-function getNumericalNounForm($number)
-{
-  // return 'n' - nominative (комментарий)
-  // return 's' - singular (комментария)
-  // return 'p' - plural (комментариев)
-
-  $number = intval($number);
-  $number_ratio = ($number % 100) / 10;
-
-  if ($number > 10 && ($number_ratio >= 1 && $number_ratio <= 2)) {
-    return 'p';
-  }
-
-  switch ($number % 10) {
-    case 1:
-      return 'n';
-    case 2:
-    case 3:
-    case 4:
-      return 's';
-  }
-
-  return 'p';
 }

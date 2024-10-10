@@ -25,7 +25,7 @@ function getButtonSocials()
 
 function getUiSectionPath()
 {
-  return Path::resolve(Path::file('view'), 'ui');
+  return Path::resolve(Path::file('page'), 'ui');
 }
 
 function getUiSectionFiles($isFormatName = false)

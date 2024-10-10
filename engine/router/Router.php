@@ -4,11 +4,12 @@ namespace engine\router;
 
 use engine\Config;
 use engine\module\Module;
-use engine\util\Hash;
-use engine\util\Path;
 use engine\http\Request;
 use engine\http\Response;
 use engine\i18n\I18n;
+use engine\util\File;
+use engine\util\Hash;
+use engine\util\Path;
 
 class Router
 {
@@ -148,7 +149,7 @@ class Router
     }
 
     if (Request::ip() !== $form->ip) {
-      Response::answer(null, 'error', t('engine.form.forbidden'), 403);
+      Response::answer(null, 'error', I18n::translate('engine.form.forbidden'), 403);
     }
 
     $timestampNow = time();
@@ -156,7 +157,7 @@ class Router
     $timestampDiff = $timestampNow - $timestampCreated;
 
     if ($timestampDiff > Config::getProperty('form', 'lifetime')) {
-      Response::answer(null, 'error', t('engine.form.inactive'), 405);
+      Response::answer(null, 'error', I18n::translate('engine.form.inactive'), 405);
     }
 
     Module::loadHooks();
@@ -319,7 +320,7 @@ class Router
       $controllerContent .= "use engine\\router\\Controller;\n\n";
       $controllerContent .= "class $controllerName extends Controller {}\n";
 
-      createFile($controllerFile, $controllerContent);
+      File::createFile($controllerFile, $controllerContent);
 
       return true;
     }

@@ -1,7 +1,7 @@
 # WORK IN PROGRESS, TODO:
 
 * **NEW todos below**:
-* engine: rewrite old classes
+* engine: rewrite old classes (missing ones)
 * backend module: rewrite from scratch
 * frontend module: rewrite from scratch
 * install module: rewrite from scratch

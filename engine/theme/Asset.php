@@ -7,6 +7,7 @@ use engine\module\Module;
 use engine\router\Route;
 use engine\util\Hash;
 use engine\util\Path;
+use engine\util\Text;
 
 class Asset
 {
@@ -101,7 +102,7 @@ class Asset
       $assetAttributes = '';
       if (!empty($asset['attributes'])) {
         $assetAttributes = implode(' ', array_map(function ($key, $value) {
-          return $key . '="' . html($value) . '"';
+          return $key . '="' . Text::html($value) . '"';
         }, array_keys($asset['attributes']), $asset['attributes']));
       }
 

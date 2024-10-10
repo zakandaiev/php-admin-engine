@@ -5,6 +5,7 @@ namespace engine\theme;
 use engine\Config;
 use engine\Engine;
 use engine\http\Request;
+use engine\util\File;
 
 class Page
 {
@@ -206,7 +207,7 @@ class Page
             return $favicon;
           }
 
-          $iconExtension = getFileExtension($iconPath);
+          $iconExtension = File::getExtension($iconPath);
 
           switch ($iconExtension) {
             case 'ico': {
@@ -246,7 +247,6 @@ class Page
       locale: "' . lang('locale') . '",
     },
     i18n: {},
-    paginationLimit: ' . site('pagination_limit') . ',
     site: {
       charset: "' . site('charset') . '",
       language: "' . site('language') . '",

@@ -5,6 +5,7 @@ namespace engine\router;
 use engine\router\Router;
 use engine\http\Request;
 use engine\i18n\I18n;
+use engine\util\Text;
 
 class Route
 {
@@ -46,7 +47,7 @@ class Route
     $query = !empty($routeQuery) ? '?' . http_build_query($routeQuery) : '';
     $url = "$base/$language/$uri$query";
 
-    return html($url);
+    return Text::html($url);
   }
 
   public static function linkRaw($routeLink = '/', $routeQuery = [])
@@ -57,7 +58,7 @@ class Route
     $query = !empty($routeQuery) ? '?' . http_build_query($routeQuery) : '';
     $url = "$base/$language/$uri$query";
 
-    return html($url);
+    return Text::html($url);
   }
 
   public static function isActive($routeName = null, $moduleName = null)

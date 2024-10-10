@@ -2,23 +2,18 @@
 
 namespace engine\theme;
 
+use engine\util\File;
+use engine\util\Path;
+
 class Theme
 {
-  const BLOCK_DIR = 'block';
-  const BLOCK_MASK = [
-    'header'  => 'header-%s',
-    'footer'  => 'footer-%s',
-    'sidebar'  => 'sidebar-%s',
-    'widget'  => 'widget-%s',
-    'menu'  => 'menu-%s',
-    'breadcrumb'  => 'breadcrumb-%s',
-    'pagination'  => 'pagination-%s'
-  ];
+  protected static $pageTemplateList = [];
 
-  protected static $themePageTemplates = [];
-
-  public static function header($name = '', $data = [])
+  public static function breadcrumb($name = '', $data = [])
   {
+    $data['items'] = Page::get(__FUNCTION__)->items;
+    $data['options'] = Page::get(__FUNCTION__)->options;
+
     self::loadTemplate(__FUNCTION__, $name, $data);
   }
 
@@ -27,21 +22,8 @@ class Theme
     self::loadTemplate(__FUNCTION__, $name, $data);
   }
 
-  public static function sidebar($name = '', $data = [])
+  public static function header($name = '', $data = [])
   {
-    self::loadTemplate(__FUNCTION__, $name, $data);
-  }
-
-  public static function widget($name = '', $data = [])
-  {
-    self::loadTemplate(__FUNCTION__, $name, $data);
-  }
-
-  public static function breadcrumb($name = '', $data = [])
-  {
-    $data['items'] = Page::get(__FUNCTION__)->items;
-    $data['options'] = Page::get(__FUNCTION__)->options;
-
     self::loadTemplate(__FUNCTION__, $name, $data);
   }
 
@@ -59,52 +41,41 @@ class Theme
     self::loadTemplate(__FUNCTION__, $name, $data);
   }
 
-  protected static function loadTemplate($type, $name = '', $data = [])
+  public static function template($name, $data = [])
   {
-    $file = self::detectNameFile($name, $type);
-    $file = self::BLOCK_DIR . '/' . $file;
-
-    View::setData($data);
-    Template::load($file, true);
+    self::loadTemplate($name);
   }
 
-  public static function block($name, $data = [])
+  public static function getPageTemplates()
   {
-    $file = self::BLOCK_DIR . '/' . $name;
-
-    View::setData($data);
-    Template::load($file, true);
-  }
-
-  public static function pageTemplates()
-  {
-    if (!empty(self::$themePageTemplates)) {
-      return self::$themePageTemplates;
+    if (!empty(self::$pageTemplateList)) {
+      return self::$pageTemplateList;
     }
 
     $path = Path::file('theme');
 
     foreach (glob($path . '/*.php') as $template) {
-      $templateName = getFileName($template);
+      $templateName = File::getName($template);
 
       if ($templateName === 'functions' || $templateName === 'home' || $templateName === 'page' || $templateName === 'category') {
         continue;
       }
 
-      self::$themePageTemplates[] = $templateName;
+      self::$pageTemplateList[] = $templateName;
     }
 
-    return self::$themePageTemplates;
+    return self::$pageTemplateList;
   }
 
-  protected static function detectNameFile($name, $function)
+  protected static function loadTemplate($type, $name = '', $data = [])
   {
-    if (empty($name)) {
-      return $function;
-    } else if ($name[0] === '/') {
-      return sprintf(str_replace('-', '', self::BLOCK_MASK[$function]), $name);
-    } else {
-      return sprintf(self::BLOCK_MASK[$function], $name);
+    $file = Path::resolve('template', $type);
+
+    if (!empty($name)) {
+      $file = "$file-$name";
     }
+
+    View::setData($data);
+    Template::load($file, true);
   }
 }

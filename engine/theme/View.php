@@ -4,6 +4,7 @@ namespace engine\theme;
 
 use engine\module\Module;
 use engine\theme\Template;
+use engine\util\Path;
 
 class View
 {
@@ -21,15 +22,14 @@ class View
     }
 
     Template::load('functions', false);
-
-    Template::load($template, $isRequired, $moduleName);
+    Template::load(Path::resolve('page', $template), $isRequired, $moduleName);
   }
 
   public function error($code)
   {
     http_response_code($code);
 
-    $this->render('error/' . $code);
+    $this->render($code);
   }
 
   public static function setData($key, $data = null)

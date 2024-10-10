@@ -71,7 +71,10 @@ class Path
 
           return self::resolve(self::file('module'), $module, $section);
         }
-      case 'asset': {
+      case 'asset':
+      case 'error':
+      case 'page':
+      case 'template': {
           return self::resolve(self::file('view', $module), $section);
         }
       case 'config': {
@@ -141,7 +144,7 @@ class Path
 
   public static function resolveUrl(...$args)
   {
-    $base = Path::url();
+    $base = self::url();
 
     if (empty($args)) {
       return $base;

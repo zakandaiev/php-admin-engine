@@ -4,9 +4,11 @@ namespace engine\i18n;
 
 use engine\Config;
 use engine\module\Module;
-use engine\util\Path;
 use engine\module\Setting;
 use engine\http\Cookie;
+use engine\util\File;
+use engine\util\Path;
+use engine\util\Text;
 
 class I18n
 {
@@ -125,23 +127,10 @@ class I18n
     $translation = self::$translationFlat[$key] ?? $key;
 
     if (isset($data) && is_numeric($data)) {
-      @list($nominative, $singular, $plural) = explode(' | ', $translation, 3);
+      $pluralValues = explode(' | ', $translation, 3);
 
-      if (!empty($nominative) && !empty($singular) && !empty($plural)) {
-        switch (getNumericalNounForm($data)) {
-          case 's': {
-              $translation = str_replace('{v}', $data, $singular);
-              break;
-            }
-          case 'n': {
-              $translation = str_replace('{v}', $data, $nominative);
-              break;
-            }
-          case 'p': {
-              $translation = str_replace('{v}', $data, $plural);
-              break;
-            }
-        }
+      if (count($pluralValues) === 3) {
+        return str_replace('{v}', $data, Text::pluralValue($data, $pluralValues) ?? '');
       } else {
         $translation = str_replace('{v}', $data, $translation);
       }
@@ -154,7 +143,7 @@ class I18n
     }
 
     if (self::$isDebug && is_string($translation)) {
-      $translation =  html(self::$langWrap . $translation . self::$langWrap);
+      $translation =  Text::html(self::$langWrap . $translation . self::$langWrap);
     }
 
     return $translation;
@@ -163,7 +152,7 @@ class I18n
   protected static function loadVariables()
   {
     self::$cookieKey = Config::getProperty('languageKey', 'cookie');
-    self::$langWrap = Config::getProperty('langWrap', 'debug');
+    self::$langWrap = Config::getProperty('langWrap', 'debug') ?? '';
     self::$isDebug = Config::getProperty('isEnabled', 'debug') ?? false;
 
     return true;
@@ -192,11 +181,11 @@ class I18n
           continue;
         }
 
-        if (getFileExtension($language) !== 'json') {
+        if (File::getExtension($language) !== 'json') {
           continue;
         }
 
-        @list($languageKey, $languageRegion) = explode('-', getFileName($language), 2);
+        @list($languageKey, $languageRegion) = explode('-', File::getName($language), 2);
 
         if (empty($languageKey) || empty($languageRegion)) {
           continue;

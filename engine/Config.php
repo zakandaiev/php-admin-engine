@@ -2,6 +2,8 @@
 
 namespace engine;
 
+use engine\util\File;
+
 class Config
 {
   protected static $configList = [];
@@ -75,7 +77,7 @@ class Config
       }
 
       $config = require $configPath . '/' . $configFile;
-      $configName = getFileName($configFile);
+      $configName = File::getName($configFile);
 
       if (!is_array($config)) {
         throw new \Exception(sprintf('%s config is invalid.', $configFile));
