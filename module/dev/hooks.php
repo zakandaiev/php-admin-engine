@@ -1,7 +1,6 @@
 <?php
 
 use engine\module\Hook;
-use engine\router\Route;
 use engine\util\Path;
 
 ############################# SIDEBAR #############################
@@ -27,32 +26,32 @@ function getUiSections()
   return $uiSectionsFormatted;
 }
 
-Hook::run('admin_sidebar_prepend', [
-  'name' => '',
-  'is_separator' => true,
-  'route' => 'log'
+Hook::run('backend.sidebar.prepend', [
+  'text' => '',
+  'isSeparator' => true,
+  'name' => 'log'
 ]);
 
-Hook::run('admin_sidebar_prepend', [
+Hook::run('backend.sidebar.prepend', [
   'icon' => 'layout',
-  'name' => 'UI',
-  'route' => getUiSections()
+  'text' => 'UI',
+  'name' => getUiSections()
 ]);
 
-Hook::run('admin_sidebar_prepend', [
+Hook::run('backend.sidebar.prepend', [
   'icon' => 'activity',
-  'name' => 'Logs',
-  'route' => 'log'
+  'text' => 'Logs',
+  'name' => 'log'
 ]);
 
-Hook::run('admin_sidebar_prepend', [
+Hook::run('backend.sidebar.prepend', [
   'icon' => 'box',
-  'name' => 'Modules',
-  'route' => 'module'
+  'text' => 'Modules',
+  'name' => 'module'
 ]);
 
-Hook::run('admin_sidebar_prepend', [
-  'name' => 'Dev',
-  'is_separator' => true,
-  'route' => 'log'
+Hook::run('backend.sidebar.prepend', [
+  'text' => 'Dev',
+  'isSeparator' => true,
+  'name' => 'log'
 ]);

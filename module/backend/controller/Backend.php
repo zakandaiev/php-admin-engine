@@ -32,7 +32,7 @@ class Backend extends Controller
     // $this->user->groups = $this->backendModel->getUserGroups($this->user->id);
     // $this->user->routes = $this->backendModel->getUserRoutes($this->user->id);
 
-    // if((isset($this->route['is_public']) && $this->route['is_public'] === true) || $this->user->access_all) {
+    // if((isset($this->route['isPublic']) && $this->route['isPublic'] === true) || $this->user->access_all) {
     // 	$is_user_enabled = true;
     // } else {
     // 	foreach($this->user->routes as $route) {

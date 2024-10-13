@@ -39,8 +39,8 @@ return [
 		'type' => 'text',
 		'default' => 'default',
 		'data-test' => 'test',
-		'label' => t('admin.user.name'),
-		'placeholder' => t('admin.user.name'),
+		'label' => t('backend.user.name'),
+		'placeholder' => t('backend.user.name'),
 		'col_class' => 'col-xs-12 col-md-6'
 	],
 ];

@@ -6,7 +6,7 @@
         <span>&copy; <?= dateFormat(null, 'Y') ?></span>
       </div>
       <div class="col text-right">
-        <a href="<?= site('url') ?>" target="_blank"><strong><?= t('admin.navbar.open_site') ?></strong></a>
+        <a href="<?= site('url') ?>" target="_blank"><strong><?= t('backend.navbar.open_site') ?></strong></a>
       </div>
     </div>
   </div>

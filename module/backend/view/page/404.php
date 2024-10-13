@@ -2,8 +2,8 @@
 
 use \engine\http\Request;
 
-$pageTitle = t('admin.dashboard.title');
-$pageSubtitle = t('admin.dashboard.subtitle');
+$pageTitle = t('backend.dashboard.title');
+$pageSubtitle = t('backend.dashboard.subtitle');
 
 Page::set('no_index_no_follow', true);
 Page::set('title', $pageTitle);
@@ -26,11 +26,11 @@ $referer = Request::referer();
 
       <div class="d-flex gap-2 mt-4">
         <?php if ($referer && !Route::isActive($referer)) : ?>
-          <a href="<?= $referer ?>" class="btn btn_lg btn_secondary"><?= t('admin.404.go_back') ?></a>
+          <a href="<?= $referer ?>" class="btn btn_lg btn_secondary"><?= t('backend.404.go_back') ?></a>
         <?php endif; ?>
 
         <?php if ($referer !== Route::link('dashboard')) : ?>
-          <a href="<?= Route::link('dashboard') ?>" class="btn btn_lg btn_primary"><?= t('admin.404.go_dashboard') ?></a>
+          <a href="<?= Route::link('dashboard') ?>" class="btn btn_lg btn_primary"><?= t('backend.404.go_dashboard') ?></a>
         <?php endif; ?>
       </div>
 

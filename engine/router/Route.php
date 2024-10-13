@@ -61,16 +61,21 @@ class Route
     return Text::html($url);
   }
 
-  public static function isActive($routeName = null, $moduleName = null)
+  public static function isActive($routeName, $routeParams = [], $moduleName = null)
   {
-    $route = Router::get($routeName ?? self::get('name'), $moduleName);
-    if (@$route['name'] === self::get('name')) {
-      return true;
+    $uri = $routeName;
+
+    $route = Router::get($routeName, $moduleName);
+    if (isset($route['path'])) {
+      $uri = preg_replace_callback('/\$(\w+)/iu', function ($matches) use ($routeParams) {
+        $key = $matches[1];
+        return isset($routeParams[$key]) ? $routeParams[$key] : $matches[0];
+      }, $route['path'] ?? '');
+
+      $uri = trim($uri, '/');
     }
 
-    $routeUri = $route['path'] ?? $routeName;
-
-    return self::compareUri($routeUri, Request::uri());
+    return self::compareUri($uri, Request::uri());
   }
 
   public static function compareUri($url1, $url2)

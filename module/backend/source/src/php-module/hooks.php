@@ -1,53 +1,72 @@
 <?php
 
 use engine\module\Hook;
+use engine\module\Module;
 
-############################# ADMIN SIDEBAR #############################
-Hook::setData('admin.sidebar', []);
+############################# SIDEBAR #############################
+Hook::setData('backend.sidebar', []);
 
-Hook::register('admin_sidebar_append', function ($route) {
-  $sidebar = Hook::getData('admin.sidebar') ?? [];
-  $sidebar[] = $route;
-  Hook::setData('admin.sidebar', $sidebar);
-});
+function formatRoute($route = [])
+{
+  $route['module'] = Module::getName();
 
-Hook::register('admin_sidebar_prepend', function ($route) {
-  $sidebar = Hook::getData('admin.sidebar') ?? [];
-  array_unshift($sidebar, $route);
-  Hook::setData('admin.sidebar', $sidebar);
-});
+  if (isset($route['name']) && is_array($route['name'])) {
+    $innerRoutes = [];
 
-Hook::register('admin_sidebar_append_after', function ($position, $append_route) {
-  $sidebar = Hook::getData('admin.sidebar') ?? [];
-  $sidebar_new = [];
+    foreach ($route['name'] as $key => $item) {
+      if (!isset($item) || !is_array($item) || !isset($item['name'])) {
+        continue;
+      }
 
-  foreach ($sidebar as $route) {
-    $sidebar_new[] = $route;
-
-    if (is_string($route['route']) && trim($route['route'], '/') === trim($position, '/')) {
-      $sidebar_new[] = $append_route;
+      $innerRoutes[$key] = [...$item, 'module' => Module::getName()];
     }
+
+    if (empty($innerRoutes)) {
+      return false;
+    }
+
+    $route['name'] = $innerRoutes;
   }
 
-  Hook::setData('admin.sidebar', $sidebar_new);
+  return $route;
+}
+
+Hook::register('backend.sidebar.append', function ($route) {
+  if (!isset($route['name'])) {
+    return false;
+  }
+
+  $sidebar = Hook::getData('backend.sidebar') ?? [];
+  $sidebar[] = formatRoute($route);
+  Hook::setData('backend.sidebar', $sidebar);
+});
+
+Hook::register('backend.sidebar.prepend', function ($route) {
+  if (!isset($route['name'])) {
+    return false;
+  }
+
+  $sidebar = Hook::getData('backend.sidebar') ?? [];
+  array_unshift($sidebar, formatRoute($route));
+  Hook::setData('backend.sidebar', $sidebar);
 });
 
 // ############################# NOTIFICATION #############################
-// $GLOBALS['admin_notification'] = [];
+// $GLOBALS['backend.notification'] = [];
 
 // Hook::register('notification_add', function($type, $data) {
 // 	if(empty($type) || empty($data)) {
 // 		return false;
 // 	}
 
-// 	$GLOBALS['admin_notification'][$type] = $data;
+// 	$GLOBALS['backend.notification'][$type] = $data;
 // });
 // Hook::register('notification_modify', function($type, $data) {
-// 	if(!isset($GLOBALS['admin_notification'][$type]) || empty($data)) {
+// 	if(!isset($GLOBALS['backend.notification'][$type]) || empty($data)) {
 // 		return false;
 // 	}
 
-// 	$GLOBALS['admin_notification'][$type] = $data;
+// 	$GLOBALS['backend.notification'][$type] = $data;
 // });
 
 // ############################# TRANSLATION #############################
@@ -276,85 +295,110 @@ Hook::register('admin_sidebar_append_after', function ($position, $append_route)
 // );
 
 ############################# RUN - SIDEBAR #############################
-Hook::run('admin_sidebar_append', [
+Hook::run('backend.sidebar.append', [
   'icon' => 'home',
-  'name' => t('admin.sidebar.dashboard'),
-  'route' => '/admin/dashboard',
-  'is_public' => true
+  'text' => t('backend.sidebar.dashboard'),
+  'name' => 'dashboard',
+  'isPublic' => true
 ]);
-Hook::run('admin_sidebar_append', [
+
+Hook::run('backend.sidebar.append', [
   'icon' => 'user-circle',
   'label' => function () {
     $notifications_count = User::get()->notifications_count;
     return $notifications_count > 0 ? $notifications_count : null;
   },
-  'name' => t('admin.sidebar.profile'),
-  'route' => '/admin/profile',
-  'is_public' => true
+  'text' => t('backend.sidebar.profile'),
+  'name' => 'profile',
+  'isPublic' => true
 ]);
-Hook::run('admin_sidebar_append', [
-  'name' => t('admin.sidebar.interaction'),
-  'is_separator' => true,
-  'route' => '/admin/contact'
+
+Hook::run('backend.sidebar.append', [
+  'text' => t('backend.sidebar.interaction'),
+  'isSeparator' => true,
+  'name' => 'contact'
 ]);
-Hook::run('admin_sidebar_append', [
+
+Hook::run('backend.sidebar.append', [
   'icon' => 'message-circle',
   'label' => function () {
-    $count = \Module\Admin\Model\Contact::getInstance()->countUnreadContacts();
+    $count = \module\backend\model\Contact::getInstance()->countUnreadContacts();
     return $count > 0 ? $count : null;
   },
-  'name' => t('admin.sidebar.feedback'),
-  'route' => '/admin/contact'
+  'text' => t('backend.sidebar.feedback'),
+  'name' => 'contact'
 ]);
-Hook::run('admin_sidebar_append', [
-  'name' => t('admin.sidebar.content'),
-  'is_separator' => true,
-  'route' => '/admin/page'
+
+Hook::run('backend.sidebar.append', [
+  'text' => t('backend.sidebar.content'),
+  'isSeparator' => true,
+  'name' => 'page'
 ]);
-Hook::run('admin_sidebar_append', [
+
+Hook::run('backend.sidebar.append', [
   'icon' => 'file-text',
-  'name' => t('admin.sidebar.pages'),
-  'route' => '/admin/page'
+  'text' => t('backend.sidebar.pages'),
+  'name' => 'page'
 ]);
-Hook::run('admin_sidebar_append', [
+
+Hook::run('backend.sidebar.append', [
   'icon' => 'message',
   'label' => function () {
-    $count = \Module\Admin\Model\Comment::getInstance()->countUnapprovedComments();
+    $count = \module\backend\model\Comment::getInstance()->countUnapprovedComments();
     return $count > 0 ? $count : null;
   },
-  'name' => t('admin.sidebar.comments'),
-  'route' => '/admin/comment'
+  'text' => t('backend.sidebar.comments'),
+  'name' => 'comment'
 ]);
-Hook::run('admin_sidebar_append', [
+
+Hook::run('backend.sidebar.append', [
   'icon' => 'menu-2',
-  'name' => t('admin.sidebar.menu'),
-  'route' => '/admin/menu'
+  'text' => t('backend.sidebar.menu'),
+  'name' => 'menu'
 ]);
-Hook::run('admin_sidebar_append', [
+
+Hook::run('backend.sidebar.append', [
   'icon' => 'world',
-  'name' => t('admin.sidebar.translations'),
-  'route' => '/admin/translation'
+  'text' => t('backend.sidebar.translations'),
+  'name' => 'translation'
 ]);
-Hook::run('admin_sidebar_append', [
-  'name' => t('admin.sidebar.administration'),
-  'is_separator' => true,
-  'route' => '/admin/user'
+
+Hook::run('backend.sidebar.append', [
+  'text' => t('backend.sidebar.administration'),
+  'isSeparator' => true,
+  'name' => 'user'
 ]);
-Hook::run('admin_sidebar_append', [
+
+Hook::run('backend.sidebar.append', [
   'icon' => 'users',
-  'name' => t('admin.sidebar.users'),
-  'route' => [
-    t('admin.sidebar.users') => '/admin/user',
-    t('admin.sidebar.groups') => '/admin/group'
+  'text' => t('backend.sidebar.users'),
+  'name' => [
+    t('backend.sidebar.users') => [
+      'name' => 'setting-section',
+      'parameter' => ['section' => 'user']
+    ],
+    t('backend.sidebar.groups') => [
+      'name' => 'setting-section',
+      'parameter' => ['section' => 'group']
+    ]
   ]
 ]);
-Hook::run('admin_sidebar_append', [
+
+Hook::run('backend.sidebar.append', [
   'icon' => 'settings',
-  'name' => t('admin.sidebar.settings'),
-  'route' => [
-    t('admin.sidebar.main') => '/admin/setting/main',
-    t('admin.sidebar.site') => '/admin/setting/site',
-    t('admin.sidebar.contacts') => '/admin/setting/contact',
-    t('admin.sidebar.optimizations') => '/admin/setting/optimization'
+  'text' => t('backend.sidebar.settings'),
+  'name' => [
+    t('backend.sidebar.main') => [
+      'name' => 'setting-section',
+      'parameter' => ['section' => 'main']
+    ],
+    t('backend.sidebar.site') => [
+      'name' => 'setting-section',
+      'parameter' => ['section' => 'site']
+    ],
+    t('backend.sidebar.contacts') => [
+      'name' => 'setting-section',
+      'parameter' => ['section' => 'contact']
+    ]
   ]
 ]);

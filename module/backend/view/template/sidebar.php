@@ -2,7 +2,7 @@
 
 use \engine\module\Hook;
 
-$sidebar = Hook::getData('admin.sidebar');
+$sidebar = Hook::getData('backend.sidebar');
 
 // TODO
 function checkRouteAccess($route)
@@ -39,12 +39,43 @@ function checkRouteAccess($route)
   // return false;
 }
 
+function isRouteActive($route = [])
+{
+  if (isset($route['name']) && is_string($route['name'])) {
+    return Route::isActive($route['name'], @$route['parameter'], @$route['module']);
+  }
+
+  return false;
+}
+
+function isRouteParentActive($route = [])
+{
+  if (!isset($route['name']) || !is_array($route['name'])) {
+    return false;
+  }
+
+  $result = false;
+
+  foreach ($route['name'] as $item) {
+    if (!is_array($item) || !isset($item['name'])) {
+      continue;
+    }
+
+    $result = Route::isActive($item['name'], @$item['parameter'], @$item['module']);
+
+    if ($result) {
+      return true;
+    }
+  }
+
+  return false;
+}
 ?>
 
 <aside class="sidebar">
-  <a class="sidebar__logo" href="<?= Route::link('dashboard', 'backend') ?>">
+  <a class="sidebar__logo" href="<?= Route::link('dashboard', null, null, 'backend') ?>">
     <?php if (!empty(site('logo_alt'))) : ?>
-      <img class="sidebar__logo-image" src="<?= site('url') ?>/<?= site('logo_alt') ?>" alt="Logo">
+      <img class="sidebar__logo-image" src="<?= resolveUrl(null, site('logo_alt')) ?>" alt="Logo">
     <?php else : ?>
       <span class="sidebar__logo-text"><?= site('name') ?></span>
     <?php endif; ?>
@@ -53,23 +84,23 @@ function checkRouteAccess($route)
   <nav class="sidebar__nav">
     <?php foreach ($sidebar as $item) : ?>
       <?php
-      if (!@$item['is_public'] && !checkRouteAccess(@$item['route'])) {
+      if (!@$item['isPublic'] && !checkRouteAccess(@$item['name'])) {
         continue;
       }
       ?>
 
-      <?php if (isset($item['is_separator']) && $item['is_separator']) : ?>
-        <span class="sidebar__separator"><?= $item['name'] ?></span>
-      <?php elseif (is_array($item['route'])) : ?>
-        <div class="sidebar__collapse <?php if (Route::isActive('todo' ?? $item['route'])) : ?>active<?php endif; ?>">
-          <span class="sidebar__item <?php if (Route::isActive('todo' ?? $item['route'])) : ?>active<?php endif; ?>">
+      <?php if (@$item['isSeparator'] === true) : ?>
+        <span class="sidebar__separator"><?= $item['text'] ?></span>
+      <?php elseif (is_array($item['name'])) : ?>
+        <div class="sidebar__collapse <?php if (isRouteParentActive($item)) : ?>active<?php endif; ?>">
+          <span class="sidebar__item <?php if (isRouteParentActive($item)) : ?>active<?php endif; ?>">
             <i class="ti ti-<?= $item['icon'] ?>"></i>
-            <span class="sidebar__text"><?= $item['name'] ?></span>
+            <span class="sidebar__text"><?= $item['text'] ?></span>
           </span>
 
           <div class="sidebar__collapse-menu">
-            <?php foreach ($item['route'] as $key => $value) : ?>
-              <a href="<?= $value ?>" class="sidebar__collapse-item <?php if (Route::isActive('todo' ?? $value)) : ?>active<?php endif; ?>">
+            <?php foreach ($item['name'] as $key => $value) : ?>
+              <a href="<?= Route::link($value['name'], @$value['parameter'], null, @$value['module']) ?>" class="sidebar__collapse-item <?php if (isRouteActive($value)) : ?>active<?php endif; ?>">
                 <span class="sidebar__text"><?= $key ?></span>
                 <!-- <span class="label label_primary">2</span> -->
               </a>
@@ -77,9 +108,9 @@ function checkRouteAccess($route)
           </div>
         </div>
       <?php else : ?>
-        <a href="<?= $item['route'] ?>" class="sidebar__item <?php if (Route::isActive('todo' ?? $item['route'])) : ?>active<?php endif; ?>">
+        <a href="<?= Route::link($item['name'], @$item['parameter'], null, @$item['module']) ?>" class="sidebar__item <?php if (isRouteActive($item)) : ?>active<?php endif; ?>">
           <i class="ti ti-<?= $item['icon'] ?>"></i>
-          <span class="sidebar__text"><?= $item['name'] ?></span>
+          <span class="sidebar__text"><?= $item['text'] ?></span>
           <?php
           if (false) :
             // TODO

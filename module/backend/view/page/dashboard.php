@@ -1,5 +1,5 @@
 <?php
-$pageTitle = t('admin.dashboard.title');
+$pageTitle = t('backend.dashboard.title');
 
 Page::set('title', $pageTitle);
 ?>
