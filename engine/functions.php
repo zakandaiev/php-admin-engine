@@ -50,7 +50,7 @@ function dateLeft($date)
 ############################# DEBUG #############################
 function debug(...$data)
 {
-  return Debug::dd($data);
+  return Debug::dd(...$data);
 }
 
 function debugTrace($level = null)
@@ -138,12 +138,12 @@ function getPathUrl($section = '', $module = null)
 
 function resolvePath(...$args)
 {
-  return Path::resolve($args);
+  return Path::resolve(...$args);
 }
 
 function resolveUrl(...$args)
 {
-  return Path::resolveUrl($args);
+  return Path::resolveUrl(...$args);
 }
 
 ############################# TEXT #############################
