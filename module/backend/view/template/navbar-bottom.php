@@ -5,8 +5,9 @@
         <a href="<?= getEngineProperty('author_url') ?>" target="_blank"><?= getEngineProperty('author') ?></a>
         <span>&copy; <?= dateFormat(null, 'Y') ?></span>
       </div>
+
       <div class="col text-right">
-        <a href="<?= site('url') ?>" target="_blank"><strong><?= t('backend.navbar.open_site') ?></strong></a>
+        <a href="<?= site('url') ?>" target="_blank"><strong><?= t('navbar.open_site') ?></strong></a>
       </div>
     </div>
   </div>

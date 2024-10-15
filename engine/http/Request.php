@@ -22,6 +22,7 @@ class Request
   protected static $uriFull;
   protected static $uriParts = [];
   protected static $url;
+  protected static $urlFull;
   protected static $referer;
   protected static $ip;
   protected static $csrfToken;
@@ -42,6 +43,7 @@ class Request
     self::$uriParts = explode('/', self::$uri);
     array_shift(self::$uriParts);
     self::$url = self::$base . self::$uri;
+    self::$urlFull = self::$base . self::$uriFull;
     self::$referer = $_SERVER['HTTP_REFERER'] ?? null;
     self::$ip = $_SERVER['REMOTE_ADDR'];
 
@@ -130,6 +132,11 @@ class Request
   public static function url()
   {
     return self::$url;
+  }
+
+  public static function urlFull()
+  {
+    return self::$urlFull;
   }
 
   public static function referer()

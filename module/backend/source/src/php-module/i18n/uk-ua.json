@@ -1,0 +1,57 @@
+{
+  "i18n": {
+    "en": "Англійська",
+    "uk": "Українська"
+  },
+  "breadcrumb": {
+    "home": "Головна"
+  },
+  "pagination": {
+    "total": "Всього: {v}"
+  },
+  "sidebar": {
+    "dashboard": "Дашборд",
+    "profile": "Профіль",
+    "content": "Контент",
+    "pages": "Сторінки",
+    "comments": "Коментарі",
+    "menu": "Меню",
+    "translations": "Переклади",
+    "administration": "Адміністрування",
+    "feedback": "Зворотній зв'язок",
+    "users": "Користувачі",
+    "groups": "Групи",
+    "settings": "Налаштування",
+    "main": "Основне",
+    "site": "Сайт",
+    "contacts": "Контакти"
+  },
+  "navbar": {
+    "open_site": "Відкрити сайт"
+  },
+  "profile": {
+    "dropdown": {
+      "profile": "Профіль",
+      "settings": "Налаштування",
+      "logout": "Вийти"
+    }
+  },
+  "group": {
+    "plural": "{s} група | {s} групи | {s} груп",
+    "list": {
+      "title": "Групи"
+    }
+  },
+  "user": {
+    "plural": "{s} користувач | {s} користувача | {s} користувачів",
+    "list": {
+      "title": "Користувачі"
+    }
+  },
+  "product": {
+    "plural": "{s} товар | {s} товари | {s} товарів",
+    "list": {
+      "title": "Товари"
+    }
+  }
+}

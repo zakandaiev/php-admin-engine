@@ -6,8 +6,6 @@
   </div>
 </footer>
 
-<?= Asset::render('js'); ?>
-
 </body>
 
 </html>

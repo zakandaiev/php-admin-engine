@@ -25,9 +25,9 @@ class Date
     $yesterday = date('d.m.Y', mktime(0, 0, 0, date('m'), date('d') - 1, date('Y')));
 
     if ($dateDay === $today) {
-      $date = I18n::translate('engine.date.today_at', date('H:i', $timestamp));
+      $date = I18n::translate('date.today_at', date('H:i', $timestamp));
     } else if ($yesterday === $dateDay) {
-      $date = I18n::translate('engine.date.yesterday_at', date('H:i', $timestamp));
+      $date = I18n::translate('date.yesterday_at', date('H:i', $timestamp));
     } else {
       $date = self::format($timestamp, $format);
     }
@@ -41,7 +41,7 @@ class Date
     $then = is_numeric($date) ? $date : strtotime($date ?? time());
 
     if ($then - $now < 0) {
-      return I18n::translate('engine.date.left.expired');
+      return I18n::translate('date.left.expired');
     }
 
     $difference = abs($then - $now);
@@ -49,22 +49,22 @@ class Date
 
     $month = floor($difference / 2592000);
     if (0 < $month) {
-      $left['month'] = I18n::translate('engine.date.left.month', $month);
+      $left['month'] = I18n::translate('date.left.month', $month);
     }
 
     $days = floor($difference / 86400) % 30;
     if (0 < $days) {
-      $left['days'] = I18n::translate('engine.date.left.days', $days);
+      $left['days'] = I18n::translate('date.left.days', $days);
     }
 
     $hours = floor($difference / 3600) % 24;
     if (0 < $hours) {
-      $left['hours'] = I18n::translate('engine.date.left.hours', $hours);
+      $left['hours'] = I18n::translate('date.left.hours', $hours);
     }
 
     $minutes = floor($difference / 60) % 60;
     if (0 < $minutes) {
-      $left['minutes'] = I18n::translate('engine.date.left.minutes', $minutes);
+      $left['minutes'] = I18n::translate('date.left.minutes', $minutes);
     }
 
     if (0 < count($left)) {
@@ -73,6 +73,6 @@ class Date
       return $datediff;
     }
 
-    return I18n::translate('engine.date.left.few_seconds');
+    return I18n::translate('date.left.few_seconds');
   }
 }

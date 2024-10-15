@@ -7,7 +7,101 @@ CREATE TABLE IF NOT EXISTS `%prefix%_setting` (
   UNIQUE `module_name` (`module`, `name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+INSERT INTO `%prefix%_setting` (`module`, `name`, `value`) VALUES
+('engine', 'language', 'en'),
+('engine', 'enable_registration', 'true'),
+('engine', 'enable_password_restore', 'true'),
+('engine', 'moderate_comments', 'false'),
+('engine', 'no_index_no_follow', 'false'),
+('engine', 'name', '{"en":"%site_name%"}'),
+('engine', 'description', '{"en":null}'),
+('engine', 'analytics_gtag', NULL),
 
+('backend', 'pagination_limit', '10'),
+('backend', 'favicon', NULL),
+('backend', 'logo', NULL),
+('backend', 'logo_alt', NULL),
+('backend', 'placeholder_avatar', NULL),
+('backend', 'placeholder_image', NULL),
+
+('frontend', 'pagination_limit', '10'),
+('frontend', 'favicon', NULL),
+('frontend', 'logo', NULL),
+('frontend', 'logo_alt', NULL),
+('frontend', 'placeholder_avatar', NULL),
+('frontend', 'placeholder_image', NULL),
+
+('contact', 'address', '{"en":null}'),
+('contact', 'coordinate_x', NULL),
+('contact', 'coordinate_y', NULL),
+('contact', 'work_hours', '{"en":null}'),
+('contact', 'email', '%contact_email%'),
+('contact', 'phones', NULL);
+
+CREATE TABLE IF NOT EXISTS `%prefix%_group` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `access_all` BOOLEAN NOT NULL DEFAULT FALSE,
+  `is_enabled` BOOLEAN NOT NULL DEFAULT TRUE,
+  `date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `date_edited` DATETIME on update CURRENT_TIMESTAMP DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE IF NOT EXISTS `%prefix%_group_translation` (
+  `group_id` INT UNSIGNED NOT NULL,
+  `language` VARCHAR(2) NOT NULL,
+  `name` VARCHAR(256) NOT NULL,
+  PRIMARY KEY (`group_id`, `language`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE IF NOT EXISTS `%prefix%_group_user` (
+  `group_id` INT UNSIGNED NOT NULL,
+  `user_id` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`group_id`, `user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE IF NOT EXISTS `%prefix%_group_route` (
+  `group_id` INT UNSIGNED NOT NULL,
+  `route` VARCHAR(512) NOT NULL,
+  PRIMARY KEY (`group_id`, `route`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `%prefix%_group` (`id`, `access_all`) VALUES
+(1, true),
+(2, false),
+(3, false);
+
+INSERT INTO `%prefix%_group_translation` (`group_id`, `language`, `name`) VALUES
+(1, 'en', 'Developer'),
+(2, 'en', 'Administrator'),
+(3, 'en', 'Moderator');
+
+INSERT INTO `%prefix%_group_route` (`group_id`, `route`) VALUES
+(2, 'any@/admin/**'),
+(3, 'any@/admin/feedback'),
+(3, 'any@/admin/comment'),
+(3, 'any@/admin/comment/**'),
+(3, 'any@/admin/menu'),
+(3, 'any@/admin/menu/**'),
+(3, 'any@/admin/page'),
+(3, 'any@/admin/page/**'),
+(3, 'any@/admin/translation'),
+(3, 'any@/admin/translation/**'),
+(3, 'any@/admin/upload');
+
+INSERT INTO `%prefix%_group_user` (`group_id`, `user_id`) VALUES
+(1, 1);
+
+CREATE TABLE IF NOT EXISTS `%prefix%_form` (
+  `token` VARCHAR(256) NOT NULL,
+  `module` VARCHAR(128) NOT NULL,
+  `action` VARCHAR(32) NOT NULL,
+  `form_name` VARCHAR(128) NOT NULL,
+  `item_id` VARCHAR(256) DEFAULT NULL,
+  `date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `ip` VARCHAR(32) NOT NULL,
+  PRIMARY KEY  (`token`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
 
@@ -31,34 +125,6 @@ CREATE TABLE IF NOT EXISTS `%prefix%_user` (
   UNIQUE `email` (`email`),
   UNIQUE `phone` (`phone`),
   UNIQUE `auth_token` (`auth_token`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-CREATE TABLE IF NOT EXISTS `%prefix%_group_user` (
-  `group_id` INT UNSIGNED NOT NULL,
-  `user_id` INT UNSIGNED NOT NULL,
-  PRIMARY KEY (`group_id`, `user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-CREATE TABLE IF NOT EXISTS `%prefix%_group` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `access_all` BOOLEAN NOT NULL DEFAULT FALSE,
-  `is_enabled` BOOLEAN NOT NULL DEFAULT TRUE,
-  `date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `date_edited` DATETIME on update CURRENT_TIMESTAMP DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-CREATE TABLE IF NOT EXISTS `%prefix%_group_translation` (
-  `group_id` INT UNSIGNED NOT NULL,
-  `language` VARCHAR(8) NOT NULL,
-  `name` VARCHAR(300) NOT NULL,
-  PRIMARY KEY (`group_id`, `language`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-CREATE TABLE IF NOT EXISTS `%prefix%_group_route` (
-  `group_id` INT UNSIGNED NOT NULL,
-  `route` VARCHAR(512) NOT NULL,
-  PRIMARY KEY (`group_id`, `route`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `%prefix%_page` (
@@ -122,18 +188,6 @@ CREATE TABLE `%prefix%_custom_field` (
   UNIQUE `page_id_language_name` (`page_id`, `language`, `name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE IF NOT EXISTS `%prefix%_form` (
-  `token` VARCHAR(200) NOT NULL,
-  `module` varchar(200) NOT NULL,
-  `action` VARCHAR(32) NOT NULL,
-  `form_name` VARCHAR(200) NOT NULL,
-  `item_id` VARCHAR(200) DEFAULT NULL,
-  `is_translation` BOOLEAN NOT NULL DEFAULT FALSE,
-  `date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `ip` VARCHAR(32) NOT NULL,
-  PRIMARY KEY  (`token`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 CREATE TABLE `%prefix%_menu` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(200) NOT NULL,
@@ -170,77 +224,8 @@ CREATE TABLE IF NOT EXISTS `%prefix%_feedback` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-
-
-
-
-INSERT INTO `%prefix%_setting` (`module`, `name`, `value`) VALUES
-('engine', 'language', 'en'),
-('engine', 'enable_registration', 'true'),
-('engine', 'enable_password_restore', 'true'),
-('engine', 'moderate_comments', 'false'),
-('engine', 'no_index_no_follow', 'false'),
-('engine', 'name', '{"en":"%site_name%"}'),
-('engine', 'description', '{"en":null}'),
-('engine', 'analytics_gtag', NULL),
-('engine', 'group_css', NULL),
-('engine', 'group_js', NULL),
-('engine', 'cache_db', NULL),
-
-('backend', 'pagination_limit', '10'),
-('backend', 'favicon', NULL),
-('backend', 'logo', NULL),
-('backend', 'logo_alt', NULL),
-('backend', 'placeholder_avatar', NULL),
-('backend', 'placeholder_image', NULL),
-
-('frontend', 'pagination_limit', '10'),
-('frontend', 'favicon', NULL),
-('frontend', 'logo', NULL),
-('frontend', 'logo_alt', NULL),
-('frontend', 'placeholder_avatar', NULL),
-('frontend', 'placeholder_image', NULL),
-
-('contact', 'address', '{"en":null}'),
-('contact', 'coordinate_x', NULL),
-('contact', 'coordinate_y', NULL),
-('contact', 'work_hours', '{"en":null}'),
-('contact', 'email', '%contact_email%'),
-('contact', 'phones', NULL);
-
-
-
-
-
-
 INSERT INTO `%prefix%_user` (`email`, `password`, `name`, `auth_token`, `auth_ip`) VALUES
 ('%admin_email%', '%admin_password%', 'Administrator', '%auth_token%', '%auth_ip%');
-
-INSERT INTO `%prefix%_group` (`id`, `access_all`) VALUES
-(1, true),
-(2, false),
-(3, false);
-
-INSERT INTO `%prefix%_group_translation` (`group_id`, `language`, `name`) VALUES
-(1, 'en', 'Developer'),
-(2, 'en', 'Administrator'),
-(3, 'en', 'Moderator');
-
-INSERT INTO `%prefix%_group_route` (`group_id`, `route`) VALUES
-(2, 'any@/admin/**'),
-(3, 'any@/admin/feedback'),
-(3, 'any@/admin/comment'),
-(3, 'any@/admin/comment/**'),
-(3, 'any@/admin/menu'),
-(3, 'any@/admin/menu/**'),
-(3, 'any@/admin/page'),
-(3, 'any@/admin/page/**'),
-(3, 'any@/admin/translation'),
-(3, 'any@/admin/translation/**'),
-(3, 'any@/admin/upload');
-
-INSERT INTO `%prefix%_group_user` (`group_id`, `user_id`) VALUES
-(1, 1);
 
 INSERT INTO `%prefix%_notification` (`user_id`, `type`, `info`) VALUES
 (1, 'user_register', '{"ip":"%auth_ip%"}');

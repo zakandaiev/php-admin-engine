@@ -3,11 +3,10 @@
 
 <head>
   <?= Page::meta() ?>
-  <?= Asset::render('css') ?>
-  <?= Asset::render('js') ?>
+  <?= Asset::render() ?>
 </head>
 
 <body>
-  <script src="<?= Path::resolveUrl(Asset::url(), 'js', 'data-theme.js') ?>"></script>
+  <script src="<?= resolveUrl(Asset::url(), 'js', 'data-theme.js') ?>"></script>
 
   <div class="page-content">

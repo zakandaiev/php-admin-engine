@@ -1,5 +1,4 @@
 <?php
-
 $pageTitle = @$title;
 $parentTitle = 'Dev UI';
 
@@ -7,12 +6,10 @@ if ($pageTitle) {
   Page::set('title', "$pageTitle | $parentTitle");
 }
 
-Page::breadcrumb('set', $parentTitle, 'ui-home');
+Page::breadcrumb('add', $parentTitle, 'ui-home');
 if ($pageTitle) {
-  Page::breadcrumb('set', $pageTitle);
+  Page::breadcrumb('add', $pageTitle);
 }
-
-
 ?>
 
 <?php Theme::header(); ?>
@@ -21,7 +18,7 @@ if ($pageTitle) {
 
 <main class="page-content__inner">
 
-  <?php Theme::template('navbar/top'); ?>
+  <?php Theme::template('navbar-top'); ?>
 
   <section class="section section_grow section_offset">
     <div class="container-fluid">

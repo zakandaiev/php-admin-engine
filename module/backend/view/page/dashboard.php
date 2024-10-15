@@ -1,5 +1,5 @@
 <?php
-$pageTitle = t('backend.dashboard.title');
+$pageTitle = t('dashboard.title');
 
 Page::set('title', $pageTitle);
 ?>
@@ -10,7 +10,7 @@ Page::set('title', $pageTitle);
 
 <main class="page-content__inner">
 
-  <?php Theme::template('navbar/top'); ?>
+  <?php Theme::template('navbar-top'); ?>
 
   <section class="section section_grow section_offset">
     <div class="container-fluid">
@@ -164,7 +164,7 @@ Page::set('title', $pageTitle);
                     <tr>
                       <td>
                         <div class="d-flex gap-3">
-                          <img class="d-block flex-shrink-0 w-4rem h-4rem fit-cover radius" src="https://demo.zakandaiev.com/upload/demo/post-1.jpg" data-fancybox>
+                          <img class="d-block flex-shrink-0 w-4rem h-4rem fit-cover radius-xs" src="https://demo.zakandaiev.com/upload/demo/post-1.jpg" data-fancybox>
                           <div>
                             <p class="mb-0"><strong>Lorem post #1</strong></p>
                             <p class="color-muted"><small>Category name</small></p>
@@ -179,7 +179,7 @@ Page::set('title', $pageTitle);
                     <tr>
                       <td>
                         <div class="d-flex gap-3">
-                          <img class="d-block flex-shrink-0 w-4rem h-4rem fit-cover radius" src="https://demo.zakandaiev.com/upload/demo/post-2.jpg" data-fancybox>
+                          <img class="d-block flex-shrink-0 w-4rem h-4rem fit-cover radius-xs" src="https://demo.zakandaiev.com/upload/demo/post-2.jpg" data-fancybox>
                           <div>
                             <p class="mb-0"><strong>Lorem post #2</strong></p>
                             <p class="color-muted"><small>Category name</small></p>
@@ -194,7 +194,7 @@ Page::set('title', $pageTitle);
                     <tr>
                       <td>
                         <div class="d-flex gap-3">
-                          <img class="d-block flex-shrink-0 w-4rem h-4rem fit-cover radius" src="https://demo.zakandaiev.com/upload/demo/post-3.jpg" data-fancybox>
+                          <img class="d-block flex-shrink-0 w-4rem h-4rem fit-cover radius-xs" src="https://demo.zakandaiev.com/upload/demo/post-3.jpg" data-fancybox>
                           <div>
                             <p class="mb-0"><strong>Lorem post #3</strong></p>
                             <p class="color-muted"><small>Category name</small></p>
@@ -229,7 +229,7 @@ Page::set('title', $pageTitle);
     </div>
   </section>
 
-  <?php Theme::template('navbar/bottom'); ?>
+  <?php Theme::template('navbar-bottom'); ?>
 
 </main>
 

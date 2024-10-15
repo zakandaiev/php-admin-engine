@@ -1,11 +1,9 @@
 <?php
-
 $pageTitle = 'Dev UI';
 
 Page::set('title', $pageTitle);
 
-Page::breadcrumb('set', $pageTitle);
-
+Page::breadcrumb('add', $pageTitle);
 ?>
 
 <?php Theme::header(); ?>
@@ -14,7 +12,7 @@ Page::breadcrumb('set', $pageTitle);
 
 <main class="page-content__inner">
 
-  <?php Theme::template('navbar/top'); ?>
+  <?php Theme::template('navbar-top'); ?>
 
   <section class="section section_grow section_offset">
     <div class="container-fluid">
@@ -36,7 +34,7 @@ Page::breadcrumb('set', $pageTitle);
       </div>
   </section>
 
-  <?php Theme::template('navbar/bottom'); ?>
+  <?php Theme::template('navbar-bottom'); ?>
 
 </main>
 

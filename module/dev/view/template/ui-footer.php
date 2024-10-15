@@ -1,6 +1,6 @@
 </section>
 
-<?php Theme::template('navbar/bottom'); ?>
+<?php Theme::template('navbar-bottom'); ?>
 
 </main>
 

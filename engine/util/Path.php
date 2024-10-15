@@ -29,6 +29,9 @@ class Path
       case 'view': {
           return "\\module\\$module\\view";
         }
+      case 'form': {
+          return "\\module\\$module\\form";
+        }
     }
 
     return null;
@@ -139,6 +142,10 @@ class Path
       $args[0] = $base;
     }
 
+    $args = array_map(function ($item) {
+      return trim($item ?? '', '/');
+    }, $args);
+
     return implode('/', $args);
   }
 
@@ -153,6 +160,10 @@ class Path
     if (gettype($args[0]) !== 'string') {
       $args[0] = $base;
     }
+
+    $args = array_map(function ($item) {
+      return trim($item ?? '', '/');
+    }, $args);
 
     return implode('/', $args);
   }

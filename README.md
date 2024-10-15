@@ -8,10 +8,9 @@
 * dev module: refactor all uis
 * dev module: create interface that will generate I18n files for modules
 * dev module: create interface that will install/uninstall modules
-* demo module that extends backend module: rewrite from scratch
-* all: replace all tabs with spaces
-* all: replace all em to rem
-* all: replace all .active to .block_active
+* all files: replace all tabs with spaces
+* all files: replace all em to rem
+* all files: replace all .active to .block_active
 
 * **OLD todos below**:
 * engine: replace all strtok with explode
@@ -45,8 +44,10 @@
 * Supports MVC pattern
 * Coded in OOP style
 * Modular add-ons system
-* CMS-ready modules out of box
-* Multilingual
+* CMS-ready modules
+* Multilingual support
+* Useful utils
+* And many-many more...
 
 ## Server environment requirements
 * PHP 7.4+
@@ -57,13 +58,13 @@
 1. Download/clone this repository to your web server
 2. Install dependencies with `composer upgrade` command
 3. Open the site and fill out the installation form
-4. Create & enjoy ;)
+4. Create your own modules & enjoy ;)
 
 ## Roadmap
 * create an api module:
-  * swagger
   * /api/template/$path - load Template::loadT... for ajax/fetch
   * /api/data/$data - show data from DB
-* docs: create docs module and plug MkDocs or create own builder
-  * /docs/dev - documentation for developers
-  * /docs/user - documentation for users
+* create docs module:
+  * /docs/api - api module documentation for developers
+  * /docs/dev - engine documentation for developers
+  * /docs/user - engine documentation for users

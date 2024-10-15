@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     quill.before(textarea);
 
     const quillIcons = Quill.import('ui/icons');
-    quillIcons.expand = '<i class="icon icon-arrows-maximize"></i><i class="icon icon-arrows-minimize"></i>';
+    quillIcons.expand = '<i class="ti ti-arrows-maximize"></i><i class="ti ti-arrows-minimize"></i>';
 
     const editor = new Quill(quill, {
       modules: {

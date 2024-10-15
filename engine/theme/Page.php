@@ -49,14 +49,24 @@ class Page
     }
 
     switch ($key) {
-      case 'set': {
+      case 'add': {
           $crumb = new \stdClass();
 
           $crumb->name = @$args[1];
           $crumb->url = @$args[2];
 
-          if (self::breadcrumb('has', @$args[3])) {
-            self::$page->breadcrumb[$args[3]] = $crumb;
+          self::$page->breadcrumb[] = $crumb;
+
+          break;
+        }
+      case 'set': {
+          $crumb = new \stdClass();
+
+          $crumb->name = @$args[2];
+          $crumb->url = @$args[3];
+
+          if (self::breadcrumb('has', @$args[1])) {
+            self::$page->breadcrumb[$args[1]] = $crumb;
           } else {
             self::$page->breadcrumb[] = $crumb;
           }
@@ -219,7 +229,7 @@ class Page
       case 'engine_script': {
           $engineScript = '
 <script>
-  const Engine = {
+  window.Engine = {
     backend: {
       delayMs: ' . Config::getProperty('backendDelayMs', 'engine') . ',
       timeoutMs: ' . Config::getProperty('backendTimeoutMs', 'engine') . '
@@ -239,10 +249,14 @@ class Page
       language: "' . site('language') . '",
       languageCurrent: "' . site('language_current') . '",
       name: "' . site('name') . '",
-      permalink: "' . site('permalink') . '",
-      uri: "' . site('uri') . '",
       url: "' . site('url') . '",
-      urlLanguage: "' . site('url_language') . '",
+      assetUrl: "' . Asset::url() . '",
+      permalink: "' . site('permalink') . '",
+      permalinkFull: "' . site('permalink_full') . '",
+      uri: "' . site('uri') . '",
+      uriFull: "' . site('uri_full') . '",
+      uriNoLanguage: "' . site('uri_no_language') . '",
+      uriFullNoLanguage: "' . site('uri_full_no_language') . '",
       version: "' . site('version') . '",
     },
     theme: {}

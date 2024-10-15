@@ -12,30 +12,21 @@ use engine\util\Text;
 class Asset
 {
   const EXTENSION_MASK = [
-    'js' => '<script %s src="%s"></script>',
-    'css' => '<link rel="stylesheet" %s href="%s">'
+    'css' => '<link rel="stylesheet" %s href="%s">',
+    'js' => '<script %s src="%s"></script>'
   ];
 
   protected static $container = [];
-  protected static $optimization = [
-    'js' => [
-      'attributes' => null,
-      'routes' => null
-    ],
-    'css' => [
-      'attributes' => null,
-      'routes' => null
-    ]
-  ];
 
   protected static function add($fileExtension, $fileName, $attributes = [], $routes = [], $module = null)
   {
-    $filePath = Path::resolve(Path::file('asset', $module), "$fileName.$fileExtension");
+    $filePath = Path::resolve(Path::file('asset', $module), $fileExtension, "$fileName.$fileExtension");
 
     if (is_file($filePath)) {
-      $fileUrl = Path::resolveUrl(self::url($module), "$fileName.$fileExtension");
+      $fileUrl = Path::resolveUrl(self::url($module), $fileExtension, "$fileName.$fileExtension");
 
       self::$container[$fileExtension][] = [
+        'extension' => $fileExtension,
         'url' => $fileUrl,
         'attributes' => $attributes,
         'routes' => $routes
@@ -57,35 +48,19 @@ class Asset
     return self::add(__FUNCTION__, $asset, $attributes, $routes, $module);
   }
 
-  // TODO optimization
-  // public static function optimization($extension, $attributes = [], $routes = null)
-  // {
-  //   self::$optimization[$extension]['attributes'] = $attributes;
-  //   self::$optimization[$extension]['routes'] = $routes;
-
-  //   return true;
-  // }
-
-  public static function render($extension)
+  public static function render($extension = null)
   {
     $assets = self::$container[$extension] ?? [];
+
+    if (!isset($extension)) {
+      foreach (self::getContainer() ?? [] as $ext => $extContainer) {
+        $assets = array_merge($assets, $extContainer);
+      }
+    }
 
     if (empty($assets)) {
       return false;
     }
-
-    // TODO optimization
-    // $groupSetting = Setting::getProperty('group_' . $extension, 'engine');
-    // if(Module::getName() === 'frontend' && $groupSetting != 'false' && !empty($groupSetting)) {
-    // 	$assets = [
-    // 		[
-    // 			'module' => 'frontend',
-    // 			'file' => "$extension/$groupSetting.$extension",
-    // 			'attributes' => self::$optimization[$extension]['attributes'],
-    // 			'routes' => self::$optimization[$extension]['routes']
-    // 		]
-    // 	];
-    // }
 
     $version = Config::getProperty('isEnabled', 'debug') ? Hash::token(8) : Module::getProperty('version');
 
@@ -97,6 +72,7 @@ class Asset
       //   continue;
       // }
 
+      $assetExtension = $asset['extension'];
       $assetUrl = $asset['url'] . '?version=' . $version;
 
       $assetAttributes = '';
@@ -107,7 +83,7 @@ class Asset
       }
 
       $output .= sprintf(
-        self::EXTENSION_MASK[$extension],
+        self::EXTENSION_MASK[$assetExtension],
         $assetAttributes,
         $assetUrl
       ) . PHP_EOL;
@@ -115,6 +91,41 @@ class Asset
 
     return $output;
   }
+
+  public static function setContainer($key, $data = null)
+  {
+    self::$container[$key] = $data;
+
+    return true;
+  }
+
+  public static function hasContainer($extension)
+  {
+    return isset(self::$container[$extension]);
+  }
+
+  public static function getContainer($extension = null)
+  {
+    return isset($extension) ? @self::$container[$extension] : self::$container;
+  }
+
+  // TODO
+  // protected static function checkRoute($routes = null)
+  // {
+  //   if (empty($routes)) {
+  //     return true;
+  //   }
+
+  //   $routes = is_array($routes) ? $routes : (!empty($routes) ? [$routes] : []);
+
+  //   foreach ($routes as $route) {
+  //     if (Route::isActive($route)) {
+  //       return true;
+  //     }
+  //   }
+
+  //   return false;
+  // }
 
   public static function url($module = null)
   {
@@ -136,39 +147,4 @@ class Asset
 
     return null;
   }
-
-  // TODO
-  // public static function setContainer($key, $data = null)
-  // {
-  //   self::$container[$key] = $data;
-
-  //   return true;
-  // }
-
-  // public static function hasContainer($extension)
-  // {
-  //   return isset(self::$container[$extension]);
-  // }
-
-  // public static function getContainer($extension = null)
-  // {
-  //   return isset($extension) ? @self::$container[$extension] : self::$container;
-  // }
-
-  // protected static function checkRoute($routes = null)
-  // {
-  //   if (empty($routes)) {
-  //     return true;
-  //   }
-
-  //   $routes = is_array($routes) ? $routes : (!empty($routes) ? [$routes] : []);
-
-  //   foreach ($routes as $route) {
-  //     if (Route::isActive($route)) {
-  //       return true;
-  //     }
-  //   }
-
-  //   return false;
-  // }
 }

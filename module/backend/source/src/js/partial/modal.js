@@ -139,7 +139,7 @@ function createModal(title, options = {}) {
     const modal_close = document.createElement('button');
     modal_close.setAttribute('type', 'button');
     modal_close.classList.add('modal__close');
-    modal_close.innerHTML = '<i class="icon icon-x"></i>';
+    modal_close.innerHTML = '<i class="ti ti-x"></i>';
     modal_close.addEventListener('click', (event) => {
       closeModal(modal);
       modal.remove();

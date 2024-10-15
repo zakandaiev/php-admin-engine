@@ -123,7 +123,7 @@
               <tr>
                 <td>
                   <div class="d-flex gap-2">
-                    <div class="flex-shrink-0 w-4rem h-4rem p-2 bg-body fit-cover radius">
+                    <div class="flex-shrink-0 w-4rem h-4rem p-2 bg-body fit-cover radius-xs">
                       <img class="d-inline-block w-100 h-100" src="https://dummyimage.com/600x600/ccc/fff" data-fancybox>
                     </div>
                     <div>
@@ -140,7 +140,7 @@
               <tr>
                 <td>
                   <div class="d-flex gap-2">
-                    <div class="flex-shrink-0 w-4rem h-4rem p-2 bg-body fit-cover radius">
+                    <div class="flex-shrink-0 w-4rem h-4rem p-2 bg-body fit-cover radius-xs">
                       <img class="d-inline-block w-100 h-100" src="https://dummyimage.com/600x600/ccc/fff" data-fancybox>
                     </div>
                     <div>
@@ -157,7 +157,7 @@
               <tr>
                 <td>
                   <div class="d-flex gap-2">
-                    <div class="flex-shrink-0 w-4rem h-4rem p-2 bg-body fit-cover radius">
+                    <div class="flex-shrink-0 w-4rem h-4rem p-2 bg-body fit-cover radius-xs">
                       <img class="d-inline-block w-100 h-100" src="https://dummyimage.com/600x600/ccc/fff" data-fancybox>
                     </div>
                     <div>

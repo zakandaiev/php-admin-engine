@@ -68,6 +68,14 @@ class Router
 
   public static function register($method, $path, $controller, $name = null, $option = [])
   {
+    if (is_array($path)) {
+      foreach ($path as $itemPath) {
+        self::register($method, $itemPath, $controller, $name, $option);
+      }
+
+      return true;
+    }
+
     $moduleName = Module::getName();
 
     if (!self::isMethodAllowed($method)) {
@@ -140,7 +148,7 @@ class Router
       return false;
     }
 
-    $statement = new Statement('SELECT * FROM {form} WHERE token = :token ORDER BY date_created DESC LIMIT 1');
+    $statement = new Query('SELECT * FROM {form} WHERE token = :token ORDER BY date_created DESC LIMIT 1');
 
     $form = $statement->execute(['token' => Request::uriParts(0)])->fetch();
 
@@ -149,7 +157,7 @@ class Router
     }
 
     if (Request::ip() !== $form->ip) {
-      Response::answer(null, 'error', I18n::translate('engine.form.forbidden'), 403);
+      Response::answer(null, 'error', I18n::translate('form.forbidden'), 403);
     }
 
     $timestampNow = time();
@@ -157,7 +165,7 @@ class Router
     $timestampDiff = $timestampNow - $timestampCreated;
 
     if ($timestampDiff > Config::getProperty('form', 'lifetime')) {
-      Response::answer(null, 'error', I18n::translate('engine.form.inactive'), 405);
+      Response::answer(null, 'error', I18n::translate('form.inactive'), 405);
     }
 
     Module::loadHooks();

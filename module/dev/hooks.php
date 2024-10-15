@@ -26,31 +26,31 @@ function getUiSections()
   return $uiSectionsFormatted;
 }
 
-Hook::run('backend.sidebar.prepend', [
+Hook::run('sidebar.prepend', [
   'text' => '',
   'isSeparator' => true,
   'name' => 'log'
 ]);
 
-Hook::run('backend.sidebar.prepend', [
+Hook::run('sidebar.prepend', [
   'icon' => 'layout',
   'text' => 'UI',
   'name' => getUiSections()
 ]);
 
-Hook::run('backend.sidebar.prepend', [
+Hook::run('sidebar.prepend', [
   'icon' => 'activity',
   'text' => 'Logs',
   'name' => 'log'
 ]);
 
-Hook::run('backend.sidebar.prepend', [
+Hook::run('sidebar.prepend', [
   'icon' => 'box',
   'text' => 'Modules',
   'name' => 'module'
 ]);
 
-Hook::run('backend.sidebar.prepend', [
+Hook::run('sidebar.prepend', [
   'text' => 'Dev',
   'isSeparator' => true,
   'name' => 'log'

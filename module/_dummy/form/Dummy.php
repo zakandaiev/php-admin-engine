@@ -20,8 +20,8 @@ $allChecks = [
 
 	// VALIDATION MESSAGE
 	'validation' => [ // message to show when user sent invalid data
-		'min' => __('validation.min'),
-		'max' => __('validation.max')
+		'min' => t('validation.min'),
+		'max' => t('validation.max')
 	],
 
 	// MODIFY

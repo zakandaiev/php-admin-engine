@@ -308,33 +308,44 @@ function site($key, $module = null)
         $value = I18n::getCurrent();
         break;
       }
+    case 'url': {
+        $value = Request::base();
+        break;
+      }
     case 'permalink': {
         $value = Request::url();
+        break;
+      }
+    case 'permalink_full': {
+        $value = Request::urlFull();
         break;
       }
     case 'uri': {
         $value = Request::uri();
         break;
       }
-    case 'url': {
-        $value = Request::base();
-        break;
-      }
-    case 'url_language': {
-        $value = Request::base() . '/' . site('language_current');
+    case 'uri_full': {
+        $value = Request::uriFull();
         break;
       }
     case 'uri_no_language': {
         $uri = Request::uri();
-        $uri_parts = Request::uriParts();
-        $language = $uri_parts[0];
+        $uriParts = Request::uriParts();
+        $language = $uriParts[0];
 
         if (I18n::has($language)) {
-          array_shift($uri_parts);
-          $uri = '/' . implode('/', $uri_parts);
+          array_shift($uriParts);
+          $uri = Path::resolveUrl(...$uriParts);
         }
 
-        $value = $uri;
+        $value = '/' . $uri;
+        break;
+      }
+    case 'uri_full_no_language': {
+        $query = http_build_query(Request::get());
+        $query = !empty($query) ? "?$query" : '';
+
+        $value = site('uri_no_language') . $query;
         break;
       }
     case 'version': {
@@ -388,8 +399,7 @@ function getLinkFilter($key, $value = 1)
   $query[$key] = $value;
 
   $query = http_build_query($query);
-
-  $query = !empty($query) ? '?' . $query : '';
+  $query = !empty($query) ? "?$query" : '';
 
   return site('permalink') . $query;
 }
@@ -401,8 +411,7 @@ function getLinkUnfilter($key)
   unset($query[$key]);
 
   $query = http_build_query($query);
-
-  $query = !empty($query) ? '?' . $query : '';
+  $query = !empty($query) ? "?$query" : '';
 
   return site('permalink') . $query;
 }
@@ -424,8 +433,7 @@ function getLinkSort($key)
   }
 
   $query = http_build_query($query);
-
-  $query = !empty($query) ? '?' . $query : '';
+  $query = !empty($query) ? "?$query" : '';
 
   return site('permalink') . $query;
 }

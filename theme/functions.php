@@ -1,6 +1,6 @@
 <?php
 
 ############################# ASSETS #############################
-Asset::css('css/main');
+Asset::css('main');
 
-Asset::js('js/main');
+Asset::js('main');

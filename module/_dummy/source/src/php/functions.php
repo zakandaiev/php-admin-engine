@@ -1,9 +1,9 @@
 <?php
 
 ############################# ASSETS #############################
-Asset::css('css/main');
+Asset::css('main');
 
-Asset::js('js/main', ['type' => 'module']);
+Asset::js('main', ['type' => 'module']);
 
 ############################# DEMO DATA #############################
 function getHeaderMenu()
@@ -35,7 +35,7 @@ function getFeatures()
     [
       'icon' => '🏗️',
       'title' => 'PHP Admin Engine',
-      'text' => 'Flexible & fast PHP based HMVC engine built for developers'
+      'text' => 'Flexible & fast PHP based MVC engine built for developers'
     ],
     [
       'icon' => '📁',

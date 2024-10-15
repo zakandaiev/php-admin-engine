@@ -1,12 +1,57 @@
 {
-  "locale": {
+  "i18n": {
     "en": "English",
-    "uk": "Ukrainian",
-    "ru": "Russian",
-    "de": "German",
-    "es": "Spanish"
+    "uk": "Ukrainian"
   },
-  "test_var": "You passed \"{v}\" value",
-  "test_named_vars": "You passed \"{keyOne}\" and \"{keyTwo}\" named values",
-  "test_pluralization": "{v} item | {v} items | {v} items"
+  "breadcrumb": {
+    "home": "Home"
+  },
+  "pagination": {
+    "total": "Total: {v}"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "content": "Content",
+    "pages": "Pages",
+    "comments": "Comments",
+    "menu": "Menu",
+    "translations": "Translations",
+    "administration": "Administration",
+    "feedback": "Feedback",
+    "users": "Users",
+    "groups": "Groups",
+    "settings": "Settings",
+    "main": "Main",
+    "site": "Site",
+    "contacts": "Contacts"
+  },
+  "navbar": {
+    "open_site": "Open site"
+  },
+  "profile": {
+    "dropdown": {
+      "profile": "Profile",
+      "settings": "Settings",
+      "logout": "Log out"
+    }
+  },
+  "group": {
+    "plural": "{s} group | {s} groups | {s} groups",
+    "list": {
+      "title": "Groups"
+    }
+  },
+  "user": {
+    "plural": "{s} user | {s} users | {s} users",
+    "list": {
+      "title": "Users"
+    }
+  },
+  "product": {
+    "plural": "{s} product | {s} products | {s} products",
+    "list": {
+      "title": "Products"
+    }
+  }
 }

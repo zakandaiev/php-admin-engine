@@ -1,10 +1,7 @@
 {
-  "locale": {
+  "i18n": {
     "en": "English",
-    "uk": "Ukrainian",
-    "ru": "Russian",
-    "de": "German",
-    "es": "Spanish"
+    "uk": "Ukrainian"
   },
   "test_var": "You passed \"{v}\" value",
   "test_named_vars": "You passed \"{keyOne}\" and \"{keyTwo}\" named values",

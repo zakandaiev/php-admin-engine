@@ -29,6 +29,7 @@ abstract class Controller
     class_alias('engine\\router\\Route', 'Route');
     class_alias('engine\\router\\View', 'View');
     class_alias('engine\\theme\\Asset', 'Asset');
+    class_alias('engine\\theme\\Form', 'Form');
     class_alias('engine\\theme\\Page', 'Page');
     class_alias('engine\\theme\\Template', 'Template');
     class_alias('engine\\theme\\Theme', 'Theme');

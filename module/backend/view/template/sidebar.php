@@ -2,7 +2,7 @@
 
 use \engine\module\Hook;
 
-$sidebar = Hook::getData('backend.sidebar');
+$sidebar = Hook::getData('sidebar');
 
 // TODO
 function checkRouteAccess($route)

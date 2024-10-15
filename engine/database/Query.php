@@ -7,9 +7,12 @@ use \PDOException;
 use \Exception;
 
 use engine\Config;
+use engine\database\Database;
+use engine\database\Filter;
+use engine\database\Pagination;
 use engine\http\Request;
 use engine\http\Response;
-use engine\database\Database;
+use engine\util\Cache;
 
 class Query
 {
@@ -23,9 +26,10 @@ class Query
   protected $filterSql;
   protected $filterBinding = [];
   protected $pagination = [];
-  protected $isSelect;
-  protected $isPaginate = false;
   protected $isFilter = false;
+  protected $isPaginate = false;
+  protected $isSelect = false;
+  protected $isSuccess = false;
 
   public function __construct($sql, $cache = null, $debug = null)
   {
@@ -33,19 +37,9 @@ class Query
       throw new Exception('Database connection is failed.');
     }
 
-    $is_cached = false;
     $this->isSelect = preg_match('/^\s*SELECT/mi', $sql) ? true : false;
-
-    // TODO
-    // if (isset($cache) && $cache && $this->isSelect) {
-    //   $is_cached = true;
-    // } else if (!isset($cache) && $this->isSelect && Module::getName() === 'frontend' && Setting::getProperty('cache_db', 'engine') == 'true') {
-    //   $is_cached = true;
-    // }
-
-    $this->cache = $is_cached;
+    $this->cache = ($cache === true && $this->isSelect);
     $this->debug = isset($debug) && $debug ? true : false;
-
     $this->prefix = Config::getProperty('prefix', 'database');
 
     $replacement = '$1';
@@ -107,19 +101,19 @@ class Query
       return false;
     }
 
-    $sql_cuted = $this->cutSelectionPartFromSQL($this->filterSql);
-    $sql_cuted = preg_replace('/\s*ORDER\s+BY\s+[\w\s\@\<\>\.\,\=\-\'\"\`]+$/mi', '', $sql_cuted);
+    $sqlCuted = $this->cutSelectionPartFromSQL($this->filterSql);
+    $sqlCuted = preg_replace('/\s*ORDER\s+BY\s+[\w\s\@\<\>\.\,\=\-\'\"\`]+$/mi', '', $sqlCuted);
 
-    foreach ($this->filter->get('data') as $alias => $filter_data) {
-      if (is_array($filter_data['column']) || !in_array($filter_data['type'], ['checkbox', 'radio', 'select'])) {
+    foreach ($this->filter->get('data') as $alias => $filterData) {
+      if (is_array($filterData['column']) || !in_array($filterData['type'], ['checkbox', 'radio', 'select'])) {
         continue;
       }
 
-      $filterSql = "SELECT COUNT(*) as `count`, {$filter_data['column']} as `id`, {$filter_data['column']} as `text` FROM $sql_cuted";
+      $filterSql = "SELECT COUNT(*) as `count`, {$filterData['column']} as `id`, {$filterData['column']} as `text` FROM $sqlCuted";
 
-      $filter_data['show_all_options'] = $filter_data['show_all_options'] ?? false;
+      $filterData['show_all_options'] = $filterData['show_all_options'] ?? false;
 
-      if (!$filter_data['show_all_options'] && !empty($this->filter->get('sql'))) {
+      if (!$filterData['show_all_options'] && !empty($this->filter->get('sql'))) {
         $filterSql .= " WHERE {$this->filter->get('sql')}";
 
         foreach ($this->filter->get('binding') as $key => $value) {
@@ -127,13 +121,13 @@ class Query
         }
       }
 
-      $filterSql .= " GROUP BY {$filter_data['column']} ORDER BY count DESC";
+      $filterSql .= " GROUP BY {$filterData['column']} ORDER BY count DESC";
 
-      $filter_options = new Statement($filterSql);
+      $filterOptions = new Query($filterSql);
 
-      $filter_options = $filter_options->execute($this->filterBinding)->fetchAll();
+      $filterOptions = $filterOptions->execute($this->filterBinding)->fetchAll();
 
-      $this->filter->setOptions($alias, $filter_options);
+      $this->filter->setOptions($alias, $filterOptions);
     }
 
     return true;
@@ -168,19 +162,18 @@ class Query
 
     if (!isset($this->pagination['total'])) {
       // $total = "SELECT COUNT(*) FROM ({$this->sql}) as total";
-      $total_sql = "SELECT COUNT(*) as total FROM " . $this->cutSelectionPartFromSQL($this->sql);
+      $totalSql = "SELECT COUNT(*) as total FROM " . $this->cutSelectionPartFromSQL($this->sql);
 
-      $total_binding = [];
-
+      $totalBinding = [];
       foreach ($this->binding as $key => $value) {
-        if (str_contains($total_sql, ':' . $key)) {
-          $total_binding[$key] = $value;
+        if (str_contains($totalSql, ':' . $key)) {
+          $totalBinding[$key] = $value;
         }
       }
 
-      $total = new Statement($total_sql);
+      $total = new Query($totalSql);
 
-      $this->pagination['total'] = $total->execute($total_binding)->fetchColumn();
+      $this->pagination['total'] = $total->execute($totalBinding)->fetchColumn();
     }
 
     $pagination = new Pagination($this->pagination['total'], $this->pagination);
@@ -197,31 +190,31 @@ class Query
   {
     $output = '';
 
-    $sql_to_array = str_split($sql);
+    $sqlToArray = str_split($sql);
 
-    $left_bracket_count = 0;
-    $right_bracket_count = 0;
-    $from_position = false;
+    $leftBracketCount = 0;
+    $rightBracketCount = 0;
+    $fromPosition = false;
 
-    $sql_to_array_length = count($sql_to_array);
+    $sqlToArrayLength = count($sqlToArray);
 
-    for ($i = 0; $i < $sql_to_array_length; $i++) {
-      if ($sql_to_array[$i] == '(') {
-        $left_bracket_count += 1;
+    for ($i = 0; $i < $sqlToArrayLength; $i++) {
+      if ($sqlToArray[$i] == '(') {
+        $leftBracketCount += 1;
       }
 
-      if ($sql_to_array[$i] == ')') {
-        $right_bracket_count += 1;
+      if ($sqlToArray[$i] == ')') {
+        $rightBracketCount += 1;
       }
 
-      if ($sql_to_array[$i] == 'f' || $sql_to_array[$i] == 'F') {
-        $checkString = $sql_to_array[$i] . $sql_to_array[$i + 1] . $sql_to_array[$i + 2] . $sql_to_array[$i + 3];
+      if ($sqlToArray[$i] == 'f' || $sqlToArray[$i] == 'F') {
+        $checkString = $sqlToArray[$i] . $sqlToArray[$i + 1] . $sqlToArray[$i + 2] . $sqlToArray[$i + 3];
 
         if ($checkString == 'from' || $checkString == 'FROM') {
-          $from_position = $i;
+          $fromPosition = $i;
 
-          if ($left_bracket_count == $right_bracket_count) {
-            $output = mb_substr($sql, $from_position + 4);
+          if ($leftBracketCount == $rightBracketCount) {
+            $output = mb_substr($sql, $fromPosition + 4);
 
             break;
           }
@@ -235,7 +228,7 @@ class Query
     // $output = '';
 
     // $paren_count = 0;
-    // $from_position = false;
+    // $fromPosition = false;
 
     // for ($i = 0; $i < strlen($sql); $i++) {
     //   if ($sql[$i] == '(') {
@@ -244,13 +237,13 @@ class Query
     // 	elseif ($sql[$i] == ')') {
     //     $paren_count--;
     //   }
-    // 	elseif (!$from_position && strtolower(mb_substr($sql, $i, 4)) == 'from' && $paren_count == 0) {
-    //     $from_position = $i;
+    // 	elseif (!$fromPosition && strtolower(mb_substr($sql, $i, 4)) == 'from' && $paren_count == 0) {
+    //     $fromPosition = $i;
     //   }
     // }
 
-    // if ($from_position !== false) {
-    //   $output = mb_substr($sql, $from_position + 4);
+    // if ($fromPosition !== false) {
+    //   $output = mb_substr($sql, $fromPosition + 4);
     // }
 
     // return trim($output);
@@ -274,82 +267,59 @@ class Query
     $this->prepare();
     $this->bind();
 
-    $is_execute_success = false;
+    $this->isSuccess = false;
 
     try {
       $this->statement->execute();
-      $is_execute_success = true;
-    } catch (PDOException $error) {
-      // TODO handle all error codes
-      $error_message = $error->getMessage();
 
-      if (preg_match("/Duplicate entry .+ for key '(.+)'/", $error_message, $matches)) {
-        $error_message = str_replace($this->prefix . '_', '', $matches[1]);
-        $error_message = 'duplicate.' . $error_message;
+      $this->isSuccess = true;
+    } catch (PDOException $error) {
+      // TODO return array of errors with structure like in Model.php
+      // TODO handle all error codes
+      $errorMessage = $error->getMessage();
+
+      if (preg_match("/Duplicate entry .+ for key '(.+)'/", $errorMessage, $matches)) {
+        $errorMessage = str_replace($this->prefix . '_', '', $matches[1]);
+        $errorMessage = 'duplicate.' . $errorMessage;
       }
 
       if (Request::method() === 'get') {
         if (Config::getProperty('isEnabled', 'debug')) {
-          debug(__($error_message), $this->sql, $this->binding); // TODO translation
+          debug(t($errorMessage), $this->sql, $this->binding); // TODO translation
         } else {
-          debug(__($error_message)); // TODO translation
+          debug(t($errorMessage)); // TODO translation
         }
       } else {
-        $debug_sql = Config::getProperty('isEnabled', 'debug') ? ['query' => preg_replace('/(\v|\s)+/', ' ', trim($this->sql ?? '')), 'binding' => $this->binding] : null;
-        Response::answer($debug_sql, 'error', __($error_message), '409'); // TODO translation
+        $debugSql = Config::getProperty('isEnabled', 'debug') ? ['query' => preg_replace('/(\v|\s)+/', ' ', trim($this->sql ?? '')), 'binding' => $this->binding] : null;
+        Response::answer($debugSql, 'error', t($errorMessage), '409'); // TODO translation
       }
     }
 
-    if ($is_execute_success) {
+    if ($this->isSuccess) {
       $this->setFilterValues();
     }
 
     return $this;
   }
 
-  protected function fetchCache($type, $mode)
-  {
-    if ($this->cache) {
-      $cache_key =  $this->sql . '@' . json_encode($this->binding, JSON_UNESCAPED_UNICODE);
-
-      $cache = Cache::get($cache_key);
-
-      if ($cache) {
-        return $cache;
-      } else {
-        $this->prepare();
-        $this->bind();
-        $this->statement->execute();
-
-        $cache = $this->statement->{$type}($mode);
-
-        Cache::set($cache_key, $cache);
-
-        return $cache;
-      }
-    }
-
-    return $this->statement->{$type}($mode);
-  }
-
   public function fetchAll($mode = PDO::FETCH_OBJ)
   {
-    return $this->fetchCache(__FUNCTION__, $mode);
+    return $this->fetchPre(__FUNCTION__, $mode);
   }
 
   public function fetch($mode = PDO::FETCH_OBJ)
   {
-    return $this->fetchCache(__FUNCTION__, $mode);
+    return $this->fetchPre(__FUNCTION__, $mode);
   }
 
   public function fetchColumn($column = 0)
   {
-    return intval($this->fetchCache(__FUNCTION__, $column));
+    return $this->fetchPre(__FUNCTION__, $column);
   }
 
   public function insertId()
   {
-    return Database::getConnection()->lastInsertId();
+    return $this->isSuccess ? Database::getConnection()->lastInsertId() : false;
   }
 
   public function rowCount()
@@ -364,18 +334,18 @@ class Query
     return true;
   }
 
-  protected function addBinding($key_or_array, $value = null)
+  protected function addBinding($keyOrArray, $value = null)
   {
-    if (empty($key_or_array)) {
+    if (empty($keyOrArray)) {
       return false;
     }
 
-    if (is_array($key_or_array)) {
-      foreach ($key_or_array as $k => $v) {
+    if (is_array($keyOrArray)) {
+      foreach ($keyOrArray as $k => $v) {
         $this->binding[strval($k)] = $v;
       }
     } else {
-      $this->binding[strval($key_or_array)] = $value;
+      $this->binding[strval($keyOrArray)] = $value;
     }
 
     return true;
@@ -387,21 +357,52 @@ class Query
       return false;
     }
 
-    $pdo_param = PDO::PARAM_NULL;
+    $pdoParam = PDO::PARAM_NULL;
 
     foreach ($this->binding as $key => $value) {
-      if (is_bool($value)) $pdo_param = PDO::PARAM_BOOL;
-      if (is_int($value)) $pdo_param = PDO::PARAM_INT;
-      if (is_string($value)) $pdo_param = PDO::PARAM_STR;
-
-      if (is_array($value) || is_object($value)) {
-        $pdo_param = PDO::PARAM_STR;
+      if (is_bool($value)) {
+        $pdoParam = PDO::PARAM_BOOL;
+      } else if (is_int($value)) {
+        $pdoParam = PDO::PARAM_INT;
+      } else if (is_string($value)) {
+        $pdoParam = PDO::PARAM_STR;
+      } else if (is_array($value) || is_object($value)) {
+        $pdoParam = PDO::PARAM_STR;
         $value = json_encode($value, JSON_UNESCAPED_UNICODE);
       }
 
-      $this->statement->bindValue(':' . $key, $value, $pdo_param);
+      $this->statement->bindValue(':' . $key, $value, $pdoParam);
     }
 
     return true;
+  }
+
+  protected function fetchPre($type, $mode)
+  {
+    if (!$this->isSuccess) {
+      return false;
+    }
+
+    if ($this->cache) {
+      $cacheKey =  $this->sql . '@' . json_encode($this->binding, JSON_UNESCAPED_UNICODE);
+
+      $cache = Cache::get($cacheKey);
+
+      if ($cache) {
+        return $cache;
+      } else {
+        $this->prepare();
+        $this->bind();
+        $this->statement->execute();
+
+        $cache = $this->statement->{$type}($mode);
+
+        Cache::set($cacheKey, $cache);
+
+        return $cache;
+      }
+    }
+
+    return $this->statement->{$type}($mode);
   }
 }

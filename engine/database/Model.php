@@ -4,9 +4,11 @@ namespace engine\database;
 
 abstract class Model
 {
+  protected $table;
+  protected $primaryKey;
   protected $column = [];
   protected $errors = [];
-  protected $validations = ['required', 'boolean', 'min', 'max', 'regex'];
+  protected $validation = ['required', 'boolean', 'min', 'max', 'regex'];
 
   public function __construct($data = [])
   {
@@ -40,30 +42,35 @@ abstract class Model
   public function validate()
   {
     foreach ($this->column as $columnName => $columnDefinition) {
-      $result = $this->validateColumn($columnName, $columnDefinition);
+      $result = $this->validateColumn($columnName);
 
       if ($result !== true) {
         $this->errors[] = $result;
       }
     }
 
-    return empty($this->errors) ? true : $this->errors;
+    return empty($this->errors) ? true : false;
   }
 
-  public function validateColumn($columnName, $columnDefinition = [])
+  public function validateColumn($columnName)
   {
     $result = true;
+
+    $columnDefinition = @$this->column[$columnName];
+    if (!$columnDefinition) {
+      return $result;
+    }
 
     $columnType = $columnDefinition['type'];
     $columnValue = @$columnDefinition['value'];
 
-    if (@$columnDefinition['required'] !== true && empty($columnValue)) {
+    if (@$columnDefinition['required'] !== true && $columnValue === null) {
       return $result;
     }
 
     $isColumnValidated = false;
 
-    foreach ($this->validations as $validation) {
+    foreach ($this->validation as $validation) {
       if ($isColumnValidated || (!isset($columnDefinition[$validation]) && $columnType !== $validation)) {
         continue;
       }
@@ -110,6 +117,8 @@ abstract class Model
 
     if ($type === 'number' && $value < $rule) {
       $result = false;
+    } else if ($type === 'array' && count($value) < $rule) {
+      $result = false;
     } else if (mb_strlen($value ?? '') < $rule) {
       $result = false;
     }
@@ -122,6 +131,8 @@ abstract class Model
     $result = true;
 
     if ($type === 'number' && $value > $rule) {
+      $result = false;
+    } else if ($type === 'array' && count($value) > $rule) {
       $result = false;
     } else if (mb_strlen($value ?? '') > $rule) {
       $result = false;
@@ -138,5 +149,127 @@ abstract class Model
   protected function validateRegex($type, $rule, $value)
   {
     return preg_match($rule, $value ?? '') ? true : false;
+  }
+
+  public function add()
+  {
+    if (!$this->validate()) {
+      return false;
+    }
+
+    $columnKeys = [];
+    $columnValues = [];
+
+    foreach ($this->column as $columnName => $column) {
+      if (!isset($column['value'])) {
+        continue;
+      }
+
+      $columnKeys[] = $columnName;
+      $columnValues[$columnName] = $column['value'];
+    }
+
+    if (empty($columnKeys) || empty($columnValues)) {
+      return false;
+    }
+
+    $sqlParams = '(' . implode(', ', array_keys($columnKeys)) . ') VALUES (:' . implode(', :', array_keys($columnKeys)) . ')';
+
+    $sql = "INSERT INTO {{$this->table}} $sqlParams";
+    $query = new Query($sql);
+    $result = $query->execute($columnValues)->insertId();
+
+    return $result;
+  }
+
+  public function edit()
+  {
+    if (!$this->validate()) {
+      return false;
+    }
+
+    $pkName = $this->getPrimaryKey();
+    if (!$pkName) {
+      return false;
+    }
+
+    $columnKeys = [];
+    $columnValues = [];
+
+    foreach ($this->column as $columnName => $column) {
+      if (!isset($column['value'])) {
+        continue;
+      }
+
+      $columnKeys[] = $columnName;
+      $columnValues[$columnName] = $column['value'];
+    }
+
+    if (empty($columnKeys) || empty($columnValues)) {
+      return false;
+    }
+
+    $sqlParams = array_reduce($columnKeys, function ($carry, $v) {
+      return ($carry ? "$carry, " : '') . "$v=:$v";
+    });
+
+    $sql = "UPDATE {{$this->table}} SET $sqlParams WHERE $pkName=:$pkName";
+    $query = new Query($sql);
+    $query->execute($columnValues);
+
+    return true;
+  }
+
+  public function delete()
+  {
+    if (!$this->validate()) {
+      return false;
+    }
+
+    $pkName = $this->getPrimaryKey();
+    if (!$pkName) {
+      return false;
+    }
+
+    $columnKeys = [];
+    $columnValues = [];
+
+    foreach ($this->column as $columnName => $column) {
+      if (!isset($column['value'])) {
+        continue;
+      }
+
+      $columnKeys[] = $columnName;
+      $columnValues[$columnName] = $column['value'];
+    }
+
+    if (empty($columnKeys) || empty($columnValues)) {
+      return false;
+    }
+
+    $sqlParams = array_reduce($columnKeys, function ($carry, $v) {
+      return ($carry ? "$carry AND " : '') . "$v=:$v";
+    });
+
+    $sql = "DELETE FROM {{$this->table}} WHERE $sqlParams AND $pkName=:$pkName";
+    $query = new Query($sql);
+    $query->execute($columnValues);
+
+    return true;
+  }
+
+  public function getPrimaryKey()
+  {
+    if (!empty($this->primaryKey)) {
+      return $this->primaryKey;
+    }
+
+    if (empty($this->table)) {
+      return false;
+    }
+
+    $query = new Query("SHOW KEYS FROM {{$this->table}} WHERE Key_name='PRIMARY'");
+
+    return $query->execute()->fetch();
   }
 }

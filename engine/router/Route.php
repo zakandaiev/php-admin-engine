@@ -5,6 +5,7 @@ namespace engine\router;
 use engine\router\Router;
 use engine\http\Request;
 use engine\i18n\I18n;
+use engine\util\Path;
 use engine\util\Text;
 
 class Route
@@ -44,8 +45,9 @@ class Route
 
     $base = Request::base();
     $language = I18n::getCurrent();
-    $query = !empty($routeQuery) ? '?' . http_build_query($routeQuery) : '';
-    $url = "$base/$language/$uri$query";
+    $query = http_build_query($routeQuery ?? []);
+    $query = !empty($query) ? "?$query" : '';
+    $url = Path::resolveUrl($base, $language, $uri . $query);
 
     return Text::html($url);
   }
@@ -55,8 +57,9 @@ class Route
     $uri = trim($routeLink, '/');
     $base = Request::base();
     $language = I18n::getCurrent();
-    $query = !empty($routeQuery) ? '?' . http_build_query($routeQuery) : '';
-    $url = "$base/$language/$uri$query";
+    $query = http_build_query($routeQuery ?? []);
+    $query = !empty($query) ? "?$query" : '';
+    $url = Path::resolveUrl($base, $language, $uri . $query);
 
     return Text::html($url);
   }
@@ -121,5 +124,17 @@ class Route
     }
 
     return true;
+  }
+
+  public static function changeQuery($params = [], $returnUri = false)
+  {
+    $newParams = [...Request::get(), ...$params];
+
+    $base = $returnUri ? '' : null;
+    $uri = Request::uri();
+    $query = http_build_query($newParams);
+    $query = !empty($query) ? "?$query" : '';
+
+    return Path::resolveUrl($base, $uri . $query);
   }
 }

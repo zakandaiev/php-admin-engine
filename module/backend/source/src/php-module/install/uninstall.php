@@ -2,6 +2,6 @@
 
 // REMOVE FILES, CLEAR DB etc.
 
-// $statement = new Statement('DELETE * FROM {table} WHERE ...');
+// $statement = new Query('DELETE * FROM {table} WHERE ...');
 
 // $statement->execute();
