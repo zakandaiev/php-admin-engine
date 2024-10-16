@@ -29,8 +29,9 @@ class Debug
       $itemOutputRaw = ob_get_clean();
       $itemOutput = $itemOutputRaw;
 
-      $itemOutput = preg_replace('/(int|float|string|bool|array|object)(\()([\w\d]*)(\))/', '<span style="color:#00bfff">$1</span><span style="color:#00ced1">$2</span><span style="color:#ff7f50">$3</span><span style="color:#00ced1">$4</span>', $itemOutput);
-      $itemOutput = preg_replace('/(\[)(.*)(\])/', '<span style="color:#00ced1">$1</span><span style="color:#ff7f50">$2</span><span style="color:#00ced1">$3</span>', $itemOutput);
+      $itemOutput = preg_replace('/int|float|string|bool|array|object/', '<span style="color:#00bfff">$0</span>', $itemOutput);
+      $itemOutput = preg_replace('/(\()([\w\d\\\\]*)(\))/', '<span style="color:#00ced1">$1</span><span style="color:#ff7f50">$2</span><span style="color:#00ced1">$3</span>', $itemOutput);
+      $itemOutput = preg_replace('/(\[)(.*)(\])/', '<span style="color:#00ced1">$1</span><span style="color:#e06c75">$2</span><span style="color:#00ced1">$3</span>', $itemOutput);
       $itemOutput = preg_replace('/{|}/', '<span style="color:#00ced1">$0</span>', $itemOutput);
       $itemOutput = preg_replace('/(=>)\s+/', '<span style="color:#00ced1">$0</span>', $itemOutput);
       $itemOutput = preg_replace('/\s*=>\s*/', ' => ', $itemOutput);

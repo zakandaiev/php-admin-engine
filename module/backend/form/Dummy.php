@@ -95,7 +95,7 @@ return [
 		exit;
 		// execute some hooks or additional sql queries here, for example
 		// or do whatever then answer
-		// Response::answer('dummy_data', 'dummy_status', 'dummy_message');
+		// Response::answer('dummy_status', 'dummy_message', 'dummy_data');
 	},
 	'execute_post' => function ($rowCount, $fields, $data) {
 		debug($rowCount, $fields, $data);
@@ -124,5 +124,5 @@ return function ($data, $incomeData) {
 	debug($data, $incomeData);
 	exit;
 	// do whatever then answer
-	Response::answer('dummy_data', 'dummy_status', 'dummy_message');
+	Response::answer('dummy_status', 'dummy_message', 'dummy_data');
 };

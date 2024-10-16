@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS `%prefix%_form` (
   `token` VARCHAR(256) NOT NULL,
   `module` VARCHAR(128) NOT NULL,
   `action` VARCHAR(32) NOT NULL,
-  `form_name` VARCHAR(128) NOT NULL,
+  `model_name` VARCHAR(128) NOT NULL,
   `item_id` VARCHAR(256) DEFAULT NULL,
   `date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `ip` VARCHAR(32) NOT NULL,

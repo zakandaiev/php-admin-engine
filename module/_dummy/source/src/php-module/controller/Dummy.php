@@ -27,11 +27,11 @@ class Dummy extends Controller
 
   public function postExample()
   {
-    Response::answer(null, 'success', __FUNCTION__);
+    Response::answer('success', __FUNCTION__, null);
   }
 
   public function putExample()
   {
-    Response::answer(null, 'success', __FUNCTION__);
+    Response::answer('success', __FUNCTION__, null);
   }
 }

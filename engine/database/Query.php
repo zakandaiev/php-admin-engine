@@ -11,7 +11,6 @@ use engine\database\Database;
 use engine\database\Filter;
 use engine\database\Pagination;
 use engine\http\Request;
-use engine\http\Response;
 use engine\util\Cache;
 
 class Query
@@ -29,7 +28,7 @@ class Query
   protected $isFilter = false;
   protected $isPaginate = false;
   protected $isSelect = false;
-  protected $isSuccess = false;
+  protected $error = [];
 
   public function __construct($sql, $cache = null, $debug = null)
   {
@@ -50,6 +49,16 @@ class Query
     $this->sql = preg_replace('/{([\w\d\-\_]+)}/miu', $replacement, $sql);
 
     return $this;
+  }
+
+  public function hasError()
+  {
+    return isset($this->error['message']);
+  }
+
+  public function getError($key = null)
+  {
+    return isset($key) ? @$this->error[$key] : $this->error;
   }
 
   public function filter($name, $mixed = null)
@@ -267,37 +276,29 @@ class Query
     $this->prepare();
     $this->bind();
 
-    $this->isSuccess = false;
-
     try {
       $this->statement->execute();
-
-      $this->isSuccess = true;
     } catch (PDOException $error) {
-      // TODO return array of errors with structure like in Model.php
-      // TODO handle all error codes
-      $errorMessage = $error->getMessage();
+      $this->error['message'] = $error->getMessage();
 
-      if (preg_match("/Duplicate entry .+ for key '(.+)'/", $errorMessage, $matches)) {
-        $errorMessage = str_replace($this->prefix . '_', '', $matches[1]);
-        $errorMessage = 'duplicate.' . $errorMessage;
+      if (preg_match("/duplicate.+key.+[\'\"\`](.+)[\'\"\`]/iu", $this->error['message'], $matches)) {
+        $columnName = str_replace($this->prefix . '_', '', $matches[1]);
+        $errorMessage = "$columnName.duplicate";
+
+        $this->error['message'] = $errorMessage;
+        $this->error['column'] = $columnName;
+        $this->error['validation'] = 'duplicate';
       }
 
-      if (Request::method() === 'get') {
-        if (Config::getProperty('isEnabled', 'debug')) {
-          debug(t($errorMessage), $this->sql, $this->binding); // TODO translation
-        } else {
-          debug(t($errorMessage)); // TODO translation
-        }
-      } else {
-        $debugSql = Config::getProperty('isEnabled', 'debug') ? ['query' => preg_replace('/(\v|\s)+/', ' ', trim($this->sql ?? '')), 'binding' => $this->binding] : null;
-        Response::answer($debugSql, 'error', t($errorMessage), '409'); // TODO translation
+      if (Request::method() === 'get' && Config::getProperty('isEnabled', 'debug')) {
+        debug($this->error, $this->sql, $this->binding);
       }
     }
 
-    if ($this->isSuccess) {
-      $this->setFilterValues();
-    }
+    // TODO
+    // if (!$this->hasError()) {
+    //   $this->setFilterValues();
+    // }
 
     return $this;
   }
@@ -319,7 +320,7 @@ class Query
 
   public function insertId()
   {
-    return $this->isSuccess ? Database::getConnection()->lastInsertId() : false;
+    return !$this->hasError() ? Database::getConnection()->lastInsertId() : false;
   }
 
   public function rowCount()
@@ -379,7 +380,7 @@ class Query
 
   protected function fetchPre($type, $mode)
   {
-    if (!$this->isSuccess) {
+    if ($this->hasError()) {
       return false;
     }
 

@@ -8,7 +8,7 @@ use engine\module\Module;
 
 class Group extends Model
 {
-  public function __construct()
+  public function __construct($data = [])
   {
     $this->table = 'group';
     $this->primaryKey = 'id';
@@ -52,6 +52,8 @@ class Group extends Model
       'type' => 'boolean',
       'value' => false
     ];
+
+    parent::__construct($data);
   }
 
   public function getGroups()

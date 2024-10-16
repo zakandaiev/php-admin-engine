@@ -2,10 +2,10 @@
 
 namespace engine\router;
 
-use engine\Config;
 use engine\module\Module;
 use engine\http\Request;
 use engine\http\Response;
+use engine\theme\Form;
 use engine\i18n\I18n;
 use engine\util\File;
 use engine\util\Hash;
@@ -24,8 +24,7 @@ class Router
 
   public static function watch()
   {
-    // TODO
-    // self::checkForm();
+    self::checkForm();
     self::checkRoutes();
     self::check404();
     self::setController();
@@ -142,42 +141,29 @@ class Router
       return false;
     }
 
-    $token = Request::uriParts(0);
+    $form = new Form(Request::uriParts(0));
 
-    if (empty($token)) {
+    if (!$form->isTokenExists()) {
       return false;
     }
 
-    $statement = new Query('SELECT * FROM {form} WHERE token = :token ORDER BY date_created DESC LIMIT 1');
-
-    $form = $statement->execute(['token' => Request::uriParts(0)])->fetch();
-
-    if (empty($form)) {
-      return false;
+    if (!$form->isTokenAllowedIp()) {
+      Response::answer('error', I18n::translate('form.forbidden'), null, 403);
     }
 
-    if (Request::ip() !== $form->ip) {
-      Response::answer(null, 'error', I18n::translate('form.forbidden'), 403);
+    if (!$form->isTokenActive()) {
+      Response::answer('error', I18n::translate('form.inactive'), null, 400);
     }
 
-    $timestampNow = time();
-    $timestampCreated = strtotime($form->date_created);
-    $timestampDiff = $timestampNow - $timestampCreated;
-
-    if ($timestampDiff > Config::getProperty('form', 'lifetime')) {
-      Response::answer(null, 'error', I18n::translate('form.inactive'), 405);
+    if (!$form->isModelActive()) {
+      throw new \Exception('Form model is missed.');
     }
 
-    Module::loadHooks();
-    Module::setName($form->module);
+    if (!$form->isFormActiveAndValid()) {
+      Response::answer('error', I18n::translate('form.unknown_error'), null, 400);
+    }
 
-    self::initRoute();
-
-    new User();
-
-    Form::execute($form->action, $form->form_name, $form->item_id, $form->is_translation);
-
-    Response::answer();
+    $form->execute()->answer();
 
     return true;
   }
@@ -280,7 +266,7 @@ class Router
   {
     if (empty(self::$route)) {
       if (Request::method() !== 'get') {
-        Response::answer(null, 'error', 'Not found', 404);
+        Response::answer('error', 'Not found', null, 404);
       }
 
       $moduleName = 'frontend';

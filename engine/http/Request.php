@@ -55,7 +55,7 @@ class Request
     if (self::$method === 'get') {
       self::$csrfToken = self::setCSRF();
     } else if (!self::verifyCSRF()) {
-      Response::answer(null, 'error', 'Forbidden', 403);
+      Response::answer('error', 'Forbidden', null, 403);
     }
 
     return true;

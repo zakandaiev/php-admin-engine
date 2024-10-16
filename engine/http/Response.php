@@ -4,7 +4,7 @@ namespace engine\http;
 
 class Response
 {
-	public static function answer($data = null, $status = null, $message = null, $code = 200, $contentType = 'text/plain')
+	public static function answer($status = null, $message = null, $data = null, $code = 200, $contentType = 'text/plain')
 	{
 		if (
 			(isset($status) || isset($message))

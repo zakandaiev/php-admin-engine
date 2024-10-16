@@ -78,8 +78,6 @@ $table = new Table([
     // ]
   ]
 ]);
-
-debug(Form::add('Group'));
 ?>
 
 <?php Theme::header(); ?>
@@ -92,6 +90,20 @@ debug(Form::add('Group'));
 
   <section class="section section_grow section_offset">
     <div class="container-fluid">
+
+      <form action="<?= Form::add('Group') ?>" method="POST">
+        <input type="text" name="csrf_token" value="<?= \engine\http\Request::csrfToken() ?>">
+
+        <input type="text" name="name" required>
+
+        <label class="switch">
+          <input type="hidden" name="is_enabled" value="false">
+          <input type="checkbox" name="is_enabled" value="true">
+          <span class="switch__slider"></span>
+        </label>
+
+        <input type="submit">
+      </form>
 
       <?php Theme::breadcrumb(); ?>
 
