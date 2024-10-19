@@ -8,13 +8,13 @@
     </nav>
 
     <nav class="breadcrumb">
-      <span class="breadcrumb__item"><a href="<?= Route::link('home') ?>">Home</a></span>
+      <span class="breadcrumb__item"><a href="<?= routeLink('home') ?>">Home</a></span>
       <span class="breadcrumb__item">Path</span>
     </nav>
 
     <nav class="breadcrumb">
-      <span class="breadcrumb__item"><a href="<?= Route::link('home') ?>">Home</a></span>
-      <span class="breadcrumb__item"><a href="<?= Route::link('path') ?>">Path</a></span>
+      <span class="breadcrumb__item"><a href="<?= routeLink('home') ?>">Home</a></span>
+      <span class="breadcrumb__item"><a href="<?= routeLink('path') ?>">Path</a></span>
       <span class="breadcrumb__item">Data</span>
     </nav>
 

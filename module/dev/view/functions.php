@@ -25,7 +25,7 @@ function getButtonSocials()
 
 function getUiSectionFiles($isFormatName = false)
 {
-  $uiSectionsPath = Path::resolve(Path::file('page'), 'ui');
+  $uiSectionsPath = pathResolve(pathFile('page'), 'ui');
   $uiSections = is_dir($uiSectionsPath) ? scandir($uiSectionsPath) : [];
   $uiSectionsFormatted = [];
 
@@ -34,9 +34,9 @@ function getUiSectionFiles($isFormatName = false)
       continue;
     }
 
-    $uiSectionName = getFileName($uiSection);
+    $uiSectionName = fileGetName($uiSection);
     $uiSectionNameFormatted = ucfirst(str_replace('-', ' ', $uiSectionName));
-    $link = Route::link('ui-section', ['section' => $uiSectionName]);
+    $link = routeLink('ui-section', ['section' => $uiSectionName]);
 
     $uiSectionsFormatted[$isFormatName ? $uiSectionNameFormatted : $uiSectionName] = $link;
   }

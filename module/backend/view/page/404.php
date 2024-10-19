@@ -25,12 +25,12 @@ $referer = Request::referer();
       <h4 class="color-text"><?= $pageSubtitle ?></h4>
 
       <div class="d-flex gap-2 mt-4">
-        <?php if ($referer && !Route::isActive($referer)) : ?>
+        <?php if ($referer && !routeIsActive($referer)) : ?>
           <a href="<?= $referer ?>" class="btn btn_lg btn_secondary"><?= t('404.go_back') ?></a>
         <?php endif; ?>
 
-        <?php if ($referer !== Route::link('dashboard')) : ?>
-          <a href="<?= Route::link('dashboard') ?>" class="btn btn_lg btn_primary"><?= t('404.go_dashboard') ?></a>
+        <?php if ($referer !== routeLink('dashboard')) : ?>
+          <a href="<?= routeLink('dashboard') ?>" class="btn btn_lg btn_primary"><?= t('404.go_dashboard') ?></a>
         <?php endif; ?>
       </div>
 

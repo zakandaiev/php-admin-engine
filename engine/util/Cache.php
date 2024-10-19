@@ -4,6 +4,7 @@ namespace engine\util;
 
 use engine\Config;
 use engine\util\Log;
+use engine\util\File;
 
 class Cache
 {
@@ -89,7 +90,7 @@ class Cache
     foreach (scandir($path) as $file) {
       if (in_array($file, ['.', '..'], true)) continue;
 
-      if (getFileExtension($file) !== trim(Config::getProperty('extension', 'cache'), '.')) continue;
+      if (File::getExtension($file) !== trim(Config::getProperty('extension', 'cache'), '.')) continue;
 
       unlink($path . '/' . $file);
     }

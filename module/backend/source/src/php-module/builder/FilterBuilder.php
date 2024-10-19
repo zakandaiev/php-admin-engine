@@ -2,9 +2,9 @@
 
 namespace module\backend\builder;
 
-use Engine\Filter;
-use Engine\Path;
-use Engine\Request;
+use engine\database\Filter as DbFilter;
+use engine\util\Path;
+use engine\http\Request;
 
 class FilterBuilder
 {
@@ -27,7 +27,7 @@ class FilterBuilder
 
 		$this->filter_name = $filter_name;
 
-		$filter_options = Filter::getInstance()->get('options') ?? [];
+		$filter_options = DbFilter::getInstance()->get('options') ?? [];
 
 		foreach ($fields as $field_alias => $field) {
 			if (!is_array($field)) continue;

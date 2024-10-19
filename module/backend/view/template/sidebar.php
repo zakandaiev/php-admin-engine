@@ -42,7 +42,7 @@ function checkRouteAccess($route)
 function isRouteActive($route = [])
 {
   if (isset($route['name']) && is_string($route['name'])) {
-    return Route::isActive($route['name'], @$route['parameter'], @$route['module']);
+    return isRouteActive($route['name'], @$route['parameter'], @$route['module']);
   }
 
   return false;
@@ -61,7 +61,7 @@ function isRouteParentActive($route = [])
       continue;
     }
 
-    $result = Route::isActive($item['name'], @$item['parameter'], @$item['module']);
+    $result = isRouteActive($item['name'], @$item['parameter'], @$item['module']);
 
     if ($result) {
       return true;
@@ -73,9 +73,9 @@ function isRouteParentActive($route = [])
 ?>
 
 <aside class="sidebar">
-  <a class="sidebar__logo" href="<?= Route::link('dashboard', null, null, 'backend') ?>">
+  <a class="sidebar__logo" href="<?= routeLink('dashboard', null, null, 'backend') ?>">
     <?php if (!empty(site('logo_alt'))) : ?>
-      <img class="sidebar__logo-image" src="<?= resolveUrl(null, site('logo_alt')) ?>" alt="Logo">
+      <img class="sidebar__logo-image" src="<?= pathResolveUrl(null, site('logo_alt')) ?>" alt="Logo">
     <?php else : ?>
       <span class="sidebar__logo-text"><?= site('name') ?></span>
     <?php endif; ?>
@@ -100,7 +100,7 @@ function isRouteParentActive($route = [])
 
           <div class="sidebar__collapse-menu">
             <?php foreach ($item['name'] as $key => $value) : ?>
-              <a href="<?= Route::link($value['name'], @$value['parameter'], null, @$value['module']) ?>" class="sidebar__collapse-item <?php if (isRouteActive($value)) : ?>active<?php endif; ?>">
+              <a href="<?= routeLink($value['name'], @$value['parameter'], null, @$value['module']) ?>" class="sidebar__collapse-item <?php if (isRouteActive($value)) : ?>active<?php endif; ?>">
                 <span class="sidebar__text"><?= $key ?></span>
                 <!-- <span class="label label_primary">2</span> -->
               </a>
@@ -108,7 +108,7 @@ function isRouteParentActive($route = [])
           </div>
         </div>
       <?php else : ?>
-        <a href="<?= Route::link($item['name'], @$item['parameter'], null, @$item['module']) ?>" class="sidebar__item <?php if (isRouteActive($item)) : ?>active<?php endif; ?>">
+        <a href="<?= routeLink($item['name'], @$item['parameter'], null, @$item['module']) ?>" class="sidebar__item <?php if (isRouteActive($item)) : ?>active<?php endif; ?>">
           <i class="ti ti-<?= $item['icon'] ?>"></i>
           <span class="sidebar__text"><?= $item['text'] ?></span>
           <?php

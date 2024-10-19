@@ -16,36 +16,29 @@ abstract class Controller
   protected $route;
   protected $setting;
 
-  protected $user;
+  protected $model;
   protected $page;
   protected $view;
-  protected $model;
+  protected $user;
 
   public function __construct()
   {
-    // TODO refactor
-    class_alias('engine\\module\\Module', 'Module');
-    class_alias('engine\\module\\Setting', 'Setting');
-    class_alias('engine\\router\\Route', 'Route');
-    class_alias('engine\\router\\View', 'View');
     class_alias('engine\\theme\\Asset', 'Asset');
     class_alias('engine\\theme\\Form', 'Form');
     class_alias('engine\\theme\\Page', 'Page');
     class_alias('engine\\theme\\Template', 'Template');
     class_alias('engine\\theme\\Theme', 'Theme');
-    class_alias('engine\\util\\Path', 'Path');
 
-    // TODO refactor
-    // $this->module = Module::get();
-    // $this->modules = Module::list();
+    $this->module = Module::get();
+    $this->modules = Module::list();
     $this->route = Route::get();
-    // $this->setting = Setting::get();
+    $this->setting = Setting::get();
 
-    // TODO
-    // $this->user = new User();
+    $this->model = $this->loadModel($this->route['controller']);
+
     $this->page = new Page();
     $this->view = new View();
-    $this->model = $this->loadModel($this->route['controller']);
+    // $this->user = new User();
   }
 
   protected function loadModel($modelName, $module = null)

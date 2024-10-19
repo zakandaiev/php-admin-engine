@@ -7,7 +7,7 @@
 </head>
 
 <body>
-  <script src="<?= resolveUrl(Asset::url(), 'js', 'data-theme.js') ?>"></script>
+  <script src="<?= pathResolveUrl(Asset::url(), 'js', 'data-theme.js') ?>"></script>
 
   <header id="header" class="header">
     <div class="container">

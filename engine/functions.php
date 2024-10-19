@@ -6,6 +6,9 @@ use engine\http\Request;
 use engine\i18n\I18n;
 use engine\module\Module;
 use engine\module\Setting;
+use engine\router\Route;
+use engine\router\Router;
+use engine\router\View;
 use engine\theme\Asset;
 use engine\util\Date;
 use engine\util\Debug;
@@ -59,130 +62,130 @@ function debugTrace($level = null)
 }
 
 ############################# FILE #############################
-function getFileDirectory($path)
+function fileGetDirectory($path)
 {
   return File::getDirectory($path);
 }
 
-function getFileName($path)
+function fileGetName($path)
 {
   return File::getName($path);
 }
 
-function getFileBaseName($path)
+function fileGetBaseName($path)
 {
   return File::getBaseName($path);
 }
 
-function getFileExtension($path)
+function fileGetExtension($path)
 {
   return File::getExtension($path);
 }
 
-function getFileSize($path, $precision = 2)
+function fileGetSize($path, $precision = 2)
 {
   return File::getSize($path);
 }
 
-function createDir($directory, $permissions = 0755, $recursive = true)
+function fileCreateDir($directory, $permissions = 0755, $recursive = true)
 {
   return File::createDir($directory, $permissions, $recursive);
 }
 
-function createFile($path, $content = PHP_EOL, $flags = 0)
+function fileCreateFile($path, $content = PHP_EOL, $flags = 0)
 {
   return File::createFile($path, $content, $flags);
 }
 
-function globRecursive($pattern, $flags = 0)
+function fileGlobRecursive($pattern, $flags = 0)
 {
   return File::globRecursive($pattern, $flags);
 }
 
-function rmdirRecursive($path)
+function fileRmdirRecursive($path)
 {
   return File::rmdirRecursive($path);
 }
 
 ############################# HASH #############################
-function generateToken($length = 16)
+function hashToken($length = 16)
 {
   return Hash::token($length);
 }
 
-function generatePassword($password)
+function hashPassword($password)
 {
-  return Hash::token($password);
+  return Hash::password($password);
 }
 
-function passwordVerify($password, $hash)
+function hashPasswordVerify($password, $hash)
 {
   return Hash::passwordVerify($password, $hash);
 }
 
 ############################# PATH #############################
-function getPathClass($className = '', $module = null)
+function pathClass($className = '', $module = null)
 {
   return Path::class($className, $module);
 }
 
-function getPathFile($section = '', $module = null)
+function pathFile($section = '', $module = null)
 {
-  return Path::class($section, $module);
+  return Path::file($section, $module);
 }
 
-function getPathUrl($section = '', $module = null)
+function pathUrl($section = '', $module = null)
 {
   return Path::url($section, $module);
 }
 
-function resolvePath(...$args)
+function pathResolve(...$args)
 {
   return Path::resolve(...$args);
 }
 
-function resolveUrl(...$args)
+function pathResolveUrl(...$args)
 {
   return Path::resolveUrl(...$args);
 }
 
 ############################# TEXT #############################
-function html($text = '')
+function textHtml($text = '')
 {
   return Text::html($text);
 }
 
-function url($url = '')
+function textUrl($url = '')
 {
   return Text::url($url);
 }
 
-function tel($tel = '')
+function textTel($tel = '')
 {
   return Text::tel($tel);
 }
 
-function cyrToLat($text = '')
+function textCyrToLat($text = '')
 {
   return Text::cyrToLat($text);
 }
 
-function slug($text = '', $delimiter = '-')
+function textSlug($text = '', $delimiter = '-')
 {
   return Text::slug($text, $delimiter);
 }
 
-function word($text = '')
+function textWord($text = '')
 {
   return Text::word($text);
 }
 
-function excerpt($text = '', $maxchar = 100, $end = "...")
+function textExcerpt($text = '', $maxchar = 100, $end = "...")
 {
   return Text::excerpt($text, $maxchar, $end);
 }
 
-function pluralValue($number, $values = [])
+function textPluralValue($number, $values = [])
 {
   return Text::pluralValue($number, $values);
 }
@@ -224,6 +227,104 @@ function lang($key = null, $language = null, $mixed = null)
   return $value;
 }
 
+############################# MODULE #############################
+function moduleExists($moduleName)
+{
+  return Module::exists($moduleName);
+}
+
+function moduleList()
+{
+  return Module::list();
+}
+
+function moduleGet($moduleName = null)
+{
+  return Module::get($moduleName);
+}
+
+function moduleHasProperty($propertyName, $moduleName = null)
+{
+  return Module::hasProperty($propertyName, $moduleName);
+}
+
+function moduleGetProperty($propertyName, $moduleName = null)
+{
+  return Module::getProperty($propertyName, $moduleName);
+}
+
+function moduleGetName()
+{
+  return Module::getName();
+}
+
+############################# ROUTE #############################
+function routerHas($routeName, $moduleName = null)
+{
+  return Router::has($routeName, $moduleName);
+}
+
+function routerList($moduleName = null)
+{
+  return Router::list($moduleName);
+}
+
+function routerGet($routeName = null, $moduleName = null)
+{
+  return Router::get($routeName, $moduleName);
+}
+
+function routeHas($key)
+{
+  return Route::has($key);
+}
+
+function routeSet($key, $data = null)
+{
+  return Route::set($key, $data);
+}
+
+function routeGet($key = null)
+{
+  return Route::get($key);
+}
+
+function routeLink($routeName, $routeParams = [], $routeQuery = [], $moduleName = null)
+{
+  return Route::link($routeName, $routeParams, $routeQuery, $moduleName);
+}
+
+function routeIsActive($routeName, $routeParams = [], $moduleName = null)
+{
+  return Route::isActive($routeName, $routeParams, $moduleName);
+}
+
+function routeCompareUri($url1, $url2)
+{
+  return Route::compareUri($url1, $url2);
+}
+
+function routeChangeQuery($params = [], $returnUri = false)
+{
+  return Route::changeQuery($params, $returnUri);
+}
+
+############################# VIEW #############################
+function viewSetData($key, $data = null)
+{
+  return View::setData($key, $data);
+}
+
+function viewHasData($key)
+{
+  return View::hasData($key);
+}
+
+function viewGetData($key = null)
+{
+  return View::getData($key);
+}
+
 ############################# ENGINE & SITE DATA #############################
 function getEngineProperty($key)
 {
@@ -244,31 +345,6 @@ function getEngineProperty($key)
   }
 
   return null;
-}
-
-function isModuleExists($moduleName)
-{
-  return Module::exists($moduleName);
-}
-
-function getModuleList()
-{
-  return Module::list();
-}
-
-function getModuleConfig($moduleName = null)
-{
-  return Module::get($moduleName);
-}
-
-function hasModuleProperty($propertyName, $moduleName = null)
-{
-  return Module::hasProperty($propertyName, $moduleName);
-}
-
-function getModuleProperty($propertyName, $moduleName = null)
-{
-  return Module::getProperty($propertyName, $moduleName);
 }
 
 function site($key, $module = null)
@@ -349,7 +425,7 @@ function site($key, $module = null)
         break;
       }
     case 'version': {
-        $value = getModuleProperty('version') ?? getEngineProperty('version');
+        $value = moduleGetProperty('version') ?? getEngineProperty('version');
         break;
       }
   }

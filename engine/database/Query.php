@@ -292,6 +292,9 @@ class Query
 
       if (Request::method() === 'get' && Config::getProperty('isEnabled', 'debug')) {
         debug($this->error, $this->sql, $this->binding);
+      } else if (Config::getProperty('isEnabled', 'debug')) {
+        $this->error['sql'] = $this->sql;
+        $this->error['binding'] = $this->binding;
       }
     }
 

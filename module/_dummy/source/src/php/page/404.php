@@ -10,12 +10,12 @@
       <h3 class="hero__text">The page you are looking for might have been removed</h3>
 
       <div class="hero__actions">
-        <a href="<?= Route::link('home') ?>" class="btn btn_primary">Return to Homepage</a>
+        <a href="<?= routeLink('home') ?>" class="btn btn_primary">Return to Homepage</a>
       </div>
     </div>
 
     <div class="hero__image">
-      <img src="<?= resolveUrl(Asset::url(), 'favicon.svg') ?>" alt="HTML5 Logo" height="320">
+      <img src="<?= pathResolveUrl(Asset::url(), 'favicon.svg') ?>" alt="HTML5 Logo" height="320">
     </div>
   </div>
 </div>

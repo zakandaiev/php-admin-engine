@@ -14,7 +14,7 @@ class Route
 
   public static function has($key)
   {
-    return isset($data[$key]);
+    return isset(self::$data[$key]);
   }
 
   public static function set($key, $data = null)
@@ -52,17 +52,17 @@ class Route
     return Text::html($url);
   }
 
-  public static function linkRaw($routeLink = '/', $routeQuery = [])
-  {
-    $uri = trim($routeLink, '/');
-    $base = Request::base();
-    $language = I18n::getCurrent();
-    $query = http_build_query($routeQuery ?? []);
-    $query = !empty($query) ? "?$query" : '';
-    $url = Path::resolveUrl($base, $language, $uri . $query);
+  // public static function linkRaw($routeLink = '/', $routeQuery = [])
+  // {
+  //   $uri = trim($routeLink, '/');
+  //   $base = Request::base();
+  //   $language = I18n::getCurrent();
+  //   $query = http_build_query($routeQuery ?? []);
+  //   $query = !empty($query) ? "?$query" : '';
+  //   $url = Path::resolveUrl($base, $language, $uri . $query);
 
-    return Text::html($url);
-  }
+  //   return Text::html($url);
+  // }
 
   public static function isActive($routeName, $routeParams = [], $moduleName = null)
   {

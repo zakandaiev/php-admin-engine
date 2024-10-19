@@ -1,12 +1,11 @@
 <?php
 
 use engine\module\Hook;
-use engine\util\Path;
 
 ############################# SIDEBAR #############################
 function getUiSections()
 {
-  $uiSectionsPath = Path::resolve(Path::file('page'), 'ui');
+  $uiSectionsPath = pathResolve(pathFile('page'), 'ui');
   $uiSections = is_dir($uiSectionsPath) ? scandir($uiSectionsPath) : [];
   $uiSectionsFormatted = [];
 
@@ -15,7 +14,7 @@ function getUiSections()
       continue;
     }
 
-    $uiSectionName = getFileName($uiSection);
+    $uiSectionName = fileGetName($uiSection);
     $uiSectionNameFormatted = ucfirst(str_replace('-', ' ', $uiSectionName));
     $uiSectionsFormatted[$uiSectionNameFormatted] = [
       'name' => 'ui-section',

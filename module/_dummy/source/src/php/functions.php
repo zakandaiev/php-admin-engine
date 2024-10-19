@@ -11,15 +11,15 @@ function getHeaderMenu()
   return [
     [
       'name' => 'Home',
-      'link' => Route::link('home')
+      'link' => routeLink('home')
     ],
     [
       'name' => 'Route guide',
-      'link' => Route::link('guide', null, ['query-param' => 'dummy'])
+      'link' => routeLink('guide', null, ['query-param' => 'dummy'])
     ],
     [
       'name' => 'Route closure test',
-      'link' => Route::link('user-payment', ['uid' => 111, 'pid' => 222])
+      'link' => routeLink('user-payment', ['uid' => 111, 'pid' => 222])
     ]
   ];
 }

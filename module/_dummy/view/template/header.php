@@ -7,15 +7,15 @@
 </head>
 
 <body>
-  <script src="<?= resolveUrl(Asset::url(), 'js', 'data-theme.js') ?>"></script>
+  <script src="<?= pathResolveUrl(Asset::url(), 'js', 'data-theme.js') ?>"></script>
 
   <header id="header" class="header">
     <div class="container">
       <div class="header__wrapper">
-        <a href="<?= Route::link('home') ?>" class="header__logo">
-          <img class="header__logo-image" src="<?= resolveUrl(Asset::url(), 'favicon.svg') ?>" alt="HTML5 Logo" height="24">
-          <span class="header__logo-text"><?= Module::getName() ?></span>
-          <span class="label label_primary header__logo-label">v<?= Module::getProperty('version') ?></span>
+        <a href="<?= routeLink('home') ?>" class="header__logo">
+          <img class="header__logo-image" src="<?= pathResolveUrl(Asset::url(), 'favicon.svg') ?>" alt="HTML5 Logo" height="24">
+          <span class="header__logo-text"><?= moduleGetName() ?></span>
+          <span class="label label_primary header__logo-label">v<?= moduleGetProperty('version') ?></span>
         </a>
 
         <nav class="header__nav">

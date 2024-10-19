@@ -25,11 +25,11 @@
         <h4 class="font-regular">$dataFromControllerRouteOptions:</h4>
         <div class="box"><?php debug($dataFromControllerRouteOptions); ?></div>
 
-        <h4 class="font-regular">Or get whole data from View class - View::getData():</h4>
-        <div class="box"><?php debug(View::getData()); ?></div>
+        <h4 class="font-regular">Or get whole data from View class - viewGetData():</h4>
+        <div class="box"><?php debug(viewGetData()); ?></div>
 
-        <h4 class="font-regular">Or get data about current route - Route::get():</h4>
-        <div class="box"><?php debug(Route::get()); ?></div>
+        <h4 class="font-regular">Or get data about current route - getRouteProperty():</h4>
+        <div class="box"><?php debug(getRouteProperty()); ?></div>
       </div>
     </section>
 
