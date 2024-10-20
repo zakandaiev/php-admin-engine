@@ -71,7 +71,7 @@ class Form
 
     // CHECK MODEL
     $this->model = $this->loadModel($this->modelName);
-    if (!$this->model) {
+    if (empty($this->model)) {
       return $this;
     }
     $this->isModelActive = true;
@@ -104,17 +104,6 @@ class Form
     return $this->isTokenExists && $this->isTokenAllowedIp && $this->isTokenActive && $this->isModelActive;
   }
 
-  protected function loadModel($modelName)
-  {
-    $model = Path::class('model') . '\\' . $modelName;
-
-    if (class_exists($model)) {
-      return new $model(Request::get());
-    }
-
-    return null;
-  }
-
   public function execute()
   {
     if (!$this->isFormActiveAndValid()) {
@@ -144,6 +133,128 @@ class Form
     return true;
   }
 
+  protected function loadModel($modelName)
+  {
+    $model = Path::class('model') . '\\' . $modelName;
+
+    if (class_exists($model)) {
+      return new $model(Request::get());
+    }
+
+    return null;
+  }
+
+  protected function process()
+  {
+    $this->answer['status'] = 'success';
+    $this->answer['message'] = null;
+    $this->answer['data'] = null;
+    $this->answer['code'] = 200;
+
+    $this->model->validation->validate();
+    if ($this->model->validation->hasError()) {
+      $this->answer['status'] = 'error';
+      $this->answer['message'] = I18n::translate('form.error');
+      $this->answer['data'] = $this->model->validation->getError();
+      $this->answer['code'] = 400;
+
+      return $this;
+    }
+
+    // TODO
+    // self::prepareMediaFields();
+    // $foreign_data = self::getForeignFields();
+    // $translation_data = self::getTranslationFields($form_data['modelName']);
+
+    $table = $this->model->getTable();
+    $pkName = $this->model->getPrimaryKey();
+    $column = $this->model->getColumn();
+
+    $columnKeys = [];
+    $columnValues = [];
+    foreach ($column as $columnName => $column) {
+      $columnValue = $column['value'];
+      if ($columnValue === null && $columnName === $pkName) {
+        $columnValue = $this->itemId;
+      }
+
+      $columnKeys[] = $columnName;
+      $columnValues[$columnName] = $columnValue;
+    }
+
+    $sql = null;
+    if ($this->action === 'add') {
+      $sqlParams = '(' . implode(', ', $columnKeys) . ') VALUES (:' . implode(', :', $columnKeys) . ')';
+      $sql = "INSERT INTO {{$table}} $sqlParams";
+    } else if ($this->action === 'edit') {
+      $sqlParams = array_reduce($columnKeys, function ($carry, $v) {
+        return ($carry ? "$carry, " : '') . "$v=:$v";
+      });
+      $sql = "UPDATE {{$table}} SET $sqlParams WHERE $pkName=:$pkName";
+    } else if ($this->action === 'delete') {
+      $sqlParams = array_reduce($columnKeys, function ($carry, $v) {
+        return ($carry ? "$carry AND " : '') . "$v=:$v";
+      });
+      $sql = "DELETE FROM {{$table}} WHERE $sqlParams AND $pkName=:$pkName";
+    }
+
+    $query = new Query($sql);
+    $result = $query->execute($columnValues);
+
+    if ($query->hasError()) {
+      $this->answer['status'] = 'error';
+      $this->answer['message'] = $query->getError('message');
+      $this->answer['data'] = $query->getError();
+      $this->answer['code'] = 400;
+
+      return $this;
+    }
+
+    if ($this->action === 'add') {
+      $result = $result->insertId();
+    } else if ($this->action === 'edit') {
+      $result = true;
+    } else if ($this->action === 'delete') {
+      $result = true;
+    }
+
+
+
+
+
+
+    // TODO
+    // $statement = new Statement($form_data['sql']);
+    // $statement->execute($form_data['sql_binding']);
+
+    // $form_data['rowCount'] = $statement->rowCount();
+
+    // if ($form_data['action'] === 'add') {
+    //   $form_data['itemId'] = $statement->insertId();
+    // }
+
+    // self::uploadMediaFields();
+    // self::processForeignFields($foreign_data, $form_data);
+    // self::processTranslationFields($translation_data, $form_data);
+
+    // if (isset($form['execute_post']) && is_closure($form['execute_post'])) {
+    //   $form['execute_post']($form_data['rowCount'], self::$fields, $form_data);
+    // }
+
+    // if (isset($form['submit_message']) && is_closure($form['submit_message'])) {
+    //   $submit_message = $form['submit_message'](self::$fields, $form_data);
+    // } else if (isset($form['submit_message'])) {
+    //   $submit_message = $form['submit_message'];
+    // }
+
+    // if (!$form_data['force_no_answer']) {
+    //   Server::answer(null, 'success', @$submit_message);
+    // }
+
+    return $this;
+  }
+
+  // STATIC METHODS
   public static function add($modelName)
   {
     return self::generateToken(__FUNCTION__, $modelName, null);
@@ -270,116 +381,6 @@ class Form
     }
 
     return true;
-  }
-
-  protected function process()
-  {
-    $this->answer['status'] = 'success';
-    $this->answer['message'] = null;
-    $this->answer['data'] = null;
-    $this->answer['code'] = 200;
-
-    $this->model->validation->validate();
-    if ($this->model->validation->hasError()) {
-      $this->answer['status'] = 'error';
-      $this->answer['message'] = I18n::translate('form.error');
-      $this->answer['data'] = $this->model->validation->getError();
-      $this->answer['code'] = 400;
-
-      return $this;
-    }
-
-    // TODO
-    // self::prepareMediaFields();
-    // $foreign_data = self::getForeignFields();
-    // $translation_data = self::getTranslationFields($form_data['modelName']);
-
-    $table = $this->model->getTable();
-    $pkName = $this->model->getPrimaryKey();
-    $column = $this->model->getColumn();
-
-    $columnKeys = [];
-    $columnValues = [];
-    foreach ($column as $columnName => $column) {
-      $columnValue = $column['value'];
-      if ($columnValue === null && $columnName === $pkName) {
-        $columnValue = $this->itemId;
-      }
-
-      $columnKeys[] = $columnName;
-      $columnValues[$columnName] = $columnValue;
-    }
-
-    $sql = null;
-    if ($this->action === 'add') {
-      $sqlParams = '(' . implode(', ', $columnKeys) . ') VALUES (:' . implode(', :', $columnKeys) . ')';
-      $sql = "INSERT INTO {{$table}} $sqlParams";
-    } else if ($this->action === 'edit') {
-      $sqlParams = array_reduce($columnKeys, function ($carry, $v) {
-        return ($carry ? "$carry, " : '') . "$v=:$v";
-      });
-      $sql = "UPDATE {{$table}} SET $sqlParams WHERE $pkName=:$pkName";
-    } else if ($this->action === 'delete') {
-      $sqlParams = array_reduce($columnKeys, function ($carry, $v) {
-        return ($carry ? "$carry AND " : '') . "$v=:$v";
-      });
-      $sql = "DELETE FROM {{$table}} WHERE $sqlParams AND $pkName=:$pkName";
-    }
-
-    $query = new Query($sql);
-    $result = $query->execute($columnValues);
-
-    if ($query->hasError()) {
-      $this->answer['status'] = 'error';
-      $this->answer['message'] = $query->getError('message');
-      $this->answer['data'] = $query->getError();
-      $this->answer['code'] = 400;
-
-      return $this;
-    }
-
-    if ($this->action === 'add') {
-      $result = $result->insertId();
-    } else if ($this->action === 'edit') {
-      $result = true;
-    } else if ($this->action === 'delete') {
-      $result = true;
-    }
-
-
-
-
-
-
-    // TODO
-    // $statement = new Statement($form_data['sql']);
-    // $statement->execute($form_data['sql_binding']);
-
-    // $form_data['rowCount'] = $statement->rowCount();
-
-    // if ($form_data['action'] === 'add') {
-    //   $form_data['itemId'] = $statement->insertId();
-    // }
-
-    // self::uploadMediaFields();
-    // self::processForeignFields($foreign_data, $form_data);
-    // self::processTranslationFields($translation_data, $form_data);
-
-    // if (isset($form['execute_post']) && is_closure($form['execute_post'])) {
-    //   $form['execute_post']($form_data['rowCount'], self::$fields, $form_data);
-    // }
-
-    // if (isset($form['submit_message']) && is_closure($form['submit_message'])) {
-    //   $submit_message = $form['submit_message'](self::$fields, $form_data);
-    // } else if (isset($form['submit_message'])) {
-    //   $submit_message = $form['submit_message'];
-    // }
-
-    // if (!$form_data['force_no_answer']) {
-    //   Server::answer(null, 'success', @$submit_message);
-    // }
-
-    return $this;
   }
 
   protected static function getForeignFields()

@@ -24,7 +24,7 @@ class File
     return pathinfo($path, PATHINFO_EXTENSION);
   }
 
-  public static function getSize($path, $precision = 2)
+  public static function getSize($path)
   {
     $size = 0;
 

@@ -115,7 +115,8 @@
             <div class="box__body">
 
               <label class="switch">
-                <input type="checkbox">
+                <input type="hidden" name="switch-default" value="false">
+                <input type="checkbox" name="switch-default" value="true">
                 <span class="switch__slider"></span>
                 <span>Switch</span>
               </label>
@@ -123,7 +124,8 @@
               <br>
 
               <label class="switch">
-                <input type="checkbox" disabled>
+                <input type="hidden" name="switch-disabled" value="false" disabled>
+                <input type="checkbox" name="switch-disabled" value="true" disabled>
                 <span class="switch__slider"></span>
                 <span>Switch disabled</span>
               </label>
@@ -131,19 +133,22 @@
               <br>
 
               <label class="switch mb-0 mr-3">
-                <input type="checkbox">
+                <input type="hidden" name="switch-1" value="false">
+                <input type="checkbox" name="switch-1" value="true">
                 <span class="switch__slider"></span>
                 <span>Switch 1</span>
               </label>
 
               <label class="switch mb-0 mr-3">
-                <input type="checkbox">
+                <input type="hidden" name="switch-2" value="false">
+                <input type="checkbox" name="switch-2" value="true">
                 <span class="switch__slider"></span>
                 <span>Switch 2</span>
               </label>
 
               <label class="switch mb-0 mr-3">
-                <input type="checkbox">
+                <input type="hidden" name="switch-3" value="false">
+                <input type="checkbox" name="switch-3" value="true">
                 <span class="switch__slider"></span>
                 <span>Switch 3</span>
               </label>

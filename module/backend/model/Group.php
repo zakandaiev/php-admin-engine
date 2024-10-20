@@ -86,7 +86,7 @@ class Group extends Model
     $groups = new Query($sql);
 
     // TODO
-    // $groups = $groups->filter('group')->paginate()->execute(['language' => site('language')])->fetchAll();
+    // ->filter()
     $groups = $groups->paginate()->execute(['language' => site('language_current')])->fetchAll();
 
     foreach ($groups as $group) {
@@ -98,32 +98,34 @@ class Group extends Model
 
   public function getRoutes()
   {
-    $routes_grouped = [];
-    $modules = Module::get();
+    $routesGrouped = [];
+    $modules = Module::list();
 
     foreach ($modules as $module) {
-      if (!$module['is_enabled']) {
+      if (!$module['isEnabled']) {
         continue;
       }
 
       foreach ($module['routes'] as $route) {
-        if (isset($route['is_public']) && $route['is_public'] === true) {
+        if (isset($route['isPublic']) && $route['isPublic'] === true) {
           continue;
         }
 
-        $routes_grouped['any'][] = $route['path'];
-        $routes_grouped[$route['method']][] = $route['path'];
+        $routesGrouped['any'][] = $route['path'];
+        $routesGrouped[$route['method']][] = $route['path'];
       }
     }
 
-    $routes_grouped['any'] = array_unique($routes_grouped['any']);
+    foreach ($routesGrouped as $method => $routes) {
+      $routesGrouped[$method] = array_unique($routesGrouped[$method]);
+    }
 
-    ksort($routes_grouped, SORT_NATURAL | SORT_FLAG_CASE);
+    ksort($routesGrouped, SORT_NATURAL | SORT_FLAG_CASE);
 
     return array_map(function ($a) {
       sort($a, SORT_NATURAL | SORT_FLAG_CASE);
       return $a;
-    }, $routes_grouped);
+    }, $routesGrouped);
   }
 
   public function getUsers()
@@ -134,9 +136,10 @@ class Group extends Model
 
     $users = $users->execute()->fetchAll();
 
-    $users = array_map(function ($user) {
-      return \Engine\User::format($user);
-    }, $users);
+    // TODO
+    // $users = array_map(function ($user) {
+    //   return \Engine\User::format($user);
+    // }, $users);
 
     return $users;
   }

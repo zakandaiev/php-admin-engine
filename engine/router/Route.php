@@ -29,8 +29,11 @@ class Route
     return isset($key) ? @self::$data[$key] : self::$data;
   }
 
-  public static function link($routeName, $routeParams = [], $routeQuery = [], $moduleName = null)
+  public static function link($routeName, $routeParams = null, $routeQuery = null, $moduleName = null)
   {
+    $routeParams = $routeParams ?? [];
+    $routeQuery = $routeQuery ?? [];
+
     $uri = $routeName;
 
     $route = Router::get($routeName, $moduleName);
@@ -45,15 +48,18 @@ class Route
 
     $base = Request::base();
     $language = I18n::getCurrent();
-    $query = http_build_query($routeQuery ?? []);
+    $query = http_build_query($routeQuery);
     $query = !empty($query) ? "?$query" : '';
     $url = Path::resolveUrl($base, $language, $uri . $query);
 
     return Text::html($url);
   }
 
-  // public static function linkRaw($routeLink = '/', $routeQuery = [])
+  // public static function linkRaw($routeLink = null, $routeQuery = null)
   // {
+  //   $routeLink = $routeLink ?? '/';
+  //   $routeQuery = $routeQuery ?? [];
+  //
   //   $uri = trim($routeLink, '/');
   //   $base = Request::base();
   //   $language = I18n::getCurrent();
@@ -64,8 +70,10 @@ class Route
   //   return Text::html($url);
   // }
 
-  public static function isActive($routeName, $routeParams = [], $moduleName = null)
+  public static function isActive($routeName, $routeParams = null, $moduleName = null)
   {
+    $routeParams = $routeParams ?? [];
+
     $uri = $routeName;
 
     $route = Router::get($routeName, $moduleName);
@@ -126,8 +134,11 @@ class Route
     return true;
   }
 
-  public static function changeQuery($params = [], $returnUri = false)
+  public static function changeQuery($params = null, $returnUri = null)
   {
+    $params = $params ?? [];
+    $returnUri = $returnUri ?? false;
+
     $newParams = [...Request::get(), ...$params];
 
     $base = $returnUri ? '' : null;

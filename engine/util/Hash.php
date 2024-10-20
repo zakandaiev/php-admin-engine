@@ -4,9 +4,9 @@ namespace engine\util;
 
 class Hash
 {
-  public static function token($length = 16)
+  public static function token($length = null)
   {
-    return bin2hex(random_bytes($length / 2));
+    return bin2hex(random_bytes(($length ?? 16) / 2));
   }
 
   public static function password($password)

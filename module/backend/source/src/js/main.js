@@ -24,6 +24,7 @@ import '@/js/partial/air-datepicker';
 import '@/js/partial/chart';
 import '@/js/partial/fancybox';
 import '@/js/partial/filepond';
+import '@/js/partial/form';
 import '@/js/partial/maska';
 import '@/js/partial/slimselect';
 import '@/js/partial/sortable';

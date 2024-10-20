@@ -4,7 +4,7 @@
 
   <h1>404</h1>
 
-  <a href="<?= Route::link('home') ?>" class="btn btn_primary">Return to Homepage</a>
+  <a href="<?= routeLink('home') ?>" class="btn btn_primary">Return to Homepage</a>
 
 </div>
 

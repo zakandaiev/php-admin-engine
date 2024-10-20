@@ -6,19 +6,22 @@ Asset::css('main');
 Asset::js('main', ['type' => 'module']);
 
 ############################# INTERFACE #############################
-function getInterfaceTranslationsColumn($table, $value, $item)
+function getInterfaceTranslationsColumn($value, $item)
 {
+  $routeName = routeGet('name') ? routeGet('name') : trim(routeGet('path'), '/');
+  $routeName = preg_replace('/[^\d\w]/iu', '.', $routeName);
+
   $html = '<div class="d-flex gap-1">';
-  $count_translations = count(array_intersect($value, array_keys(site('languages')))) + 1;
-  $count_aviable_languages = count(site('languages'));
+  $countTranslations = count(array_intersect($value, array_keys(site('languages')))) + 1;
+  $countAviableLanguages = count(site('languages'));
 
   foreach ($value as $language) {
-    $html .= '<a href="' . site('url_language') . '/admin/' . $table . '/edit/' . $item->id . '/translation/edit/' . $language . '" class="flex-shrink-0 d-inline-block w-2rem h-2rem" data-tooltip="top" title="' . t('admin.' . $table . '.edit_translation', t('locale.' . $language)) . '"><img class="d-inline-block w-100 h-100 radius-round" src="' . Asset::url() . '/' . lang('icon', $language) . '" alt="' . $language . '"></a>';
+    $html .= '<a href="' . routeLink('group-translation-edit', ['id' => $item->id, 'language' => $language]) . '" class="flex-shrink-0 d-inline-block w-2rem h-2rem" data-tooltip="top" title="' . t("$routeName.edit_translation", t("i18n.$language")) . '"><img class="d-inline-block w-100 h-100 radius-round" src="' . pathResolveUrl(Asset::url(), lang('icon', $language)) . '" alt="' . $language . '"></a>';
   }
 
-  if ($count_translations < $count_aviable_languages) {
-    $html .= '<div class="flex-shrink-0 dropdown d-inline-flex w-2rem h-2rem dropdown_right-top">';
-    $html .= '<button type="button" class="table__action flex justify-content-center align-items-center w-100 h-100" data-tooltip="top" title="' . t('admin.' . $table . '.add_translation') . '"><i class="ti ti-plus"></i></button>';
+  if ($countTranslations < $countAviableLanguages) {
+    $html .= '<div class="flex-shrink-0 dropdown d-inline-flex w-2rem h-2rem">';
+    $html .= '<button type="button" class="table__action flex justify-content-center align-items-center w-100 h-100" data-tooltip="top" title="' . t("$routeName.add_translation") . '"><i class="ti ti-plus"></i></button>';
     $html .= '<div class="dropdown__menu">';
 
     foreach (site('languages') as $language) {
@@ -26,9 +29,9 @@ function getInterfaceTranslationsColumn($table, $value, $item)
         continue;
       }
 
-      $html .= '<a href="' . site('url_language') . '/admin/' . $table . '/edit/' . $item->id . '/translation/add/' . $language['key']  . '" class="dropdown__item d-flex align-items-center gap-2">';
-      $html .= '<img src="' . Asset::url() . '/' . lang('icon', $language['key']) . '" alt="' . lang('locale', $language['key']) . '" class="flex-shrink-0 d-inline-block h-1em">';
-      $html .= '<span>' . t("locale.{$language['key']}") . '</span>';
+      $html .= '<a href="' . routeLink('group-translation-add', ['id' => $item->id, 'language' => $language['key']]) . '" class="dropdown__item d-flex align-items-center gap-2">';
+      $html .= '<img src="' .  pathResolveUrl(Asset::url(), lang('icon', $language['key'])) . '" alt="' . lang('locale', $language['key']) . '" class="flex-shrink-0 d-inline-block h-1em">';
+      $html .= '<span>' . t("i18n.{$language['key']}") . '</span>';
       $html .= '</a>';
     }
 
@@ -277,7 +280,7 @@ function getInterfaceTranslationsColumn($table, $value, $item)
 // }
 
 ############################# MISC #############################
-function iconBoolean($value = false)
+function iconBoolean($value = null)
 {
   $icon = 'x';
 

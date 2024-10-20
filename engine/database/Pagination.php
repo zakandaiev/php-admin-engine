@@ -34,9 +34,9 @@ class Pagination
 
   public static function getInstance($totalRows = 0, $options = [])
   {
-    if (!self::$instance instanceof self) {
-      self::$instance = new self($totalRows, $options);
-    }
+    // if (!self::$instance instanceof self) {
+    //   self::$instance = new self($totalRows, $options);
+    // }
 
     return self::$instance;
   }

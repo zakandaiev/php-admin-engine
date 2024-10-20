@@ -13,11 +13,11 @@ class Table
   protected $header;
   protected $title;
   protected $actions = [];
-  protected $fields = [];
+  protected $columns = [];
   protected $data;
   protected $placeholder;
 
-  public function __construct($interface)
+  public function __construct($interface = [])
   {
     // TODO
     // $this->filter = @$interface['filter'];
@@ -25,7 +25,7 @@ class Table
     $this->header = @$interface['header'];
     $this->title = @$interface['title'];
     $this->actions = $interface['actions'] ?? [];
-    $this->fields = $interface['fields'] ?? [];
+    $this->columns = $interface['columns'] ?? [];
     $this->data = @$interface['data'];
     $this->placeholder = @$interface['placeholder'];
 
@@ -36,7 +36,7 @@ class Table
   {
     $html = '<h2 class="section__title">';
     $html .= '<span>' . $this->title . '</span>';
-    $html .= $this->renderActions();
+    $html .= $this->getActionsHtml();
     $html .= '</h2>';
 
     if ($this->isFilters()) {
@@ -44,7 +44,7 @@ class Table
       $html .= '<div class="row gap-xs">';
 
       $html .= '<div class="col-xs-12 col-xxl-3 order-xs-1 order-xxl-2">';
-      $html .= $this->renderFilters();
+      $html .= $this->getFiltersHtml();
       $html .= '</div>';
 
       $html .= '<div class="col-xs-12';
@@ -52,19 +52,19 @@ class Table
         $html .= ' col-xxl-9 order-xs-1 order-xxl-1';
       }
       $html .= '">';
-      $html .= $this->renderTable();
+      $html .= $this->getTableHtml();
       $html .= '</div>';
 
       $html .= '</div>';
       $html .= '</div>';
     } else {
-      $html .= $this->renderTable();
+      $html .= $this->getTableHtml();
     }
 
     echo $html;
   }
 
-  protected function renderActions()
+  protected function getActionsHtml()
   {
     $html = '<span class="section__actions">';
 
@@ -76,7 +76,7 @@ class Table
     }
 
     foreach ($this->actions as $action) {
-      $actionClass = $action['class'] ?? 'btn btn_primary';
+      $actionClass = $action['className'] ?? 'btn btn_primary';
       $html .= '<a href="' . $action['url'] . '" class="' . $actionClass . '">' . $action['name'] . '</a>';
     }
 
@@ -87,10 +87,10 @@ class Table
 
   protected function isFilters()
   {
-    return (!empty($this->fields) && !empty($this->filter) && isset($this->filterBuilder->get) && !empty($this->filterBuilder->get()));
+    return (!empty($this->columns) && !empty($this->filter) && isset($this->filterBuilder->get) && !empty($this->filterBuilder->get()));
   }
 
-  protected function renderFilters()
+  protected function getFiltersHtml()
   {
     if (!$this->isFilters() || !Request::has('show-filters')) {
       return false;
@@ -103,7 +103,7 @@ class Table
     if (!empty($filterSelected)) {
       $html .= '<div class="box__header">';
       $html .= '<h4 class="box__title">' . t('admin.filter.selected') . '</h4>';
-      $html .= $this->filterBuilder->renderSelected();
+      $html .= $this->filterBuilder->getSelectedHtml();
       $html .= '</div>';
     }
 
@@ -116,7 +116,7 @@ class Table
     return $html;
   }
 
-  protected function renderTable()
+  protected function getTableHtml()
   {
     $html = '<div class="box">';
 
@@ -140,14 +140,14 @@ class Table
 
     $html .= '<thead>';
     $html .= '<tr>';
-    foreach ($this->fields as $fieldName => $field) {
+    foreach ($this->columns as $columnName => $column) {
       $html .= '<th';
-      $html .= isset($field['width']) ? ' width="' . $field['width'] . '"' : '';
-      $html .= isset($field['thClass']) ? ' class="' . $field['thClass'] . '"' : '';
+      $html .= isset($column['width']) ? ' width="' . $column['width'] . '"' : '';
+      $html .= isset($column['thClass']) ? ' class="' . $column['thClass'] . '"' : '';
       $html .= '>';
 
-      $orderAlias = $this->getFilterOrderAlias($fieldName);
-      $html .= $orderAlias ? '<a href="' . getLinkSort($orderAlias) . '">' . @$field['title'] . '</a>' : @$field['title'];
+      $orderAlias = $this->getFilterOrderAlias($columnName);
+      $html .= $orderAlias ? '<a href="' . getLinkSort($orderAlias) . '">' . @$column['title'] . '</a>' : @$column['title'];
 
       $html .= '</th>';
     }
@@ -157,13 +157,13 @@ class Table
     $html .= '<tbody>';
     foreach ($this->data as $item) {
       $html .= '<tr>';
-      foreach ($this->fields as $fieldName => $field) {
+      foreach ($this->columns as $columnName => $column) {
         $html .= '<td';
-        $html .= isset($field['width']) ? ' width="' . $field['width'] . '"' : '';
-        $html .= isset($field['tdClass']) ? ' class="' . $field['tdClass'] . '"' : '';
+        $html .= isset($column['width']) ? ' width="' . $column['width'] . '"' : '';
+        $html .= isset($column['tdClassName']) ? ' class="' . $column['tdClassName'] . '"' : '';
         $html .= '>';
 
-        $html .= $this->renderTableItem($field, @$item->$fieldName, $item);
+        $html .= $this->getTableHtmlItem($column, @$item->$columnName, $item);
 
         $html .= '</td>';
       }
@@ -175,7 +175,7 @@ class Table
 
     $html .= '</div>';
 
-    $html .= $this->renderPagination();
+    $html .= $this->getPaginationHtml();
 
     $html .= '</div>';
 
@@ -188,56 +188,45 @@ class Table
       return false;
     }
 
-    foreach ($this->filterBuilder->get() as $field) {
-      if ($field['type'] === 'order' && $key === @$field['column'] && isset($field['alias'])) {
-        return $field['alias'];
+    foreach ($this->filterBuilder->get() as $column) {
+      if ($column['type'] === 'order' && $key === @$column['column'] && isset($column['alias'])) {
+        return $column['alias'];
       }
     }
 
     return false;
   }
 
-  protected function renderTableItem($field, $value = null, $item = null)
+  protected function getTableHtmlItem($column, $value = null, $item = null)
   {
-    if (isClosure($field['type'])) {
-      return $field['type']($value, $item, $field);
+    if (isClosure($column['type'])) {
+      return $column['type']($value, $item, $column);
     }
 
     $html = '';
 
-    switch ($field['type']) {
-      case 'boolean': {
-          $html .= iconBoolean($value);
-          break;
-        }
-      case 'date': {
-          $html .= dateFormat($value, @$field['format']);
-          break;
-        }
-      case 'dateWhen': {
-          $html .= dateWhen($value, @$field['format']);
-          break;
-        }
-      case 'text': {
-          $html .= $value;
-          break;
-        }
-      case 'json': {
-          $html .= json_encode($value);
-          break;
-        }
-      default: {
-          $html .= '<i class="ti ti-minus"></i>';
-          break;
-        }
+    if ($column['type'] === 'boolean') {
+      $html .= iconBoolean($value);
+    } else if ($column['type'] === 'date') {
+      $html .= dateFormat($value, @$column['format']);
+    } else if ($column['type'] === 'dateWhen') {
+      $html .= dateWhen($value, @$column['format']);
+    } else if ($column['type'] === 'text') {
+      $html .= $value;
+    } else {
+      $html .= '<i class="ti ti-minus"></i>';
     }
 
     return $html;
   }
 
-  protected function renderPagination()
+  protected function getPaginationHtml()
   {
     $pagination = Pagination::getInstance();
+
+    if (!$pagination) {
+      return null;
+    }
 
     $html = '<div class="box__footer">';
 

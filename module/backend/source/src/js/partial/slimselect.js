@@ -20,29 +20,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (select.hasAttribute('data-addable')) {
       events.addable = (value) => {
-        const addableType = select.getAttribute('data-addable');
-        const isRegex = typeof addableType === 'string' && addableType[0] === '/';
-        let isRegexTest = false;
-        try {
-          // eslint-disable-next-line
-          const regexMatch = addableType.match(new RegExp('^/(.*?)/([a-z]*)$'));
-          const regex = new RegExp(regexMatch[1], regexMatch[2]);
+        value = value.replaceAll(/[\s]+/g, ' ').trim();
 
-          if (regex.test(value)) {
-            isRegexTest = true;
-          }
-        } catch (e) {
-          // do nothing
-        }
+        const addableType = select.getAttribute('data-addable');
 
         if (addableType === 'slug') {
           value = value.replaceAll(/[^\p{L}\d ]+/giu, '');
           value = getSlug(value).toLowerCase();
-        } else if (isRegex && !isRegexTest) {
-          return false;
+
+          return value;
         }
 
-        value = value.replaceAll(/[\s]+/g, ' ').trim();
+        let isRegexTest = false;
+        const isRegex = typeof addableType === 'string' && addableType[0] === '/';
+        if (isRegex) {
+          // eslint-disable-next-line
+          const regexMatch = addableType.match(new RegExp('^/(.*?)/([a-z]*)$'));
+          const regex = new RegExp(regexMatch[1], regexMatch[2]);
+
+          isRegexTest = regex.test(value);
+        }
+
+        if (isRegex && !isRegexTest) {
+          return false;
+        }
 
         return value;
       };
@@ -54,12 +55,12 @@ document.addEventListener('DOMContentLoaded', () => {
         contentLocation: wrapper,
         contentPosition: 'relative',
         alwaysOpen: select.hasAttribute('data-always-open') ? true : false,
-        placeholderText: select.hasAttribute('data-placeholder') ? select.getAttribute('data-placeholder') : null,
         allowDeselect: select.querySelector('option[data-placeholder]') ? true : false,
         minSelected: select.hasAttribute('data-min') ? select.getAttribute('data-min') : null,
         maxSelected: select.hasAttribute('data-max') ? select.getAttribute('data-max') : null,
         // eslint-disable-next-line
         showSearch: (select.querySelectorAll('option').length > 10 || select.hasAttribute('data-show-search') || select.hasAttribute('data-addable')) && select.getAttribute('data-show-search') != false ? true : false,
+        placeholderText: select.hasAttribute('placeholder') ? select.getAttribute('placeholder') : null,
         searchText: select.hasAttribute('data-placeholder-search-text') ? select.getAttribute('data-placeholder-search-text') : null,
         searchPlaceholder: select.hasAttribute('data-placeholder-search') ? select.getAttribute('data-placeholder-search') : null,
         searchHighlight: select.hasAttribute('data-search-highlight') ? true : false,

@@ -6,16 +6,16 @@ use engine\i18n\I18n;
 
 class Date
 {
-  public static function format($date = null, $format = 'd.m.Y')
+  public static function format($date = null, $format = null)
   {
     $timestamp = $date ?? time();
 
     $timestamp = is_numeric($timestamp) ? $timestamp : strtotime($timestamp);
 
-    return date($format, $timestamp);
+    return date($format ?? 'd.m.Y', $timestamp);
   }
 
-  public static function when($date = null, $format = 'd.m.Y')
+  public static function when($date = null, $format = null)
   {
     $timestamp = $date ?? time();
     $timestamp = is_numeric($date) ? $date : strtotime($date ?? time());
@@ -29,7 +29,7 @@ class Date
     } else if ($yesterday === $dateDay) {
       $date = I18n::translate('date.yesterday_at', date('H:i', $timestamp));
     } else {
-      $date = self::format($timestamp, $format);
+      $date = self::format($timestamp, $format ?? 'd.m.Y');
     }
 
     return $date;

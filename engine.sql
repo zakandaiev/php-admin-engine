@@ -38,6 +38,30 @@ INSERT INTO `%prefix%_setting` (`module`, `name`, `value`) VALUES
 ('contact', 'email', '%contact_email%'),
 ('contact', 'phones', NULL);
 
+CREATE TABLE IF NOT EXISTS `%prefix%_user` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(256) NOT NULL,
+  `password` VARCHAR(256) NOT NULL,
+  `name` VARCHAR(256) NOT NULL,
+  `phone` VARCHAR(128) DEFAULT NULL,
+  `language` VARCHAR(2) DEFAULT NULL,
+  `avatar` TEXT DEFAULT NULL,
+  `setting` TEXT DEFAULT NULL,
+  `auth_token` VARCHAR(256) DEFAULT NULL,
+  `auth_ip` VARCHAR(32) DEFAULT NULL,
+  `auth_date` DATETIME NULL DEFAULT NULL,
+  `is_enabled` BOOLEAN NOT NULL DEFAULT TRUE,
+  `date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `date_edited` DATETIME ON UPDATE CURRENT_TIMESTAMP DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE `email` (`email`),
+  UNIQUE `phone` (`phone`),
+  UNIQUE `auth_token` (`auth_token`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `%prefix%_user` (`email`, `password`, `name`, `auth_token`, `auth_ip`) VALUES
+('%admin_email%', '%admin_password%', 'Administrator', '%auth_token%', '%auth_ip%');
+
 CREATE TABLE IF NOT EXISTS `%prefix%_group` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `access_all` BOOLEAN NOT NULL DEFAULT FALSE,
@@ -106,26 +130,12 @@ CREATE TABLE IF NOT EXISTS `%prefix%_form` (
 
 
 
-CREATE TABLE IF NOT EXISTS `%prefix%_user` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `email` VARCHAR(200) NOT NULL,
-  `password` VARCHAR(200) NOT NULL,
-  `name` VARCHAR(200) NOT NULL,
-  `phone` VARCHAR(100) DEFAULT NULL,
-  `language` VARCHAR(8) DEFAULT NULL,
-  `avatar` TEXT DEFAULT NULL,
-  `setting` TEXT DEFAULT NULL,
-  `auth_token` VARCHAR(200) DEFAULT NULL,
-  `auth_ip` VARCHAR(32) DEFAULT NULL,
-  `auth_date` DATETIME NULL DEFAULT NULL,
-  `is_enabled` BOOLEAN NOT NULL DEFAULT TRUE,
-  `date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `date_edited` DATETIME ON UPDATE CURRENT_TIMESTAMP DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE `email` (`email`),
-  UNIQUE `phone` (`phone`),
-  UNIQUE `auth_token` (`auth_token`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+
+
+
+
 
 CREATE TABLE IF NOT EXISTS `%prefix%_page` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -223,9 +233,6 @@ CREATE TABLE IF NOT EXISTS `%prefix%_feedback` (
   `date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-INSERT INTO `%prefix%_user` (`email`, `password`, `name`, `auth_token`, `auth_ip`) VALUES
-('%admin_email%', '%admin_password%', 'Administrator', '%auth_token%', '%auth_ip%');
 
 INSERT INTO `%prefix%_notification` (`user_id`, `type`, `info`) VALUES
 (1, 'user_register', '{"ip":"%auth_ip%"}');

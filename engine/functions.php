@@ -35,12 +35,12 @@ if (!function_exists('str_starts_with')) {
 }
 
 ############################# DATE #############################
-function dateFormat($date = null, $format = 'd.m.Y')
+function dateFormat($date = null, $format = null)
 {
   return Date::format($date, $format);
 }
 
-function dateWhen($date = null, $format = 'd.m.Y')
+function dateWhen($date = null, $format = null)
 {
   return Date::when($date, $format);
 }
@@ -82,24 +82,24 @@ function fileGetExtension($path)
   return File::getExtension($path);
 }
 
-function fileGetSize($path, $precision = 2)
+function fileGetSize($path)
 {
   return File::getSize($path);
 }
 
-function fileCreateDir($directory, $permissions = 0755, $recursive = true)
+function fileCreateDir($directory, $permissions = null, $recursive = null)
 {
-  return File::createDir($directory, $permissions, $recursive);
+  return File::createDir($directory, $permissions ?? 0755, $recursive ?? true);
 }
 
-function fileCreateFile($path, $content = PHP_EOL, $flags = 0)
+function fileCreateFile($path, $content = null, $flags = null)
 {
-  return File::createFile($path, $content, $flags);
+  return File::createFile($path, $content ?? PHP_EOL, $flags ?? 0);
 }
 
-function fileGlobRecursive($pattern, $flags = 0)
+function fileGlobRecursive($pattern, $flags = null)
 {
-  return File::globRecursive($pattern, $flags);
+  return File::globRecursive($pattern, $flags ?? 0);
 }
 
 function fileRmdirRecursive($path)
@@ -108,7 +108,7 @@ function fileRmdirRecursive($path)
 }
 
 ############################# HASH #############################
-function hashToken($length = 16)
+function hashToken($length = null)
 {
   return Hash::token($length);
 }
@@ -150,42 +150,42 @@ function pathResolveUrl(...$args)
 }
 
 ############################# TEXT #############################
-function textHtml($text = '')
+function textHtml($text = null)
 {
   return Text::html($text);
 }
 
-function textUrl($url = '')
+function textUrl($url = null)
 {
   return Text::url($url);
 }
 
-function textTel($tel = '')
+function textTel($tel = null)
 {
   return Text::tel($tel);
 }
 
-function textCyrToLat($text = '')
+function textCyrToLat($text = null)
 {
   return Text::cyrToLat($text);
 }
 
-function textSlug($text = '', $delimiter = '-')
+function textSlug($text = null, $delimiter = null)
 {
   return Text::slug($text, $delimiter);
 }
 
-function textWord($text = '')
+function textWord($text = null)
 {
   return Text::word($text);
 }
 
-function textExcerpt($text = '', $maxchar = 100, $end = "...")
+function textExcerpt($text = null, $maxchar = null, $end = null)
 {
   return Text::excerpt($text, $maxchar, $end);
 }
 
-function textPluralValue($number, $values = [])
+function textPluralValue($number, $values = null)
 {
   return Text::pluralValue($number, $values);
 }
@@ -289,12 +289,12 @@ function routeGet($key = null)
   return Route::get($key);
 }
 
-function routeLink($routeName, $routeParams = [], $routeQuery = [], $moduleName = null)
+function routeLink($routeName, $routeParams = null, $routeQuery = null, $moduleName = null)
 {
   return Route::link($routeName, $routeParams, $routeQuery, $moduleName);
 }
 
-function routeIsActive($routeName, $routeParams = [], $moduleName = null)
+function routeIsActive($routeName, $routeParams = null, $moduleName = null)
 {
   return Route::isActive($routeName, $routeParams, $moduleName);
 }
@@ -304,7 +304,7 @@ function routeCompareUri($url1, $url2)
   return Route::compareUri($url1, $url2);
 }
 
-function routeChangeQuery($params = [], $returnUri = false)
+function routeChangeQuery($params = null, $returnUri = null)
 {
   return Route::changeQuery($params, $returnUri);
 }
@@ -468,11 +468,11 @@ function stringToNumber($string)
   return null;
 }
 
-function getLinkFilter($key, $value = 1)
+function getLinkFilter($key, $value = null)
 {
   $query = Request::get();
 
-  $query[$key] = $value;
+  $query[$key] = $value ?? 1;
 
   $query = http_build_query($query);
   $query = !empty($query) ? "?$query" : '';
