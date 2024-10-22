@@ -14,7 +14,7 @@
 }
 
 .col,
-[class^="col-"] {
+[class*="col-"] {
   display: block;
   flex: 0 0 auto;
 
@@ -61,7 +61,7 @@
     }
 
     .row.gap-#{$bp} > .col,
-    .row.gap-#{$bp} > [class^="col-"] {
+    .row.gap-#{$bp} > [class*="col-"] {
       padding: calc(var(--gap) / 2);
     }
 
@@ -71,7 +71,7 @@
     }
 
     .row.gap-#{$bp}-x > .col,
-    .row.gap-#{$bp}-x > [class^="col-"] {
+    .row.gap-#{$bp}-x > [class*="col-"] {
       padding: 0 calc(var(--gap) / 2);
     }
 
@@ -81,7 +81,7 @@
     }
 
     .row.gap-#{$bp}-y > .col,
-    .row.gap-#{$bp}-y > [class^="col-"] {
+    .row.gap-#{$bp}-y > [class*="col-"] {
       padding: calc(var(--gap) / 2) 0;
     }
   }

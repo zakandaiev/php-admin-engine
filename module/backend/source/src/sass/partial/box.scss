@@ -6,12 +6,8 @@
   border-radius: var(--radius-xs);
   box-shadow: var(--shadow);
 
-  &:not(:first-child) {
-    margin-top: 1rem;
-  }
-
   & + .box {
-    margin-top: var(--gap);
+    margin-top: 2rem;
   }
 
   // .box__image

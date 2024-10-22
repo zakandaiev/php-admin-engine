@@ -9,7 +9,6 @@ Page::set('title', $title);
 Page::breadcrumb('add', t('group.list.title'), 'group-list');
 Page::breadcrumb('add', $title);
 
-
 $routesFormatted = [];
 foreach ($routes as $method => $r) {
   foreach ($r as $p) {
@@ -38,32 +37,32 @@ $form = new Form([
   'action' => 'add',
   'title' => $title,
   'attributes' => [
-    'data-redirect="' . routeLink('group-list') . '"',
+    'data-redirect="' . routeLink('group-edit') . '"',
     'data-validate'
   ],
   'columns' => [
     'name' => [
-      'label' => t('group.add.name'),
-      'placeholder' => t('group.add.name_placeholder')
+      'label' => t('group.column.name'),
+      'placeholder' => t('group.column.name_placeholder')
     ],
-    'routes' => [
-      'label' => t('group.add.routes'),
-      'placeholder' => t('group.add.routes_placeholder'),
+    'route' => [
+      'label' => t('group.column.routes'),
+      'placeholder' => t('group.column.routes_placeholder'),
       'options' => $routesFormatted,
       'data-addable' => '/(any|delete|get|options|patch|post|put)@\/[0-9a-z\/\*\$\-\_]+/g'
     ],
-    'users' => [
-      'label' => t('group.add.users'),
-      'placeholder' => t('group.add.users_placeholder'),
+    'user_id' => [
+      'label' => t('group.column.users'),
+      'placeholder' => t('group.column.users_placeholder'),
       'options' => $usersFormatted
     ],
     'is_enabled' => [
-      'label' => t('group.add.is_enabled'),
-      'placeholder' => t('group.add.is_enabled_placeholder')
+      'label' => t('group.column.is_enabled'),
+      'placeholder' => t('group.column.is_enabled_placeholder')
     ],
     'access_all' => [
-      'label' => t('group.add.access_all_placeholder'),
-      'placeholder' => t('group.add.access_all_placeholder')
+      'label' => t('group.column.access_all_placeholder'),
+      'placeholder' => t('group.column.access_all_placeholder')
     ],
   ]
 ]);

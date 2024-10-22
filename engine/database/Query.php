@@ -283,9 +283,7 @@ class Query
 
       if (preg_match("/duplicate.+key.+[\'\"\`](.+)[\'\"\`]/iu", $this->error['message'], $matches)) {
         $columnName = str_replace($this->prefix . '_', '', $matches[1]);
-        $errorMessage = "$columnName.duplicate";
 
-        $this->error['message'] = $errorMessage;
         $this->error['column'] = $columnName;
         $this->error['validation'] = 'duplicate';
       }

@@ -25,63 +25,83 @@ class Group extends Backend
 
   public function getEdit()
   {
-    $is_translation = false;
-    $translation_language = null;
-
-    if (isset($this->route['parameter']['language'])) {
-      $is_translation = true;
-      $translation_language = $this->route['parameter']['language'];
-    }
-
-    $group_id = $this->route['parameter']['id'];
-
-    $group = $this->model->getGroupById($group_id);
+    $groupId = $this->route['parameter']['id'];
+    $group = $this->model->getGroupById($groupId);
 
     if (empty($group)) {
       $this->view->error('404');
+      return false;
     }
 
-    $group->routes = $this->model->getGroupRoutesById($group_id);
-    $group->users = $this->model->getGroupUsersById($group_id);
+    $group->route = $this->model->getGroupRoutesById($groupId);
+    $group->user_id = $this->model->getGroupUsersById($groupId);
 
-    if ($is_translation) {
-      $this->view->setData('group_origin', $group);
-      $this->view->setData('group', $this->model->getGroupById($group_id, $translation_language));
-    } else {
-      $this->view->setData('group', $group);
-      $this->view->setData('routes', $this->model->getRoutes());
-      $this->view->setData('users', $this->model->getUsers());
-    }
-    $this->view->setData('is_translation', $is_translation);
+    $this->view->setData('group', $group);
+    $this->view->setData('routes', $this->model->getRoutes());
+    $this->view->setData('users', $this->model->getUsers());
 
     $this->view->render('group/edit');
   }
 
   public function getAddTranslation()
   {
-    $group_id = $this->route['parameter']['id'];
-    $translation_language = $this->route['parameter']['language'];
+    $groupId = $this->route['parameter']['id'];
+    $translationLanguage = $this->route['parameter']['language'];
 
-    if (!Language::has($translation_language)) {
+    if (!Language::has($translationLanguage)) {
       Server::redirect(site('url_language') . '/admin/group');
     }
 
-    $group = $this->model->getGroupById($group_id);
+    $group = $this->model->getGroupById($groupId);
 
     if (empty($group)) {
       Server::redirect(site('url_language') . '/admin/group');
     }
 
     $translation = [
-      'group_id' => $group_id,
-      'language' => $translation_language,
+      'groupId' => $groupId,
+      'language' => $translationLanguage,
       'name' => $group->name
     ];
 
     if ($this->model->createTranslation('group_translation', $translation)) {
-      Server::redirect(site('url_language') . '/admin/group/edit/' . $group_id . '/translation/edit/' . $translation_language);
+      Server::redirect(site('url_language') . '/admin/group/edit/' . $groupId . '/translation/edit/' . $translationLanguage);
     } else {
       Server::redirect(site('url_language') . '/admin/group');
     }
+  }
+
+  public function getEditTranslation()
+  {
+    $isTranslation = false;
+    $translationLanguage = null;
+
+    if (isset($this->route['parameter']['language'])) {
+      $isTranslation = true;
+      $translationLanguage = $this->route['parameter']['language'];
+    }
+
+    $groupId = $this->route['parameter']['id'];
+
+    $group = $this->model->getGroupById($groupId);
+
+    if (empty($group)) {
+      $this->view->error('404');
+    }
+
+    $group->routes = $this->model->getGroupRoutesById($groupId);
+    $group->users = $this->model->getGroupUsersById($groupId);
+
+    if ($isTranslation) {
+      $this->view->setData('group_origin', $group);
+      $this->view->setData('group', $this->model->getGroupById($groupId, $translationLanguage));
+    } else {
+      $this->view->setData('group', $group);
+      $this->view->setData('routes', $this->model->getRoutes());
+      $this->view->setData('users', $this->model->getUsers());
+    }
+    $this->view->setData('isTranslation', $isTranslation);
+
+    $this->view->render('group/edit');
   }
 }

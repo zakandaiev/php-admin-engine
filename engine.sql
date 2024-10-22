@@ -39,7 +39,7 @@ INSERT INTO `%prefix%_setting` (`module`, `name`, `value`) VALUES
 ('contact', 'phones', NULL);
 
 CREATE TABLE IF NOT EXISTS `%prefix%_user` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` VARCHAR(32) NOT NULL,
   `email` VARCHAR(256) NOT NULL,
   `password` VARCHAR(256) NOT NULL,
   `name` VARCHAR(256) NOT NULL,
@@ -63,7 +63,7 @@ INSERT INTO `%prefix%_user` (`email`, `password`, `name`, `auth_token`, `auth_ip
 ('%admin_email%', '%admin_password%', 'Administrator', '%auth_token%', '%auth_ip%');
 
 CREATE TABLE IF NOT EXISTS `%prefix%_group` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` VARCHAR(32) NOT NULL,
   `access_all` BOOLEAN NOT NULL DEFAULT FALSE,
   `is_enabled` BOOLEAN NOT NULL DEFAULT TRUE,
   `date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -72,20 +72,20 @@ CREATE TABLE IF NOT EXISTS `%prefix%_group` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `%prefix%_group_translation` (
-  `group_id` INT UNSIGNED NOT NULL,
+  `group_id` VARCHAR(32) NOT NULL,
   `language` VARCHAR(2) NOT NULL,
   `name` VARCHAR(256) NOT NULL,
   PRIMARY KEY (`group_id`, `language`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `%prefix%_group_user` (
-  `group_id` INT UNSIGNED NOT NULL,
-  `user_id` INT UNSIGNED NOT NULL,
+  `group_id` VARCHAR(32) NOT NULL,
+  `user_id` VARCHAR(32) NOT NULL,
   PRIMARY KEY (`group_id`, `user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `%prefix%_group_route` (
-  `group_id` INT UNSIGNED NOT NULL,
+  `group_id` VARCHAR(32) NOT NULL,
   `route` VARCHAR(512) NOT NULL,
   PRIMARY KEY (`group_id`, `route`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -122,6 +122,7 @@ CREATE TABLE IF NOT EXISTS `%prefix%_form` (
   `action` VARCHAR(32) NOT NULL,
   `model_name` VARCHAR(128) NOT NULL,
   `item_id` VARCHAR(256) DEFAULT NULL,
+  `is_match_request` BOOLEAN NOT NULL DEFAULT FALSE,
   `date_created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `ip` VARCHAR(32) NOT NULL,
   PRIMARY KEY  (`token`)

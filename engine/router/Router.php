@@ -163,7 +163,7 @@ class Router
       Response::answer('error', I18n::translate('form.unknown_error'), null, 400);
     }
 
-    $form->execute()->answer();
+    $form->execute();
 
     return true;
   }

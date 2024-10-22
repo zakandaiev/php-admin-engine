@@ -22,6 +22,7 @@ import '@/js/partial/sidebar';
 /* ==========  PLUGINS  ========== */
 import '@/js/partial/air-datepicker';
 import '@/js/partial/chart';
+import '@/js/partial/data-action';
 import '@/js/partial/fancybox';
 import '@/js/partial/filepond';
 import '@/js/partial/form';

@@ -1,6 +1,10 @@
 import { request } from '@/js/util/request';
 import toast from '@/js/util/toast';
 
+// TODO
+// form behavior
+// refactor all
+
 class Form {
   constructor(node, options = {}) {
     this.initializeVariables(node, options);
@@ -30,7 +34,7 @@ class Form {
       this.method = 'POST';
     }
     this.dataConfirm = this.node.getAttribute('data-confirm');
-    this.dataClass = this.node.getAttribute('data-class') || 'submit';
+    this.dataClass = this.node.getAttribute('data-class') || 'form_loading';
     this.dataReset = this.node.hasAttribute('data-reset') ? true : false;
     this.dataRedirect = this.node.getAttribute('data-redirect');
     this.dataMessage = this.node.getAttribute('data-message');
@@ -63,10 +67,26 @@ class Form {
 
     this.submit.addEventListener('click', () => {
       this.node.querySelectorAll(':invalid').forEach((item) => {
+        const column = item.closest('.form__column');
+        if (column) {
+          column.classList.remove('form__column_valid');
+          column.classList.add('form__column_invalid');
+
+          return true;
+        }
+
         item.classList.remove('valid');
         item.classList.add('invalid');
       });
       this.node.querySelectorAll(':valid').forEach((item) => {
+        const column = item.closest('.form__column');
+        if (column) {
+          column.classList.remove('form__column_invalid');
+          column.classList.add('form__column_valid');
+
+          return true;
+        }
+
         item.classList.remove('invalid');
         item.classList.add('valid');
       });
@@ -78,9 +98,24 @@ class Form {
       events.forEach((e) => {
         input.addEventListener(e, () => {
           if (!input.validity.valid) {
+            const column = input.closest('.form__column');
+            if (column) {
+              column.classList.remove('form__column_valid');
+              column.classList.add('form__column_invalid');
+
+              return true;
+            }
+
             input.classList.remove('valid');
             input.classList.add('invalid');
           } else {
+            const column = input.closest('.form__column');
+            if (column) {
+              column.classList.remove('form__column_invalid');
+              column.classList.add('form__column_valid');
+
+              return true;
+            }
             input.classList.remove('invalid');
             input.classList.add('valid');
           }
@@ -93,7 +128,7 @@ class Form {
     const loader = this.options?.theme?.loader;
 
     if (loader) {
-      this.node.insertAdjacentHTML('beforeend', loader);
+      this.node.insertAdjacentHTML('beforeend', `<div class="form__loader">${loader}</div>`);
 
       return true;
     }
@@ -157,12 +192,14 @@ class Form {
         this.api.delayMs,
       );
 
-      if (data.status === 'success') {
+      if (data.code === 200 && data.status === 'success') {
         this.successRedirect(data);
         this.successResetForm();
 
         toast(this.dataMessage || data.message, data.status);
       } else {
+        this.showErrors(data.data || []);
+
         toast(data.message, data.status);
       }
 
@@ -224,6 +261,7 @@ class Form {
     }
   }
 
+  // eslint-disable-next-line
   unsetNullFormData(data) {
     // eslint-disable-next-line
     for (const pair of data.entries()) {
@@ -236,6 +274,7 @@ class Form {
     }
   }
 
+  // eslint-disable-next-line
   getFormattedDate(type, date) {
     const d = new Date(date.valueOf());
     d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
@@ -273,13 +312,38 @@ class Form {
     return true;
   }
 
-  successRedirect(data) {
-    if (this.dataRedirect) {
-      if (this.dataRedirect === 'this') {
-        document.location.reload();
-      } else {
-        window.location.href = decodeURI(this.dataRedirect).replaceAll(/({\w+})/g, data?.data);
+  showErrors(data) {
+    if (!this.node.hasAttribute('data-validate') || !data?.length) {
+      return false;
+    }
+
+    data.forEach((validation) => {
+      if (!validation.column || !validation.validation) {
+        return false;
       }
+
+      const column = this.node.querySelector(`[data-column-name="${validation.column}"]`);
+      if (!column) {
+        return false;
+      }
+
+      column.classList.remove('form__column_valid');
+      column.classList.add('form__column_invalid');
+
+      const errorNode = column.querySelector('.form__error');
+      if (!errorNode) {
+        return false;
+      }
+
+      errorNode.textContent = validation.validation;
+    });
+  }
+
+  successRedirect(data) {
+    if (this.dataRedirect === 'this') {
+      document.location.reload();
+    } else if (this.dataRedirect) {
+      window.location.href = decodeURI(this.dataRedirect).replaceAll(/(\$[\w\d]+)/g, data?.data);
     }
 
     return false;

@@ -5,10 +5,11 @@ namespace module\backend\model;
 use engine\database\Model;
 use engine\database\Query;
 use engine\module\Module;
+use engine\util\Hash;
 
 class Group extends Model
 {
-  public function __construct($data = [])
+  public function __construct($columnData = null, $columnKeysToValidate = null)
   {
     $this->table = 'group';
     $this->primaryKey = 'id';
@@ -16,13 +17,15 @@ class Group extends Model
     $this->column['language'] = [
       'type' => 'text',
       'required' => true,
-      'value' => site('language')
+      'value' => site('language'),
+      'foreign' => 'group_translation@group_id'
     ];
 
     $this->column['id'] = [
-      'type' => 'number',
+      'type' => 'text',
       'min' => 1,
-      'max' => 128
+      'max' => 128,
+      'value' => Hash::token(32)
     ];
 
     $this->column['name'] = [
@@ -30,17 +33,20 @@ class Group extends Model
       'required' => true,
       'min' => 1,
       'max' => 256,
-      'regex' => '/^[\w ]+$/iu'
+      'regex' => '/^[\w ]+$/iu',
+      'foreign' => 'group_translation@group_id'
     ];
 
-    $this->column['routes'] = [
+    $this->column['route'] = [
       'type' => 'array',
-      'value' => []
+      'value' => [],
+      'foreign' => 'group_route@group_id'
     ];
 
-    $this->column['users'] = [
+    $this->column['user_id'] = [
       'type' => 'array',
-      'value' => []
+      'value' => [],
+      'foreign' => 'group_user@group_id'
     ];
 
     $this->column['is_enabled'] = [
@@ -53,47 +59,41 @@ class Group extends Model
       'value' => false
     ];
 
-    parent::__construct($data);
+    parent::__construct($columnData, $columnKeysToValidate);
   }
 
   public function getGroups()
   {
-    $sql = '
+    $sql = "
       SELECT
         *,
-        (SELECT COUNT(*) FROM {group_route} WHERE group_id = t_group.id) as count_routes,
-        (SELECT COUNT(*) FROM {group_user} WHERE group_id = t_group.id) as count_users,
-        (SELECT GROUP_CONCAT(language) FROM {group_translation} WHERE group_id = t_group.id AND language<>:language) as translations
+        (SELECT COUNT(*) FROM {group_route} WHERE group_id=t_group.id) as count_routes,
+        (SELECT COUNT(*) FROM {group_user} WHERE group_id=t_group.id) as count_users,
+        (SELECT GROUP_CONCAT(language) FROM {group_translation} WHERE group_id=t_group.id AND language<>:language) as translations
       FROM
         {group} t_group
       INNER JOIN
         {group_translation} t_group_translation
       ON
-        t_group.id = t_group_translation.group_id
+        t_group.id=t_group_translation.group_id
       WHERE
         t_group_translation.language =
           (CASE WHEN
-            (SELECT count(*) FROM {group_translation} WHERE group_id = t_group.id AND language = :language) > 0
+            (SELECT count(*) FROM {group_translation} WHERE group_id=t_group.id AND language=:language) > 0
           THEN
             :language
           ELSE
-            (SELECT value FROM {setting} WHERE module = \'engine\' AND name = \'language\')
+            (SELECT value FROM {setting} WHERE module='engine' AND name='language')
           END)
       ORDER BY
-        t_group.id ASC
-    ';
+        t_group.date_created ASC
+    ";
 
-    $groups = new Query($sql);
+    $query = new Query($sql);
 
     // TODO
     // ->filter()
-    $groups = $groups->paginate()->execute(['language' => site('language_current')])->fetchAll();
-
-    foreach ($groups as $group) {
-      $group->translations = !empty($group->translations) ? explode(',', $group->translations) : [];
-    }
-
-    return $groups;
+    return $query->paginate()->execute(['language' => site('language_current')])->fetchAll();
   }
 
   public function getRoutes()
@@ -146,31 +146,31 @@ class Group extends Model
 
   public function getGroupById($id, $language = null)
   {
-    $sql = '
+    $sql = "
       SELECT
         *,
-        (SELECT COUNT(*) FROM {group_route} WHERE group_id = t_group.id) as count_routes,
-        (SELECT COUNT(*) FROM {group_user} WHERE group_id = t_group.id) as count_users
+        (SELECT COUNT(*) FROM {group_route} WHERE group_id=t_group.id) as count_routes,
+        (SELECT COUNT(*) FROM {group_user} WHERE group_id=t_group.id) as count_users
       FROM
         {group} t_group
       INNER JOIN
         {group_translation} t_group_translation
       ON
-        t_group.id = t_group_translation.group_id
+        t_group.id=t_group_translation.group_id
       WHERE
-        t_group.id = :id
+        t_group.id=:id
         AND t_group_translation.language =
           (CASE WHEN
-            (SELECT count(*) FROM {group_translation} WHERE group_id = t_group.id AND language = :language) > 0
+            (SELECT count(*) FROM {group_translation} WHERE group_id=t_group.id AND language=:language) > 0
           THEN
             :language
           ELSE
-            (SELECT value FROM {setting} WHERE module = \'engine\' AND name = \'language\')
+            (SELECT value FROM {setting} WHERE module='engine' AND name='language')
           END)
       ORDER BY
-        t_group.id ASC
+        t_group.date_created ASC
       LIMIT 1
-    ';
+    ";
 
     $group = new Query($sql);
 
@@ -179,15 +179,11 @@ class Group extends Model
 
   public function getGroupRoutesById($group_id)
   {
-    $routes = new \stdClass();
+    $routes = [];
 
-    $sql = 'SELECT route FROM {group_route} WHERE group_id = :group_id';
-
-    $statement = new Query($sql);
-
-    foreach ($statement->execute(['group_id' => $group_id])->fetchAll() as $route) {
-      list($method, $uri) = explode('@', $route->route, 2);
-      $routes->{$method}[] = $uri;
+    $query = new Query("SELECT route FROM {group_route} WHERE group_id=:group_id");
+    foreach ($query->execute(['group_id' => $group_id])->fetchAll() as $route) {
+      $routes[] = $route->route;
     }
 
     return $routes;
@@ -197,11 +193,8 @@ class Group extends Model
   {
     $users = [];
 
-    $sql = 'SELECT user_id FROM {group_user} WHERE group_id = :group_id';
-
-    $statement = new Query($sql);
-
-    foreach ($statement->execute(['group_id' => $group_id])->fetchAll() as $user) {
+    $query = new Query("SELECT user_id FROM {group_user} WHERE group_id=:group_id");
+    foreach ($query->execute(['group_id' => $group_id])->fetchAll() as $user) {
       $users[] = $user->user_id;
     }
 

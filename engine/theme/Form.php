@@ -22,11 +22,10 @@ class Form
   protected $action;
   protected $modelName;
   protected $itemId;
+  protected $isMatchRequest;
 
   protected $model;
   protected $isModelActive = false;
-
-  protected $answer = [];
 
   public function __construct($token)
   {
@@ -64,16 +63,18 @@ class Form
     $this->action = $result->action;
     $this->modelName = $result->model_name;
     $this->itemId = $result->item_id;
+    $this->isMatchRequest = $result->is_match_request;
 
     // TODO
     // Module::loadHooks();
     Module::setName($this->module);
 
     // CHECK MODEL
-    $this->model = $this->loadModel($this->modelName);
+    $this->model = $this->loadModel();
     if (empty($this->model)) {
       return $this;
     }
+    $this->model->setItemId($this->itemId);
     $this->isModelActive = true;
 
     return $this;
@@ -116,11 +117,6 @@ class Form
     return $this;
   }
 
-  public function answer()
-  {
-    Response::answer(@$this->answer['status'], @$this->answer['message'], @$this->answer['data'], @$this->answer['code']);
-  }
-
   protected function clearExpired()
   {
     $tokenLifetime = Config::getProperty('form', 'lifetime');
@@ -133,12 +129,15 @@ class Form
     return true;
   }
 
-  protected function loadModel($modelName)
+  protected function loadModel()
   {
-    $model = Path::class('model') . '\\' . $modelName;
+    $model = Path::class('model') . '\\' . $this->modelName;
 
     if (class_exists($model)) {
-      return new $model(Request::get());
+      $request = Request::get();
+      $columnKeysToValidate = $this->isMatchRequest ? array_keys($request) : null;
+
+      return new $model($request, $columnKeysToValidate);
     }
 
     return null;
@@ -146,128 +145,36 @@ class Form
 
   protected function process()
   {
-    $this->answer['status'] = 'success';
-    $this->answer['message'] = null;
-    $this->answer['data'] = null;
-    $this->answer['code'] = 200;
+    $result = $this->model->{$this->action}();
 
-    $this->model->validation->validate();
-    if ($this->model->validation->hasError()) {
-      $this->answer['status'] = 'error';
-      $this->answer['message'] = I18n::translate('form.error');
-      $this->answer['data'] = $this->model->validation->getError();
-      $this->answer['code'] = 400;
-
-      return $this;
+    if ($result) {
+      $answer['status'] = 'success';
+      $answer['message'] = I18n::translate('form.success');
+      $answer['data'] = $result;
+      $answer['code'] = 200;
+    } else {
+      $answer['status'] = 'error';
+      $answer['message'] = I18n::translate('form.error');
+      $answer['data'] = $this->model->getError();
+      $answer['code'] = 400;
     }
 
-    // TODO
-    // self::prepareMediaFields();
-    // $foreign_data = self::getForeignFields();
-    // $translation_data = self::getTranslationFields($form_data['modelName']);
-
-    $table = $this->model->getTable();
-    $pkName = $this->model->getPrimaryKey();
-    $column = $this->model->getColumn();
-
-    $columnKeys = [];
-    $columnValues = [];
-    foreach ($column as $columnName => $column) {
-      $columnValue = $column['value'];
-      if ($columnValue === null && $columnName === $pkName) {
-        $columnValue = $this->itemId;
-      }
-
-      $columnKeys[] = $columnName;
-      $columnValues[$columnName] = $columnValue;
-    }
-
-    $sql = null;
-    if ($this->action === 'add') {
-      $sqlParams = '(' . implode(', ', $columnKeys) . ') VALUES (:' . implode(', :', $columnKeys) . ')';
-      $sql = "INSERT INTO {{$table}} $sqlParams";
-    } else if ($this->action === 'edit') {
-      $sqlParams = array_reduce($columnKeys, function ($carry, $v) {
-        return ($carry ? "$carry, " : '') . "$v=:$v";
-      });
-      $sql = "UPDATE {{$table}} SET $sqlParams WHERE $pkName=:$pkName";
-    } else if ($this->action === 'delete') {
-      $sqlParams = array_reduce($columnKeys, function ($carry, $v) {
-        return ($carry ? "$carry AND " : '') . "$v=:$v";
-      });
-      $sql = "DELETE FROM {{$table}} WHERE $sqlParams AND $pkName=:$pkName";
-    }
-
-    $query = new Query($sql);
-    $result = $query->execute($columnValues);
-
-    if ($query->hasError()) {
-      $this->answer['status'] = 'error';
-      $this->answer['message'] = $query->getError('message');
-      $this->answer['data'] = $query->getError();
-      $this->answer['code'] = 400;
-
-      return $this;
-    }
-
-    if ($this->action === 'add') {
-      $result = $result->insertId();
-    } else if ($this->action === 'edit') {
-      $result = true;
-    } else if ($this->action === 'delete') {
-      $result = true;
-    }
-
-
-
-
-
-
-    // TODO
-    // $statement = new Statement($form_data['sql']);
-    // $statement->execute($form_data['sql_binding']);
-
-    // $form_data['rowCount'] = $statement->rowCount();
-
-    // if ($form_data['action'] === 'add') {
-    //   $form_data['itemId'] = $statement->insertId();
-    // }
-
-    // self::uploadMediaFields();
-    // self::processForeignFields($foreign_data, $form_data);
-    // self::processTranslationFields($translation_data, $form_data);
-
-    // if (isset($form['execute_post']) && is_closure($form['execute_post'])) {
-    //   $form['execute_post']($form_data['rowCount'], self::$fields, $form_data);
-    // }
-
-    // if (isset($form['submit_message']) && is_closure($form['submit_message'])) {
-    //   $submit_message = $form['submit_message'](self::$fields, $form_data);
-    // } else if (isset($form['submit_message'])) {
-    //   $submit_message = $form['submit_message'];
-    // }
-
-    // if (!$form_data['force_no_answer']) {
-    //   Server::answer(null, 'success', @$submit_message);
-    // }
-
-    return $this;
+    Response::answer(@$answer['status'], @$answer['message'], @$answer['data'], @$answer['code']);
   }
 
-  // STATIC METHODS
-  public static function add($modelName)
+  public static function add($modelName, $isMatchRequest = null)
   {
-    return self::generateToken(__FUNCTION__, $modelName, null);
+    return self::generateToken(__FUNCTION__, $modelName, null, $isMatchRequest);
   }
 
-  public static function edit($modelName, $itemId)
+  public static function edit($modelName, $itemId, $isMatchRequest = null)
   {
-    return self::generateToken(__FUNCTION__, $modelName, $itemId);
+    return self::generateToken(__FUNCTION__, $modelName, $itemId, $isMatchRequest);
   }
 
-  public static function delete($modelName, $itemId)
+  public static function delete($modelName, $itemId, $isMatchRequest = null)
   {
-    return self::generateToken(__FUNCTION__, $modelName, $itemId);
+    return self::generateToken(__FUNCTION__, $modelName, $itemId, $isMatchRequest);
   }
 
   public static function isModelExists($modelName)
@@ -277,13 +184,13 @@ class Form
     return class_exists($model);
   }
 
-  public static function generateToken($action, $modelName, $itemId = null)
+  public static function generateToken($action, $modelName, $itemId = null, $isMatchRequest = null)
   {
     if (!self::isModelExists($modelName)) {
       return null;
     }
 
-    $tokenExists = self::isFormExistsAndActive($action, $modelName, $itemId);
+    $tokenExists = self::isFormExistsAndActive($action, $modelName, $itemId, $isMatchRequest);
     if ($tokenExists) {
       return Path::resolveUrl(null, $tokenExists);
     }
@@ -300,6 +207,7 @@ class Form
 
     if ($action !== 'add') {
       $bindParams['item_id'] = $itemId;
+      $bindParams['is_match_request'] = $isMatchRequest ?? false;
     }
 
     $sqlParams = '(' . implode(', ', array_keys($bindParams)) . ') VALUES (:' . implode(', :', array_keys($bindParams)) . ')';
@@ -311,7 +219,7 @@ class Form
     return Path::resolveUrl(null, $token);
   }
 
-  protected static function isFormExistsAndActive($action, $modelName, $itemId = null)
+  protected static function isFormExistsAndActive($action, $modelName, $itemId = null, $isMatchRequest = null)
   {
     $bindParams = [
       'module' => Module::getName(),
@@ -322,6 +230,7 @@ class Form
 
     if ($action !== 'add') {
       $bindParams['item_id'] = $itemId;
+      $bindParams['is_match_request'] = $isMatchRequest ?? false;
     }
 
     $sqlParams = array_reduce(array_keys($bindParams), function ($carry, $v) {
@@ -334,185 +243,5 @@ class Form
     $query = new Query($sql);
 
     return $query->execute($bindParams)->fetchColumn();
-  }
-
-
-
-
-
-
-
-
-  protected static function prepareMediaFields()
-  {
-    foreach (self::$fields as $key => $field_data) {
-      if ($field_data['type'] !== 'file' || empty($field_data['value']) || !isset($field_data['value'][0]['tmp_name'])) {
-        continue;
-      }
-
-      $value = $field_data['value'];
-
-      $upload = new Upload($value, @$field_data['folder'], @$field_data['extensions']);
-
-      if (!$upload->get('status')) {
-        Server::answer(null, 'error', $upload->get('message'), 400);
-      }
-
-      if (!isset($field_data['multiple']) || !$field_data['multiple']) {
-        self::$fields[$key]['value'] = @$upload->get('files')[0];
-      } else {
-        self::$fields[$key]['value'] = $upload->get('files') ?? [];
-      }
-
-      self::$fields[$key]['upload'] = $upload;
-    }
-
-    return true;
-  }
-
-  protected static function uploadMediaFields()
-  {
-    foreach (self::$fields as $key => $field_data) {
-      if ($field_data['type'] !== 'file' || !isset($field_data['upload']) || empty($field_data['upload'])) {
-        continue;
-      }
-
-      $field_data['upload']->execute();
-    }
-
-    return true;
-  }
-
-  protected static function getForeignFields()
-  {
-    $data = [];
-
-    foreach (self::$fields as $key => $field_data) {
-      if (!isset($field_data['foreign']) || empty($field_data['foreign'])) {
-        continue;
-      }
-
-      $field_name = $field_data['name'];
-      $foreign = $field_data['foreign'];
-
-      $data[$field_name]['value'] = $field_data['value'];
-
-      if (is_closure($foreign)) {
-        $data[$field_name]['closure'] = $foreign;
-      } else {
-        preg_match('/(\w+)\@(\w+)\/(\w+)/i', $foreign, $matches);
-
-        if (empty($matches) || count($matches) !== 4) {
-          continue;
-        }
-
-        $data[$field_name]['table'] = $matches[1];
-        $data[$field_name]['key_pk'] = $matches[2];
-        $data[$field_name]['key_fk'] = $matches[3];
-      }
-
-      unset(self::$fields[$key]);
-    }
-
-    return $data;
-  }
-
-  protected static function processForeignFields($foreign_data, $form_data)
-  {
-    if (empty($foreign_data) || empty($form_data)) {
-      return false;
-    }
-
-    foreach ($foreign_data as $foreign) {
-      if (isset($foreign['closure']) && is_closure($foreign['closure'])) {
-        $foreign['closure']($foreign['value'], $form_data);
-      } else if (isset($foreign['table']) && isset($foreign['key_pk']) && isset($foreign['key_fk'])) {
-        $table = $foreign['table'];
-        $key_pk = $foreign['key_pk'];
-        $key_fk = $foreign['key_fk'];
-        $value = $foreign['value'];
-        $itemId = $form_data['itemId'];
-
-        $sql = 'DELETE FROM {' . $table . '} WHERE ' . $key_pk . ' = :' . $key_pk;
-
-        $statement = new Statement($sql);
-        $statement->execute([$key_pk => $itemId]);
-
-        if (empty($value)) {
-          continue;
-        }
-
-        $value = is_array($value) ? $value : [$value];
-
-        foreach ($value as $v) {
-          $sql = '
-            INSERT INTO {' . $table . '}
-              (' . $key_pk . ', ' . $key_fk . ')
-            VALUES
-              (:' . $key_pk . ', :' . $key_fk . ')
-          ';
-
-          $statement = new Statement($sql);
-          $statement->execute([$key_pk => $itemId, $key_fk => $v]);
-        }
-      }
-    }
-
-    return true;
-  }
-
-  protected static function getTranslationFields($modelName)
-  {
-    $data = [];
-
-    $form_data = self::get($modelName);
-
-    if (!isset($form_data['translation']) || empty($form_data['translation'])) {
-      return false;
-    }
-
-    foreach ($form_data['translation'] as $key) {
-      if (!isset(self::$fields[$key])) {
-        continue;
-      }
-
-      $data[$key] = self::$fields[$key];
-
-      unset(self::$fields[$key]);
-    }
-
-    return $data;
-  }
-
-  protected static function processTranslationFields($fields, $form_data)
-  {
-    if (!is_array($fields) || empty($form_data) || empty($form_data['itemId']) || ($form_data['action'] !== 'delete' && empty($fields)) || str_contains($form_data['table'], '_translation')) {
-      return false;
-    }
-
-    if (!isset($fields['language']['value']) || empty($fields['language']['value'])) {
-      $fields['language']['type'] = 'hidden';
-      $fields['language']['value'] = Language::current();
-    }
-
-    $name = $form_data['modelName'] . '_translation';
-    $table = $form_data['table'] . '_translation';
-    $action = $form_data['action'];
-    $data = [
-      'table' => $table,
-      'fields' => $fields,
-      'modify_sql' => function ($sql, $fields, $data) {
-        if ($data['action'] === 'edit') {
-          $sql .= ' AND language = :language';
-        }
-
-        return $sql;
-      },
-    ];
-
-    self::set($name, $data);
-    self::execute($action, $name, $form_data['itemId'], false, true);
-
-    return true;
   }
 }

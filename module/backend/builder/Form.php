@@ -21,6 +21,7 @@ class Form
   protected $submitButtonRowClassName;
   protected $attributes = [];
   protected $columns = [];
+  protected $values = [];
 
   protected $model;
   protected $token;
@@ -41,6 +42,7 @@ class Form
     $this->submitButtonRowClassName = @$interface['submitButtonRowClassName'];
     $this->attributes = @$interface['attributes'];
     $this->columns = $interface['columns'] ?? [];
+    $this->values = $interface['values'] ?? [];
 
     if (empty($this->action)) {
       return $this;
@@ -51,7 +53,6 @@ class Form
       return $this;
     }
     $this->isModelActive = true;
-
 
     $this->token = ThemeForm::generateToken($this->action, $this->modelName, $this->itemId);
     if (empty($this->token)) {
@@ -78,20 +79,15 @@ class Form
     $html .= '<div class="box">';
     $html .= '<div class="box__body">';
 
-    $formClass = isset($this->className) ? 'class="' . $this->className . '"' : 'form';
+    $formClass = isset($this->className) ? 'class="' . $this->className . '"' : 'form gap-0 row gap-xs';
     $formAttributes = isset($this->attributes) ? implode(' ', $this->attributes) : '';
     $html .= '<form action="' . $this->token . '" class="' . $formClass . '" ' . $formAttributes . '>';
-
-    $rowClass = isset($this->rowClassName) ? $this->rowClassName : 'row gap-xs';
-    $html .= '<div class="' . $rowClass . '">';
 
     foreach ($this->columns as $columnName => $column) {
       $html .= $this->getColumnHtml($columnName, $column);
     }
 
     $html .= $this->getSubmitHtml();
-
-    $html .= '</div>';
 
     $html .= '</form>';
 
@@ -106,7 +102,7 @@ class Form
     $model = Path::class('model') . '\\' . $modelName;
 
     if (class_exists($model)) {
-      return new $model(Request::get());
+      return new $model((array)$this->values);
     }
 
     return null;
@@ -137,10 +133,15 @@ class Form
 
     $modelColumn = $this->model->getColumn($columnName);
 
-    $columnClassName = isset($this->columns[$columnName]['className']) ? $this->columns[$columnName]['className'] : 'col-xs-12';
+    $columnClassName = isset($column['className']) ? $column['className'] : 'col-xs-12 form__column';
+    if (@$modelColumn['required'] === true) {
+      $columnClassName .= ' form__column_required';
+    }
 
-    $html = '<div class="' . $columnClassName . '" data-form-type="column" data-form-name="' . $columnName . '">';
+    $html = '<div class="' . $columnClassName . '" data-form-type="column" data-column-name="' . $columnName . '">';
+
     $html .= $this->getColumnInputHtml(['name' => $columnName, ...$modelColumn, ...$column]);
+
     $html .= '</div>';
 
     return $html;
@@ -167,18 +168,17 @@ class Form
       return false;
     }
 
-    $html = '';
+    $inputHtml = '';
     $labelHtml = '';
 
     // SET LABEL
     if (isset($column['label'])) {
       $labelText = $column['label'];
-      $labelClassName = isset($column['labelClassName']) ? $column['labelClassName'] : '';
-      $labelClassDefinition = !empty($labelClassName) ? 'class="' . $labelClassName . '"' : '';
+      $labelClassName = isset($column['labelClassName']) ? $column['labelClassName'] : 'form__label';
 
-      $labelHtml = '<label ' . $labelClassDefinition . '>';
-      $labelHtml .= $labelText;
-      $labelHtml .= '</label>';
+      $labelHtml = '<div class="' . $labelClassName . '">';
+      $labelHtml .= "<label>$labelText</label>";
+      $labelHtml .= '</div>';
     }
 
     $validation = [
@@ -206,7 +206,7 @@ class Form
     $inputAttributes = [];
     foreach ($column as $attrName => $attrValue) {
       if (
-        in_array($attrName, ['className', 'label', 'options', 'regex'])
+        in_array($attrName, ['className', 'foreign', 'label', 'options', 'regex'])
         || $attrName === 'required' && !$attrValue
       ) {
         continue;
@@ -230,59 +230,63 @@ class Form
     switch ($inputType) {
       case 'array':
       case 'select': {
-          $html = $labelHtml;
-
           $inputValue = $inputValue ?? [];
           $inputOptions = $column['options'] ?? [];
 
           $inputAttributes['multiple'] = $inputType === 'array' ? 'multiple' : '';
 
-          $html .= '<select ' . implode(' ', $inputAttributes) . '>';
+          $inputHtml = '<select ' . implode(' ', $inputAttributes) . '>';
 
           if (isset($inputAttributes['placeholder'])) {
-            $html .= '<option data-placeholder="true"></option>';
+            $inputHtml .= '<option data-placeholder="true"></option>';
           }
 
           foreach ($inputOptions as $key => $value) {
             if (is_array($value)) {
-              $html .= '<optgroup label="' . $key . '">';
+              $inputHtml .= '<optgroup label="' . $key . '">';
 
               foreach ($value as $vf => $vv) {
                 $selected = in_array($vv->value, $inputValue) ? ' selected' : '';
-                $html .= '<option value="' . $vv->value . '"' . $selected . '>' . $vv->text . '</option>';
+                $inputHtml .= '<option value="' . $vv->value . '"' . $selected . '>' . $vv->text . '</option>';
               }
 
-              $html .= '</optgroup>';
+              $inputHtml .= '</optgroup>';
             } else {
               $selected = in_array($value->value, $inputValue) ? ' selected' : '';
-              $html .= '<option value="' . $value->value . '"' . $selected . '>' . $value->text . '</option>';
+              $inputHtml .= '<option value="' . $value->value . '"' . $selected . '>' . $value->text . '</option>';
             }
           }
 
-          $html .= '</select>';
+          $inputHtml .= '</select>';
 
           break;
         }
       case 'boolean': {
+          $labelHtml = '';
+
           $checked = $inputValue === true ? 'checked' : '';
 
-          $html = '<label class="switch">';
-          $html .= '<input type="hidden" name="switch-default" value="false">';
-          $html .= '<input type="checkbox" name="switch-default" value="true" ' . $checked . '>';
-          $html .= '<span class="switch__slider"></span>';
-          $html .= '<span>' . $labelText . '</span>';
-          $html .= '</label>';
+          $inputHtml = '<label class="switch">';
+          $inputHtml .= '<input type="hidden" name="' . $inputName . '" value="false">';
+          $inputHtml .= '<input type="checkbox" name="' . $inputName . '" value="true" ' . $checked . '>';
+          $inputHtml .= '<span class="switch__slider"></span>';
+          $inputHtml .= '<span>' . $labelText . '</span>';
+          $inputHtml .= '</label>';
 
           break;
         }
       default: {
-          $html = $labelHtml;
-
-          $html .= '<input ' . implode(' ', $inputAttributes) . '>';
+          $inputHtml = '<input ' . implode(' ', $inputAttributes) . '>';
 
           break;
         }
     }
+
+    $html = $labelHtml;
+    $html .= '<div class="form__input">';
+    $html .= $inputHtml;
+    $html .= '</div>';
+    $html .= '<div class="form__error"></div>';
 
     return $html;
 

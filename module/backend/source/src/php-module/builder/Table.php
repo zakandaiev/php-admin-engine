@@ -285,7 +285,12 @@ class Table
 
     $html .= '<div class="flex-grow-1 row gap-xs justify-content-between align-items-center">';
     $html .= '<div class="col">';
-    $html .= '<output class="pagination-output">' . t('pagination.total', $pagination->get('totalRows')) . '</output>';
+    $html .= '<output class="pagination-output">';
+    $html .= t('pagination.total');
+    $html .= ': <span>';
+    $html .= $pagination->get('totalRows');
+    $html .= '</span>';
+    $html .= '</output>';
     $html .= '</div>';
     if ($pagination->get('totalPages') > 1) {
       $html .= '<div class="col">';

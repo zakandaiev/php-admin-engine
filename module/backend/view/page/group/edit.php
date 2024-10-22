@@ -2,14 +2,14 @@
 
 use module\backend\builder\Form;
 
-$title = t('group.add.title');
+$title = t('group.edit.title');
 
 Page::set('title', $title);
 
 Page::breadcrumb('add', t('group.list.title'), 'group-list');
 Page::breadcrumb('add', $title);
 
-$routesFormatted = [];
+$routeOptions = [];
 foreach ($routes as $method => $r) {
   foreach ($r as $p) {
     $r = new \stdClass();
@@ -17,11 +17,11 @@ foreach ($routes as $method => $r) {
     $r->text = $p;
     $r->value = $method . '@' . $p;
 
-    $routesFormatted[$method][] = $r;
+    $routeOptions[$method][] = $r;
   }
 }
 
-$usersFormatted = array_map(function ($user) {
+$userOptions = array_map(function ($user) {
   $u = new \stdClass();
 
   // TODO
@@ -34,10 +34,12 @@ $usersFormatted = array_map(function ($user) {
 
 $form = new Form([
   'modelName' => 'Group',
-  'action' => 'add',
+  'action' => 'edit',
+  'itemId' => $group->id,
+  'values' => $group,
   'title' => $title,
   'attributes' => [
-    'data-redirect="' . routeLink('group-edit') . '"',
+    // 'data-redirect="' . routeLink('group-edit') . '"',
     'data-validate'
   ],
   'columns' => [
@@ -48,20 +50,20 @@ $form = new Form([
     'route' => [
       'label' => t('group.column.routes'),
       'placeholder' => t('group.column.routes_placeholder'),
-      'options' => $routesFormatted,
-      'data-addable' => '/(any|delete|get|options|patch|post|put)@\/[0-9a-z\/\*\$\-\_]+/g'
+      'data-addable' => '/(any|delete|get|options|patch|post|put)@\/[0-9a-z\/\*\$\-\_]+/g',
+      'options' => $routeOptions
     ],
     'user_id' => [
       'label' => t('group.column.users'),
       'placeholder' => t('group.column.users_placeholder'),
-      'options' => $usersFormatted
+      'options' => $userOptions
     ],
     'is_enabled' => [
       'label' => t('group.column.is_enabled'),
       'placeholder' => t('group.column.is_enabled_placeholder')
     ],
     'access_all' => [
-      'label' => t('group.column.access_all_placeholder'),
+      'label' => t('group.column.access_all'),
       'placeholder' => t('group.column.access_all_placeholder')
     ],
   ]

@@ -2,9 +2,13 @@
 
 namespace engine\database;
 
+use engine\i18n\I18n;
+
 class Validation
 {
+  protected $table;
   protected $column = [];
+  protected $columnKeysToValidate = [];
   protected $error = [];
   protected $validation = [
     // COLUMN TYPES
@@ -24,9 +28,11 @@ class Validation
     'extensions',
   ];
 
-  public function __construct($data = [])
+  public function __construct($table, $column, $columnKeysToValidate = null)
   {
-    $this->column = $data;
+    $this->table = $table;
+    $this->column = $column;
+    $this->columnKeysToValidate = $columnKeysToValidate ?? [];
   }
 
   public function hasColumn($key)
@@ -66,6 +72,10 @@ class Validation
   {
     $result = true;
 
+    if (!empty($this->columnKeysToValidate) && !in_array($columnName, $this->columnKeysToValidate)) {
+      return $result;
+    }
+
     $columnDefinition = @$this->column[$columnName];
     if (!$columnDefinition) {
       return $result;
@@ -93,7 +103,7 @@ class Validation
       if ($validationResult !== true) {
         $result = [
           'column' => $columnName,
-          'validation' => $validationName,
+          'validation' => $columnDefinition[$validationName . 'Message'] ?? I18n::translate("{$this->table}.$columnName.validation.$validationName", $columnValue),
           'value' => $columnValue
         ];
 

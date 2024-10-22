@@ -12,62 +12,60 @@ $table = new Table([
   // 'filter' => 'Group', TODO filter from model like Form
   'title' => $title,
   'data' => $groups,
-  'placeholder' => t('group.list.placeholder'),
+  'placeholder' => t('group.page.list.placeholder'),
   'actions' => [
     ['name' => t('group.list.add'), 'url' => routeLink('group-add')]
   ],
   'columns' => [
-    'id' => [
-      'type' => 'text',
-      'title' => 'ID'
-    ],
     'name' => [
       'type' => 'text',
-      'title' => t('group.list.name')
+      'title' => t('group.column.name')
     ],
     'translations' => [
       'type' => function ($value, $item) {
+        $value = !empty($value) ? explode(',', $value) : [];
+
         return getInterfaceTranslationsColumn($value, $item);
       },
-      'title' => t('group.list.translations')
+      'title' => t('group.column.translations')
     ],
     'count_routes' => [
       'type' => function ($value, $item) {
         if ($item->access_all) {
-          return t('group.list.access_all');
+          return t('group.column.access_all');
         }
 
         return $value;
       },
-      'title' => t('group.list.count_routes')
+      'title' => t('group.column.count_routes')
     ],
     'count_users' => [
       'type' => 'text',
-      'title' => t('group.list.count_users')
+      'title' => t('group.column.count_users')
     ],
     'date_created' => [
       'type' => 'dateWhen',
       'format' => 'd.m.Y H:i',
-      'title' => t('group.list.date_created')
+      'title' => t('group.column.date_created')
     ],
     'is_enabled' => [
       'type' => function ($value, $item) {
         $tooltip = $item->is_enabled ? t('group.list.deactivate_this_group') : t('group.list.activate_this_group');
 
-        $html = '<button type="button" data-action="' . Form::edit('group', $item->id) . '" data-fields="is_enabled:' . !$value . '" data-redirect="this" data-tooltip="top" title="' . $tooltip . '" class="table__action">';
+        $html = '<button type="button" data-action="' . Form::edit('group', $item->id, true) . '" data-fields="is_enabled:' . json_encode(!$value) . '" data-redirect="this" data-tooltip="top" title="' . $tooltip . '" class="table__action">';
         $html .= iconBoolean($value);
         $html .= '</button>';
 
         return $html;
       },
-      'title' => t('group.list.is_enabled')
+      'title' => t('group.column.is_enabled')
     ],
     'table_actions' => [
       'tdClassName' => 'table__actions',
       'type' => function ($value, $item) {
         $html = ' <a href="' . routeLink('group-edit', ['id' => $item->id]) . '" data-tooltip="top" title="' . t('group.list.edit') . '" class="table__action"><i class="ti ti-edit"></i></a>';
 
-        $html .= ' <button type="button" data-action="' . Form::delete('group', $item->id) . '" data-confirm="' . t('group.list.delete_confirm', $item->name) . '" data-remove="trow" data-decrement=".pagination-output" data-tooltip="top" title="' . t('group.list.delete') . '" class="table__action">';
+        $html .= ' <button type="button" data-action="' . Form::delete('group', $item->id, true) . '" data-confirm="' . t('group.list.delete_confirm', $item->name) . '" data-remove="trow" data-decrement=".pagination-output > span" data-tooltip="top" title="' . t('group.list.delete') . '" class="table__action">';
         $html .= '<i class="ti ti-trash"></i>';
         $html .= '</button>';
 

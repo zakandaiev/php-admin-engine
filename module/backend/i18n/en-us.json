@@ -7,7 +7,7 @@
     "home": "Home"
   },
   "pagination": {
-    "total": "Total: {v}"
+    "total": "Total"
   },
   "sidebar": {
     "dashboard": "Dashboard",
