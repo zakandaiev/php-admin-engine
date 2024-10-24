@@ -1,6 +1,7 @@
 import { fadeOut } from '@/js/util/fade';
 import { confirmModal } from '@/js/util/modal';
 import { request } from '@/js/util/request';
+import { isStringValidJSON, isArray } from '@/js/util/is-object';
 import toast from '@/js/util/toast';
 
 class DataAction {
@@ -15,7 +16,7 @@ class DataAction {
     }
     this.dataEvent = this.node.getAttribute('data-event') || 'click';
     this.dataConfirm = this.node.getAttribute('data-confirm');
-    this.dataFields = this.node.getAttribute('data-fields') || '';
+    this.dataBody = this.node.getAttribute('data-body') || '[]';
     this.dataUnsetNull = this.node.hasAttribute('data-unset-null') ? true : false;
     this.dataClass = this.node.getAttribute('data-class') || 'submit';
     this.dataClassTarget = this.node.getAttribute('data-class-target');
@@ -90,40 +91,27 @@ class DataAction {
 
   getFormData() {
     const data = new FormData();
-    const fields = this.dataFields.split('|') || [];
 
-    fields.forEach((field) => {
-      const [key, value] = field.split(':');
+    let body = isStringValidJSON(this.dataBody) ? JSON.parse(this.dataBody) : [];
+    if (isArray(body)) {
+      body = { ...body };
+    }
 
-      if (!key) {
+    Object.keys(body).forEach((columnName) => {
+      const columnValue = body[columnName] || null;
+
+      if (this.dataUnsetNull && columnValue === null) {
         return false;
       }
 
-      data.set(key, value || null);
+      data.set(columnName, columnValue);
     });
 
     if (this.options?.csrf) {
       data.set(this.options.csrf.key, this.options.csrf.token);
     }
 
-    if (this.dataUnsetNull) {
-      this.unsetNullFormData(data);
-    }
-
     return data;
-  }
-
-  // eslint-disable-next-line
-  unsetNullFormData(data) {
-    // eslint-disable-next-line
-    for (const pair of data.entries()) {
-      const name = pair[0];
-      const value = pair[1];
-
-      if (!value || !value.length) {
-        data.delete(name);
-      }
-    }
   }
 
   disableNodes() {

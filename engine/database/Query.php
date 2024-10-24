@@ -281,13 +281,6 @@ class Query
     } catch (PDOException $error) {
       $this->error['message'] = $error->getMessage();
 
-      if (preg_match("/duplicate.+key.+[\'\"\`](.+)[\'\"\`]/iu", $this->error['message'], $matches)) {
-        $columnName = str_replace($this->prefix . '_', '', $matches[1]);
-
-        $this->error['column'] = $columnName;
-        $this->error['validation'] = 'duplicate';
-      }
-
       if (Request::method() === 'get' && Config::getProperty('isEnabled', 'debug')) {
         debug($this->error, $this->sql, $this->binding);
       } else if (Config::getProperty('isEnabled', 'debug')) {

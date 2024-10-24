@@ -21,6 +21,8 @@ abstract class Controller
   protected $view;
   protected $user;
 
+  protected static $instance;
+
   public function __construct()
   {
     class_alias('engine\\theme\\Asset', 'Asset');
@@ -39,6 +41,30 @@ abstract class Controller
     $this->page = new Page();
     $this->view = new View();
     // $this->user = new User();
+
+    self::$instance = $this;
+  }
+
+  public function error($code = '404')
+  {
+    $this->view->error($code);
+
+    return true;
+  }
+
+  public function hasModel()
+  {
+    return !empty($this->model);
+  }
+
+  public function getModel()
+  {
+    return $this->model;
+  }
+
+  public static function getInstance()
+  {
+    return self::$instance;
   }
 
   protected function loadModel($modelName, $module = null)
@@ -50,12 +76,5 @@ abstract class Controller
     }
 
     return null;
-  }
-
-  public function error($code = '404')
-  {
-    $this->view->error($code);
-
-    return true;
   }
 }

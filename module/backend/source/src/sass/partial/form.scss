@@ -457,6 +457,12 @@ input[type="range"] {
     }
   }
 
+  // .form__column_hidden
+  &__column_hidden {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
   // .form__column_required
   &__column_required {
     &  > .form__label::after {

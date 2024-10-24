@@ -1,12 +1,10 @@
 <?php
 
-use module\backend\builder\Form;
-
 $title = t('group.edit.title');
 
 Page::set('title', $title);
 
-Page::breadcrumb('add', t('group.list.title'), 'group-list');
+Page::breadcrumb('add', t('group.list.title'), 'group.list');
 Page::breadcrumb('add', $title);
 
 $routeOptions = [];
@@ -16,6 +14,27 @@ foreach ($routes as $method => $r) {
 
     $r->text = $p;
     $r->value = $method . '@' . $p;
+
+    $routeOptions[$method][] = $r;
+  }
+}
+
+foreach ($group->route as $addableRoute) {
+  list($method, $path) = explode('@', $addableRoute);
+
+  if (empty($method) || empty($path)) {
+    continue;
+  }
+
+  $isAddableRouteAlreadyInArray = array_filter($routeOptions[$method], function ($routeOption) use ($addableRoute) {
+    return $routeOption->value === $addableRoute;
+  });
+
+  if (!$isAddableRouteAlreadyInArray) {
+    $r = new \stdClass();
+
+    $r->text = $path;
+    $r->value = $addableRoute;
 
     $routeOptions[$method][] = $r;
   }
@@ -32,14 +51,14 @@ $userOptions = array_map(function ($user) {
   return $u;
 }, $users);
 
-$form = new Form([
-  'modelName' => 'Group',
+$form = new BuilderForm([
   'action' => 'edit',
+  'modelName' => 'Group',
   'itemId' => $group->id,
   'values' => $group,
   'title' => $title,
   'attributes' => [
-    // 'data-redirect="' . routeLink('group-edit') . '"',
+    // 'data-redirect="' . routeLink('group.edit') . '"',
     'data-validate'
   ],
   'columns' => [

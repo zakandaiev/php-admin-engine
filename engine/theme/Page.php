@@ -54,6 +54,7 @@ class Page
 
           $crumb->name = @$args[1];
           $crumb->url = @$args[2];
+          $crumb->options = @$args[3] ?? [];
 
           self::$page->breadcrumb[] = $crumb;
 

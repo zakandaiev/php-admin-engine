@@ -3,8 +3,8 @@
 namespace module\backend\controller;
 
 use module\backend\controller\Backend;
-use Engine\Language;
-use Engine\Server;
+use engine\http\Response;
+use engine\router\Route;
 
 class Group extends Backend
 {
@@ -13,6 +13,8 @@ class Group extends Backend
     $this->view->setData('groups', $this->model->getGroups());
 
     $this->view->render('group/list');
+
+    return true;
   }
 
   public function getAdd()
@@ -21,6 +23,8 @@ class Group extends Backend
     $this->view->setData('users', $this->model->getUsers());
 
     $this->view->render('group/add');
+
+    return true;
   }
 
   public function getEdit()
@@ -41,67 +45,51 @@ class Group extends Backend
     $this->view->setData('users', $this->model->getUsers());
 
     $this->view->render('group/edit');
+
+    return true;
   }
 
-  public function getAddTranslation()
+  public function getTranslationAdd()
   {
+    $language = $this->route['parameter']['language'];
     $groupId = $this->route['parameter']['id'];
-    $translationLanguage = $this->route['parameter']['language'];
 
-    if (!Language::has($translationLanguage)) {
-      Server::redirect(site('url_language') . '/admin/group');
-    }
+    $routeDestination = Route::link('group.translation.edit', ['id' => $groupId, 'language' => $language]);
+    $routeFallback = Route::link('group.list');
 
     $group = $this->model->getGroupById($groupId);
-
     if (empty($group)) {
-      Server::redirect(site('url_language') . '/admin/group');
+      Response::redirect($routeFallback);
+      return false;
     }
 
-    $translation = [
-      'groupId' => $groupId,
-      'language' => $translationLanguage,
-      'name' => $group->name
-    ];
-
-    if ($this->model->createTranslation('group_translation', $translation)) {
-      Server::redirect(site('url_language') . '/admin/group/edit/' . $groupId . '/translation/edit/' . $translationLanguage);
-    } else {
-      Server::redirect(site('url_language') . '/admin/group');
+    $translationResult = $this->model->insertIntoTable('group_translation', ['group_id' => $groupId, 'language' => $language, 'name' => $group->name]);
+    if (!$translationResult) {
+      Response::redirect($routeFallback);
+      return false;
     }
+
+    Response::redirect($routeDestination);
+
+    return true;
   }
 
-  public function getEditTranslation()
+  public function getTranslationEdit()
   {
-    $isTranslation = false;
-    $translationLanguage = null;
-
-    if (isset($this->route['parameter']['language'])) {
-      $isTranslation = true;
-      $translationLanguage = $this->route['parameter']['language'];
-    }
-
+    $language = $this->route['parameter']['language'];
     $groupId = $this->route['parameter']['id'];
-
-    $group = $this->model->getGroupById($groupId);
+    $group = $this->model->getGroupById($groupId, $language);
 
     if (empty($group)) {
       $this->view->error('404');
+      return false;
     }
 
-    $group->routes = $this->model->getGroupRoutesById($groupId);
-    $group->users = $this->model->getGroupUsersById($groupId);
+    $this->view->setData('group', $group);
+    $this->view->setData('isTranslation', true);
 
-    if ($isTranslation) {
-      $this->view->setData('group_origin', $group);
-      $this->view->setData('group', $this->model->getGroupById($groupId, $translationLanguage));
-    } else {
-      $this->view->setData('group', $group);
-      $this->view->setData('routes', $this->model->getRoutes());
-      $this->view->setData('users', $this->model->getUsers());
-    }
-    $this->view->setData('isTranslation', $isTranslation);
+    $this->view->render('group/translation-edit');
 
-    $this->view->render('group/edit');
+    return true;
   }
 }

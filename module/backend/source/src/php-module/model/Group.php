@@ -34,7 +34,8 @@ class Group extends Model
       'min' => 1,
       'max' => 256,
       'regex' => '/^[\w ]+$/iu',
-      'foreign' => 'group_translation@group_id'
+      'foreign' => 'group_translation@group_id',
+      'isForeignDeleteSkip' => true
     ];
 
     $this->column['route'] = [
@@ -150,7 +151,8 @@ class Group extends Model
       SELECT
         *,
         (SELECT COUNT(*) FROM {group_route} WHERE group_id=t_group.id) as count_routes,
-        (SELECT COUNT(*) FROM {group_user} WHERE group_id=t_group.id) as count_users
+        (SELECT COUNT(*) FROM {group_user} WHERE group_id=t_group.id) as count_users,
+        (SELECT GROUP_CONCAT(language) FROM {group_translation} WHERE group_id=t_group.id AND language<>:language) as translations
       FROM
         {group} t_group
       INNER JOIN

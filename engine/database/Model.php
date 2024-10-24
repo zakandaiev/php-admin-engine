@@ -17,7 +17,16 @@ abstract class Model
 
   public $validation;
 
+  protected static $instance;
+
   public function __construct($columnData = null, $columnKeysToValidate = null)
+  {
+    $this->setData($columnData, $columnKeysToValidate);
+
+    self::$instance = $this;
+  }
+
+  public function setData($columnData = null, $columnKeysToValidate = null)
   {
     foreach ($this->column as $columnName => $column) {
       $this->column[$columnName]['value'] = $this->formatColumnValue($column['type'], $columnData[$columnName] ?? $column['value'] ?? null);
@@ -29,6 +38,8 @@ abstract class Model
     }
 
     $this->validation = new Validation($this->table, $this->column, $this->columnKeysToValidate);
+
+    return $this;
   }
 
   public function hasTable()
@@ -132,21 +143,13 @@ abstract class Model
     return $this->processQuery('delete');
   }
 
-  protected function formatColumnValue($type, $value)
+  public function insertIntoTable($table, $values)
   {
-    if ($type === 'boolean') {
-      return $value === true || in_array($value, ['on', 'yes', '1', 'true']) ? true : false;
-    } else if ($type === 'file') {
-      // TODO
-    } else if ($type === 'number') {
-      return !empty($value) && is_numeric($value) ? floatval($value) : null;
+    if (empty($table) || !is_array($values)) {
+      return false;
     }
 
-    return $value;
-  }
-
-  protected function insertIntoTable($table, $keys, $values)
-  {
+    $keys = array_keys($values);
     $sqlParams = '(' . implode(', ', $keys) . ') VALUES (:' . implode(', :', $keys) . ')';
     $sql = "INSERT INTO {{$table}} $sqlParams";
     $query = new Query($sql);
@@ -164,14 +167,17 @@ abstract class Model
       return $insertId;
     }
 
-    return @$values[$this->getPrimaryKey()];
+    return $values[$this->getPrimaryKey()] ?? true;
   }
 
-  protected function updateTable($table, $keys, $values, $pkName, $pkValue)
+  public function updateTable($table, $values, $pkName, $pkValue)
   {
-    $keys[] = $pkName;
-    $keys = array_unique($keys);
+    if (empty($table) || !is_array($values) || empty($pkName)) {
+      return false;
+    }
+
     $values[$pkName] = $pkValue;
+    $keys = array_keys($values);
 
     $sqlParams = array_reduce($keys, function ($carry, $v) {
       return ($carry ? "$carry, " : '') . "$v=:$v";
@@ -189,11 +195,14 @@ abstract class Model
     return $pkValue;
   }
 
-  protected function deleteFromTable($table, $keys, $values, $pkName, $pkValue)
+  public function deleteFromTable($table, $values, $pkName, $pkValue)
   {
-    $keys[] = $pkName;
-    $keys = array_unique($keys);
+    if (empty($table) || !is_array($values) || empty($pkName)) {
+      return false;
+    }
+
     $values[$pkName] = $pkValue;
+    $keys = array_keys($values);
 
     $sqlParams = array_reduce($keys, function ($carry, $v) {
       return ($carry ? "$carry AND " : '') . "$v=:$v";
@@ -209,6 +218,24 @@ abstract class Model
     }
 
     return $pkValue;
+  }
+
+  public static function getInstance()
+  {
+    return self::$instance;
+  }
+
+  protected function formatColumnValue($type, $value)
+  {
+    if ($type === 'boolean') {
+      return $value === true || in_array($value, ['on', 'yes', '1', 'true']) ? true : false;
+    } else if ($type === 'file') {
+      // TODO
+    } else if ($type === 'number') {
+      return !empty($value) && is_numeric($value) ? floatval($value) : null;
+    }
+
+    return $value;
   }
 
   protected function processQuery($action)
@@ -235,28 +262,26 @@ abstract class Model
 
     $this->prepareForeignFields();
 
-    $columnKeys = [];
     $columnValues = [];
     foreach ($this->column as $columnName => $column) {
       if (isset($column['foreign']) || (!empty($this->columnKeysToValidate) && !in_array($columnName, $this->columnKeysToValidate))) {
         continue;
       }
 
-      $columnKeys[] = $columnName;
       $columnValues[$columnName] = @$column['value'];
     }
 
-    if (empty($columnKeys) || empty($columnValues)) {
+    if (empty($columnValues)) {
       return false;
     }
 
     $result = null;
     if ($action === 'add') {
-      $result = $this->insertIntoTable($table, $columnKeys, $columnValues);
+      $result = $this->insertIntoTable($table, $columnValues);
     } else if ($action === 'edit') {
-      $result = $this->updateTable($table, $columnKeys, $columnValues, $pkName, $pkValue);
+      $result = $this->updateTable($table, $columnValues, $pkName, $pkValue);
     } else if ($action === 'delete') {
-      $result = $this->deleteFromTable($table, $columnKeys, $columnValues, $pkName, $pkValue);
+      $result = $this->deleteFromTable($table, $columnValues, $pkName, $pkValue);
     } else {
       return false;
     }
@@ -310,7 +335,8 @@ abstract class Model
         'pkName' => $foreignPkName,
         'pkValue' => null,
         'fkName' => $columnName,
-        'fkValue' => @$column['value']
+        'fkValue' => @$column['value'],
+        'isFkDeleteSkip' => @$column['isForeignDeleteSkip'] ?? false
       ];
     }
 
@@ -330,7 +356,9 @@ abstract class Model
       $tablePkName = null;
       $tablePkValue = null;
       $keys = [];
+      $keysDelete = [];
       $values = [];
+      $valuesDelete = [];
       $isValuesArray = false;
 
       if (count($foreignTableColumns) === 1 && is_array(@$foreignTableColumns[0]['fkValue'])) {
@@ -362,9 +390,15 @@ abstract class Model
 
           $keys[] = $tablePkName;
           $keys[] = $fkName;
+          if (!$foreignTableColumn['isFkDeleteSkip']) {
+            $keysDelete[] = $fkName;
+          }
 
           $values[$tablePkName] = $pkValue;
           $values[$fkName] = $fkValue;
+          if (!$foreignTableColumn['isFkDeleteSkip']) {
+            $valuesDelete[$fkName] = $fkValue;
+          }
         }
       }
 
@@ -373,7 +407,9 @@ abstract class Model
         'tablePkName' => $tablePkName,
         'tablePkValue' => $tablePkValue ?? $pkValue,
         'keys' => is_array($keys) ? array_unique($keys) : $keys,
+        'keysDelete' => $keysDelete,
         'values' => $values,
+        'valuesDelete' => $valuesDelete,
         'isValuesArray' => $isValuesArray,
       ];
     }
@@ -383,17 +419,18 @@ abstract class Model
       $tablePkName = $foreignData['tablePkName'];
       $tablePkValue = $foreignData['tablePkValue'];
       $keys = $foreignData['keys'];
+      $keysDelete = $foreignData['keysDelete'];
       $values = $foreignData['values'];
+      $valuesDelete = $foreignData['valuesDelete'];
       $isValuesArray = $foreignData['isValuesArray'];
 
-      $this->deleteFromTable($table, [], [], $tablePkName, $tablePkValue);
+      $this->deleteFromTable($table, $valuesDelete, $tablePkName, $tablePkValue);
 
       if ($isValuesArray === true && !empty($values)) {
         foreach ($values as $fdValue) {
-          $fdKeys = [$tablePkName, $keys];
           $fdValues = [$tablePkName => $tablePkValue, $keys => $fdValue];
 
-          $this->insertIntoTable($table, $fdKeys, $fdValues);
+          $this->insertIntoTable($table, $fdValues);
         }
       }
 
@@ -401,7 +438,7 @@ abstract class Model
         continue;
       }
 
-      $this->insertIntoTable($table, $keys, $values);
+      $this->insertIntoTable($table, $values);
     }
 
     return true;

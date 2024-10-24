@@ -19,7 +19,7 @@ function getHeaderMenu()
     ],
     [
       'name' => 'Route closure test',
-      'link' => routeLink('user-payment', ['uid' => 111, 'pid' => 222])
+      'link' => routeLink('example.user-payment', ['uid' => 111, 'pid' => 222])
     ]
   ];
 }

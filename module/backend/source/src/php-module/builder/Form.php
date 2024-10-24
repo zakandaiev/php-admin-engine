@@ -4,15 +4,19 @@ namespace module\backend\builder;
 
 use engine\http\Request;
 use engine\i18n\I18n;
+use engine\router\Route;
+use engine\theme\Asset;
 use engine\theme\Form as ThemeForm;
+use engine\util\Date;
 use engine\util\Path;
 use engine\util\Text;
 
 class Form
 {
-  protected $modelName;
   protected $action;
+  protected $modelName;
   protected $itemId;
+  protected $isMatchRequest;
   protected $title;
   protected $className;
   protected $rowClassName;
@@ -31,9 +35,10 @@ class Form
 
   public function __construct($interface = [])
   {
-    $this->modelName = @$interface['modelName'];
     $this->action = @$interface['action'];
+    $this->modelName = @$interface['modelName'];
     $this->itemId = @$interface['itemId'];
+    $this->isMatchRequest = $interface['isMatchRequest'] ?? false;
     $this->title = @$interface['title'];
     $this->className = @$interface['className'];
     $this->rowClassName = @$interface['rowClassName'];
@@ -42,19 +47,19 @@ class Form
     $this->submitButtonRowClassName = @$interface['submitButtonRowClassName'];
     $this->attributes = @$interface['attributes'];
     $this->columns = $interface['columns'] ?? [];
-    $this->values = $interface['values'] ?? [];
+    $this->values = @$interface['values'];
 
     if (empty($this->action)) {
       return $this;
     }
 
-    $this->model = $this->loadModel($this->modelName);
+    $this->model = $this->loadModel();
     if (empty($this->model)) {
       return $this;
     }
     $this->isModelActive = true;
 
-    $this->token = ThemeForm::generateToken($this->action, $this->modelName, $this->itemId);
+    $this->token = ThemeForm::generateToken($this->action, $this->modelName, $this->itemId, $this->isMatchRequest);
     if (empty($this->token)) {
       return $this;
     }
@@ -84,7 +89,7 @@ class Form
     $html .= '<form action="' . $this->token . '" class="' . $formClass . '" ' . $formAttributes . '>';
 
     foreach ($this->columns as $columnName => $column) {
-      $html .= $this->getColumnHtml($columnName, $column);
+      $html .= $this->getColumnHtml($columnName);
     }
 
     $html .= $this->getSubmitHtml();
@@ -97,12 +102,21 @@ class Form
     echo $html;
   }
 
-  protected function loadModel($modelName)
+  protected function loadModel()
   {
-    $model = Path::class('model') . '\\' . $modelName;
+    $model = Path::class('model') . '\\' . $this->modelName;
 
     if (class_exists($model)) {
-      return new $model((array)$this->values);
+      $values = (array)$this->values ?? [];
+
+      $modelInstance = $model::getInstance();
+      if (!$modelInstance) {
+        return new $model($values);
+      }
+
+      $modelInstance->setData($values);
+
+      return $modelInstance;
     }
 
     return null;
@@ -110,37 +124,61 @@ class Form
 
   protected function getTitleHtml()
   {
-    $html = '';
+    $html = '<h2 class="section__title">';
 
-    if (empty($this->title)) {
-      return $html;
+    if (!empty($this->title)) {
+      $html .= '<span>';
+      $html .= $this->title;
+      $html .= '</span>';
     }
 
-    $html .= '
-      <h2 class="section__title">
-        <span>' . $this->title . '</span>
-      </h2>
-    ';
+    $translations = !empty(@$this->values->translations) ? explode(',', $this->values->translations) : [];
+    if (!empty($translations)) {
+      $html .= '<span>';
+
+      foreach ($translations as $language) {
+        $table = strtolower($this->modelName);
+        $routeName = "$table.translation.edit";
+        $i18nTooltip = "$table.translation_edit";
+
+        $html .= '<a href="' . Route::link($routeName, ['id' => $this->itemId, 'language' => $language]) . '" data-tooltip="top" title="' . I18n::translate($i18nTooltip, I18n::translate("i18n.$language")) . '">';
+        $html .= '<img class="d-inline-block w-1em h-1em vertical-align-middle radius-round" src="' . Path::resolveUrl(Asset::url(), lang('icon', $language)) . '" alt="' . $language . '">&nbsp;';
+        $html .= '</a>';
+      }
+
+      $html .= '</span>';
+    }
+
+    $dateEdited = @Date::format($this->values->date_edited, 'd.m.Y H:i');
+    if (!empty($dateEdited)) {
+      $html .= '<span class="label label_info align-self-center ml-auto">';
+      $html .= t('date.last_edited', $dateEdited);
+      $html .= '</span>';
+    }
+
+    $html .= '</h2>';
 
     return $html;
   }
 
-  protected function getColumnHtml($columnName, $column)
+  protected function getColumnHtml($columnName)
   {
     if (!$this->model->hasColumn($columnName)) {
       return false;
     }
 
     $modelColumn = $this->model->getColumn($columnName);
+    $column = $this->columns[$columnName];
+    $column = ['name' => $columnName, ...$modelColumn, ...$column];
 
-    $columnClassName = isset($column['className']) ? $column['className'] : 'col-xs-12 form__column';
-    if (@$modelColumn['required'] === true) {
-      $columnClassName .= ' form__column_required';
+    $columnClassName = 'col-xs-12 form__column form__column_' . $column['type'];
+    if (isset($column['className'])) {
+      $columnClassName = $column['className'];
     }
 
     $html = '<div class="' . $columnClassName . '" data-form-type="column" data-column-name="' . $columnName . '">';
 
-    $html .= $this->getColumnInputHtml(['name' => $columnName, ...$modelColumn, ...$column]);
+    $html .= $this->getColumnInputHtml($column);
 
     $html .= '</div>';
 

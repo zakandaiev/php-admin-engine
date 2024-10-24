@@ -1,20 +1,18 @@
 <?php
 
-use module\backend\builder\Table;
-
 $title = t('group.list.title');
 
 Page::set('title', $title);
 
 Page::breadcrumb('add', $title);
 
-$table = new Table([
+$table = new BuilderTable([
   // 'filter' => 'Group', TODO filter from model like Form
   'title' => $title,
   'data' => $groups,
   'placeholder' => t('group.page.list.placeholder'),
   'actions' => [
-    ['name' => t('group.list.add'), 'url' => routeLink('group-add')]
+    ['name' => t('group.list.add'), 'url' => routeLink('group.add')]
   ],
   'columns' => [
     'name' => [
@@ -25,7 +23,7 @@ $table = new Table([
       'type' => function ($value, $item) {
         $value = !empty($value) ? explode(',', $value) : [];
 
-        return getInterfaceTranslationsColumn($value, $item);
+        return getColumnTranslations('group', $item->language, $value, ['id' => $item->id]);
       },
       'title' => t('group.column.translations')
     ],
@@ -52,7 +50,7 @@ $table = new Table([
       'type' => function ($value, $item) {
         $tooltip = $item->is_enabled ? t('group.list.deactivate_this_group') : t('group.list.activate_this_group');
 
-        $html = '<button type="button" data-action="' . Form::edit('group', $item->id, true) . '" data-fields="is_enabled:' . json_encode(!$value) . '" data-redirect="this" data-tooltip="top" title="' . $tooltip . '" class="table__action">';
+        $html = '<button type="button" data-action="' . Form::edit('group', $item->id, true) . '" data-body="' . textHtml(json_encode(['is_enabled' => !$value])) . '" data-redirect="this" data-tooltip="top" title="' . $tooltip . '" class="table__action">';
         $html .= iconBoolean($value);
         $html .= '</button>';
 
@@ -63,7 +61,7 @@ $table = new Table([
     'table_actions' => [
       'tdClassName' => 'table__actions',
       'type' => function ($value, $item) {
-        $html = ' <a href="' . routeLink('group-edit', ['id' => $item->id]) . '" data-tooltip="top" title="' . t('group.list.edit') . '" class="table__action"><i class="ti ti-edit"></i></a>';
+        $html = ' <a href="' . routeLink('group.edit', ['id' => $item->id]) . '" data-tooltip="top" title="' . t('group.list.edit') . '" class="table__action"><i class="ti ti-edit"></i></a>';
 
         $html .= ' <button type="button" data-action="' . Form::delete('group', $item->id, true) . '" data-confirm="' . t('group.list.delete_confirm', $item->name) . '" data-remove="trow" data-decrement=".pagination-output > span" data-tooltip="top" title="' . t('group.list.delete') . '" class="table__action">';
         $html .= '<i class="ti ti-trash"></i>';

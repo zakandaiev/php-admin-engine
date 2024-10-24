@@ -258,7 +258,7 @@ function moduleGetName()
   return Module::getName();
 }
 
-############################# ROUTE #############################
+############################# ROUTER #############################
 function routerHas($routeName, $moduleName = null)
 {
   return Router::has($routeName, $moduleName);

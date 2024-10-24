@@ -8,7 +8,7 @@ $languages = site('languages');
       <?php if ($language['key'] === site('language_current')) continue; ?>
 
       <a href="<?= pathResolveUrl(null, $language['key'], site('uri_full_no_language')) ?>" class="header__item" title="<?= t("i18n.{$language['key']}") ?>">
-        <img src="<?= pathResolveUrl(Asset::url(), lang('icon', $language['key'])) ?>>" class="fit-cover radius-round" alt="<?= lang('locale', $language['key']) ?>">
+        <img src="<?= pathResolveUrl(Asset::url(), lang('icon', $language['key'])) ?>>" class="fit-cover radius-round" alt="<?= $language['key'] ?>">
       </a>
 
     <?php endforeach; ?>

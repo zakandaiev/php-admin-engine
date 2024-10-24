@@ -23,8 +23,8 @@ Router::register('get', '/_dummy/guide', 'Dummy@getGuide', 'guide', ['dummyTestK
 
 Router::register('get', '/_dummy/user/$uid/payment/$pid', function ($parameter, $option, $route) {
   debug($parameter, $option, $route);
-}, 'user-payment', ['dummyKey' => 'dummyValue']);
+}, 'example.user-payment', ['dummyKey' => 'dummyValue']);
 
-Router::register('post', '/_dummy/post-example', 'Dummy@postExample', 'post-example');
+Router::register('post', '/_dummy/post-example', 'Dummy@postExample', 'example.post');
 
-Router::register('put', '/_dummy/put-example', 'Dummy@putExample', 'put-example');
+Router::register('put', '/_dummy/put-example', 'Dummy@putExample', 'example.put');

@@ -4,7 +4,7 @@
 
     <?php foreach ($items as $crumb) : ?>
       <?php if (!empty($crumb->url)) : ?>
-        <span class="breadcrumb__item"><a href="<?= routeLink($crumb->url) ?>"><?= $crumb->name ?></a></span>
+        <span class="breadcrumb__item"><a href="<?= routeLink($crumb->url, @$crumb->options['parameter'], @$crumb->options['query']) ?>"><?= $crumb->name ?></a></span>
       <?php else : ?>
         <span class="breadcrumb__item"><?= $crumb->name ?></span>
       <?php endif; ?>

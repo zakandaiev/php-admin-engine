@@ -368,7 +368,7 @@ Hook::run('sidebar.append', [
   'text' => t('sidebar.users'),
   'name' => [
     t('sidebar.groups') => [
-      'name' => 'group-list'
+      'name' => 'group.list'
     ],
     t('sidebar.users') => [
       'name' => 'user-list'

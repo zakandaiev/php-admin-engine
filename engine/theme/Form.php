@@ -134,10 +134,17 @@ class Form
     $model = Path::class('model') . '\\' . $this->modelName;
 
     if (class_exists($model)) {
-      $request = Request::get();
-      $columnKeysToValidate = $this->isMatchRequest ? array_keys($request) : null;
+      $values = Request::get();
+      $columnKeysToValidate = $this->isMatchRequest ? array_keys($values) : null;
 
-      return new $model($request, $columnKeysToValidate);
+      $modelInstance = $model::getInstance();
+      if (!$modelInstance) {
+        return new $model($values, $columnKeysToValidate);
+      }
+
+      $modelInstance->setData($values, $columnKeysToValidate);
+
+      return $modelInstance;
     }
 
     return null;

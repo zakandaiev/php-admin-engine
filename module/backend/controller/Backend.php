@@ -15,10 +15,9 @@ class Backend extends Controller
     // TODO
     // $this->backendModel = $this->loadModel('Backend', 'backend');
 
-    // TODO
-    // class_alias('\\Module\\Admin\\Builder\\FormBuilder', 'FormBuilder');
-    // class_alias('\\Module\\Admin\\Builder\\FilterBuilder', 'FilterBuilder');
-    // class_alias('\\Module\\Admin\\Builder\\InterfaceBuilder', 'InterfaceBuilder');
+    class_alias('\\module\\backend\\builder\\Form', 'BuilderForm');
+    class_alias('\\module\\backend\\builder\\Filter', 'BuilderFilter');
+    class_alias('\\module\\backend\\builder\\Table', 'BuilderTable');
 
     // TODO - make as function
     // if(!$this->user->get()->authorized) {

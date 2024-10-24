@@ -16,6 +16,7 @@ class Pagination
   protected $totalPages;
   protected $currentPage;
   protected $offset;
+
   protected static $instance;
 
   public function __construct($totalRows, $options = [])
@@ -32,12 +33,8 @@ class Pagination
     self::$instance = $this;
   }
 
-  public static function getInstance($totalRows = 0, $options = [])
+  public static function getInstance()
   {
-    // if (!self::$instance instanceof self) {
-    //   self::$instance = new self($totalRows, $options);
-    // }
-
     return self::$instance;
   }
 

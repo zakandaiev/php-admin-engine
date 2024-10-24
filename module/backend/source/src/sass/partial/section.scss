@@ -4,7 +4,8 @@
   // .section__title
   &__title {
     display: flex;
-    gap: 0.5em;
+    flex-wrap: wrap;
+    gap: 1rem;
     align-items: flex-start;
     justify-content: space-between;
 
@@ -21,7 +22,7 @@
   &__actions {
     display: flex;
     flex-shrink: 0;
-    gap: 0.5em;
+    gap: 1rem;
     align-items: stretch;
   }
 

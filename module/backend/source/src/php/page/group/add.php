@@ -1,12 +1,10 @@
 <?php
 
-use module\backend\builder\Form;
-
 $title = t('group.add.title');
 
 Page::set('title', $title);
 
-Page::breadcrumb('add', t('group.list.title'), 'group-list');
+Page::breadcrumb('add', t('group.list.title'), 'group.list');
 Page::breadcrumb('add', $title);
 
 $routesFormatted = [];
@@ -32,12 +30,12 @@ $usersFormatted = array_map(function ($user) {
   return $u;
 }, $users);
 
-$form = new Form([
-  'modelName' => 'Group',
+$form = new BuilderForm([
   'action' => 'add',
+  'modelName' => 'Group',
   'title' => $title,
   'attributes' => [
-    'data-redirect="' . routeLink('group-edit') . '"',
+    'data-redirect="' . routeLink('group.edit') . '"',
     'data-validate'
   ],
   'columns' => [
