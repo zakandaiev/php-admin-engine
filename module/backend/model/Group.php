@@ -14,18 +14,19 @@ class Group extends Model
     $this->table = 'group';
     $this->primaryKey = 'id';
 
+    $this->column['id'] = [
+      'type' => 'text',
+      'required' => true,
+      'min' => 16,
+      'max' => 32,
+      'value' => Hash::token()
+    ];
+
     $this->column['language'] = [
       'type' => 'text',
       'required' => true,
       'value' => site('language'),
       'foreign' => 'group_translation@group_id'
-    ];
-
-    $this->column['id'] = [
-      'type' => 'text',
-      'min' => 1,
-      'max' => 128,
-      'value' => Hash::token(32)
     ];
 
     $this->column['name'] = [
@@ -94,7 +95,9 @@ class Group extends Model
 
     // TODO
     // ->filter()
-    return $query->paginate()->execute(['language' => site('language_current')])->fetchAll();
+    $groups = $query->paginate()->execute(['language' => site('language')])->fetchAll();
+
+    return $groups;
   }
 
   public function getRoutes()

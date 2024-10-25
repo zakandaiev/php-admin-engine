@@ -7,7 +7,7 @@ Page::set('title', $title);
 Page::breadcrumb('add', t('group.list.title'), 'group.list');
 Page::breadcrumb('add', $title);
 
-$routesFormatted = [];
+$routeOptions = [];
 foreach ($routes as $method => $r) {
   foreach ($r as $p) {
     $r = new \stdClass();
@@ -15,11 +15,11 @@ foreach ($routes as $method => $r) {
     $r->text = $p;
     $r->value = $method . '@' . $p;
 
-    $routesFormatted[$method][] = $r;
+    $routeOptions[$method][] = $r;
   }
 }
 
-$usersFormatted = array_map(function ($user) {
+$userOptions = array_map(function ($user) {
   $u = new \stdClass();
 
   // TODO
@@ -33,7 +33,6 @@ $usersFormatted = array_map(function ($user) {
 $form = new BuilderForm([
   'action' => 'add',
   'modelName' => 'Group',
-  'title' => $title,
   'attributes' => [
     'data-redirect="' . routeLink('group.edit') . '"',
     'data-validate'
@@ -46,13 +45,13 @@ $form = new BuilderForm([
     'route' => [
       'label' => t('group.column.routes'),
       'placeholder' => t('group.column.routes_placeholder'),
-      'options' => $routesFormatted,
+      'options' => $routeOptions,
       'data-addable' => '/(any|delete|get|options|patch|post|put)@\/[0-9a-z\/\*\$\-\_]+/g'
     ],
     'user_id' => [
       'label' => t('group.column.users'),
       'placeholder' => t('group.column.users_placeholder'),
-      'options' => $usersFormatted
+      'options' => $userOptions
     ],
     'is_enabled' => [
       'label' => t('group.column.is_enabled'),
@@ -79,7 +78,7 @@ $form = new BuilderForm([
 
       <?php Theme::breadcrumb(); ?>
 
-      <?php $form->render(); ?>
+      <?= getFormBox('group', $title, null, $form->renderHtml()) ?>
 
     </div>
   </section>

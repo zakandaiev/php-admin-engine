@@ -8,54 +8,101 @@
         <div class="box__header">
           <h5 class="box__title">Custom validation</h5>
         </div>
+
         <div class="box__body">
-          <form class="row gap-xs" data-validate>
-            <div class="col-xs-12 col-md-4">
-              <label>First name</label>
-              <input type="text" value="Mark" placeholder="First name" required>
-            </div>
-
-            <div class="col-xs-12 col-md-4">
-              <label>Last name</label>
-              <input type="text" value="Otto" placeholder="Last name" required>
-            </div>
-
-            <div class="col-xs-12 col-md-4">
-              <label>Username</label>
-              <div class="input-group">
-                <span>@</span>
-                <input type="text" placeholder="Username" required>
+          <form class="form row gap-xs" data-validate>
+            <div class="col-xs-12 col-md-4 form__column form__column_required" data-form-type="column" data-column-name="first-name">
+              <div class="form__label">
+                <label>First name</label>
               </div>
+
+              <div class="form__input">
+                <input name="first-name" type="text" required value="John" placeholder="First name">
+              </div>
+
+              <div class="form__error"></div>
             </div>
 
-            <div class="col-xs-12 col-md-6">
-              <label>City</label>
-              <input type="text" placeholder="City" required>
+            <div class="col-xs-12 col-md-4 form__column form__column_required" data-form-type="column" data-column-name="last-name">
+              <div class="form__label">
+                <label>Last name</label>
+              </div>
+
+              <div class="form__input">
+                <input name="last-name" type="text" required value="Doe" placeholder="Last name">
+              </div>
+
+              <div class="form__error"></div>
             </div>
 
-            <div class="col-xs-12 col-md-3">
-              <label>State</label>
-              <select required>
-                <option data-placeholder="true">Choose...</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-              </select>
+            <div class="col-xs-12 col-md-4 form__column form__column_required" data-form-type="column" data-column-name="username">
+              <div class="form__label">
+                <label>Username</label>
+              </div>
+
+              <div class="form__input">
+                <div class="input-group">
+                  <span>@</span>
+                  <input name="username" type="text" required placeholder="Username">
+                </div>
+              </div>
+
+              <div class="form__error"></div>
             </div>
 
-            <div class="col-xs-12 col-md-3">
-              <label>Zip</label>
-              <input type="text" placeholder="Zip" required>
+            <div class="col-xs-12 col-md-6 form__column form__column_required" data-form-type="column" data-column-name="city">
+              <div class="form__label">
+                <label>City</label>
+              </div>
+
+              <div class="form__input">
+                <input name="city" type="text" required placeholder="City">
+              </div>
+
+              <div class="form__error"></div>
             </div>
 
-            <div class="col-xs-12">
-              <label>
-                <input type="checkbox" required>
-                <span>Agree to terms and conditions</span>
-              </label>
+            <div class="col-xs-12 col-md-3 form__column form__column_required" data-form-type="column" data-column-name="state">
+              <div class="form__label">
+                <label>State</label>
+              </div>
+
+              <div class="form__input">
+                <select required>
+                  <option data-placeholder="true">Choose...</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                </select>
+              </div>
+
+              <div class="form__error"></div>
             </div>
 
-            <div class="col-xs-12">
-              <button class="btn btn_primary" type="submit">Submit form</button>
+            <div class="col-xs-12 col-md-3 form__column form__column_required" data-form-type="column" data-column-name="zip">
+              <div class="form__label">
+                <label>Zip</label>
+              </div>
+
+              <div class="form__input">
+                <input name="zip" type="text" required placeholder="Zip">
+              </div>
+
+              <div class="form__error"></div>
+            </div>
+
+            <div class="col-xs-12 form__column form__column_boolean" data-form-type="column" data-column-name="terms">
+              <div class="form__input">
+                <label>
+                  <input type="checkbox" name="terms" value="true" required>
+                  <span>Agree to terms and conditions</span>
+                </label>
+              </div>
+
+              <div class="form__error"></div>
+            </div>
+
+            <div class="col-xs-12 form__submit" data-form-type="submit">
+              <button type="submit" class="btn btn_primary">Submit</button>
             </div>
           </form>
         </div>
@@ -69,53 +116,99 @@
         </div>
 
         <div class="box__body">
-          <form class="row gap-xs">
-            <div class="col-xs-12 col-md-4">
-              <label>First name</label>
-              <input type="text" value="Mark" placeholder="First name" required>
-            </div>
-
-            <div class="col-xs-12 col-md-4">
-              <label>Last name</label>
-              <input type="text" value="Otto" placeholder="Last name" required>
-            </div>
-
-            <div class="col-xs-12 col-md-4">
-              <label>Username</label>
-              <div class="input-group">
-                <span>@</span>
-                <input type="text" placeholder="Username" required>
+          <form class="form row gap-xs">
+            <div class="col-xs-12 col-md-4 form__column form__column_required" data-form-type="column" data-column-name="first-name">
+              <div class="form__label">
+                <label>First name</label>
               </div>
+
+              <div class="form__input">
+                <input name="first-name" type="text" required value="John" placeholder="First name">
+              </div>
+
+              <div class="form__error"></div>
             </div>
 
-            <div class="col-xs-12 col-md-6">
-              <label>City</label>
-              <input type="text" placeholder="City" required>
+            <div class="col-xs-12 col-md-4 form__column form__column_required" data-form-type="column" data-column-name="last-name">
+              <div class="form__label">
+                <label>Last name</label>
+              </div>
+
+              <div class="form__input">
+                <input name="last-name" type="text" required value="Doe" placeholder="Last name">
+              </div>
+
+              <div class="form__error"></div>
             </div>
 
-            <div class="col-xs-12 col-md-3">
-              <label>State</label>
-              <select required>
-                <option data-placeholder="true">Choose...</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-              </select>
+            <div class="col-xs-12 col-md-4 form__column form__column_required" data-form-type="column" data-column-name="username">
+              <div class="form__label">
+                <label>Username</label>
+              </div>
+
+              <div class="form__input">
+                <div class="input-group">
+                  <span>@</span>
+                  <input name="username" type="text" required placeholder="Username">
+                </div>
+              </div>
+
+              <div class="form__error"></div>
             </div>
 
-            <div class="col-xs-12 col-md-3">
-              <label>Zip</label>
-              <input type="text" placeholder="Zip" required>
+            <div class="col-xs-12 col-md-6 form__column form__column_required" data-form-type="column" data-column-name="city">
+              <div class="form__label">
+                <label>City</label>
+              </div>
+
+              <div class="form__input">
+                <input name="city" type="text" required placeholder="City">
+              </div>
+
+              <div class="form__error"></div>
             </div>
 
-            <div class="col-xs-12">
-              <label>
-                <input type="checkbox" required>
-                <span>Agree to terms and conditions</span>
-              </label>
+            <div class="col-xs-12 col-md-3 form__column form__column_required" data-form-type="column" data-column-name="state">
+              <div class="form__label">
+                <label>State</label>
+              </div>
+
+              <div class="form__input">
+                <select required>
+                  <option data-placeholder="true">Choose...</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                </select>
+              </div>
+
+              <div class="form__error"></div>
             </div>
 
-            <div class="col-xs-12">
-              <button class="btn btn_primary" type="submit">Submit form</button>
+            <div class="col-xs-12 col-md-3 form__column form__column_required" data-form-type="column" data-column-name="zip">
+              <div class="form__label">
+                <label>Zip</label>
+              </div>
+
+              <div class="form__input">
+                <input name="zip" type="text" required placeholder="Zip">
+              </div>
+
+              <div class="form__error"></div>
+            </div>
+
+            <div class="col-xs-12 form__column form__column_required" data-form-type="column" data-column-name="terms">
+              <div class="form__input">
+                <label>
+                  <input type="checkbox" name="terms" value="true" required>
+                  <span>Agree to terms and conditions</span>
+                </label>
+              </div>
+
+              <div class="form__error"></div>
+            </div>
+
+            <div class="col-xs-12 form__submit" data-form-type="submit">
+              <button type="submit" class="btn btn_primary">Submit</button>
             </div>
           </form>
         </div>

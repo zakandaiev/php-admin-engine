@@ -56,9 +56,8 @@ $form = new BuilderForm([
   'modelName' => 'Group',
   'itemId' => $group->id,
   'values' => $group,
-  'title' => $title,
   'attributes' => [
-    // 'data-redirect="' . routeLink('group.edit') . '"',
+    // 'data-redirect="' . routeLink('group.list') . '"',
     'data-validate'
   ],
   'columns' => [
@@ -102,7 +101,7 @@ $form = new BuilderForm([
 
       <?php Theme::breadcrumb(); ?>
 
-      <?php $form->render(); ?>
+      <?= getFormBox('group', $title, $group, $form->renderHtml()) ?>
 
     </div>
   </section>

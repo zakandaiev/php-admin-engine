@@ -17,12 +17,10 @@ class Form
   protected $modelName;
   protected $itemId;
   protected $isMatchRequest;
-  protected $title;
-  protected $className;
-  protected $rowClassName;
-  protected $submitButtonText;
-  protected $submitButtonClassName;
-  protected $submitButtonRowClassName;
+  protected $formClassName;
+  protected $submitText;
+  protected $submitClassName;
+  protected $submitColClassName;
   protected $attributes = [];
   protected $columns = [];
   protected $values = [];
@@ -39,12 +37,10 @@ class Form
     $this->modelName = @$interface['modelName'];
     $this->itemId = @$interface['itemId'];
     $this->isMatchRequest = $interface['isMatchRequest'] ?? false;
-    $this->title = @$interface['title'];
-    $this->className = @$interface['className'];
-    $this->rowClassName = @$interface['rowClassName'];
-    $this->submitButtonText = @$interface['submitButtonText'];
-    $this->submitButtonClassName = @$interface['submitButtonClassName'];
-    $this->submitButtonRowClassName = @$interface['submitButtonRowClassName'];
+    $this->formClassName = @$interface['formClassName'];
+    $this->submitText = @$interface['submitText'];
+    $this->submitClassName = @$interface['submitClassName'];
+    $this->submitColClassName = @$interface['submitColClassName'];
     $this->attributes = @$interface['attributes'];
     $this->columns = $interface['columns'] ?? [];
     $this->values = @$interface['values'];
@@ -75,16 +71,18 @@ class Form
 
   public function render()
   {
+    echo $this->renderHtml();
+  }
+
+  public function renderHtml()
+  {
     if (!$this->isFormActiveAndValid()) {
       return false;
     }
 
-    $html = $this->getTitleHtml();
+    $html = '';
 
-    $html .= '<div class="box">';
-    $html .= '<div class="box__body">';
-
-    $formClass = isset($this->className) ? 'class="' . $this->className . '"' : 'form gap-0 row gap-xs';
+    $formClass = isset($this->formClassName) ? 'class="' . $this->formClassName . '"' : 'form row gap-xs';
     $formAttributes = isset($this->attributes) ? implode(' ', $this->attributes) : '';
     $html .= '<form action="' . $this->token . '" class="' . $formClass . '" ' . $formAttributes . '>';
 
@@ -96,10 +94,7 @@ class Form
 
     $html .= '</form>';
 
-    $html .= '</div>';
-    $html .= '</div>';
-
-    echo $html;
+    return $html;
   }
 
   protected function loadModel()
@@ -122,45 +117,6 @@ class Form
     return null;
   }
 
-  protected function getTitleHtml()
-  {
-    $html = '<h2 class="section__title">';
-
-    if (!empty($this->title)) {
-      $html .= '<span>';
-      $html .= $this->title;
-      $html .= '</span>';
-    }
-
-    $translations = !empty(@$this->values->translations) ? explode(',', $this->values->translations) : [];
-    if (!empty($translations)) {
-      $html .= '<span>';
-
-      foreach ($translations as $language) {
-        $table = strtolower($this->modelName);
-        $routeName = "$table.translation.edit";
-        $i18nTooltip = "$table.translation_edit";
-
-        $html .= '<a href="' . Route::link($routeName, ['id' => $this->itemId, 'language' => $language]) . '" data-tooltip="top" title="' . I18n::translate($i18nTooltip, I18n::translate("i18n.$language")) . '">';
-        $html .= '<img class="d-inline-block w-1em h-1em vertical-align-middle radius-round" src="' . Path::resolveUrl(Asset::url(), lang('icon', $language)) . '" alt="' . $language . '">&nbsp;';
-        $html .= '</a>';
-      }
-
-      $html .= '</span>';
-    }
-
-    $dateEdited = @Date::format($this->values->date_edited, 'd.m.Y H:i');
-    if (!empty($dateEdited)) {
-      $html .= '<span class="label label_info align-self-center ml-auto">';
-      $html .= t('date.last_edited', $dateEdited);
-      $html .= '</span>';
-    }
-
-    $html .= '</h2>';
-
-    return $html;
-  }
-
   protected function getColumnHtml($columnName)
   {
     if (!$this->model->hasColumn($columnName)) {
@@ -171,9 +127,10 @@ class Form
     $column = $this->columns[$columnName];
     $column = ['name' => $columnName, ...$modelColumn, ...$column];
 
-    $columnClassName = 'col-xs-12 form__column form__column_' . $column['type'];
-    if (isset($column['className'])) {
-      $columnClassName = $column['className'];
+    $columnClassName = isset($column['className']) ? $column['className'] : 'col-xs-12';
+    $columnClassName .= ' form__column form__column_' . $column['type'];
+    if (@$column['required'] === true) {
+      $columnClassName .= ' form__column_required';
     }
 
     $html = '<div class="' . $columnClassName . '" data-form-type="column" data-column-name="' . $columnName . '">';
@@ -187,13 +144,13 @@ class Form
 
   protected function getSubmitHtml()
   {
-    $submitButtonText = isset($this->submitButtonText) ? $this->submitButtonText : I18n::translate('form.submit');
-    $submitButtonClassName = isset($this->submitButtonClassName) ? $this->submitButtonClassName : 'btn btn_primary';
-    $submitButtonRowClassName = isset($this->submitButtonRowClassName) ? $this->submitButtonRowClassName : 'col-xs-12';
+    $submitText = isset($this->submitText) ? $this->submitText : I18n::translate('form.submit');
+    $submitClassName = isset($this->submitClassName) ? $this->submitClassName : 'btn btn_primary';
+    $submitColClassName = isset($this->submitColClassName) ? $this->submitColClassName : 'col-xs-12 form__submit';
 
-    $html = '<div class="' . $submitButtonRowClassName . '" data-form-type="submit">';
-    $html .= '<button type="submit" class="' . $submitButtonClassName . '">';
-    $html .= $submitButtonText;
+    $html = '<div class="' . $submitColClassName . '" data-form-type="submit">';
+    $html .= '<button type="submit" class="' . $submitClassName . '">';
+    $html .= $submitText;
     $html .= '</button>';
     $html .= '</div>';
 
@@ -244,10 +201,18 @@ class Form
     $inputAttributes = [];
     foreach ($column as $attrName => $attrValue) {
       if (
-        in_array($attrName, ['className', 'foreign', 'label', 'options', 'regex'])
+        in_array($attrName, ['className', 'foreign', 'label', 'options', 'regex', 'isForeignDeleteSkip'])
         || $attrName === 'required' && !$attrValue
       ) {
         continue;
+      }
+
+      if ($attrName === 'min' && !in_array($inputType, ['number', 'range'])) {
+        $attrName = 'minlength';
+      }
+
+      if ($attrName === 'max' && !in_array($inputType, ['number', 'range'])) {
+        $attrName = 'maxlength';
       }
 
       if ($attrName === 'name' && $inputType === 'array') {

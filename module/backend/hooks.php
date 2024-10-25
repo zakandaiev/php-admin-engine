@@ -368,10 +368,12 @@ Hook::run('sidebar.append', [
   'text' => t('sidebar.users'),
   'name' => [
     t('sidebar.groups') => [
-      'name' => 'group.list'
+      'name' => 'group.list',
+      'activeRoutes' => ['group.add', 'group.edit', 'group.translation.edit']
     ],
     t('sidebar.users') => [
-      'name' => 'user-list'
+      'name' => 'user.list',
+      'activeRoutes' => ['user.add', 'user.edit']
     ]
   ]
 ]);

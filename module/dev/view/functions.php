@@ -36,7 +36,7 @@ function getUiSectionFiles($isFormatName = false)
 
     $uiSectionName = fileGetName($uiSection);
     $uiSectionNameFormatted = ucfirst(str_replace('-', ' ', $uiSectionName));
-    $link = routeLink('ui-section', ['section' => $uiSectionName]);
+    $link = routeLink('ui.section', ['section' => $uiSectionName]);
 
     $uiSectionsFormatted[$isFormatName ? $uiSectionNameFormatted : $uiSectionName] = $link;
   }

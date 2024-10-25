@@ -5,7 +5,52 @@ Asset::css('main');
 
 Asset::js('main', ['type' => 'module']);
 
-############################# TABLE #############################
+############################# FORM BUILDER #############################
+function getFormBox($table, $title, $value, $form)
+{
+  $html = '<h2 class="section__title">';
+
+  if (!empty($title)) {
+    $html .= '<span>';
+    $html .= $title;
+    $html .= '</span>';
+  }
+
+  $translations = !empty(@$value->translations) ? explode(',', $value->translations) : [];
+  if (!empty($translations)) {
+    $html .= '<span>';
+
+    foreach ($translations as $language) {
+      $routeName = "$table.translation.edit";
+      $i18nTooltip = "$table.translation_edit";
+
+      $html .= '<a href="' . routeLink($routeName, ['id' => @$value->id, 'language' => $language]) . '" data-tooltip="top" title="' . t($i18nTooltip, t("i18n.$language")) . '">';
+      $html .= '<img class="d-inline-block w-1em h-1em vertical-align-middle radius-round" src="' . pathResolveUrl(Asset::url(), lang('icon', $language)) . '" alt="' . $language . '">&nbsp;';
+      $html .= '</a>';
+    }
+
+    $html .= '</span>';
+  }
+
+  $dateEdited = @$value->date_edited ? dateFormat($value->date_edited, 'd.m.Y H:i') : null;
+  if (!empty($dateEdited)) {
+    $html .= '<span class="label label_info align-self-center ml-auto">';
+    $html .= t('date.last_edited', $dateEdited);
+    $html .= '</span>';
+  }
+
+  $html .= '</h2>';
+
+  $html .= '<div class="box">';
+  $html .= '<div class="box__body">';
+  $html .= $form;
+  $html .= '</div>';
+  $html .= '</div>';
+
+  return $html;
+}
+
+############################# TABLE BUILDER #############################
 function getColumnTranslations($table, $currentLanguage, $translations, $routeParams = [])
 {
   $routeAddTranslation = "$table.translation.add";

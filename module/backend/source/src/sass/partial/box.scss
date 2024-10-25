@@ -75,6 +75,16 @@
     display: block;
     padding: 1.5em;
 
+    @for $i from 1 through 6 {
+      & > * + h#{$i} {
+        margin: 2rem 0 0;
+      }
+    }
+
+    & > * + p {
+      margin: 0.5rem 0 0;
+    }
+
     // .box__body + .box__footer
     & + .box__footer {
       padding-top: 0.5em;

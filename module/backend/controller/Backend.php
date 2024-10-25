@@ -3,6 +3,8 @@
 namespace module\backend\controller;
 
 use engine\router\Controller;
+use engine\http\Response;
+use engine\router\Route;
 
 class Backend extends Controller
 {
@@ -12,17 +14,14 @@ class Backend extends Controller
   {
     parent::__construct();
 
-    // TODO
-    // $this->backendModel = $this->loadModel('Backend', 'backend');
-
     class_alias('\\module\\backend\\builder\\Form', 'BuilderForm');
     class_alias('\\module\\backend\\builder\\Filter', 'BuilderFilter');
     class_alias('\\module\\backend\\builder\\Table', 'BuilderTable');
 
-    // TODO - make as function
-    // if(!$this->user->get()->authorized) {
-    // 	Server::redirect('/admin/login');
-    // }
+    $this->checkAuth();
+
+    // TODO
+    // $this->backendModel = $this->loadModel('Backend', 'backend');
 
     // // CHECK USER FOR ROUTE ACCESS
     // $is_user_enabled = false;
@@ -51,5 +50,14 @@ class Backend extends Controller
     // // GET USER NOTIFICATIONS
     // $this->user->notifications_count = $this->backendModel->getUserNotificationsCount($this->user->id);
     // $this->user->notifications = $this->backendModel->getUserNotifications($this->user->id);
+  }
+
+  public function checkAuth()
+  {
+    if ($this->user->get('isAuthorized') !== true) {
+      Response::redirect(Route::link('login'));
+    }
+
+    return true;
   }
 }

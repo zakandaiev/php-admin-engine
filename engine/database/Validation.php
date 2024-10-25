@@ -35,6 +35,13 @@ class Validation
     $this->columnKeysToValidate = $columnKeysToValidate ?? [];
   }
 
+  public function unsetColumn($columnName)
+  {
+    unset($this->column[$columnName]);
+
+    return true;
+  }
+
   public function hasColumn($key)
   {
     return isset($this->column[$key]);

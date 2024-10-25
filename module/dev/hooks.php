@@ -17,7 +17,7 @@ function getUiSections()
     $uiSectionName = fileGetName($uiSection);
     $uiSectionNameFormatted = ucfirst(str_replace('-', ' ', $uiSectionName));
     $uiSectionsFormatted[$uiSectionNameFormatted] = [
-      'name' => 'ui-section',
+      'name' => 'ui.section',
       'parameter' => ['section' => $uiSectionName]
     ];
   }

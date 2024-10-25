@@ -41,11 +41,20 @@ function checkRouteAccess($route)
 
 function isRouteActive($route = [])
 {
-  if (isset($route['name']) && is_string($route['name'])) {
-    return isRouteActive($route['name'], @$route['parameter'], @$route['module']);
+  if (!isset($route['name']) || !is_string($route['name'])) {
+    return false;
   }
 
-  return false;
+  $result = routeIsActive($route['name'], @$route['parameter'], @$route['module']);
+  if (!$result && is_array(@$route['activeRoutes'])) {
+    foreach ($route['activeRoutes'] as $routeAlsoActive) {
+      if ($routeAlsoActive === routeGet('name')) {
+        return true;
+      }
+    }
+  }
+
+  return $result;
 }
 
 function isRouteParentActive($route = [])
@@ -61,7 +70,7 @@ function isRouteParentActive($route = [])
       continue;
     }
 
-    $result = isRouteActive($item['name'], @$item['parameter'], @$item['module']);
+    $result = isRouteActive($item);
 
     if ($result) {
       return true;
@@ -100,7 +109,7 @@ function isRouteParentActive($route = [])
 
           <div class="sidebar__collapse-menu">
             <?php foreach ($item['name'] as $key => $value) : ?>
-              <a href="<?= routeLink($value['name'], @$value['parameter'], null, @$value['module']) ?>" class="sidebar__collapse-item <?php if (isRouteActive($value)) : ?>active<?php endif; ?>">
+              <a href="<?= routeLink($value['name'], @$value['parameter'], @$value['query'], @$value['module']) ?>" class="sidebar__collapse-item <?php if (isRouteActive($value)) : ?>active<?php endif; ?>">
                 <span class="sidebar__text"><?= $key ?></span>
                 <!-- <span class="label label_primary">2</span> -->
               </a>
@@ -108,7 +117,7 @@ function isRouteParentActive($route = [])
           </div>
         </div>
       <?php else : ?>
-        <a href="<?= routeLink($item['name'], @$item['parameter'], null, @$item['module']) ?>" class="sidebar__item <?php if (isRouteActive($item)) : ?>active<?php endif; ?>">
+        <a href="<?= routeLink($item['name'], @$item['parameter'], @$value['query'], @$item['module']) ?>" class="sidebar__item <?php if (isRouteActive($item)) : ?>active<?php endif; ?>">
           <i class="ti ti-<?= $item['icon'] ?>"></i>
           <span class="sidebar__text"><?= $item['text'] ?></span>
           <?php

@@ -6,7 +6,7 @@ if ($pageTitle) {
   Page::set('title', "$pageTitle | $parentTitle");
 }
 
-Page::breadcrumb('add', $parentTitle, 'ui-home');
+Page::breadcrumb('add', $parentTitle, 'ui.home');
 if ($pageTitle) {
   Page::breadcrumb('add', $pageTitle);
 }

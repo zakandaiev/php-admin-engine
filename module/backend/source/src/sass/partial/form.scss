@@ -38,22 +38,15 @@ input, textarea, select, .input, .textarea, .select {
   }
 }
 
-
-
-
-
-// TODO BELOW ALL REFACTOR
-
 textarea {
   // resize: vertical;
   overflow: hidden auto;
-  min-height: 2.543em;
-  max-height: 20em;
+  min-height: 2rem;
+  max-height: 30rem;
 }
 
 label:not(.switch) {
-  input[type="checkbox"],
-  input[type="radio"] {
+  & > input[type="checkbox"], & > input[type="radio"] {
     position: absolute;
     z-index: var(--zi-below);
     top: 0;
@@ -73,7 +66,7 @@ label:not(.switch) {
       position: relative;
 
       display: inline-flex;
-      gap: 0.5em;
+      gap: 0.75rem;
       align-items: center;
 
       margin: 0;
@@ -114,20 +107,11 @@ label:not(.switch) {
       border-color: var(--color-primary);
     }
 
-    &.disabled,
-    &:disabled {
+    &.disabled, &:disabled {
       & ~ * {
         cursor: default;
         opacity: 0.5;
       }
-    }
-
-    &.valid + * {
-      color: var(--color-success);
-    }
-
-    &.invalid + * {
-      color: var(--color-error);
     }
   }
 
@@ -145,11 +129,24 @@ label:not(.switch) {
   }
 }
 
+.form__column_invalid > .form__input > label:not(.switch) {
+  & > input[type="checkbox"] + *,
+  & > input[type="radio"] + * {
+    color: var(--color-error);
+  }
+}
+
+.form__column_valid > .form__input > label:not(.switch) {
+  & > input[type="checkbox"] + *,
+  & > input[type="radio"] + * {
+    color: var(--color-success);
+  }
+}
+
 .switch {
   display: inline-flex;
-  gap: 0.5em;
+  gap: 0.75rem;
   align-items: center;
-  margin: 0 0 0.5em;
 
   // .switch__slider
   &__slider {
@@ -173,7 +170,7 @@ label:not(.switch) {
 
       position: absolute;
       top: 50%;
-      left: 0.3rem;
+      left: var(--radius-xs);
       transform: translateY(-50%);
 
       display: inline-block;
@@ -208,13 +205,12 @@ label:not(.switch) {
       border-color: var(--color-primary);
 
       &::before {
-        left: 1.7rem;
+        left: calc(3.2rem - 1rem - var(--radius-xs));
         background: #fff;
       }
     }
 
-    &.disabled,
-    &:disabled {
+    &.disabled, &:disabled {
       & ~ * {
         cursor: default;
         opacity: 0.5;
@@ -231,12 +227,31 @@ label:not(.switch) {
   }
 }
 
+.form__column_invalid > .form__input > .switch {
+  & > input ~ *:not([class]) {
+    color: var(--color-error);
+
+    &::before {
+      border-color: var(--color-error);
+    }
+  }
+}
+
+.form__column_valid > .form__input > .switch {
+  & > input ~ *:not([class]) {
+    color: var(--color-success);
+
+    &::before {
+      border-color: var(--color-success);
+    }
+  }
+}
+
 .select_custom {
   position: relative;
 
   display: block;
 
-  width: auto;
   padding: 0;
 
   background: none;
@@ -259,11 +274,6 @@ label:not(.switch) {
 .input-group {
   position: relative;
   display: flex;
-  margin: 0 0 1em;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
 
   & > *:not(input, textarea, select, .input, .textarea, .select) {
     @include reset-btn;
@@ -272,8 +282,11 @@ label:not(.switch) {
     align-items: center;
     justify-content: center;
 
-    padding: 0.5em 1em;
+    padding: 0 1rem;
 
+    font-size: 1.6rem;
+    font-weight: var(--font-normal);
+    line-height: 1.2;
     color: var(--color-text);
 
     background: var(--color-border);
@@ -290,14 +303,9 @@ label:not(.switch) {
     }
   }
 
-  & > input,
-  & > textarea,
-  & > select,
-  & > .input,
-  & > .textarea,
-  & > .select {
+  & > input, & > textarea, & > select, & > .input, & > .textarea, & > .select {
     flex-grow: 1;
-    width: auto;
+    width: 100%;
     margin: 0;
     border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
 
@@ -315,15 +323,26 @@ label:not(.switch) {
   }
 }
 
+.form__column_invalid > .form__input > .input-group {
+  & > * {
+    border-color: var(--color-error);
+  }
+}
+
+.form__column_valid > .form__input > .input-group {
+  & > * {
+    border-color: var(--color-success);
+  }
+}
+
 input[type="color"] {
   cursor: pointer;
 
   display: inline-block;
 
-  width: auto;
-  width: 2.543em;
-  height: 2.543em;
-  padding: 0.5em;
+  width: 2.2rem;
+  height: 2.2rem;
+  padding: 0.5rem;
 
   &::-webkit-color-swatch-wrapper {
     padding: 0;
@@ -338,30 +357,26 @@ input[type="color"] {
 
 input[type="range"] {
   cursor: pointer;
+
   display: block;
-  height: 2.543em;
+
+  height: 2.2rem;
+  padding: 0.5rem;
+
   accent-color: var(--color-primary);
 }
 
-
-
-
-
-
-
-
-
 .form {
   position: relative;
-
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-
   text-align: left;
-
   background: var(--color-box);
   border-radius: var(--radius-xs);
+
+  &:not(.row) {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
 
   // .form__column
   &__column {
@@ -379,7 +394,7 @@ input[type="range"] {
     position: relative;
     display: flex;
 
-    & > input, & > textarea, & > select, & > .input, & > .textarea, & > .select {
+    & > * {
       width: 100%;
     }
   }

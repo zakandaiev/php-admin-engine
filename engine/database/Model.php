@@ -52,37 +52,6 @@ abstract class Model
     return $this->table;
   }
 
-  public function hasColumn($key)
-  {
-    return isset($this->column[$key]);
-  }
-
-  public function getColumn($key = null)
-  {
-    return isset($key) ? @$this->column[$key] : $this->column;
-  }
-
-  public function setColumnValue($key, $value = null)
-  {
-    if (!$this->hasColumn($key)) {
-      return false;
-    }
-
-    $this->column[$key]['value'] = $value;
-
-    return true;
-  }
-
-  public function hasError()
-  {
-    return count($this->queryError) > 0 ? true : false;
-  }
-
-  public function getError()
-  {
-    return $this->queryError;
-  }
-
   public function getPrimaryKey()
   {
     if (!empty($this->primaryKey)) {
@@ -114,6 +83,64 @@ abstract class Model
   public function getItemId()
   {
     return $this->itemId;
+  }
+
+  public function unsetColumn($columnName)
+  {
+    unset($this->column[$columnName]);
+
+    if (in_array($columnName, $this->columnKeysToValidate)) {
+      unset($this->columnKeysToValidate[$columnName]);
+    }
+
+    return true;
+  }
+
+  public function hasColumn($columnName)
+  {
+    return isset($this->column[$columnName]);
+  }
+
+  public function getColumn($columnName = null)
+  {
+    return isset($columnName) ? @$this->column[$columnName] : $this->column;
+  }
+
+  public function setColumnValue($columnName, $value = null)
+  {
+    if (!$this->hasColumn($columnName)) {
+      return false;
+    }
+
+    $this->column[$columnName]['value'] = $value;
+
+    return true;
+  }
+
+  public function getColumnKeysToValidate()
+  {
+    return $this->columnKeysToValidate;
+  }
+
+  public function setError($columnName, $validation, $columnValue = null)
+  {
+    $this->queryError[] = [
+      'column' => $columnName,
+      'validation' => $validation,
+      'value' => $columnValue
+    ];
+
+    return true;
+  }
+
+  public function hasError()
+  {
+    return count($this->queryError) > 0 ? true : false;
+  }
+
+  public function getError()
+  {
+    return $this->queryError;
   }
 
   public function add()
@@ -157,7 +184,6 @@ abstract class Model
     $result = $query->execute($values);
     if ($query->hasError()) {
       $this->queryError = $query->getError();
-
       return false;
     }
 
@@ -204,8 +230,14 @@ abstract class Model
     $values[$pkName] = $pkValue;
     $keys = array_keys($values);
 
-    $sqlParams = array_reduce($keys, function ($carry, $v) {
-      return ($carry ? "$carry AND " : '') . "$v=:$v";
+    $sqlParams = array_reduce($keys, function ($carry, $v) use ($values) {
+      $operand = '=';
+
+      if (is_null($values[$v])) {
+        $operand = '<=>';
+      }
+
+      return ($carry ? "$carry AND " : '') . "$v$operand:$v";
     });
     $sql = "DELETE FROM {{$table}} WHERE $sqlParams AND $pkName=:$pkName";
     $query = new Query($sql);
@@ -244,10 +276,11 @@ abstract class Model
       return false;
     }
 
+    $this->modifyColumns();
+
     $this->validation->validate();
     if ($this->validation->hasError()) {
       $this->queryError = $this->validation->getError();
-
       return false;
     }
 
@@ -258,9 +291,9 @@ abstract class Model
 
     $table = $this->table;
     $pkName = $this->getPrimaryKey();
-    $pkValue = $this->hasItemId() ? $this->getItemId() : $this->column[$pkName]['value'];
+    $pkValue = $this->hasItemId() ? $this->getItemId() : @$this->column[$pkName]['value'];
 
-    $this->prepareForeignFields();
+    $this->prepareForeignColumns();
 
     $columnValues = [];
     foreach ($this->column as $columnName => $column) {
@@ -290,14 +323,14 @@ abstract class Model
       return false;
     }
 
-    $resultForeign = $this->processForeignFields($result);
+    $resultForeign = $this->processForeignColumns($result);
     if (!$resultForeign) {
       return false;
     }
 
     // TODO
     // self::uploadMediaFields();
-    // self::processForeignFields($foreign_data, $form_data);
+    // self::processForeignColumns($foreign_data, $form_data);
     // self::processTranslationFields($translation_data, $form_data);
 
     // if (isset($form['execute_post']) && is_closure($form['execute_post'])) {
@@ -317,7 +350,25 @@ abstract class Model
     return $result;
   }
 
-  protected function prepareForeignFields()
+  protected function modifyColumns()
+  {
+    foreach ($this->column as $columnName => $column) {
+      if (isset($column['unsetNull']) && $column['unsetNull'] === true && (@$column['value'] === null || @$column['value'] === '')) {
+        $this->unsetColumn($columnName);
+        continue;
+      }
+
+      if (!isset($column['modify']) || !isClosure($column['modify'])) {
+        continue;
+      }
+
+      $modifiedValue = $column['modify'](@$column['value'], $column, $this->column);
+
+      $this->setColumnValue($columnName, $modifiedValue);
+    }
+  }
+
+  protected function prepareForeignColumns()
   {
     foreach ($this->column as $columnName => $column) {
       if (!isset($column['foreign']) || empty($column['foreign']) || (!empty($this->columnKeysToValidate) && !in_array($columnName, $this->columnKeysToValidate))) {
@@ -343,7 +394,7 @@ abstract class Model
     return true;
   }
 
-  protected function processForeignFields($pkValue)
+  protected function processForeignColumns($pkValue)
   {
     if (empty($this->queryForeign)) {
       return true;

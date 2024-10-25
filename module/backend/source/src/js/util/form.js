@@ -343,7 +343,7 @@ class Form {
     if (this.dataRedirect === 'this') {
       document.location.reload();
     } else if (this.dataRedirect) {
-      window.location.href = decodeURI(this.dataRedirect).replaceAll(/(\$[\w\d]+)/g, data?.data);
+      window.location.href = decodeURI(this.dataRedirect).replaceAll(/(\$[\w\d\-_]+)/g, data?.data);
     }
 
     return false;

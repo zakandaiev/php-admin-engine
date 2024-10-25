@@ -190,7 +190,93 @@ function textPluralValue($number, $values = null)
   return Text::pluralValue($number, $values);
 }
 
-############################# LANGUAGE #############################
+############################# REQUEST #############################
+function requestHas($key)
+{
+  return Request::has($key);
+}
+
+function requestGet($key = null)
+{
+  return Request::get($key);
+}
+
+function requestCookie($key = null)
+{
+  return Request::cookie($key);
+}
+
+function requestFiles($key = null)
+{
+  return Request::files($key);
+}
+
+function requestServer($key = null)
+{
+  return Request::server($key);
+}
+
+function requestMethod()
+{
+  return Request::method();
+}
+
+function requestProtocol()
+{
+  return Request::protocol();
+}
+
+function requestHost()
+{
+  return Request::host();
+}
+
+function requestBase()
+{
+  return Request::base();
+}
+
+function requestUri()
+{
+  return Request::uri();
+}
+
+function requestUriFull()
+{
+  return Request::uriFull();
+}
+
+function requestUriParts()
+{
+  return Request::uriParts();
+}
+
+function requestUrl()
+{
+  return Request::url();
+}
+
+function requestUrlFull()
+{
+  return Request::urlFull();
+}
+
+function requestReferer()
+{
+  return Request::referer();
+}
+
+function requestIp()
+{
+  return Request::ip();
+}
+
+function requestCsrfToken()
+{
+  return Request::csrfToken();
+}
+
+############################# I18N #############################
 function t($key, $data = null)
 {
   return I18n::translate($key, $data);

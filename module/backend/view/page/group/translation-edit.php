@@ -15,7 +15,6 @@ $form = new BuilderForm([
   'itemId' => $group->id,
   'isMatchRequest' => true,
   'values' => $group,
-  'title' => $title,
   'attributes' => [
     // 'data-redirect="' . routeLink('group.list') . '"',
     'data-validate'
@@ -45,7 +44,7 @@ $form = new BuilderForm([
 
       <?php Theme::breadcrumb(); ?>
 
-      <?php $form->render(); ?>
+      <?= getFormBox('group', $title, $group, $form->renderHtml()) ?>
 
     </div>
   </section>

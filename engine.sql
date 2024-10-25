@@ -59,8 +59,8 @@ CREATE TABLE IF NOT EXISTS `%prefix%_user` (
   UNIQUE `auth_token` (`auth_token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `%prefix%_user` (`email`, `password`, `name`, `auth_token`, `auth_ip`) VALUES
-('%admin_email%', '%admin_password%', 'Administrator', '%auth_token%', '%auth_ip%');
+INSERT INTO `%prefix%_user` (`id`, `email`, `password`, `name`, `auth_token`, `auth_ip`) VALUES
+('user-1', '%admin_email%', '%admin_password%', 'Administrator', '%auth_token%', '%auth_ip%');
 
 CREATE TABLE IF NOT EXISTS `%prefix%_group` (
   `id` VARCHAR(32) NOT NULL,
@@ -90,31 +90,59 @@ CREATE TABLE IF NOT EXISTS `%prefix%_group_route` (
   PRIMARY KEY (`group_id`, `route`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+CREATE TRIGGER
+  `%prefix%_clear_group_route_by_group_delete`
+AFTER DELETE ON
+  `%prefix%_group`
+FOR EACH ROW
+  DELETE FROM `%prefix%_group_route` WHERE group_id = OLD.id;
+
+CREATE TRIGGER
+  `%prefix%_clear_group_translation_by_group_delete`
+AFTER DELETE ON
+  `%prefix%_group`
+FOR EACH ROW
+  DELETE FROM `%prefix%_group_translation` WHERE group_id = OLD.id;
+
+CREATE TRIGGER
+  `%prefix%_clear_group_user_by_group_delete`
+AFTER DELETE ON
+  `%prefix%_group`
+FOR EACH ROW
+  DELETE FROM `%prefix%_group_user` WHERE group_id = OLD.id;
+
+CREATE TRIGGER
+  `%prefix%_clear_group_user_by_user_delete`
+AFTER DELETE ON
+  `%prefix%_user`
+FOR EACH ROW
+  DELETE FROM `%prefix%_group_user` WHERE user_id = OLD.id;
+
 INSERT INTO `%prefix%_group` (`id`, `access_all`) VALUES
-(1, true),
-(2, false),
-(3, false);
+('group-1', true),
+('group-2', false),
+('group-3', false);
 
 INSERT INTO `%prefix%_group_translation` (`group_id`, `language`, `name`) VALUES
-(1, 'en', 'Developer'),
-(2, 'en', 'Administrator'),
-(3, 'en', 'Moderator');
+('group-1', 'en', 'Developer'),
+('group-2', 'en', 'Administrator'),
+('group-3', 'en', 'Moderator');
 
 INSERT INTO `%prefix%_group_route` (`group_id`, `route`) VALUES
-(2, 'any@/admin/**'),
-(3, 'any@/admin/feedback'),
-(3, 'any@/admin/comment'),
-(3, 'any@/admin/comment/**'),
-(3, 'any@/admin/menu'),
-(3, 'any@/admin/menu/**'),
-(3, 'any@/admin/page'),
-(3, 'any@/admin/page/**'),
-(3, 'any@/admin/translation'),
-(3, 'any@/admin/translation/**'),
-(3, 'any@/admin/upload');
+('group-2', 'any@/backend/**'),
+('group-3', 'any@/backend/feedback'),
+('group-3', 'any@/backend/comment'),
+('group-3', 'any@/backend/comment/**'),
+('group-3', 'any@/backend/menu'),
+('group-3', 'any@/backend/menu/**'),
+('group-3', 'any@/backend/page'),
+('group-3', 'any@/backend/page/**'),
+('group-3', 'any@/backend/translation'),
+('group-3', 'any@/backend/translation/**'),
+('group-3', 'any@/backend/upload');
 
 INSERT INTO `%prefix%_group_user` (`group_id`, `user_id`) VALUES
-(1, 1);
+('group-1', 'user-1');
 
 CREATE TABLE IF NOT EXISTS `%prefix%_form` (
   `token` VARCHAR(256) NOT NULL,
@@ -245,7 +273,7 @@ INSERT INTO `%prefix%_page_translation` (`page_id`, `language`, `title`) VALUES
 (1, 'en', 'Homepage');
 
 CREATE TRIGGER
-  `set_page_static`
+  `%prefix%_set_page_static`
 BEFORE UPDATE ON
   `%prefix%_page`
 FOR EACH ROW
@@ -257,7 +285,7 @@ FOR EACH ROW
     END;
 
 CREATE TRIGGER
-  `moderate_comment`
+  `%prefix%_moderate_comment`
 BEFORE INSERT ON
   `%prefix%_comment`
 FOR EACH ROW
@@ -269,57 +297,29 @@ FOR EACH ROW
     END;
 
 CREATE TRIGGER
-  `clear_page_category`
+  `%prefix%_clear_page_category`
 AFTER DELETE ON
   `%prefix%_page`
 FOR EACH ROW
   DELETE FROM `%prefix%_page_category` WHERE page_id = OLD.id OR category_id = OLD.id;
 
 CREATE TRIGGER
-  `clear_comment_add`
+  `%prefix%_clear_comment_add`
 AFTER DELETE ON
   `%prefix%_page`
 FOR EACH ROW
   DELETE FROM `%prefix%_comment` WHERE page_id = OLD.id;
 
 CREATE TRIGGER
-  `clear_page_translation`
+  `%prefix%_clear_page_translation`
 AFTER DELETE ON
   `%prefix%_page`
 FOR EACH ROW
   DELETE FROM `%prefix%_page_translation` WHERE page_id = OLD.id;
 
 CREATE TRIGGER
-  `clear_menu_translation`
+  `%prefix%_clear_menu_translation`
 AFTER DELETE ON
   `%prefix%_menu`
 FOR EACH ROW
   DELETE FROM `%prefix%_menu_translation` WHERE menu_id = OLD.id;
-
-CREATE TRIGGER
-  `clear_group_route_by_group_delete`
-AFTER DELETE ON
-  `%prefix%_group`
-FOR EACH ROW
-  DELETE FROM `%prefix%_group_route` WHERE group_id = OLD.id;
-
-CREATE TRIGGER
-  `clear_group_translation_by_group_delete`
-AFTER DELETE ON
-  `%prefix%_group`
-FOR EACH ROW
-  DELETE FROM `%prefix%_group_translation` WHERE group_id = OLD.id;
-
-CREATE TRIGGER
-  `clear_group_user_by_group_delete`
-AFTER DELETE ON
-  `%prefix%_group`
-FOR EACH ROW
-  DELETE FROM `%prefix%_group_user` WHERE group_id = OLD.id;
-
-CREATE TRIGGER
-  `clear_group_user_by_user_delete`
-AFTER DELETE ON
-  `%prefix%_user`
-FOR EACH ROW
-  DELETE FROM `%prefix%_group_user` WHERE user_id = OLD.id;

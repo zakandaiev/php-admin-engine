@@ -30,13 +30,9 @@ class Form
   public function __construct($token)
   {
     // CHECK TOKEN IN DATABASE
-    $bindParams = ['token' => $token];
-    $sqlParams = array_reduce(array_keys($bindParams), function ($carry, $v) {
-      return ($carry ? "$carry AND " : '') . "$v=:$v";
-    });
-    $sql = "SELECT * FROM {form} WHERE $sqlParams ORDER BY date_created DESC LIMIT 1";
+    $sql = "SELECT * FROM {form} WHERE token=:token ORDER BY date_created DESC LIMIT 1";
     $query = new Query($sql);
-    $result = $query->execute($bindParams)->fetch();
+    $result = $query->execute(['token' => $token])->fetch();
     if (!$result) {
       return $this;
     }
@@ -240,8 +236,14 @@ class Form
       $bindParams['is_match_request'] = $isMatchRequest ?? false;
     }
 
-    $sqlParams = array_reduce(array_keys($bindParams), function ($carry, $v) {
-      return ($carry ? "$carry AND " : '') . "$v=:$v";
+    $sqlParams = array_reduce(array_keys($bindParams), function ($carry, $v) use ($bindParams) {
+      $operand = '=';
+
+      if (is_null($bindParams[$v])) {
+        $operand = '<=>';
+      }
+
+      return ($carry ? "$carry AND " : '') . "$v$operand:$v";
     });
 
     $tokenLifetime = Config::getProperty('form', 'lifetime');

@@ -2,6 +2,7 @@
 
 namespace engine\router;
 
+use engine\auth\User;
 use engine\module\Module;
 use engine\module\Setting;
 use engine\router\Route;
@@ -40,7 +41,7 @@ abstract class Controller
 
     $this->page = new Page();
     $this->view = new View();
-    // $this->user = new User();
+    $this->user = new User();
 
     self::$instance = $this;
   }
