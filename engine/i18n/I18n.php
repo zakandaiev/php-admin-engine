@@ -136,6 +136,12 @@ class I18n
       }
     } else if (isset($data) && is_array($data)) {
       foreach ($data as $key => $value) {
+        if (is_bool($value)) {
+          $value = $value === true ? 'true' : 'false';
+        } else if (!is_scalar($value)) {
+          $value = json_encode($value);
+        }
+
         $translation = str_replace('{' . $key . '}', $value, $translation);
       }
     } else if (isset($data)) {

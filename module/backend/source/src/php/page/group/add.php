@@ -7,29 +7,6 @@ Page::set('title', $title);
 Page::breadcrumb('add', t('group.list.title'), 'group.list');
 Page::breadcrumb('add', $title);
 
-$routeOptions = [];
-foreach ($routes as $method => $r) {
-  foreach ($r as $p) {
-    $r = new \stdClass();
-
-    $r->text = $p;
-    $r->value = $method . '@' . $p;
-
-    $routeOptions[$method][] = $r;
-  }
-}
-
-$userOptions = array_map(function ($user) {
-  $u = new \stdClass();
-
-  // TODO
-  // $u->text = $user->fullname;
-  $u->text = $user->name;
-  $u->value = $user->id;
-
-  return $u;
-}, $users);
-
 $form = new BuilderForm([
   'action' => 'add',
   'modelName' => 'Group',
@@ -45,13 +22,11 @@ $form = new BuilderForm([
     'route' => [
       'label' => t('group.column.routes'),
       'placeholder' => t('group.column.routes_placeholder'),
-      'options' => $routeOptions,
       'data-addable' => '/(any|delete|get|options|patch|post|put)@\/[0-9a-z\/\*\$\-\_]+/g'
     ],
     'user_id' => [
       'label' => t('group.column.users'),
-      'placeholder' => t('group.column.users_placeholder'),
-      'options' => $userOptions
+      'placeholder' => t('group.column.users_placeholder')
     ],
     'is_enabled' => [
       'label' => t('group.column.is_enabled'),

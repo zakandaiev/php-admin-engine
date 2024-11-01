@@ -166,6 +166,11 @@ class Form
     $inputHtml = '';
     $labelHtml = '';
 
+    $inputName = $column['name'];
+    $inputType = $column['type'];
+    $inputValue = $column['value'];
+    $inputMultiple = @$column['isMultiple'] === true ? true : false;
+
     // SET LABEL
     if (isset($column['label'])) {
       $labelText = $column['label'];
@@ -176,47 +181,88 @@ class Form
       $labelHtml .= '</div>';
     }
 
-    $validation = [
-      // COLUMN TYPES
-      'array',
-      'boolean',
-      'date',
-      'email',
-      'url',
-      'time',
-
-      // COLUMN ATTRIBUTES
-      'required',
-      'min',
-      'max',
-      'regex',
-      'color',
-      'extensions',
-    ];
-
-    $inputName = $column['name'];
-    $inputType = $column['type'];
-    $inputValue = $column['value'];
-
+    // SET ATTRIBUTES ARRAY
     $inputAttributes = [];
     foreach ($column as $attrName => $attrValue) {
       if (
-        in_array($attrName, ['className', 'foreign', 'label', 'options', 'regex', 'isForeignDeleteSkip'])
-        || $attrName === 'required' && !$attrValue
+        in_array($attrName, ['className', 'folder', 'foreign', 'label', 'options', 'regex', 'isForeignDeleteSkip', 'isMultiple'])
+        || ($attrName === 'required' && !$attrValue)
+        || ($attrName === 'type' && in_array($inputType, ['date', 'datetime', 'month', 'time']))
+        || ($attrName === 'value' && in_array($inputType, ['checkbox', 'radio',  'select', 'textarea', 'wysiwyg']))
       ) {
         continue;
       }
 
-      if ($attrName === 'min' && !in_array($inputType, ['number', 'range'])) {
-        $attrName = 'minlength';
-      }
+      switch ($attrName) {
+        case 'name': {
+            if ($inputMultiple) {
+              $attrValue = $attrValue . '[]';
+            }
 
-      if ($attrName === 'max' && !in_array($inputType, ['number', 'range'])) {
-        $attrName = 'maxlength';
-      }
+            break;
+          }
+        case 'extensions': {
+            $attrName = 'accept';
+            $attrValue = implode(',', array_unique(array_map(function ($v) {
+              return self::getMimeByExtension($v) ?? '.' . $v;
+            }, $attrValue)));
 
-      if ($attrName === 'name' && $inputType === 'array') {
-        $attrValue = $attrValue . '[]';
+            break;
+          }
+        case 'min': {
+            if ($inputType === 'file') {
+              $attrName = 'data-min-files';
+            } else if (in_array($inputType, ['date', 'datetime', 'month', 'time'])) {
+              $attrName = 'data-min';
+            } else if (!in_array($inputType, ['number', 'range'])) {
+              $attrName = 'minlength';
+            }
+
+            break;
+          }
+        case 'max': {
+            if ($inputType === 'file') {
+              $attrName = 'data-max-files';
+            } else if (in_array($inputType, ['date', 'datetime', 'month', 'time'])) {
+              $attrName = 'data-max';
+            } else if (!in_array($inputType, ['number', 'range'])) {
+              $attrName = 'maxlength';
+            }
+
+            break;
+          }
+        case 'maxSize': {
+            $attrName = 'data-max-size';
+            $attrValue = $attrValue . 'B';
+
+            break;
+          }
+        case 'placeholder': {
+            if (in_array($inputType, ['file', 'select'])) {
+              $attrName = 'data-placeholder';
+            }
+
+            break;
+          }
+        case 'range': {
+            $attrName = 'data-range';
+
+            break;
+          }
+        case 'value': {
+            if ($inputType === 'file') {
+              $attrName = 'data-value';
+
+              if ($inputMultiple && !isJson($attrValue)) {
+                $attrValue = is_array($attrValue) ? $attrValue : ($attrValue ? [$attrValue] : []);
+                $attrValue = json_encode($attrValue, JSON_UNESCAPED_SLASHES);
+              }
+            } else if ($inputType === 'datetime') {
+              $attrValue = str_replace(' ', 'T', $attrValue) . 'Z';
+            }
+
+            break;
+          }
       }
 
       if (is_bool($attrValue)) {
@@ -228,19 +274,62 @@ class Form
       $inputAttributes[] = $attrName . '="' . Text::html($attrValue) . '"';
     }
 
-    // TODO
-    // debug($inputName, $inputAttributes);
     switch ($inputType) {
-      case 'array':
+      case 'boolean': {
+          $labelHtml = '';
+
+          $checked = $inputValue === true ? 'checked' : '';
+
+          $inputHtml = '<label class="switch">';
+          $inputHtml .= '<input type="hidden" name="' . $inputName . '" value="false">';
+          $inputHtml .= '<input type="checkbox" name="' . $inputName . '" value="true" ' . $checked . '>';
+          $inputHtml .= '<span class="switch__slider"></span>';
+          $inputHtml .= '<span>' . $labelText . '</span>';
+          $inputHtml .= '</label>';
+
+          break;
+        }
+      case 'date':
+      case 'datetime':
+      case 'month':
+      case 'time': {
+          $multiple = $inputMultiple ? ' data-multiple' : '';
+
+          $inputHtml .= '<input type="text" data-picker="' . $inputType . '" ' . implode(' ', $inputAttributes) . $multiple . '>';
+
+          break;
+        }
+      case 'checkbox':
+      case 'radio': {
+          $inputValue = $inputValue ?? [];
+          $inputOptions = isClosure($column['options']) ? $column['options']() : [];
+          if (empty($inputOptions)) {
+            break;
+          }
+
+          foreach ($inputOptions as $key => $value) {
+            $checked = in_array($value->value, $inputValue) ? ' checked' : '';
+
+            $inputHtml .= '<label>';
+            $inputHtml .= '<input ' . implode(' ', $inputAttributes) . $checked . ' value="' . $value->value . '">';
+            $inputHtml .= '<span>' . $value->text . '</span>';
+            $inputHtml .= '</label>';
+          }
+
+          break;
+        }
       case 'select': {
           $inputValue = $inputValue ?? [];
-          $inputOptions = $column['options'] ?? [];
+          $inputOptions = isClosure($column['options']) ? $column['options']() : [];
+          if (empty($inputOptions)) {
+            break;
+          }
 
-          $inputAttributes['multiple'] = $inputType === 'array' ? 'multiple' : '';
+          $multiple = $inputMultiple ? ' multiple' : '';
 
-          $inputHtml = '<select ' . implode(' ', $inputAttributes) . '>';
+          $inputHtml = '<select ' . implode(' ', $inputAttributes) . $multiple . '>';
 
-          if (isset($inputAttributes['placeholder'])) {
+          if (isset($column['placeholder'])) {
             $inputHtml .= '<option data-placeholder="true"></option>';
           }
 
@@ -264,17 +353,20 @@ class Form
 
           break;
         }
-      case 'boolean': {
-          $labelHtml = '';
+      case 'textarea': {
+          $inputHtml = '<textarea ' . implode(' ', $inputAttributes) . '>' . Text::html($inputValue) . '</textarea>';
 
-          $checked = $inputValue === true ? 'checked' : '';
+          break;
+        }
+      case 'wysiwyg': {
+          $inputHtml = '<textarea data-wysiwyg ' . implode(' ', $inputAttributes) . '>' . Text::html($inputValue) . '</textarea>';
 
-          $inputHtml = '<label class="switch">';
-          $inputHtml .= '<input type="hidden" name="' . $inputName . '" value="false">';
-          $inputHtml .= '<input type="checkbox" name="' . $inputName . '" value="true" ' . $checked . '>';
-          $inputHtml .= '<span class="switch__slider"></span>';
-          $inputHtml .= '<span>' . $labelText . '</span>';
-          $inputHtml .= '</label>';
+          break;
+        }
+      case 'file': {
+          $multiple = $inputMultiple ? ' multiple' : '';
+
+          $inputHtml = '<input ' . implode(' ', $inputAttributes) . $multiple . '>';
 
           break;
         }
@@ -286,213 +378,10 @@ class Form
     }
 
     $html = $labelHtml;
-    $html .= '<div class="form__input">';
+    $html .= '<div class="form__input ' . @$column['formInputClass'] . '">';
     $html .= $inputHtml;
     $html .= '</div>';
     $html .= '<div class="form__error"></div>';
-
-    return $html;
-
-
-
-
-
-    // TODO
-    // SET ATTRIBUTES
-    $attributes = [];
-    $attributes['name'] = isset($column['multiple']) && $column['multiple'] ? 'name="' . $columnName . '[]"' : 'name="' . $columnName . '"';
-    $enabled_attributes = ['required', 'min', 'max', 'pattern', 'multiple', 'range', 'extensions', 'autofocus', 'placeholder', 'rows', 'step'];
-    $valueless_attributes = ['required', 'multiple', 'range', 'autofocus'];
-    $min_max_to_datamin_datamax_replace_types = ['date', 'datetime', 'month', 'select'];
-    $min_max_to_minlength_maxlength_replace_types = ['email', 'hidden', 'password', 'tel', 'text', 'url', 'textarea', 'wysiwyg'];
-
-    foreach ($field as $attr => $attr_value) {
-      if (!in_array($attr, $enabled_attributes) && !str_starts_with($attr, 'data-')) {
-        continue;
-      }
-
-      if (in_array($attr, $valueless_attributes)) {
-        if ($attr_value) {
-          $attributes[$attr] = $attr;
-        }
-        continue;
-      }
-
-      if (($attr === 'min' || $attr === 'max') && in_array($column['type'], $min_max_to_datamin_datamax_replace_types)) {
-        $attributes[$attr] = 'data-' . $attr . '="' . addslashes(strval($attr_value)) . '"';
-        continue;
-      }
-
-      if (($attr === 'min' || $attr === 'max') && in_array($column['type'], $min_max_to_minlength_maxlength_replace_types)) {
-        $attributes[$attr] = $attr . 'length="' . addslashes(strval($attr_value)) . '"';
-        continue;
-      }
-
-      if ($attr === 'extensions') {
-        $accept = array_map(function ($v) {
-          return self::getMimeByExtension($v) ?? '.' . $v;
-        }, $attr_value);
-
-        $accept = implode(',', array_unique($accept));
-
-        $attributes[$attr] = 'accept="' . $accept . '"';
-
-        continue;
-      }
-
-      $attributes[$attr] = $attr . '="' . addcslashes(strval($attr_value), '"') . '"';
-    }
-
-    $value = @$column['value'];
-
-    if ($value === null && isset($column['default'])) {
-      $value = $column['default'];
-    }
-
-    if (isset($column['multiple']) && $column['multiple'] && is_string($value) && ($value[0] === '[' || $value[0] === '{')) {
-      $value = json_decode($value);
-    } else if (is_string($value)) {
-      $value = addcslashes($value, '"');
-    }
-
-    // FORMAT ATTRIBUTES & INIT HTML BY RIGHT TAG
-    switch ($column['type']) {
-      case 'checkbox':
-      case 'radio': {
-          $column['value'] = $column['value'] ?? [];
-
-          foreach ($column['value'] as $key => $value) {
-            $selected = isset($value->selected) && $value->selected ? ' checked' : '';
-
-            $html .= '<label><input type="' . $column['type'] . '" ' . implode(' ', $attributes) . ' value="' . $value->value . '"' . $selected . '><span>' . $value->name . '</span></label>';
-          }
-
-          break;
-        }
-      case 'date':
-      case 'datetime':
-      case 'month':
-      case 'time': {
-          if (isset($attributes['name'])) $attributes['name'] = 'name="' . $columnName . '"';
-          if (isset($attributes['range'])) $attributes['range'] = 'data-' . $attributes['range'];
-          if (isset($attributes['multiple'])) $attributes['multiple'] = 'data-' . $attributes['multiple'];
-
-          $value = isset($value) ? ' value="' . $value . '"' : '';
-
-          $html .= '<input type="text" data-picker="' . $column['type'] . '" ' . implode(' ', $attributes) . $value . '>';
-
-          break;
-        }
-      case 'file': {
-          $value = is_array($value) ? $value : ($value ? [$value] : []);
-
-          if (isset($attributes['placeholder'])) {
-            $attributes['data-placeholder'] = 'data-' . $attributes['placeholder'];
-            unset($attributes['placeholder']);
-          }
-
-          $value = array_map(function ($v) {
-            return [
-              'value' => $v,
-              'poster' => Request::base() . '/' . $v
-            ];
-          }, $value);
-
-          $value = isset($value) ? json_encode($value, JSON_UNESCAPED_SLASHES) : '';
-
-          $value = $value ? " data-value='$value'" : '';
-
-          $html .= '<input type="file" ' . implode(' ', $attributes) . $value . '>';
-
-          break;
-        }
-      case 'textarea': {
-          if (!isset($attributes['rows'])) {
-            $attributes['rows'] = 'rows="1"';
-          }
-
-          $html .= '<textarea ' . implode(' ', $attributes) . '>' . $value . '</textarea>';
-
-          break;
-        }
-      case 'wysiwyg': {
-          $html .= '<textarea data-wysiwyg ' . implode(' ', $attributes) . '>' . $value . '</textarea>';
-
-          break;
-        }
-      case 'select': {
-          if (isset($attributes['placeholder'])) $attributes['placeholder'] = 'data-' . $attributes['placeholder'];
-
-          $html .= '<select ' . implode(' ', $attributes) . '>';
-
-          if (isset($attributes['placeholder'])) {
-            $html .= '<option data-placeholder="true"></option>';
-          }
-
-          $column['value'] = $column['value'] ?? [];
-
-          foreach ($column['value'] as $key => $value) {
-            if (is_array($value)) {
-              $html .= '<optgroup label="' . $key . '">';
-
-              foreach ($value as $vf => $vv) {
-                $selected = isset($vv->selected) && $vv->selected ? ' selected' : '';
-                $html .= '<option value="' . $vv->value . '"' . $selected . '>' . $vv->name . '</option>';
-              }
-
-              $html .= '</optgroup>';
-            } else {
-              $selected = isset($value->selected) && $value->selected ? ' selected' : '';
-              $html .= '<option value="' . $value->value . '"' . $selected . '>' . $value->name . '</option>';
-            }
-          }
-
-          $html .= '</select>';
-
-          break;
-        }
-      case 'switch': {
-          $value = ($value === true || $value === 'true' || $value === 1 || $value === '1') ? ' checked' : '';
-
-          $html = '<label class="switch">';
-          $html .= '<input type="checkbox"  ' . implode(' ', $attributes) . $value . '>';
-          $html .= '<span class="switch__slider"></span>';
-
-          if (isset($column['label_html'])) {
-            $html .= $column['label_html'];
-          } else if (isset($column['label'])) {
-            $html .= '<span';
-            if (isset($column['labelClassName'])) {
-              $html .= ' class="' . $column['labelClassName'] . '">';
-            } else {
-              $html .= '>';
-            }
-            $html .= $column['label'];
-            $html .= '</span>';
-          }
-
-          $html .= '</label>';
-          break;
-        }
-      case 'color':
-      case 'email':
-      case 'hidden':
-      case 'number':
-      case 'password':
-      case 'range':
-      case 'tel':
-      case 'text':
-      case 'url': {
-          $value = isset($value) ? ' value="' . $value . '"' : '';
-
-          $html .= '<input type="' . $column['type'] . '" ' . implode(' ', $attributes) . $value . '>';
-
-          break;
-        }
-      default: {
-          return false;
-        }
-    }
 
     return $html;
   }

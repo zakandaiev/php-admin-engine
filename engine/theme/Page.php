@@ -262,6 +262,10 @@ class Page
     },
     theme: {}
   };
+
+  if (document.cookie.indexOf("' . Config::getProperty('userTimezoneKey', 'cookie') . '") < 0 ) {
+    document.cookie = "' . Config::getProperty('userTimezoneKey', 'cookie') . '=" + new Date().getTimezoneOffset();
+  }
 </script>';
 
           self::$meta['engine_script'] = $engineScript;

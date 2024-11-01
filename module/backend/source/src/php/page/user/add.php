@@ -7,15 +7,6 @@ Page::set('title', $title);
 Page::breadcrumb('add', t('user.list.title'), 'user.list');
 Page::breadcrumb('add', $title);
 
-$groupOptions = array_map(function ($group) {
-  $u = new \stdClass();
-
-  $u->text = $group->name;
-  $u->value = $group->id;
-
-  return $u;
-}, $groups);
-
 $form = new BuilderForm([
   'action' => 'add',
   'modelName' => 'User',
@@ -26,8 +17,7 @@ $form = new BuilderForm([
   'columns' => [
     'group_id' => [
       'label' => t('user.column.groups'),
-      'placeholder' => t('user.column.groups_placeholder'),
-      'options' => $groupOptions
+      'placeholder' => t('user.column.groups_placeholder')
     ],
     'email' => [
       'label' => t('user.column.email'),

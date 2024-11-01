@@ -4,6 +4,7 @@ namespace module\backend\builder;
 
 use engine\database\Pagination;
 use engine\http\Request;
+use engine\util\Date;
 use engine\util\Path;
 
 class Table
@@ -208,9 +209,9 @@ class Table
     if ($column['type'] === 'boolean') {
       $html .= iconBoolean($value);
     } else if ($column['type'] === 'date') {
-      $html .= dateFormat($value, @$column['format']);
+      $html .= Date::format($value, @$column['format'], true);
     } else if ($column['type'] === 'dateWhen') {
-      $html .= dateWhen($value, @$column['format']);
+      $html .= Date::when($value, @$column['format'], true);
     } else if ($column['type'] === 'text') {
       $html .= $value;
     } else {

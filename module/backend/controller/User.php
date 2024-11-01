@@ -15,8 +15,6 @@ class User extends Backend
 
   public function getAdd()
   {
-    $this->view->setData('groups', $this->model->getGroups());
-
     $this->view->render('user/add');
   }
 
@@ -30,10 +28,9 @@ class User extends Backend
       return false;
     }
 
-    $user->groups = $this->model->getUserGroups($userId);
+    $user->group_id = $this->model->getUserGroups($userId);
 
     $this->view->setData('user', $user);
-    $this->view->setData('groups', $this->model->getGroups());
 
     $this->view->render('user/edit');
   }

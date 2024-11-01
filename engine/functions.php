@@ -35,14 +35,19 @@ if (!function_exists('str_starts_with')) {
 }
 
 ############################# DATE #############################
-function dateFormat($date = null, $format = null)
+function dateGetUserTimezone()
 {
-  return Date::format($date, $format);
+  return Date::getUserTimezone();
 }
 
-function dateWhen($date = null, $format = null)
+function dateFormat($date = null, $format = null, $considerTimezone = null)
 {
-  return Date::when($date, $format);
+  return Date::format($date, $format, $considerTimezone);
+}
+
+function dateWhen($date = null, $format = null, $considerTimezone = null)
+{
+  return Date::when($date, $format, $considerTimezone);
 }
 
 function dateLeft($date)
@@ -416,17 +421,23 @@ function getEngineProperty($key)
 {
   if ($key === 'php_min') {
     return Engine::PHP_MIN;
-  } else if ($key === 'name') {
+  }
+  if ($key === 'name') {
     return Engine::NAME;
-  } else if ($key === 'version') {
+  }
+  if ($key === 'version') {
     return Engine::VERSION;
-  } else if ($key === 'author') {
+  }
+  if ($key === 'author') {
     return Engine::AUTHOR;
-  } else if ($key === 'author_url') {
+  }
+  if ($key === 'author_url') {
     return Engine::AUTHOR_URL;
-  } else if ($key === 'repository_url') {
+  }
+  if ($key === 'repository_url') {
     return Engine::REPOSITORY_URL;
-  } else if ($key === 'website_url') {
+  }
+  if ($key === 'website_url') {
     return Engine::WEBSITE_URL;
   }
 

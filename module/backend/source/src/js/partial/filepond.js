@@ -1,26 +1,62 @@
 import { create, registerPlugin } from 'filepond';
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
-import FilePondPluginFilePoster from 'filepond-plugin-file-poster';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import FilePondPluginMediaPreview from 'filepond-plugin-media-preview';
 import FilePondPluginPdfPreview from 'filepond-plugin-pdf-preview';
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
 
-registerPlugin(
-  FilePondPluginFileValidateSize,
-  FilePondPluginFileValidateType,
-  FilePondPluginFilePoster,
-  FilePondPluginImagePreview,
-  FilePondPluginMediaPreview,
-  FilePondPluginPdfPreview,
-  FilePondPluginImageExifOrientation,
-);
+registerPlugin(FilePondPluginFileValidateSize);
+registerPlugin(FilePondPluginFileValidateType);
+registerPlugin(FilePondPluginImagePreview);
+registerPlugin(FilePondPluginMediaPreview);
+registerPlugin(FilePondPluginPdfPreview);
+registerPlugin(FilePondPluginImageExifOrientation);
 
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('input[type="file"]').forEach((input) => {
     const pond = create(input, {
-      server: { load: '/' },
+      server: {
+        load: async (uri, load, error) => {
+          const url = window.Engine?.site?.url;
+
+          try {
+            const response = await fetch(`${url}/${uri}`);
+            const blob = await response.blob();
+            load(blob);
+          } catch (e) {
+            error(e.message);
+          }
+        },
+      },
+      files: (() => {
+        const files = [];
+
+        if (!input.hasAttribute('data-value')) {
+          return files;
+        }
+
+        const inputFilesRaw = input.getAttribute('data-value');
+        if (!inputFilesRaw || !inputFilesRaw.length) {
+          return files;
+        }
+
+        try {
+          const inputFiles = input.multiple ? JSON.parse(inputFilesRaw) : [inputFilesRaw];
+          inputFiles.forEach((file) => {
+            files.push({
+              source: file,
+              options: {
+                type: 'local',
+              },
+            });
+          });
+        } catch (error) {
+          // do nothing
+        }
+
+        return files;
+      })(),
       storeAsFile: true,
       instantUpload: false,
       allowProcess: false,
@@ -28,7 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
       allowReorder: true,
       dropOnPage: true,
       dropOnElement: false,
-      files: initFiles(input),
       // eslint-disable-next-line
       allowImagePreview: input.getAttribute('data-preview') == 'false' ? false : true,
       maxFileSize: input.hasAttribute('data-max-size') ? input.getAttribute('data-max-size') : null,
@@ -38,8 +73,8 @@ document.addEventListener('DOMContentLoaded', () => {
       credits: false,
     });
 
-    if (typeof Engine !== 'undefined' && Engine.translation && Engine.translation.filepond) {
-      pond.setOptions(Engine.translation.filepond);
+    if (typeof window.Engine !== 'undefined' && window.Engine.translation && window.Engine.translation.filepond) {
+      pond.setOptions(window.Engine.translation.filepond);
     }
 
     if (input.hasAttribute('data-placeholder')) {
@@ -50,39 +85,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
     input.instance = pond;
   });
-
-  function initFiles(input) {
-    const files = [];
-
-    if (!input.hasAttribute('data-value')) {
-      return files;
-    }
-
-    let inputFiles = input.getAttribute('data-value');
-
-    if (!inputFiles || inputFiles === '[]') {
-      return files;
-    }
-
-    inputFiles = JSON.parse(inputFiles);
-
-    inputFiles.forEach((file) => {
-      const fileObj = {
-        source: file.value,
-        options: {
-          type: 'local',
-          metadata: {},
-        },
-      };
-
-      // eslint-disable-next-line
-      if (input.getAttribute('data-preview') == 'false' ? false : true) {
-        fileObj.options.metadata.poster = file.poster;
-      }
-
-      files.push(fileObj);
-    });
-
-    return files;
-  }
 });

@@ -6,7 +6,7 @@ Asset::css('main');
 Asset::js('main', ['type' => 'module']);
 
 ############################# FORM BUILDER #############################
-function getFormBox($table, $title, $value, $form)
+function getFormBox($table, $title, $column, $formHtml)
 {
   $html = '<h2 class="section__title">';
 
@@ -16,7 +16,7 @@ function getFormBox($table, $title, $value, $form)
     $html .= '</span>';
   }
 
-  $translations = !empty(@$value->translations) ? explode(',', $value->translations) : [];
+  $translations = !empty(@$column->translations) ? explode(',', $column->translations) : [];
   if (!empty($translations)) {
     $html .= '<span>';
 
@@ -24,7 +24,7 @@ function getFormBox($table, $title, $value, $form)
       $routeName = "$table.translation.edit";
       $i18nTooltip = "$table.translation_edit";
 
-      $html .= '<a href="' . routeLink($routeName, ['id' => @$value->id, 'language' => $language]) . '" data-tooltip="top" title="' . t($i18nTooltip, t("i18n.$language")) . '">';
+      $html .= '<a href="' . routeLink($routeName, ['id' => @$column->id, 'language' => $language]) . '" data-tooltip="top" title="' . t($i18nTooltip, t("i18n.$language")) . '">';
       $html .= '<img class="d-inline-block w-1em h-1em vertical-align-middle radius-round" src="' . pathResolveUrl(Asset::url(), lang('icon', $language)) . '" alt="' . $language . '">&nbsp;';
       $html .= '</a>';
     }
@@ -32,7 +32,7 @@ function getFormBox($table, $title, $value, $form)
     $html .= '</span>';
   }
 
-  $dateEdited = @$value->date_edited ? dateFormat($value->date_edited, 'd.m.Y H:i') : null;
+  $dateEdited = @$column->date_edited ? dateFormat($column->date_edited, 'd.m.Y H:i', true) : null;
   if (!empty($dateEdited)) {
     $html .= '<span class="label label_info align-self-center ml-auto">';
     $html .= t('date.last_edited', $dateEdited);
@@ -43,7 +43,7 @@ function getFormBox($table, $title, $value, $form)
 
   $html .= '<div class="box">';
   $html .= '<div class="box__body">';
-  $html .= $form;
+  $html .= $formHtml;
   $html .= '</div>';
   $html .= '</div>';
 
@@ -51,7 +51,29 @@ function getFormBox($table, $title, $value, $form)
 }
 
 ############################# TABLE BUILDER #############################
-function getColumnTranslations($table, $currentLanguage, $translations, $routeParams = [])
+function getColumnToggle($table, $columnName, $columnValue, $column)
+{
+  $tooltip = $column->$columnName ? t("$table.list.deactivate_this_$table") : t("$table.list.activate_this_$table");
+
+  $html = '<button type="button" data-action="' . Form::edit($table, $column->id, true) . '" data-body="' . textHtml(json_encode([$columnName => !$columnValue])) . '" data-redirect="this" data-tooltip="top" title="' . $tooltip . '" class="table__action">';
+  $html .= iconBoolean($columnValue);
+  $html .= '</button>';
+
+  return $html;
+}
+
+function getColumnActions($table, $columnValue, $column)
+{
+  $html = ' <a href="' . routeLink("$table.edit", ['id' => $column->id]) . '" data-tooltip="top" title="' . t("$table.list.edit") . '" class="table__action"><i class="ti ti-edit"></i></a>';
+
+  $html .= ' <button type="button" data-action="' . Form::delete($table, $column->id, true) . '" data-confirm="' . t("$table.list.delete_confirm", $column->name) . '" data-remove="trow" data-decrement=".pagination-output > span" data-tooltip="top" title="' . t("$table.list.delete") . '" class="table__action">';
+  $html .= '<i class="ti ti-trash"></i>';
+  $html .= '</button>';
+
+  return $html;
+}
+
+function getColumnTranslations($table, $columnValue, $column)
 {
   $routeAddTranslation = "$table.translation.add";
   $routeEditTranslation = "$table.translation.edit";
@@ -60,11 +82,11 @@ function getColumnTranslations($table, $currentLanguage, $translations, $routePa
   $i18nEditTranslation = "$table.translation_edit";
 
   $html = '<div class="d-flex gap-1">';
-  $countTranslations = count(array_intersect($translations, array_keys(site('languages')))) + 1;
+  $countTranslations = count(array_intersect($columnValue, array_keys(site('languages')))) + 1;
   $countAviableLanguages = count(site('languages'));
 
-  foreach ($translations as $language) {
-    $html .= '<a href="' . routeLink($routeEditTranslation, [...$routeParams, 'language' => $language]) . '" class="flex-shrink-0 d-inline-block w-2rem h-2rem" data-tooltip="top" title="' . t($i18nEditTranslation, t("i18n.$language")) . '"><img class="d-inline-block w-100 h-100 radius-round" src="' . pathResolveUrl(Asset::url(), lang('icon', $language)) . '" alt="' . $language . '"></a>';
+  foreach ($columnValue as $language) {
+    $html .= '<a href="' . routeLink($routeEditTranslation, ['id' => $column->id, 'language' => $language]) . '" class="flex-shrink-0 d-inline-block w-2rem h-2rem" data-tooltip="top" title="' . t($i18nEditTranslation, t("i18n.$language")) . '"><img class="d-inline-block w-100 h-100 radius-round" src="' . pathResolveUrl(Asset::url(), lang('icon', $language)) . '" alt="' . $language . '"></a>';
   }
 
   if ($countTranslations < $countAviableLanguages) {
@@ -73,11 +95,11 @@ function getColumnTranslations($table, $currentLanguage, $translations, $routePa
     $html .= '<div class="dropdown__menu">';
 
     foreach (site('languages') as $language => $languageParam) {
-      if ($language === $currentLanguage || in_array($language, $translations)) {
+      if ($language === $column->language || in_array($language, $columnValue)) {
         continue;
       }
 
-      $html .= '<a href="' . routeLink($routeAddTranslation, [...$routeParams, 'language' => $language]) . '" class="dropdown__item d-flex align-items-center gap-2">';
+      $html .= '<a href="' . routeLink($routeAddTranslation, ['id' => $column->id, 'language' => $language]) . '" class="dropdown__item d-flex align-items-center gap-2">';
       $html .= '<img src="' .  pathResolveUrl(Asset::url(), lang('icon', $language)) . '" alt="' . $language . '" class="flex-shrink-0 d-inline-block h-1em">';
       $html .= '<span>' . t("i18n.$language") . '</span>';
       $html .= '</a>';

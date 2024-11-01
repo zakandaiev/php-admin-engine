@@ -1,0 +1,139 @@
+@import "filepond/dist/filepond.min";
+@import "filepond-plugin-file-poster/dist/filepond-plugin-file-poster.min";
+@import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min";
+@import "filepond-plugin-media-preview/dist/filepond-plugin-media-preview.min";
+@import "filepond-plugin-pdf-preview/dist/filepond-plugin-pdf-preview.min";
+
+.filepond--root {
+  cursor: pointer;
+
+  margin: 0;
+  padding: 0;
+
+  font: inherit;
+  color: var(--color-text);
+}
+
+.filepond--panel-root {
+  background: var(--color-box);
+  border: var(--border);
+  border-radius: var(--radius-xs);
+}
+
+.filepond--drop-label {
+  color: var(--color-text-muted);
+}
+
+.filepond--label-action {
+  text-decoration-color: var(--color-text-muted);
+}
+
+.filepond--file-poster img {
+  width: 100%;
+  object-fit: contain;
+}
+
+.filepond--file-status-sub {
+  display: none;
+}
+
+.filepond--file-action-button {
+  cursor: pointer;
+  color: var(--color-text-muted);
+  background: #000;
+  transition: var(--transition);
+
+  &:hover, &:focus {
+    color: #fff;
+    box-shadow: 0 0 0 0.15rem rgb(255 255 255 / 90%);
+  }
+}
+
+.filepond--item {
+  margin: 0.5rem;
+}
+
+.filepond--item-panel,
+.filepond--drip {
+  background: var(--color-box);
+  border-radius: var(--radius-xs);
+}
+
+.filepond--drip-blob {
+  background: var(--color-text);
+}
+
+.filepond--file {
+  color: var(--color-text);
+}
+
+[data-filepond-item-state*='error'] .filepond--item-panel,
+[data-filepond-item-state*='invalid'] .filepond--item-panel {
+  background: var(--color-error);
+}
+
+[data-filepond-item-state='processing-complete'] .filepond--item-panel {
+  background: var(--color-success);
+}
+
+.filepond--file-info .filepond--file-info-sub {
+  color: var(--color-text-muted);
+  opacity: 1;
+}
+
+.filepond--drop-label.filepond--drop-label label {
+  padding: 0.5rem 1rem;
+}
+
+.filepond--image-preview-overlay-success {
+  color: var(--color-success);
+}
+
+.filepond--image-preview-wrapper {
+  border-radius: var(--radius-xs);
+}
+
+.filepond--list {
+  right: 1rem;
+  left: 1rem;
+}
+
+.filepond--grid .filepond--item {
+  width: 100%;
+}
+
+.form__column_invalid > .form__input > .filepond--root {
+  & > .filepond--panel-root > .filepond--panel-root {
+    border-color: var(--color-error);
+  }
+}
+
+.form__column_valid > .form__input > .filepond--root {
+  & > .filepond--panel-root > .filepond--panel-root {
+    border-color: var(--color-success);
+  }
+}
+
+@include query(md) {
+  .filepond--grid .filepond--item {
+    width: calc(100% / 2 - 1rem);
+  }
+}
+
+@include query(lg) {
+  .filepond--grid .filepond--item {
+    width: calc(100% / 3 - 1rem);
+  }
+}
+
+@include query(xl) {
+  .filepond--grid .filepond--item {
+    width: calc(100% / 4 - 1rem);
+  }
+}
+
+@include query(xxl) {
+  .filepond--grid .filepond--item {
+    width: calc(100% / 5 - 1rem);
+  }
+}

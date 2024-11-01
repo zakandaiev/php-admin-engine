@@ -2,34 +2,60 @@
 
 namespace engine\util;
 
+use DateTime;
+use DateTimeZone;
+use engine\Config;
+use engine\http\Cookie;
 use engine\i18n\I18n;
 
 class Date
 {
-  public static function format($date = null, $format = null)
+  protected static $userTimezone;
+
+  public static function getUserTimezone()
   {
-    $timestamp = $date ?? time();
+    if (empty(self::$userTimezone) && Cookie::has(Config::getProperty('userTimezoneKey', 'cookie'))) {
+      self::$userTimezone = new DateTimeZone(timezone_name_from_abbr('', abs(intval(Cookie::get(Config::getProperty('userTimezoneKey', 'cookie')))) * 60, 0));
+    } else if (empty(self::$userTimezone)) {
+      self::$userTimezone = new DateTimeZone(date_default_timezone_get());
+    }
 
-    $timestamp = is_numeric($timestamp) ? $timestamp : strtotime($timestamp);
-
-    return date($format ?? 'd.m.Y', $timestamp);
+    return self::$userTimezone;
   }
 
-  public static function when($date = null, $format = null)
+  public static function format($date = null, $format = null, $considerTimezone = null)
+  {
+    $timestamp = $date ?? time();
+    $timestamp = is_numeric($timestamp) ? $timestamp : strtotime($timestamp);
+
+    $dateTime = new DateTime('@' . $timestamp);
+    if ($considerTimezone) {
+      $dateTime->setTimezone(self::getUserTimezone());
+    }
+
+    return $dateTime->format($format ?? 'd.m.Y');
+  }
+
+  public static function when($date = null, $format = null, $considerTimezone = null)
   {
     $timestamp = $date ?? time();
     $timestamp = is_numeric($date) ? $date : strtotime($date ?? time());
 
-    $dateDay = date('d.m.Y', $timestamp);
-    $today = date('d.m.Y');
-    $yesterday = date('d.m.Y', mktime(0, 0, 0, date('m'), date('d') - 1, date('Y')));
+    $dateTime = new DateTime('@' . $timestamp);
+    if ($considerTimezone) {
+      $dateTime->setTimezone(self::getUserTimezone());
+    }
 
+    $today = (new DateTime('today', self::getUserTimezone()))->format('d.m.Y');
+    $yesterday = (new DateTime('yesterday', self::getUserTimezone()))->format('d.m.Y');
+
+    $dateDay = $dateTime->format('d.m.Y');
     if ($dateDay === $today) {
-      $date = I18n::translate('date.today_at', date('H:i', $timestamp));
-    } else if ($yesterday === $dateDay) {
-      $date = I18n::translate('date.yesterday_at', date('H:i', $timestamp));
+      $date = I18n::translate('date.today_at', $dateTime->format('H:i'));
+    } else if ($dateDay === $yesterday) {
+      $date = I18n::translate('date.yesterday_at', $dateTime->format('H:i'));
     } else {
-      $date = self::format($timestamp, $format ?? 'd.m.Y');
+      $date = self::format($timestamp, $format ?? 'd.m.Y', $considerTimezone);
     }
 
     return $date;

@@ -1,5 +1,7 @@
 <?php
 
+date_default_timezone_set('UTC');
+
 define('ROOT_DIR', $_SERVER['DOCUMENT_ROOT']);
 
 require_once ROOT_DIR . '/vendor/autoload.php';

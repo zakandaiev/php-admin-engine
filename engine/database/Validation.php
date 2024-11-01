@@ -3,53 +3,207 @@
 namespace engine\database;
 
 use engine\i18n\I18n;
+use engine\util\File;
 
-class Validation
+abstract class Validation
 {
   protected $table;
+  protected $primaryKey;
+  protected $itemId;
   protected $column = [];
   protected $columnKeysToValidate = [];
   protected $error = [];
   protected $validation = [
-    // COLUMN TYPES
-    'array',
+    // COLUMN TYPES TO VALIDATE
     'boolean',
     'date',
     'email',
+    'file',
     'url',
     'time',
 
-    // COLUMN ATTRIBUTES
+    // COLUMN ATTRIBUTES TO VALIDATE
     'required',
     'min',
     'max',
     'regex',
     'color',
     'extensions',
+    'maxSize',
+    'isArray',
   ];
 
-  public function __construct($table, $column, $columnKeysToValidate = null)
+  public function setTable($table)
   {
     $this->table = $table;
-    $this->column = $column;
-    $this->columnKeysToValidate = $columnKeysToValidate ?? [];
+
+    return true;
+  }
+
+  public function hasTable()
+  {
+    return !empty($this->table);
+  }
+
+  public function getTable()
+  {
+    return $this->table;
+  }
+
+  public function setPrimaryKey($primaryKey)
+  {
+    $this->primaryKey = $primaryKey;
+
+    return true;
+  }
+
+  public function hasPrimaryKey()
+  {
+    return !empty($this->primaryKey);
+  }
+
+  public function getPrimaryKey()
+  {
+    if ($this->hasPrimaryKey()) {
+      return $this->primaryKey;
+    }
+
+    if (empty($this->table)) {
+      return false;
+    }
+
+    $query = new Query("SHOW KEYS FROM {{$this->table}} WHERE Key_name='PRIMARY'");
+    $result = $query->execute()->fetch();
+    if (!$result) {
+      return false;
+    }
+
+    $this->primaryKey = $result->Column_name;
+
+    return $this->primaryKey;
+  }
+
+  public function setItemId($itemId)
+  {
+    $this->itemId = $itemId;
+
+    return true;
+  }
+
+  public function hasItemId()
+  {
+    return !empty($this->itemId);
+  }
+
+  public function getItemId()
+  {
+    return $this->itemId;
   }
 
   public function unsetColumn($columnName)
   {
     unset($this->column[$columnName]);
 
+    if (in_array($columnName, $this->columnKeysToValidate)) {
+      unset($this->columnKeysToValidate[$columnName]);
+    }
+
     return true;
   }
 
-  public function hasColumn($key)
+  public function setColumn($columnName, $value = null)
   {
-    return isset($this->column[$key]);
+    $this->column[$columnName] = $value;
+
+    return true;
   }
 
-  public function getColumn($key = null)
+  public function hasColumn($columnName)
   {
-    return isset($key) ? @$this->column[$key] : $this->column;
+    return isset($this->column[$columnName]);
+  }
+
+  public function getColumn($columnName = null)
+  {
+    return isset($columnName) ? @$this->column[$columnName] : $this->column;
+  }
+
+  public function setColumnValue($columnName, $value = null)
+  {
+    if (!$this->hasColumn($columnName)) {
+      return false;
+    }
+
+    $this->column[$columnName]['value'] = $value;
+
+    return true;
+  }
+
+  public function hasColumnValue($columnName)
+  {
+    if (!$this->hasColumn($columnName)) {
+      return false;
+    }
+
+    return isset($this->column[$columnName]['value']);
+  }
+
+  public function getColumnValue($columnName)
+  {
+    return @$this->column[$columnName]['value'];
+  }
+
+  public function setColumnKeysToValidate($value = null)
+  {
+    $this->columnKeysToValidate = $value ?? [];
+
+    return true;
+  }
+
+  public function hasColumnKeysToValidate()
+  {
+    return count($this->columnKeysToValidate) > 0 ? true : false;
+  }
+
+  public function getColumnKeysToValidate()
+  {
+    return $this->columnKeysToValidate;
+  }
+
+  public function setColumnKeyToValidate($columnName)
+  {
+    $this->columnKeysToValidate[] = $columnName;
+
+    return true;
+  }
+
+  public function hasColumnKeyToValidate($columnName)
+  {
+    return in_array($columnName, $this->columnKeysToValidate);
+  }
+
+  public function flushError()
+  {
+    $this->error = [];
+
+    return true;
+  }
+
+  public function setError($columnName = null, $validation = null, $columnValue = null)
+  {
+    if (is_array($columnName)) {
+      $this->error[] = $columnName;
+
+      return true;
+    }
+
+    $this->error[] = [
+      'column' => $columnName,
+      'validation' => $validation,
+      'value' => $columnValue
+    ];
+
+    return true;
   }
 
   public function hasError()
@@ -110,7 +264,7 @@ class Validation
       if ($validationResult !== true) {
         $result = [
           'column' => $columnName,
-          'validation' => $columnDefinition[$validationName . 'Message'] ?? I18n::translate("{$this->table}.$columnName.validation.$validationName", $columnValue),
+          'validation' => $columnDefinition[$validationName . 'Message'] ?? I18n::translate("{$this->table}.$columnName.validation.$validationName", $columnDefinition),
           'value' => $columnValue
         ];
 
@@ -129,20 +283,21 @@ class Validation
 
     $result = true;
 
-    if ($type === 'boolean' && !is_bool($value)) {
-      $result = false;
-    } else if ($type === 'number' && !is_numeric($value)) {
-      $result = false;
-    } else if (empty($value)) {
-      $result = false;
+    switch ($type) {
+      case 'boolean': {
+          $result = is_bool($value);
+          break;
+        }
+      case 'number': {
+          $result = is_numeric($value);
+          break;
+        }
+      default: {
+          $result = !empty($value);
+        }
     }
 
     return $result;
-  }
-
-  protected function validateArray($type, $rule, $value)
-  {
-    return is_array($value);
   }
 
   protected function validateBoolean($type, $rule, $value)
@@ -150,24 +305,19 @@ class Validation
     return is_bool($value);
   }
 
-  protected function validateDate($type, $rule, $value, $columnDefinition)
+  protected function validateDate($type, $rule, $value, $column)
   {
     $result = true;
 
-    // TODO
-    // if ((isset($columnDefinition['multiple']) && $columnDefinition['multiple']) || (isset($columnDefinition['range']) && $columnDefinition['range'])) {
-    //   $result = true;
-
-    //   foreach ($value as $v) {
-    //     if (!strtotime($v)) {
-    //       $result = false;
-    //     }
-    //   }
-
-    //   return $result;
-    // } else if() {
-    $result = strtotime($value) ? true : false;
-    // }
+    if (@$column['isMultiple'] === true) {
+      foreach ($value as $v) {
+        if (!strtotime($v)) {
+          $result = false;
+        }
+      }
+    } else {
+      $result = strtotime($value) ? true : false;
+    }
 
     return $result;
   }
@@ -175,6 +325,15 @@ class Validation
   protected function validateEmail($type, $rule, $value)
   {
     return filter_var($value, FILTER_VALIDATE_EMAIL) ? true : false;
+  }
+
+  protected function validateFile($type, $rule, $value, $column)
+  {
+    if (@$column['isMultiple'] === true) {
+      return is_array($value) ? true : false;
+    }
+
+    return true;
   }
 
   protected function validateUrl($type, $rule, $value)
@@ -187,110 +346,104 @@ class Validation
     return preg_match('/^[0-9]{2}:[0-9]{2}$/', $value ?? '') ? true : false;
   }
 
-  protected function validateMin($type, $rule, $value)
+  protected function validateMin($type, $rule, $value, $column)
   {
     $result = true;
 
-    if ($type === 'number' && $value < $rule) {
-      $result = false;
-    } else if ($type === 'array' && count($value) < $rule) {
-      $result = false;
-    } else if (mb_strlen($value ?? '') < $rule) {
-      $result = false;
+    switch ($type) {
+      case 'date':
+      case 'datetime':
+      case 'month': {
+          if (@$column['isMultiple'] === true) {
+            foreach ($value as $v) {
+              $result = strtotime($v) >= strtotime($rule);
+            }
+          } else {
+            $result = strtotime($value) >= strtotime($rule);
+          }
+
+          break;
+        }
+      case 'number': {
+          if (@$column['isMultiple'] === true) {
+            foreach ($value as $v) {
+              $result = $v >= $rule;
+            }
+          } else {
+            $result = $value >= $rule;
+          }
+
+          break;
+        }
+      case 'file': {
+          if (@$column['isMultiple'] === true) {
+            $countToUpload = @$column['isUpload'] === true ? count($column['toUpload']['tmp_name']) : 0;
+            $countValue = count($value);
+
+            $result = ($countToUpload + $countValue) >= $rule;
+          }
+
+          break;
+        }
+      default: {
+          if (@$column['isMultiple'] === true) {
+            $result = count($value) >= $rule;
+          } else {
+            $result = mb_strlen($value ?? '') >= $rule;
+          }
+        }
     }
-
-    // TODO
-    // case 'min': {
-    //   if (isset($field_data['multiple']) && $field_data['multiple'] && in_array($type, ['date', 'datetime', 'month'])) {
-    //     $result = true;
-
-    //     foreach ($value as $v) {
-    //       if (strtotime($v) >= strtotime($operand_value)) {
-    //         $result = false;
-    //       }
-    //     }
-
-    //     return $result;
-    //   } else if (isset($field_data['range']) && $field_data['range'] && in_array($type, ['date', 'datetime', 'month'])) {
-    //     return strtotime($value[0]) >= strtotime($operand_value) ? true : false;
-    //   } else if (isset($field_data['multiple']) && $field_data['multiple']) {
-    //     return count($value ?? []) >= $operand_value ? true : false;
-    //   }
-
-    //   switch ($type) {
-    //     case 'date':
-    //     case 'datetime':
-    //     case 'month': {
-    //         return strtotime($value) >= strtotime($operand_value) ? true : false;
-    //       }
-    //     case 'number':
-    //     case 'range': {
-    //         return $value >= $operand_value ? true : false;
-    //       }
-    //     case 'wysiwyg': {
-    //         $value = html($value);
-    //       }
-    //     case 'file': {
-    //         todo
-    //       }
-    //   }
-
-    //   return mb_strlen($value ?? '') >= $operand_value ? true : false;
-    // }
 
     return $result;
   }
 
-  protected function validateMax($type, $rule, $value)
+  protected function validateMax($type, $rule, $value, $column)
   {
     $result = true;
 
-    if ($type === 'number' && $value > $rule) {
-      $result = false;
-    } else if ($type === 'array' && count($value) > $rule) {
-      $result = false;
-    } else if (mb_strlen($value ?? '') > $rule) {
-      $result = false;
+    switch ($type) {
+      case 'date':
+      case 'datetime':
+      case 'month': {
+          if (@$column['isMultiple'] === true) {
+            foreach ($value as $v) {
+              $result = strtotime($v) <= strtotime($rule);
+            }
+          } else {
+            $result = strtotime($value) <= strtotime($rule);
+          }
+
+          break;
+        }
+      case 'number': {
+          if (@$column['isMultiple'] === true) {
+            foreach ($value as $v) {
+              $result = $v <= $rule;
+            }
+          } else {
+            $result = $value <= $rule;
+          }
+
+          break;
+        }
+      case 'file': {
+          if (@$column['isMultiple'] === true) {
+            $countToUpload = @$column['isUpload'] === true ? count($column['toUpload']['tmp_name']) : 0;
+            $countValue = count($value);
+
+            $result = ($countToUpload + $countValue) <= $rule;
+          }
+
+          break;
+        }
+      default: {
+          if (@$column['isMultiple'] === true) {
+            $result = count($value) <= $rule;
+          } else {
+            $result = mb_strlen($value ?? '') <= $rule;
+          }
+        }
     }
-
-    // TODO
-    // case 'max': {
-    //   if (isset($field_data['multiple']) && $field_data['multiple'] && in_array($type, ['date', 'datetime', 'month'])) {
-    //     $result = true;
-
-    //     foreach ($value as $v) {
-    //       if (strtotime($v) <= strtotime($operand_value)) {
-    //         $result = false;
-    //       }
-    //     }
-
-    //     return $result;
-    //   } else if (isset($field_data['range']) && $field_data['range'] && in_array($type, ['date', 'datetime', 'month'])) {
-    //     return strtotime($value[1]) <= strtotime($operand_value) ? true : false;
-    //   } else if (isset($field_data['multiple']) && $field_data['multiple']) {
-    //     return count($value ?? []) <= $operand_value ? true : false;
-    //   }
-
-    //   switch ($type) {
-    //     case 'date':
-    //     case 'datetime':
-    //     case 'month': {
-    //         return strtotime($value) <= strtotime($operand_value) ? true : false;
-    //       }
-    //     case 'number':
-    //     case 'range': {
-    //         return $value <= $operand_value ? true : false;
-    //       }
-    //     case 'wysiwyg': {
-    //         $value = html($value);
-    //       }
-    //     case 'file': {
-    //         todo
-    //       }
-    //   }
-
-    //   return mb_strlen($value ?? '') <= $operand_value ? true : false;
-    // }
 
     return $result;
   }
@@ -305,26 +458,61 @@ class Validation
     return preg_match('/^#([a-f0-9]{6}|[a-f0-9]{3})$/i', $value ?? '') ? true : false;
   }
 
-  protected function validateExtensions($type, $rule, $value)
+  protected function validateExtensions($type, $rule, $value, $column)
   {
-    // case 'extensions': {
-    //   if (isset($field_data['to_upload']) && $field_data['to_upload'] === false) {
-    //     return true;
-    //   }
+    if ($type !== 'file') {
+      return true;
+    }
 
-    //   foreach ($value as $file) {
-    //     $file_extension = strtolower(file_extension($file['name']));
+    if (@$column['isMultiple'] === true && @$column['isUpload'] === true) {
+      foreach ($column['toUpload']['name'] as $file) {
+        $fileExtension = strtolower(File::getExtension($file));
+        if (!in_array($fileExtension, $rule)) {
+          return false;
+        }
+      }
 
-    //     $allowed_extensions = is_array($operand_value) ? $operand_value : UPLOAD['extensions'];
+      return true;
+    } else if (@$column['isMultiple'] === true) {
+      foreach ($value as $file) {
+        $fileExtension = strtolower(File::getExtension($file));
+        if (!in_array($fileExtension, $rule)) {
+          return false;
+        }
+      }
 
-    //     if (!in_array($file_extension, $allowed_extensions)) {
-    //       return false;
-    //     }
-    //   }
+      return true;
+    }
 
-    //   return true;
-    // }
+    $fileExtension = strtolower(File::getExtension($value));
+    if (!in_array($fileExtension, $rule)) {
+      return false;
+    }
 
     return true;
+  }
+
+  protected function validateMaxSize($type, $rule, $value, $column)
+  {
+    if ($type !== 'file' || !$rule || @$column['isUpload'] !== true) {
+      return true;
+    }
+
+    if (@$column['isMultiple'] === true) {
+      foreach ($column['toUpload']['size'] as $size) {
+        if ($size > $rule) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    return $value['size'] > $rule ? false : true;
+  }
+
+  protected function validateIsArray($type, $rule, $value)
+  {
+    return is_array($value);
   }
 }

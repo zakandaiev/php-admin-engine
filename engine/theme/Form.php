@@ -108,7 +108,26 @@ class Form
     }
 
     $this->clearExpired();
-    $this->process();
+
+    $result = $this->model->{$this->action}();
+    if ($result) {
+      $answer['status'] = 'success';
+      $answer['message'] = I18n::translate('form.success');
+      $answer['data'] = $result;
+      $answer['code'] = 200;
+    } else {
+      $answer['status'] = 'error';
+      $answer['message'] = I18n::translate('form.error');
+      $answer['data'] = $this->model->getError();
+      $answer['code'] = 400;
+    }
+
+    // TODO
+    // executePost
+    // submitMessage
+    // forceNoAnswer
+
+    Response::answer(@$answer['status'], @$answer['message'], @$answer['data'], @$answer['code']);
 
     return $this;
   }
@@ -144,25 +163,6 @@ class Form
     }
 
     return null;
-  }
-
-  protected function process()
-  {
-    $result = $this->model->{$this->action}();
-
-    if ($result) {
-      $answer['status'] = 'success';
-      $answer['message'] = I18n::translate('form.success');
-      $answer['data'] = $result;
-      $answer['code'] = 200;
-    } else {
-      $answer['status'] = 'error';
-      $answer['message'] = I18n::translate('form.error');
-      $answer['data'] = $this->model->getError();
-      $answer['code'] = 400;
-    }
-
-    Response::answer(@$answer['status'], @$answer['message'], @$answer['data'], @$answer['code']);
   }
 
   public static function add($modelName, $isMatchRequest = null)

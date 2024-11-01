@@ -53,6 +53,11 @@
   }
 
   .ql-container {
+    display: block;
+
+    width: 100%;
+    height: auto;
+
     font-family: var(--font);
     font-size: 1.4rem;
     font-weight: var(--font-normal);

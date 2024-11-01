@@ -1,13 +1,53 @@
 import AirDatepicker from 'air-datepicker';
 
 document.addEventListener('DOMContentLoaded', () => {
+  function getDateFormatByType(type) {
+    if (type === 'date') {
+      return 'yyyy-MM-dd';
+    }
+
+    if (type === 'datetime') {
+      return (date) => {
+        if (Array.isArray(date)) {
+          return date.map((d) => {
+            d.setSeconds(new Date().getSeconds());
+
+            return d.toISOString().split('.')[0].replace('T', ' ');
+          });
+        }
+
+        date.setSeconds(new Date().getSeconds());
+
+        return date.toISOString().split('.')[0].replace('T', ' ');
+      };
+    }
+
+    if (type === 'month') {
+      return 'yyyy-MM';
+    }
+
+    if (type === 'time') {
+      return 'HH:mm';
+    }
+
+    return 'T';
+  }
   // INPUT
   document.querySelectorAll('input[data-picker]').forEach((input) => {
     const type = input.getAttribute('data-picker') || 'date';
     const datesArray = input.value.length ? input.value.split(' - ') : [];
 
+    const inputValue = document.createElement('input');
+    inputValue.setAttribute('hidden', true);
+    inputValue.setAttribute('name', input.name);
+
+    input.removeAttribute('name');
+    input.before(inputValue);
+
     const options = {
       selectedDates: datesArray,
+      altField: inputValue,
+      altFieldDateFormat: getDateFormatByType(type),
       multipleDates: input.hasAttribute('data-multiple') ? true : false,
       multipleDatesSeparator: ' - ',
       range: input.hasAttribute('data-range') ? true : false,
@@ -34,8 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
       options.dateFormat = 'MMMM yyyy';
     }
 
-    if (typeof Engine !== 'undefined' && Engine.translation && Engine.translation.datepicker) {
-      options.locale = Engine.translation.datepicker;
+    if (window?.Engine?.translation?.datepicker) {
+      options.locale = window.Engine.translation.datepicker;
     }
 
     options.onSelect = ({ date, datepicker }) => {
@@ -48,8 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     options.onHide = (isFinished) => {
       const initialDates = datesArray.map((d) => new Date(d));
-      const selectedDates = input.instance && input.instance.selectedDates ? input.instance.selectedDates : [];
-      const isRange = input.instance && input.instance.opts && input.instance.opts.range ? input.instance.opts.range : false;
+      const selectedDates = input.datepicker && input.datepicker.selectedDates ? input.datepicker.selectedDates : [];
+      const isRange = input.datepicker && input.datepicker.opts && input.datepicker.opts.range ? input.datepicker.opts.range : false;
 
       if (
         isFinished
@@ -62,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const datepicker = new AirDatepicker(input, options);
 
-    input.instance = datepicker;
+    input.datepicker = datepicker;
     input.setAttribute('readonly', true);
   });
 
@@ -92,15 +132,15 @@ document.addEventListener('DOMContentLoaded', () => {
       };
     }
 
-    if (typeof Engine !== 'undefined' && Engine.translation && Engine.translation.datepicker) {
+    if (window?.Engine?.translation?.datepicker) {
       options = {
         ...options,
-        locale: Engine.translation.datepicker,
+        locale: window.Engine.translation.datepicker,
       };
     }
 
     const datepicker = new AirDatepicker(calendar, options);
 
-    calendar.instance = datepicker;
+    calendar.datepicker = datepicker;
   });
 });

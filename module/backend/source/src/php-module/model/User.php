@@ -10,62 +10,70 @@ class User extends Model
 {
   public function __construct($columnData = null, $columnKeysToValidate = null)
   {
-    $this->table = 'user';
-    $this->primaryKey = 'id';
+    $this->setTable('user');
+    $this->setPrimaryKey('id');
 
-    $this->column['id'] = [
+    $this->setColumn('id', [
       'type' => 'text',
       'required' => true,
       'min' => 16,
       'max' => 32,
       'value' => Hash::token()
-    ];
+    ]);
 
-    $this->column['name'] = [
+    $this->setColumn('name', [
       'type' => 'text',
       'required' => true,
       'min' => 2,
       'max' => 256,
       'regex' => '/^[\w ]+$/iu'
-    ];
+    ]);
 
-    $this->column['email'] = [
+    $this->setColumn('email', [
       'type' => 'email',
       'required' => true,
       'min' => 6,
       'max' => 256
-    ];
+    ]);
 
-    $this->column['password'] = [
+    $this->setColumn('password', [
       'type' => 'password',
       'required' => true,
       'min' => 8,
       'max' => 256,
-      // 'unsetNull' => true, TODO
+      'unsetNull' => true,
       'modify' => function ($pass) {
         return hashPassword($pass);
-      },
-    ];
+      }
+    ]);
 
-    $this->column['group_id'] = [
-      'type' => 'array',
+    $this->setColumn('group_id', [
+      'type' => 'select',
+      'isMultiple' => true,
+      'options' => function () {
+        return $this->getGroupOptions();
+      },
       'value' => [],
       'foreign' => 'group_user@user_id'
-    ];
+    ]);
 
-    $this->column['is_enabled'] = [
+    $this->setColumn('is_enabled', [
       'type' => 'boolean',
       'value' => true
-    ];
+    ]);
 
-    $this->column['avatar'] = [
+    $this->setColumn('avatar', [
       'type' => 'file',
-      'extensions' => ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'],
-    ];
+      'extensions' => ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp']
+    ]);
 
-    $this->column['setting'] = [
-      'type' => 'text',
-    ];
+    $this->setColumn('setting', [
+      'type' => 'text'
+    ]);
+
+    $this->setColumn('date_created', [
+      'type' => 'datetime'
+    ]);
 
     parent::__construct($columnData, $columnKeysToValidate);
   }
@@ -103,7 +111,7 @@ class User extends Model
     return $user;
   }
 
-  public function getGroups()
+  public function getGroupOptions()
   {
     $sql = "
       SELECT
@@ -129,6 +137,15 @@ class User extends Model
 
     $query = new Query($sql);
     $groups = $query->execute(['language' => site('language_current')])->fetchAll();
+
+    $groups = array_map(function ($group) {
+      $u = new \stdClass();
+
+      $u->text = $group->name;
+      $u->value = $group->id;
+
+      return $u;
+    }, $groups);
 
     return $groups;
   }

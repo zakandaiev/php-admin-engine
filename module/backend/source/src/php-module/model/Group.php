@@ -11,25 +11,25 @@ class Group extends Model
 {
   public function __construct($columnData = null, $columnKeysToValidate = null)
   {
-    $this->table = 'group';
-    $this->primaryKey = 'id';
+    $this->setTable('group');
+    $this->setPrimaryKey('id');
 
-    $this->column['id'] = [
+    $this->setColumn('id', [
       'type' => 'text',
       'required' => true,
       'min' => 16,
       'max' => 32,
       'value' => Hash::token()
-    ];
+    ]);
 
-    $this->column['language'] = [
+    $this->setColumn('language', [
       'type' => 'text',
       'required' => true,
       'value' => site('language'),
       'foreign' => 'group_translation@group_id'
-    ];
+    ]);
 
-    $this->column['name'] = [
+    $this->setColumn('name', [
       'type' => 'text',
       'required' => true,
       'min' => 1,
@@ -37,29 +37,37 @@ class Group extends Model
       'regex' => '/^[\w ]+$/iu',
       'foreign' => 'group_translation@group_id',
       'isForeignDeleteSkip' => true
-    ];
+    ]);
 
-    $this->column['route'] = [
-      'type' => 'array',
+    $this->setColumn('route', [
+      'type' => 'select',
+      'isMultiple' => true,
+      'options' => function () {
+        return $this->getRouteOptions();
+      },
       'value' => [],
       'foreign' => 'group_route@group_id'
-    ];
+    ]);
 
-    $this->column['user_id'] = [
-      'type' => 'array',
+    $this->setColumn('user_id', [
+      'type' => 'select',
+      'isMultiple' => true,
+      'options' => function () {
+        return $this->getUserOptions();
+      },
       'value' => [],
       'foreign' => 'group_user@group_id'
-    ];
+    ]);
 
-    $this->column['is_enabled'] = [
+    $this->setColumn('is_enabled', [
       'type' => 'boolean',
       'value' => true
-    ];
+    ]);
 
-    $this->column['access_all'] = [
+    $this->setColumn('access_all', [
       'type' => 'boolean',
       'value' => false
-    ];
+    ]);
 
     parent::__construct($columnData, $columnKeysToValidate);
   }
@@ -100,7 +108,7 @@ class Group extends Model
     return $groups;
   }
 
-  public function getRoutes()
+  public function getRouteOptions()
   {
     $routesGrouped = [];
     $modules = Module::list();
@@ -126,24 +134,65 @@ class Group extends Model
 
     ksort($routesGrouped, SORT_NATURAL | SORT_FLAG_CASE);
 
-    return array_map(function ($a) {
+    $routesGrouped = array_map(function ($a) {
       sort($a, SORT_NATURAL | SORT_FLAG_CASE);
       return $a;
     }, $routesGrouped);
-  }
 
-  public function getUsers()
-  {
-    $sql = "SELECT * FROM {user} ORDER BY name ASC, id ASC";
+    $routes = [];
+    foreach ($routesGrouped as $method => $rg) {
+      foreach ($rg as $p) {
+        $r = new \stdClass();
 
-    $users = new Query($sql);
+        $r->text = $p;
+        $r->value = $method . '@' . $p;
 
-    $users = $users->execute()->fetchAll();
+        $routes[$method][] = $r;
+      }
+    }
 
     // TODO
-    // $users = array_map(function ($user) {
-    //   return \Engine\User::format($user);
-    // }, $users);
+    // foreach ($group->route as $addableRoute) {
+    //   list($method, $path) = explode('@', $addableRoute);
+
+    //   if (empty($method) || empty($path)) {
+    //     continue;
+    //   }
+
+    //   $isAddableRouteAlreadyInArray = array_filter($routeOptions[$method], function ($routeOption) use ($addableRoute) {
+    //     return $routeOption->value === $addableRoute;
+    //   });
+
+    //   if (!$isAddableRouteAlreadyInArray) {
+    //     $r = new \stdClass();
+
+    //     $r->text = $path;
+    //     $r->value = $addableRoute;
+
+    //     $routeOptions[$method][] = $r;
+    //   }
+    // }
+
+    return $routes;
+  }
+
+  public function getUserOptions()
+  {
+    $sql = "SELECT * FROM {user} ORDER BY name ASC, id ASC";
+    $users = new Query($sql);
+    $users = $users->execute()->fetchAll();
+
+    $users = array_map(function ($user) {
+      $u = new \stdClass();
+
+      // TODO
+      // \Engine\User::format($user);
+      // $u->text = $user->fullname;
+      $u->text = $user->name;
+      $u->value = $user->id;
+
+      return $u;
+    }, $users);
 
     return $users;
   }

@@ -3,21 +3,14 @@
 namespace engine\database;
 
 use engine\database\Validation;
+use engine\http\Request;
+use engine\util\Date;
+use engine\util\Upload;
 
-abstract class Model
+abstract class Model extends Validation
 {
-  protected $table;
-  protected $primaryKey;
-  protected $itemId;
-  protected $column = [];
-  protected $columnKeysToValidate = [];
-
-  protected $queryForeign = [];
-  protected $queryError = [];
-
-  public $validation;
-
   protected static $instance;
+  protected $columnForeign = [];
 
   public function __construct($columnData = null, $columnKeysToValidate = null)
   {
@@ -26,10 +19,15 @@ abstract class Model
     self::$instance = $this;
   }
 
+  public static function getInstance()
+  {
+    return self::$instance;
+  }
+
   public function setData($columnData = null, $columnKeysToValidate = null)
   {
     foreach ($this->column as $columnName => $column) {
-      $this->column[$columnName]['value'] = $this->formatColumnValue($column['type'], $columnData[$columnName] ?? $column['value'] ?? null);
+      $this->column[$columnName]['value'] = $this->formatColumnValue($column['type'], $columnData[$columnName] ?? $column['value'] ?? null, $columnName);
     }
 
     if (is_array($columnKeysToValidate)) {
@@ -37,137 +35,34 @@ abstract class Model
       $this->columnKeysToValidate = $columnKeysToValidate;
     }
 
-    $this->validation = new Validation($this->table, $this->column, $this->columnKeysToValidate);
-
     return $this;
-  }
-
-  public function hasTable()
-  {
-    return !empty($this->table);
-  }
-
-  public function getTable()
-  {
-    return $this->table;
-  }
-
-  public function getPrimaryKey()
-  {
-    if (!empty($this->primaryKey)) {
-      return $this->primaryKey;
-    }
-
-    if (empty($this->table)) {
-      return false;
-    }
-
-    $query = new Query("SHOW KEYS FROM {{$this->table}} WHERE Key_name='PRIMARY'", false, true);
-    $this->primaryKey = $query->execute()->fetch();
-
-    return $this->primaryKey;
-  }
-
-  public function setItemId($itemId)
-  {
-    $this->itemId = $itemId;
-
-    return true;
-  }
-
-  public function hasItemId()
-  {
-    return !empty($this->itemId);
-  }
-
-  public function getItemId()
-  {
-    return $this->itemId;
-  }
-
-  public function unsetColumn($columnName)
-  {
-    unset($this->column[$columnName]);
-
-    if (in_array($columnName, $this->columnKeysToValidate)) {
-      unset($this->columnKeysToValidate[$columnName]);
-    }
-
-    return true;
-  }
-
-  public function hasColumn($columnName)
-  {
-    return isset($this->column[$columnName]);
-  }
-
-  public function getColumn($columnName = null)
-  {
-    return isset($columnName) ? @$this->column[$columnName] : $this->column;
-  }
-
-  public function setColumnValue($columnName, $value = null)
-  {
-    if (!$this->hasColumn($columnName)) {
-      return false;
-    }
-
-    $this->column[$columnName]['value'] = $value;
-
-    return true;
-  }
-
-  public function getColumnKeysToValidate()
-  {
-    return $this->columnKeysToValidate;
-  }
-
-  public function setError($columnName, $validation, $columnValue = null)
-  {
-    $this->queryError[] = [
-      'column' => $columnName,
-      'validation' => $validation,
-      'value' => $columnValue
-    ];
-
-    return true;
-  }
-
-  public function hasError()
-  {
-    return count($this->queryError) > 0 ? true : false;
-  }
-
-  public function getError()
-  {
-    return $this->queryError;
   }
 
   public function add()
   {
-    if (empty($this->table)) {
+    if (!$this->hasTable()) {
       return false;
     }
 
-    return $this->processQuery('add');
+    return $this->processQuery(__FUNCTION__);
   }
 
   public function edit()
   {
-    if (empty($this->table)) {
+    if (!$this->hasTable()) {
       return false;
     }
 
-    return $this->processQuery('edit');
+    return $this->processQuery(__FUNCTION__);
   }
 
   public function delete()
   {
-    if (empty($this->table)) {
+    if (!$this->hasTable()) {
       return false;
     }
 
-    return $this->processQuery('delete');
+    return $this->processQuery(__FUNCTION__);
   }
 
   public function insertIntoTable($table, $values)
@@ -183,7 +78,7 @@ abstract class Model
 
     $result = $query->execute($values);
     if ($query->hasError()) {
-      $this->queryError = $query->getError();
+      $this->setError($query->getError());
       return false;
     }
 
@@ -213,7 +108,7 @@ abstract class Model
 
     $result = $query->execute($values);
     if ($query->hasError()) {
-      $this->queryError = $query->getError();
+      $this->setError($query->getError());
 
       return false;
     }
@@ -244,7 +139,7 @@ abstract class Model
 
     $result = $query->execute($values);
     if ($query->hasError()) {
-      $this->queryError = $query->getError();
+      $this->setError($query->getError());
 
       return false;
     }
@@ -252,19 +147,31 @@ abstract class Model
     return $pkValue;
   }
 
-  public static function getInstance()
-  {
-    return self::$instance;
-  }
-
-  protected function formatColumnValue($type, $value)
+  protected function formatColumnValue($type, $value, $name)
   {
     if ($type === 'boolean') {
       return $value === true || in_array($value, ['on', 'yes', '1', 'true']) ? true : false;
-    } else if ($type === 'file') {
-      // TODO
-    } else if ($type === 'number') {
+    }
+
+    if ($type === 'number') {
       return !empty($value) && is_numeric($value) ? floatval($value) : null;
+    }
+
+    if ($type === 'file') {
+      $this->column[$name]['isUpload'] = false;
+      $this->column[$name]['maxSize'] = $this->column[$name]['maxSize'] ?? Upload::getMaxSize();
+      $this->column[$name]['extensions'] = $this->column[$name]['extensions'] ?? Upload::getExtensions();
+
+      $files = Request::files($name);
+      if (
+        (isset($files['tmp_name']) && !is_array($files['tmp_name']) && !empty($files['tmp_name']))
+        || (isset($files['tmp_name']) && is_array($files['tmp_name']) && !empty($files['tmp_name'][0]))
+      ) {
+        $this->column[$name]['isUpload'] = true;
+        $this->column[$name]['toUpload'] = $files;
+      }
+
+      return $value;
     }
 
     return $value;
@@ -272,32 +179,27 @@ abstract class Model
 
   protected function processQuery($action)
   {
-    if (empty($this->table) || empty($this->column)) {
+    if (!$this->hasTable() || empty($this->column)) {
       return false;
     }
 
     $this->modifyColumns();
 
-    $this->validation->validate();
-    if ($this->validation->hasError()) {
-      $this->queryError = $this->validation->getError();
+    $this->validate();
+    if ($this->hasError()) {
       return false;
     }
 
-    // TODO
-    // self::prepareMediaFields();
-    // $foreign_data = self::getForeignFields();
-    // $translation_data = self::getTranslationFields($form_data['modelName']);
-
-    $table = $this->table;
+    $table = $this->getTable();
     $pkName = $this->getPrimaryKey();
     $pkValue = $this->hasItemId() ? $this->getItemId() : @$this->column[$pkName]['value'];
 
     $this->prepareForeignColumns();
+    $this->prepareMediaColumns();
 
     $columnValues = [];
     foreach ($this->column as $columnName => $column) {
-      if (isset($column['foreign']) || (!empty($this->columnKeysToValidate) && !in_array($columnName, $this->columnKeysToValidate))) {
+      if (isset($column['foreign']) || ($this->hasColumnKeysToValidate() && !$this->hasColumnKeyToValidate($columnName))) {
         continue;
       }
 
@@ -308,15 +210,13 @@ abstract class Model
       return false;
     }
 
-    $result = null;
+    $result = false;
     if ($action === 'add') {
       $result = $this->insertIntoTable($table, $columnValues);
     } else if ($action === 'edit') {
       $result = $this->updateTable($table, $columnValues, $pkName, $pkValue);
     } else if ($action === 'delete') {
       $result = $this->deleteFromTable($table, $columnValues, $pkName, $pkValue);
-    } else {
-      return false;
     }
 
     if (!$result) {
@@ -328,24 +228,10 @@ abstract class Model
       return false;
     }
 
-    // TODO
-    // self::uploadMediaFields();
-    // self::processForeignColumns($foreign_data, $form_data);
-    // self::processTranslationFields($translation_data, $form_data);
-
-    // if (isset($form['execute_post']) && is_closure($form['execute_post'])) {
-    //   $form['execute_post']($form_data['rowCount'], self::$fields, $form_data);
-    // }
-
-    // if (isset($form['submit_message']) && is_closure($form['submit_message'])) {
-    //   $submit_message = $form['submit_message'](self::$fields, $form_data);
-    // } else if (isset($form['submit_message'])) {
-    //   $submit_message = $form['submit_message'];
-    // }
-
-    // if (!$form_data['force_no_answer']) {
-    //   Server::answer(null, 'success', @$submit_message);
-    // }
+    $resultMedia = $this->processMediaColumns();
+    if (!$resultMedia) {
+      return false;
+    }
 
     return $result;
   }
@@ -371,7 +257,7 @@ abstract class Model
   protected function prepareForeignColumns()
   {
     foreach ($this->column as $columnName => $column) {
-      if (!isset($column['foreign']) || empty($column['foreign']) || (!empty($this->columnKeysToValidate) && !in_array($columnName, $this->columnKeysToValidate))) {
+      if (!isset($column['foreign']) || empty($column['foreign']) || ($this->hasColumnKeysToValidate() && !$this->hasColumnKeyToValidate($columnName))) {
         continue;
       }
 
@@ -381,7 +267,7 @@ abstract class Model
         continue;
       }
 
-      $this->queryForeign[$foreignTable][] = [
+      $this->columnForeign[$foreignTable][] = [
         'table' => $foreignTable,
         'pkName' => $foreignPkName,
         'pkValue' => null,
@@ -396,13 +282,13 @@ abstract class Model
 
   protected function processForeignColumns($pkValue)
   {
-    if (empty($this->queryForeign)) {
+    if (empty($this->columnForeign)) {
       return true;
     }
 
     $foreignSqlData = [];
 
-    foreach ($this->queryForeign as $foreignTable => $foreignTableColumns) {
+    foreach ($this->columnForeign as $foreignTable => $foreignTableColumns) {
       $table = $foreignTable;
       $tablePkName = null;
       $tablePkValue = null;
@@ -490,6 +376,59 @@ abstract class Model
       }
 
       $this->insertIntoTable($table, $values);
+    }
+
+    return true;
+  }
+
+  protected function prepareMediaColumns()
+  {
+    foreach ($this->column as $columnName => $column) {
+      if (@$column['isUpload'] !== true) {
+        continue;
+      }
+
+      if (@$column['isMultiple'] === true) {
+        $this->column[$columnName]['upload'] = [];
+        foreach ($column['toUpload']['tmp_name'] as $key => $tmpName) {
+          $file = [
+            'name' => $column['toUpload']['name'][$key],
+            'full_path' => $column['toUpload']['full_path'][$key],
+            'type' => $column['toUpload']['type'][$key],
+            'tmp_name' => $column['toUpload']['tmp_name'][$key],
+            'error' => $column['toUpload']['error'][$key],
+            'size' => $column['toUpload']['size'][$key]
+          ];
+
+          $upload = new Upload($file, @$column['folder']);
+          $uploadPath = $upload->get('path');
+
+          $this->column[$columnName]['upload'][] = $upload;
+          $this->column[$columnName]['value'][] = $uploadPath;
+        }
+      } else {
+        $this->column[$columnName]['upload'] = new Upload($column['value'], @$column['folder']);
+        $this->column[$columnName]['value'] = $this->column[$columnName]['upload']->get('path');
+      }
+    }
+
+    return true;
+  }
+
+  protected function processMediaColumns()
+  {
+    foreach ($this->column as $columnName => $column) {
+      if (@$column['isUpload'] !== true) {
+        continue;
+      }
+
+      if (@$column['isMultiple'] === true) {
+        foreach ($column['upload'] as $upload) {
+          $upload->execute();
+        }
+      } else {
+        $column['upload']->execute();
+      }
     }
 
     return true;

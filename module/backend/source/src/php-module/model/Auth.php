@@ -12,38 +12,38 @@ class Auth extends Model
 {
   public function __construct($columnData = null, $columnKeysToValidate = null)
   {
-    $this->table = 'user';
-    $this->primaryKey = 'id';
+    $this->setTable('user');
+    $this->setPrimaryKey('id');
 
-    $this->column['id'] = [
+    $this->setColumn('id', [
       'type' => 'text',
       'required' => true,
       'min' => 16,
       'max' => 32,
       'value' => Hash::token()
-    ];
+    ]);
 
-    $this->column['name'] = [
+    $this->setColumn('name', [
       'type' => 'text',
       'required' => true,
       'min' => 2,
       'max' => 256,
       'regex' => '/^[\w ]+$/iu'
-    ];
+    ]);
 
-    $this->column['email'] = [
+    $this->setColumn('email', [
       'type' => 'email',
       'required' => true,
       'min' => 6,
       'max' => 256
-    ];
+    ]);
 
-    $this->column['password'] = [
+    $this->setColumn('password', [
       'type' => 'password',
       'required' => true,
       'min' => 8,
       'max' => 256
-    ];
+    ]);
 
     parent::__construct($columnData, $columnKeysToValidate);
   }
@@ -54,9 +54,8 @@ class Auth extends Model
       return false;
     }
 
-    $this->validation->validate();
-    if ($this->validation->hasError()) {
-      $this->queryError = $this->validation->getError();
+    $this->validate();
+    if ($this->hasError()) {
       return false;
     }
 
@@ -85,9 +84,8 @@ class Auth extends Model
       return false;
     }
 
-    $this->validation->validate();
-    if ($this->validation->hasError()) {
-      $this->queryError = $this->validation->getError();
+    $this->validate();
+    if ($this->hasError()) {
       return false;
     }
 
@@ -112,9 +110,8 @@ class Auth extends Model
       return false;
     }
 
-    $this->validation->validate();
-    if ($this->validation->hasError()) {
-      $this->queryError = $this->validation->getError();
+    $this->validate();
+    if ($this->hasError()) {
       return false;
     }
 

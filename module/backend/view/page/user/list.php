@@ -38,32 +38,20 @@ $table = new BuilderTable([
           return '<i class="ti ti-minus"></i>';
         }
 
-        return '<a href="' . $ipChecker($item->auth_ip) . '" target="_blank"><i class="ti ti-map-pin"></i> ' . dateWhen($value, 'd.m.Y H:i') . '</a>';
+        return '<a href="' . $ipChecker($item->auth_ip) . '" target="_blank"><i class="ti ti-map-pin"></i> ' . dateWhen($value, 'd.m.Y H:i', true) . '</a>';
       },
       'title' => t('user.column.auth_date')
     ],
     'is_enabled' => [
       'type' => function ($value, $item) {
-        $tooltip = $item->is_enabled ? t('user.list.deactivate_this_user') : t('user.list.activate_this_user');
-
-        $html = '<button type="button" data-action="' . Form::edit('user', $item->id, true) . '" data-body="' . textHtml(json_encode(['is_enabled' => !$value])) . '" data-redirect="this" data-tooltip="top" title="' . $tooltip . '" class="table__action">';
-        $html .= iconBoolean($value);
-        $html .= '</button>';
-
-        return $html;
+        return getColumnToggle('user', 'is_enabled', $value, $item);
       },
       'title' => t('user.column.is_enabled')
     ],
     'table_actions' => [
       'tdClassName' => 'table__actions',
       'type' => function ($value, $item) {
-        $html = ' <a href="' . routeLink('user.edit', ['id' => $item->id]) . '" data-tooltip="top" title="' . t('user.list.edit') . '" class="table__action"><i class="ti ti-edit"></i></a>';
-
-        $html .= ' <button type="button" data-action="' . Form::delete('user', $item->id, true) . '" data-confirm="' . t('user.list.delete_confirm', $item->name) . '" data-remove="trow" data-decrement=".pagination-output > span" data-tooltip="top" title="' . t('user.list.delete') . '" class="table__action">';
-        $html .= '<i class="ti ti-trash"></i>';
-        $html .= '</button>';
-
-        return $html;
+        return getColumnActions('user', $value, $item);
       },
     ]
   ]

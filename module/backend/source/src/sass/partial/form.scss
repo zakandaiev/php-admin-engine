@@ -1,5 +1,5 @@
 label {
-  all: unset;
+  @include reset-btn;
 
   display: inline-block;
 
@@ -17,10 +17,11 @@ label {
 }
 
 input, textarea, select, .input, .textarea, .select {
-  all: unset;
+  @include reset-btn;
 
   display: block;
 
+  box-sizing: border-box;
   max-width: 100%;
   padding: 0.75rem 1.5rem;
 
@@ -393,6 +394,7 @@ input[type="range"] {
   &__input {
     position: relative;
     display: flex;
+    gap: 1rem;
 
     & > * {
       width: 100%;

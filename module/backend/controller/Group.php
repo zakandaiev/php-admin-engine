@@ -19,9 +19,6 @@ class Group extends Backend
 
   public function getAdd()
   {
-    $this->view->setData('routes', $this->model->getRoutes());
-    $this->view->setData('users', $this->model->getUsers());
-
     $this->view->render('group/add');
 
     return true;
@@ -41,8 +38,6 @@ class Group extends Backend
     $group->user_id = $this->model->getGroupUsersById($groupId);
 
     $this->view->setData('group', $group);
-    $this->view->setData('routes', $this->model->getRoutes());
-    $this->view->setData('users', $this->model->getUsers());
 
     $this->view->render('group/edit');
 

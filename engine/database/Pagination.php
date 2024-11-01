@@ -42,17 +42,23 @@ class Pagination
   {
     if ($key === 'uriKey') {
       return $this->uriKey;
-    } else if ($key === 'uri') {
+    }
+    if ($key === 'uri') {
       return $this->uri;
-    } else if ($key === 'limit') {
+    }
+    if ($key === 'limit') {
       return $this->limit;
-    } else if ($key === 'totalRows') {
+    }
+    if ($key === 'totalRows') {
       return $this->totalRows;
-    } else if ($key === 'totalPages') {
+    }
+    if ($key === 'totalPages') {
       return $this->totalPages;
-    } else if ($key === 'currentPage') {
+    }
+    if ($key === 'currentPage') {
       return $this->currentPage;
-    } else if ($key === 'offset') {
+    }
+    if ($key === 'offset') {
       return $this->offset;
     }
 

@@ -23,7 +23,7 @@ $table = new BuilderTable([
       'type' => function ($value, $item) {
         $value = !empty($value) ? explode(',', $value) : [];
 
-        return getColumnTranslations('group', $item->language, $value, ['id' => $item->id]);
+        return getColumnTranslations('group', $value, $item);
       },
       'title' => t('group.column.translations')
     ],
@@ -48,26 +48,14 @@ $table = new BuilderTable([
     ],
     'is_enabled' => [
       'type' => function ($value, $item) {
-        $tooltip = $item->is_enabled ? t('group.list.deactivate_this_group') : t('group.list.activate_this_group');
-
-        $html = '<button type="button" data-action="' . Form::edit('group', $item->id, true) . '" data-body="' . textHtml(json_encode(['is_enabled' => !$value])) . '" data-redirect="this" data-tooltip="top" title="' . $tooltip . '" class="table__action">';
-        $html .= iconBoolean($value);
-        $html .= '</button>';
-
-        return $html;
+        return getColumnToggle('group', 'is_enabled', $value, $item);
       },
       'title' => t('group.column.is_enabled')
     ],
     'table_actions' => [
       'tdClassName' => 'table__actions',
       'type' => function ($value, $item) {
-        $html = ' <a href="' . routeLink('group.edit', ['id' => $item->id]) . '" data-tooltip="top" title="' . t('group.list.edit') . '" class="table__action"><i class="ti ti-edit"></i></a>';
-
-        $html .= ' <button type="button" data-action="' . Form::delete('group', $item->id, true) . '" data-confirm="' . t('group.list.delete_confirm', $item->name) . '" data-remove="trow" data-decrement=".pagination-output > span" data-tooltip="top" title="' . t('group.list.delete') . '" class="table__action">';
-        $html .= '<i class="ti ti-trash"></i>';
-        $html .= '</button>';
-
-        return $html;
+        return getColumnActions('group', $value, $item);
       },
     ]
   ]
