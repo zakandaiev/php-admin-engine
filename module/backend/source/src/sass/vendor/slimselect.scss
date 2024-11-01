@@ -28,7 +28,14 @@
     box-shadow: none;
   }
 
+  .ss-arrow, .ss-deselect {
+    flex: 0 0 auto;
+  }
+
   .ss-values {
+    overflow: hidden;
+    flex: 1 1 auto;
+
     .ss-single {
       margin: 0;
     }
@@ -39,7 +46,11 @@
     }
 
     .ss-value {
+      overflow: hidden;
+
       .ss-value-text {
+        @include ellipsis;
+
         cursor: default;
 
         padding: 0.5rem 0.5rem 0.5rem 1rem;

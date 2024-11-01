@@ -349,6 +349,37 @@ function moduleGetName()
   return Module::getName();
 }
 
+############################# SETTING #############################
+function settingExists($moduleName)
+{
+  return Setting::exists($moduleName);
+}
+
+function settingList()
+{
+  return Setting::list();
+}
+
+function settingGet($moduleName = null)
+{
+  return Setting::get($moduleName);
+}
+
+function settingHasProperty($propertyName, $moduleName = null)
+{
+  return Setting::hasProperty($propertyName, $moduleName);
+}
+
+function settingSetProperty($data, $propertyName, $moduleName = null)
+{
+  return Setting::setProperty($data, $propertyName, $moduleName);
+}
+
+function settingGetProperty($propertyName, $moduleName = null)
+{
+  return Setting::getProperty($propertyName, $moduleName);
+}
+
 ############################# ROUTER #############################
 function routerHas($routeName, $moduleName = null)
 {

@@ -34,7 +34,7 @@ Page::set('title', $pageTitle);
                     </h4>
                   </div>
                   <div class="box__body">
-                    <h3 class="mt--2">44</h3>
+                    <h3 class="mt--2 mb-1">44</h3>
                     <span class="label label_light label_warning">-2.25%</span>
                     <span class="color-muted">since last month</span>
                   </div>
@@ -52,7 +52,7 @@ Page::set('title', $pageTitle);
                     </h4>
                   </div>
                   <div class="box__body">
-                    <h3 class="mt--2">44</h3>
+                    <h3 class="mt--2 mb-1">44</h3>
                     <span class="label label_light label_success">+7.75%</span>
                     <span class="color-muted">since last month</span>
                   </div>
@@ -70,7 +70,7 @@ Page::set('title', $pageTitle);
                     </h4>
                   </div>
                   <div class="box__body">
-                    <h3 class="mt--2">69</h3>
+                    <h3 class="mt--2 mb-1">69</h3>
                     <span class="label label_light label_error">-5.25%</span>
                     <span class="color-muted">since last month</span>
                   </div>
@@ -88,7 +88,7 @@ Page::set('title', $pageTitle);
                     </h4>
                   </div>
                   <div class="box__body">
-                    <h3 class="mt--2">10 525</h3>
+                    <h3 class="mt--2 mb-1">10 525</h3>
                     <span class="label label_light label_error">-22.25%</span>
                     <span class="color-muted">since last month</span>
                   </div>

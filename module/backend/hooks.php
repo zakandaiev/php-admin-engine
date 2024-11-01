@@ -3,6 +3,20 @@
 use engine\module\Hook;
 use engine\module\Module;
 
+############################# PAGE META #############################
+Hook::setData('page.meta', []);
+
+Hook::register('page.meta.add', function ($data) {
+  if (!is_string($data) || empty($data)) {
+    return false;
+  }
+
+  $meta = Hook::getData('page.meta') ?? [];
+  $meta[] = $data;
+
+  Hook::setData('page.meta', $meta);
+});
+
 ############################# SIDEBAR #############################
 function formatRoute($route = [])
 {
@@ -383,15 +397,19 @@ Hook::run('sidebar.append', [
   'text' => t('sidebar.settings'),
   'name' => [
     t('sidebar.main') => [
-      'name' => 'setting-section',
-      'parameter' => ['section' => 'main']
+      'name' => 'setting.section',
+      'parameter' => ['section' => 'engine']
+    ],
+    t('sidebar.admin') => [
+      'name' => 'setting.section',
+      'parameter' => ['section' => 'backend']
     ],
     t('sidebar.site') => [
-      'name' => 'setting-section',
-      'parameter' => ['section' => 'site']
+      'name' => 'setting.section',
+      'parameter' => ['section' => 'frontend']
     ],
     t('sidebar.contacts') => [
-      'name' => 'setting-section',
+      'name' => 'setting.section',
       'parameter' => ['section' => 'contact']
     ]
   ]

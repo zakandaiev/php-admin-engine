@@ -1,9 +1,9 @@
 import Chart from 'chart.js/auto';
 
-if (typeof Engine !== 'undefined' && Engine.theme && Engine.theme.color) {
-  Chart.defaults.backgroundColor = Engine.theme.color.box;
-  Chart.defaults.borderColor = Engine.theme.color.border;
-  Chart.defaults.color = Engine.theme.color.text_muted;
+if (window?.Engine?.theme?.color) {
+  Chart.defaults.backgroundColor = window.Engine.theme.color.box;
+  Chart.defaults.borderColor = window.Engine.theme.color.border;
+  Chart.defaults.color = window.Engine.theme.color.textMuted;
 }
 
 document.addEventListener('DOMContentLoaded', () => {

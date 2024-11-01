@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // CLICK
   document.addEventListener('click', (event) => {
+    closeAllPopovers();
+
     const trigger = event.target.closest('[data-popover]');
-
-    document.querySelectorAll('.popover').forEach((popover) => popover.remove());
-
     if (!trigger) {
       return false;
     }
@@ -34,34 +34,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const popoverRect = popover.getBoundingClientRect();
 
-    setPopoverPosition();
+    let top = triggerRect.top - popoverRect.height - offset;
+    let left = triggerRect.left + (triggerRect.width / 2) - (popoverRect.width / 2);
 
-    function setPopoverPosition() {
-      let top = triggerRect.top - popoverRect.height - offset;
-      let left = triggerRect.left + (triggerRect.width / 2) - (popoverRect.width / 2);
-
-      popover.style.top = `${top}px`;
-      popover.style.left = `${left}px`;
-
-      if (placement === 'bottom') {
-        top = triggerRect.bottom + offset;
-        left = triggerRect.left + (triggerRect.width / 2) - (popoverRect.width / 2);
-
-        popover.style.top = `${top}px`;
-        popover.style.left = `${left}px`;
-      } else if (placement === 'left') {
-        top = triggerRect.top + (triggerRect.height / 2) - (popoverRect.height / 2);
-        left = triggerRect.left - popoverRect.width - offset;
-
-        popover.style.top = `${top}px`;
-        popover.style.left = `${left}px`;
-      } else if (placement === 'right') {
-        top = triggerRect.top + (triggerRect.height / 2) - (popoverRect.height / 2);
-        left = triggerRect.right + offset;
-
-        popover.style.top = `${top}px`;
-        popover.style.left = `${left}px`;
-      }
+    if (placement === 'bottom') {
+      top = triggerRect.bottom + offset;
+      left = triggerRect.left + (triggerRect.width / 2) - (popoverRect.width / 2);
+    } else if (placement === 'left') {
+      top = triggerRect.top + (triggerRect.height / 2) - (popoverRect.height / 2);
+      left = triggerRect.left - popoverRect.width - offset;
+    } else if (placement === 'right') {
+      top = triggerRect.top + (triggerRect.height / 2) - (popoverRect.height / 2);
+      left = triggerRect.right + offset;
     }
+
+    popover.style.top = `${top}px`;
+    popover.style.left = `${left}px`;
+
+    popover.addEventListener('animationend', (e) => {
+      if (e.animationName === 'popover-disappear') {
+        popover.remove();
+      }
+    });
   });
+
+  // SCROLL
+  document.addEventListener('scroll', () => closeAllPopovers());
+
+  // FUNCTIONS
+  function closeAllPopovers() {
+    document.querySelectorAll('.popover').forEach((popover) => popover.classList.add('popover_disappear'));
+  }
 });

@@ -2,12 +2,8 @@
 
 namespace module\backend\builder;
 
-use engine\http\Request;
 use engine\i18n\I18n;
-use engine\router\Route;
-use engine\theme\Asset;
 use engine\theme\Form as ThemeForm;
-use engine\util\Date;
 use engine\util\Path;
 use engine\util\Text;
 
@@ -186,7 +182,7 @@ class Form
     foreach ($column as $attrName => $attrValue) {
       if (
         in_array($attrName, ['className', 'folder', 'foreign', 'label', 'options', 'regex', 'isForeignDeleteSkip', 'isMultiple'])
-        || ($attrName === 'required' && !$attrValue)
+        || ($attrName === 'required' && @$attrValue !== true)
         || ($attrName === 'type' && in_array($inputType, ['date', 'datetime', 'month', 'time']))
         || ($attrName === 'value' && in_array($inputType, ['checkbox', 'radio',  'select', 'textarea', 'wysiwyg']))
       ) {
@@ -302,13 +298,18 @@ class Form
       case 'checkbox':
       case 'radio': {
           $inputValue = $inputValue ?? [];
-          $inputOptions = isClosure($column['options']) ? $column['options']() : [];
+          $inputOptions = isClosure(@$column['options']) ? $column['options']($this->itemId, $this->values) : [];
           if (empty($inputOptions)) {
             break;
           }
 
           foreach ($inputOptions as $key => $value) {
-            $checked = in_array($value->value, $inputValue) ? ' checked' : '';
+            $isChecked = $value->value === $inputValue;
+            if ($inputMultiple) {
+              $isChecked = in_array($value->value, $inputValue);
+            }
+
+            $checked = $isChecked ? ' checked' : '';
 
             $inputHtml .= '<label>';
             $inputHtml .= '<input ' . implode(' ', $inputAttributes) . $checked . ' value="' . $value->value . '">';
@@ -320,7 +321,7 @@ class Form
         }
       case 'select': {
           $inputValue = $inputValue ?? [];
-          $inputOptions = isClosure($column['options']) ? $column['options']() : [];
+          $inputOptions = isClosure(@$column['options']) ? $column['options']($this->itemId, $this->values) : [];
           if (empty($inputOptions)) {
             break;
           }
@@ -338,13 +339,25 @@ class Form
               $inputHtml .= '<optgroup label="' . $key . '">';
 
               foreach ($value as $vf => $vv) {
-                $selected = in_array($vv->value, $inputValue) ? ' selected' : '';
+                $isSelected = $vv->value === $inputValue;
+                if ($inputMultiple) {
+                  $isSelected = in_array($vv->value, $inputValue);
+                }
+
+                $selected = $isSelected ? ' selected' : '';
+
                 $inputHtml .= '<option value="' . $vv->value . '"' . $selected . '>' . $vv->text . '</option>';
               }
 
               $inputHtml .= '</optgroup>';
             } else {
-              $selected = in_array($value->value, $inputValue) ? ' selected' : '';
+              $isSelected = $value->value === $inputValue;
+              if ($inputMultiple) {
+                $isSelected = in_array($value->value, $inputValue);
+              }
+
+              $selected = $isSelected ? ' selected' : '';
+
               $inputHtml .= '<option value="' . $value->value . '"' . $selected . '>' . $value->text . '</option>';
             }
           }

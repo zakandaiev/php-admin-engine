@@ -1,6 +1,6 @@
 .modals {
   position: fixed;
-  z-index: var(--zi-below);
+  z-index: var(--zi-modal);
   inset: 0;
 
   width: 100%;
@@ -37,9 +37,9 @@
   flex-direction: column;
 
   width: calc(100% - var(--gap) * 2);
-  max-width: 45em;
+  max-width: 60rem;
   height: auto;
-  margin: -2em 0 0;
+  margin: -2rem 0 0;
 
   visibility: hidden;
   opacity: 0;
@@ -55,7 +55,7 @@
 
     display: block;
 
-    padding: 1em 3em 1em 1.5em;
+    padding: 1.5rem 4rem 1.5rem 2rem;
 
     color: var(--color-heading);
 
@@ -74,7 +74,7 @@
     position: absolute;
     z-index: var(--zi-default);
     top: 50%;
-    right: 0.5em;
+    right: 1rem;
     transform: translateY(-50%);
 
     display: inline-flex;
@@ -109,18 +109,18 @@
   &__body {
     overflow: hidden auto;
     display: block;
-    max-height: calc(100vh - 8em - var(--gap) * 2);
-    padding: 1.5em;
+    max-height: calc(100vh - 12rem - var(--gap) * 2);
+    padding: 2rem;
   }
 
   // .modal__footer
   &__footer {
     display: flex;
-    gap: 0.5em;
+    gap: 1rem;
     align-items: stretch;
     justify-content: flex-end;
 
-    padding: 1em 1.5em;
+    padding: 1rem 2rem;
 
     border-top: var(--border);
   }
@@ -133,12 +133,12 @@
 
   // .modal_sm
   &_sm {
-    max-width: 35em;
+    max-width: 40rem;
   }
 
   // .modal_lg
   &_lg {
-    max-width: 65em;
+    max-width: 80rem;
   }
 }
 
@@ -147,7 +147,6 @@
   // padding-right: var(--scrollbar-width);
 
   & > .modals {
-    z-index: var(--zi-modal);
     visibility: visible;
 
     &::before {

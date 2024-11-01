@@ -2,6 +2,7 @@
 
 namespace module\backend\model;
 
+use engine\auth\User as AuthUser;
 use engine\database\Model;
 use engine\database\Query;
 use engine\util\Hash;
@@ -71,10 +72,6 @@ class User extends Model
       'type' => 'text'
     ]);
 
-    $this->setColumn('date_created', [
-      'type' => 'datetime'
-    ]);
-
     parent::__construct($columnData, $columnKeysToValidate);
   }
 
@@ -94,10 +91,9 @@ class User extends Model
     // ->filter()
     $users = $query->paginate()->execute()->fetchAll();
 
-    // TODO
-    // $users = array_map(function ($user) {
-    // 	return User::format($user);
-    // }, $users);
+    $users = array_map(function ($user) {
+      return AuthUser::format($user);
+    }, $users);
 
     return $users;
   }
@@ -109,6 +105,19 @@ class User extends Model
     $user = $query->execute(['id' => $id])->fetch();
 
     return $user;
+  }
+
+  public function getUserGroups($userId)
+  {
+    $sql = 'SELECT group_id FROM {group_user} WHERE user_id=:user_id';
+    $query = new Query($sql);
+    $groups = $query->execute(['user_id' => $userId])->fetchAll();
+
+    $groups = array_map(function ($group) {
+      return $group->group_id;
+    }, $groups);
+
+    return $groups;
   }
 
   public function getGroupOptions()
@@ -145,19 +154,6 @@ class User extends Model
       $u->value = $group->id;
 
       return $u;
-    }, $groups);
-
-    return $groups;
-  }
-
-  public function getUserGroups($userId)
-  {
-    $sql = 'SELECT group_id FROM {group_user} WHERE user_id=:user_id';
-    $query = new Query($sql);
-    $groups = $query->execute(['user_id' => $userId])->fetchAll();
-
-    $groups = array_map(function ($group) {
-      return $group->group_id;
     }, $groups);
 
     return $groups;

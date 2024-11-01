@@ -1,10 +1,10 @@
 .loader {
   display: inline-block;
 
-  width: 2.5em;
-  height: 2.5em;
+  width: 3.4rem;
+  height: 3.4rem;
 
-  border: 0.3em solid var(--color-text);
+  border: 0.3rem solid var(--color-text);
   border-bottom-color: transparent;
   border-radius: 50%;
 
@@ -12,16 +12,16 @@
 
   // .loader_sm
   &_sm {
-    width: 1.5em;
-    height: 1.5em;
-    border-width: 0.2em;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-width: 0.2rem;
   }
 
   // .loader_lg
   &_lg {
-    width: 3.5em;
-    height: 3.5em;
-    border-width: 0.4em;
+    width: 4.2rem;
+    height: 4.2rem;
+    border-width: 0.4rem;
   }
 
   // .loader_heading

@@ -19,7 +19,7 @@ $table = new BuilderTable([
     ['name' => t('user.list.add'), 'url' => routeLink('user.add')]
   ],
   'columns' => [
-    'name' => [
+    'fullname' => [
       'type' => 'text',
       'title' => t('user.column.name')
     ],

@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const pond = create(input, {
       server: {
         load: async (uri, load, error) => {
-          const url = window.Engine?.site?.url;
+          const url = window?.Engine?.site?.url;
 
           try {
             const response = await fetch(`${url}/${uri}`);
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
       credits: false,
     });
 
-    if (typeof window.Engine !== 'undefined' && window.Engine.translation && window.Engine.translation.filepond) {
+    if (window?.Engine?.translation?.filepond) {
       pond.setOptions(window.Engine.translation.filepond);
     }
 
@@ -84,5 +84,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     input.instance = pond;
+  });
+
+  document.addEventListener('FilePond:updatefiles', (e) => {
+    const input = e.target.querySelector('[type="file"]');
+    if (!input) {
+      return false;
+    }
+
+    if (!input.validity.valid) {
+      const column = input.closest('.form__column');
+      if (column) {
+        column.classList.remove('form__column_valid');
+        column.classList.add('form__column_invalid');
+
+        return true;
+      }
+
+      input.classList.remove('valid');
+      input.classList.add('invalid');
+    } else {
+      const column = input.closest('.form__column');
+      if (column) {
+        column.classList.remove('form__column_invalid');
+        column.classList.add('form__column_valid');
+
+        return true;
+      }
+      input.classList.remove('invalid');
+      input.classList.add('valid');
+    }
   });
 });

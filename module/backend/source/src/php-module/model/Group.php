@@ -2,6 +2,7 @@
 
 namespace module\backend\model;
 
+use engine\auth\User;
 use engine\database\Model;
 use engine\database\Query;
 use engine\module\Module;
@@ -42,8 +43,8 @@ class Group extends Model
     $this->setColumn('route', [
       'type' => 'select',
       'isMultiple' => true,
-      'options' => function () {
-        return $this->getRouteOptions();
+      'options' => function ($itemId, $value) {
+        return $this->getRouteOptions($value->route ?? []);
       },
       'value' => [],
       'foreign' => 'group_route@group_id'
@@ -108,95 +109,6 @@ class Group extends Model
     return $groups;
   }
 
-  public function getRouteOptions()
-  {
-    $routesGrouped = [];
-    $modules = Module::list();
-
-    foreach ($modules as $module) {
-      if (!$module['isEnabled']) {
-        continue;
-      }
-
-      foreach ($module['routes'] as $route) {
-        if (isset($route['isPublic']) && $route['isPublic'] === true) {
-          continue;
-        }
-
-        $routesGrouped['any'][] = $route['path'];
-        $routesGrouped[$route['method']][] = $route['path'];
-      }
-    }
-
-    foreach ($routesGrouped as $method => $routes) {
-      $routesGrouped[$method] = array_unique($routesGrouped[$method]);
-    }
-
-    ksort($routesGrouped, SORT_NATURAL | SORT_FLAG_CASE);
-
-    $routesGrouped = array_map(function ($a) {
-      sort($a, SORT_NATURAL | SORT_FLAG_CASE);
-      return $a;
-    }, $routesGrouped);
-
-    $routes = [];
-    foreach ($routesGrouped as $method => $rg) {
-      foreach ($rg as $p) {
-        $r = new \stdClass();
-
-        $r->text = $p;
-        $r->value = $method . '@' . $p;
-
-        $routes[$method][] = $r;
-      }
-    }
-
-    // TODO
-    // foreach ($group->route as $addableRoute) {
-    //   list($method, $path) = explode('@', $addableRoute);
-
-    //   if (empty($method) || empty($path)) {
-    //     continue;
-    //   }
-
-    //   $isAddableRouteAlreadyInArray = array_filter($routeOptions[$method], function ($routeOption) use ($addableRoute) {
-    //     return $routeOption->value === $addableRoute;
-    //   });
-
-    //   if (!$isAddableRouteAlreadyInArray) {
-    //     $r = new \stdClass();
-
-    //     $r->text = $path;
-    //     $r->value = $addableRoute;
-
-    //     $routeOptions[$method][] = $r;
-    //   }
-    // }
-
-    return $routes;
-  }
-
-  public function getUserOptions()
-  {
-    $sql = "SELECT * FROM {user} ORDER BY name ASC, id ASC";
-    $users = new Query($sql);
-    $users = $users->execute()->fetchAll();
-
-    $users = array_map(function ($user) {
-      $u = new \stdClass();
-
-      // TODO
-      // \Engine\User::format($user);
-      // $u->text = $user->fullname;
-      $u->text = $user->name;
-      $u->value = $user->id;
-
-      return $u;
-    }, $users);
-
-    return $users;
-  }
-
   public function getGroupById($id, $language = null)
   {
     $sql = "
@@ -251,6 +163,93 @@ class Group extends Model
     foreach ($query->execute(['group_id' => $group_id])->fetchAll() as $user) {
       $users[] = $user->user_id;
     }
+
+    return $users;
+  }
+
+  public function getRouteOptions($addableRoutes = [])
+  {
+    $routesGrouped = [];
+    $modules = Module::list();
+
+    foreach ($modules as $module) {
+      if (!$module['isEnabled']) {
+        continue;
+      }
+
+      foreach ($module['routes'] as $route) {
+        if (isset($route['isPublic']) && $route['isPublic'] === true) {
+          continue;
+        }
+
+        $routesGrouped['any'][] = $route['path'];
+        $routesGrouped[$route['method']][] = $route['path'];
+      }
+    }
+
+    foreach ($routesGrouped as $method => $routes) {
+      $routesGrouped[$method] = array_unique($routesGrouped[$method]);
+    }
+
+    ksort($routesGrouped, SORT_NATURAL | SORT_FLAG_CASE);
+
+    $routesGrouped = array_map(function ($a) {
+      sort($a, SORT_NATURAL | SORT_FLAG_CASE);
+      return $a;
+    }, $routesGrouped);
+
+    $routes = [];
+    foreach ($routesGrouped as $method => $rg) {
+      foreach ($rg as $p) {
+        $r = new \stdClass();
+
+        $r->text = $p;
+        $r->value = $method . '@' . $p;
+
+        $routes[$method][] = $r;
+      }
+    }
+
+    foreach ($addableRoutes as $addableRoute) {
+      list($method, $path) = explode('@', $addableRoute);
+
+      if (empty($method) || empty($path)) {
+        continue;
+      }
+
+      $isAddableRouteAlreadyInArray = array_filter($routes[$method], function ($routeOption) use ($addableRoute) {
+        return $routeOption->value === $addableRoute;
+      });
+
+      if (!$isAddableRouteAlreadyInArray) {
+        $r = new \stdClass();
+
+        $r->text = $path;
+        $r->value = $addableRoute;
+
+        $routes[$method][] = $r;
+      }
+    }
+
+    return $routes;
+  }
+
+  public function getUserOptions()
+  {
+    $sql = "SELECT * FROM {user} ORDER BY name ASC, id ASC";
+    $users = new Query($sql);
+    $users = $users->execute()->fetchAll();
+
+    $users = array_map(function ($user) {
+      $user = User::format($user);
+
+      $u = new \stdClass();
+
+      $u->text = $user->fullname;
+      $u->value = $user->id;
+
+      return $u;
+    }, $users);
 
     return $users;
   }

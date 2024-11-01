@@ -1,6 +1,6 @@
 <?php
 
-use \engine\module\Hook;
+use engine\module\Hook;
 
 $sidebar = Hook::getData('sidebar');
 

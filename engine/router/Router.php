@@ -2,6 +2,7 @@
 
 namespace engine\router;
 
+use engine\auth\User;
 use engine\module\Module;
 use engine\http\Request;
 use engine\http\Response;
@@ -141,6 +142,11 @@ class Router
       return false;
     }
 
+    // TODO
+    // need no emptu module::setName before call hooks
+    // Module::loadHooks();
+
+    $user = new User();
     $form = new Form(Request::uriParts(0));
 
     if (!$form->isTokenExists()) {

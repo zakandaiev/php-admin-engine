@@ -26,28 +26,28 @@
   &__header {
     position: relative;
     display: block;
-    padding: 1.5em;
+    padding: 2rem;
 
     // .box__header_actions
     &_actions {
-      padding-right: 3.5em;
+      padding-right: 5rem;
     }
 
     // .box__header_icon
     &_icon {
-      padding-right: 5.5em;
+      padding-right: 7rem;
     }
 
     // .box__header + .box__body
     & + .box__body {
-      padding-top: 0.5em;
+      padding-top: 1rem;
     }
   }
 
   // .box__title
   &__title {
     display: flex;
-    gap: 0.5em;
+    gap: 1rem;
     align-items: flex-start;
     justify-content: space-between;
 
@@ -73,7 +73,7 @@
   // .box__body
   &__body {
     display: block;
-    padding: 1.5em;
+    padding: 2rem;
 
     @for $i from 1 through 6 {
       & > * + h#{$i} {
@@ -87,7 +87,7 @@
 
     // .box__body + .box__footer
     & + .box__footer {
-      padding-top: 0.5em;
+      padding-top: 1rem;
     }
   }
 
@@ -95,8 +95,8 @@
   &__footer {
     display: flex;
     flex-wrap: wrap;
-    gap: 1em;
-    padding: 1.5em;
+    gap: 1rem;
+    padding: 2rem;
   }
 
   // .box__actions
@@ -107,7 +107,7 @@
     position: absolute;
     z-index: var(--zi-default);
     top: 50%;
-    right: 1em;
+    right: 2rem;
     transform: translateY(-50%);
 
     display: inline-flex;
@@ -138,7 +138,7 @@
     position: absolute;
     z-index: var(--zi-default);
     top: 50%;
-    right: 1em;
+    right: 2rem;
     transform: translateY(-50%);
 
     display: inline-flex;
@@ -146,11 +146,13 @@
     align-items: center;
     justify-content: center;
 
-    width: 2em;
-    height: 2em;
+    width: 4rem;
+    height: 4rem;
 
     font-size: 2rem;
+    line-height: 1;
     color: var(--color-subheading);
+    text-align: center;
 
     background: var(--color-border);
     border-radius: 50%;

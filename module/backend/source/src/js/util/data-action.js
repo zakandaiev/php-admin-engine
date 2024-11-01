@@ -64,11 +64,13 @@ class DataAction {
       );
 
       if (data.status === 'success') {
-        this.successRedirect(data);
-        this.successCounters();
-        this.successRemoveNodes();
+        const redirectResult = this.successRedirect(data);
+        if (!redirectResult) {
+          this.successCounters();
+          this.successRemoveNodes();
 
-        toast(this.dataMessage || data.message, data.status);
+          toast(this.dataMessage || data.message, data.status);
+        }
       } else {
         toast(data.message, data.status);
       }
@@ -149,13 +151,13 @@ class DataAction {
   }
 
   successRedirect(data) {
-    if (this.dataRedirect) {
-      if (this.dataRedirect === 'this') {
-        document.location.reload();
-      } else {
-        window.location.href = decodeURI(this.dataRedirect).replaceAll(/({\w+})/g, data?.data);
-      }
+    if (this.dataRedirect === 'this') {
+      document.location.reload();
+    } else if (this.dataRedirect) {
+      window.location.href = decodeURI(this.dataRedirect).replaceAll(/(\$[\w\d\-_]+)/g, data?.data);
     }
+
+    return this.dataRedirect ? true : false;
   }
 
   successCounters() {

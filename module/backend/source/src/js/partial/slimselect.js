@@ -3,10 +3,6 @@ import { getSlug } from '@/js/util/cyr-to-lat';
 
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('select').forEach((select) => {
-    if (select.hasAttribute('data-native')) {
-      return false;
-    }
-
     const wrapper = document.createElement('div');
     wrapper.classList.add('select', 'select_custom');
 
@@ -54,15 +50,15 @@ document.addEventListener('DOMContentLoaded', () => {
       settings: {
         contentLocation: wrapper,
         contentPosition: 'relative',
+        allowDeselect: select.required === true ? false : true,
         alwaysOpen: select.hasAttribute('data-always-open') ? true : false,
-        allowDeselect: select.querySelector('option[data-placeholder]') ? true : false,
         minSelected: select.hasAttribute('data-min') ? select.getAttribute('data-min') : null,
         maxSelected: select.hasAttribute('data-max') ? select.getAttribute('data-max') : null,
         // eslint-disable-next-line
         showSearch: (select.querySelectorAll('option').length > 10 || select.hasAttribute('data-show-search') || select.hasAttribute('data-addable')) && select.getAttribute('data-show-search') != false ? true : false,
-        placeholderText: select.hasAttribute('placeholder') ? select.getAttribute('placeholder') : null,
-        searchText: select.hasAttribute('data-placeholder-search-text') ? select.getAttribute('data-placeholder-search-text') : null,
-        searchPlaceholder: select.hasAttribute('data-placeholder-search') ? select.getAttribute('data-placeholder-search') : null,
+        placeholderText: select.hasAttribute('data-placeholder') ? select.getAttribute('data-placeholder') : null,
+        searchText: select.hasAttribute('data-search-text') ? select.getAttribute('data-search-text') : null,
+        searchPlaceholder: select.hasAttribute('data-search-placeholder') ? select.getAttribute('data-search-placeholder') : null,
         searchHighlight: select.hasAttribute('data-search-highlight') ? true : false,
         closeOnSelect: select.multiple ? false : true,
         // eslint-disable-next-line

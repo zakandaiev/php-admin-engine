@@ -1,6 +1,6 @@
 <?php
 
-use \engine\http\Request;
+use engine\http\Request;
 
 $pageTitle = t('dashboard.title');
 $pageSubtitle = t('dashboard.subtitle');

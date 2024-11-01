@@ -68,8 +68,8 @@
               </div>
 
               <div class="form__input">
-                <select required>
-                  <option data-placeholder="true">Choose...</option>
+                <select required data-placeholder="Choose...">
+                  <option data-placeholder="true"></option>
                   <option value="1">1</option>
                   <option value="2">2</option>
                 </select>
@@ -174,8 +174,8 @@
               </div>
 
               <div class="form__input">
-                <select required>
-                  <option data-placeholder="true">Choose...</option>
+                <select required data-placeholder="Choose...">
+                  <option data-placeholder="true"></option>
                   <option value="1">1</option>
                   <option value="2">2</option>
                 </select>

@@ -174,6 +174,8 @@ abstract class Model extends Validation
       return $value;
     }
 
+    $value = $value === '' ? null : $value;
+
     return $value;
   }
 
@@ -407,7 +409,7 @@ abstract class Model extends Validation
           $this->column[$columnName]['value'][] = $uploadPath;
         }
       } else {
-        $this->column[$columnName]['upload'] = new Upload($column['value'], @$column['folder']);
+        $this->column[$columnName]['upload'] = new Upload($column['toUpload'], @$column['folder']);
         $this->column[$columnName]['value'] = $this->column[$columnName]['upload']->get('path');
       }
     }

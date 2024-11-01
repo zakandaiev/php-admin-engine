@@ -22,3 +22,6 @@ Router::register('get', '/backend/group/edit/$id/translation/edit/$language', 'G
 Router::register('get', '/backend/user', 'User@getList', 'user.list');
 Router::register('get', '/backend/user/add', 'User@getAdd', 'user.add');
 Router::register('get', '/backend/user/edit/$id', 'User@getEdit', 'user.edit');
+
+############################# SETTING #############################
+Router::register('get', '/backend/setting/$section', 'Setting@getSection', 'setting.section');

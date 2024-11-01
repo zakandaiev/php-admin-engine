@@ -88,8 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     options.onHide = (isFinished) => {
       const initialDates = datesArray.map((d) => new Date(d));
-      const selectedDates = input.datepicker && input.datepicker.selectedDates ? input.datepicker.selectedDates : [];
-      const isRange = input.datepicker && input.datepicker.opts && input.datepicker.opts.range ? input.datepicker.opts.range : false;
+      const selectedDates = input.instance && input.instance.selectedDates ? input.instance.selectedDates : [];
+      const isRange = input.instance && input.instance.opts && input.instance.opts.range ? input.instance.opts.range : false;
 
       if (
         isFinished
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const datepicker = new AirDatepicker(input, options);
 
-    input.datepicker = datepicker;
+    input.instance = datepicker;
     input.setAttribute('readonly', true);
   });
 
@@ -141,6 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const datepicker = new AirDatepicker(calendar, options);
 
-    calendar.datepicker = datepicker;
+    calendar.instance = datepicker;
   });
 });

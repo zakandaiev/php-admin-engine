@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('mouseover', (event) => {
     const trigger = event.target.closest('[data-tooltip]');
-
     if (!trigger) {
       return false;
     }
@@ -25,35 +24,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const tooltipRect = tooltip.getBoundingClientRect();
 
-    setTooltipPosition();
+    let top = triggerRect.top - tooltipRect.height - offset;
+    let left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2);
 
-    function setTooltipPosition() {
-      let top = triggerRect.top - tooltipRect.height - offset;
-      let left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2);
-
-      tooltip.style.top = `${top}px`;
-      tooltip.style.left = `${left}px`;
-
-      if (placement === 'bottom') {
-        top = triggerRect.bottom + offset;
-        left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2);
-
-        tooltip.style.top = `${top}px`;
-        tooltip.style.left = `${left}px`;
-      } else if (placement === 'left') {
-        top = triggerRect.top + (triggerRect.height / 2) - (tooltipRect.height / 2);
-        left = triggerRect.left - tooltipRect.width - offset;
-
-        tooltip.style.top = `${top}px`;
-        tooltip.style.left = `${left}px`;
-      } else if (placement === 'right') {
-        top = triggerRect.top + (triggerRect.height / 2) - (tooltipRect.height / 2);
-        left = triggerRect.right + offset;
-
-        tooltip.style.top = `${top}px`;
-        tooltip.style.left = `${left}px`;
-      }
+    if (placement === 'bottom') {
+      top = triggerRect.bottom + offset;
+      left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2);
+    } else if (placement === 'left') {
+      top = triggerRect.top + (triggerRect.height / 2) - (tooltipRect.height / 2);
+      left = triggerRect.left - tooltipRect.width - offset;
+    } else if (placement === 'right') {
+      top = triggerRect.top + (triggerRect.height / 2) - (tooltipRect.height / 2);
+      left = triggerRect.right + offset;
     }
+
+    tooltip.style.top = `${top}px`;
+    tooltip.style.left = `${left}px`;
   });
 
   document.addEventListener('mouseout', (event) => {

@@ -85,7 +85,7 @@ class Upload
     }
 
     $extension = File::getExtension($data['name']);
-    $name = time() . '-' . (User::get('authorized') ? User::get('id') : 'uu') . '-' . Hash::token(8) . '.' . $extension;
+    $name = time() . '-' . (User::get('isAuthorized') ? User::get('id') : 'uu') . '-' . Hash::token(4) . '.' . $extension;
     $path = Path::resolve($this->folder, $name);
     $pathFull = Path::resolve(ROOT_DIR, $path);
 

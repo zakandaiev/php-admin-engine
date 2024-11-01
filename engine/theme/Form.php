@@ -61,8 +61,7 @@ class Form
     $this->itemId = $result->item_id;
     $this->isMatchRequest = $result->is_match_request;
 
-    // TODO
-    // Module::loadHooks();
+    // SET MODULE NAME
     Module::setName($this->module);
 
     // CHECK MODEL

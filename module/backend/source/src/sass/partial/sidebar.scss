@@ -49,7 +49,7 @@
     align-items: center;
     justify-content: center;
 
-    padding: 1.5em;
+    padding: 2rem;
 
     text-align: center;
 
@@ -59,13 +59,13 @@
     &-image {
       display: block;
       width: auto;
-      height: 6em;
+      height: 10rem;
       object-fit: contain;
     }
 
     // .sidebar__logo-text
     &-text {
-      font-size: 1.5em;
+      font-size: 2rem;
       color: #fff;
     }
   }
@@ -85,10 +85,10 @@
     position: relative;
 
     display: flex;
-    gap: 1em;
+    gap: 1rem;
     align-items: center;
 
-    padding: 0.8em 1.5em;
+    padding: 1rem 2rem;
 
     color: rgb(233 236 239 / 50%);
 
@@ -101,7 +101,7 @@
 
     .label {
       flex-shrink: 0;
-      padding: 0.3125em 0.45em;
+      margin: -0.5rem 0;
     }
 
     &.active {
@@ -136,16 +136,16 @@
 
   // .sidebar__separator
   &__separator {
-    padding: 2em 1.5em 0.5em;
+    padding: 3rem 2rem 1rem;
     font-size: 1.2rem;
     color: #ced4da;
 
     &:first-child {
-      padding-top: 0.5em;
+      padding-top: 1rem;
     }
 
     &:empty {
-      padding-top: 1em;
+      padding-top: 2rem;
     }
   }
 
@@ -188,7 +188,6 @@
     flex-direction: column;
 
     height: 0;
-    padding: 0 1.5em;
 
     visibility: hidden;
 
@@ -203,10 +202,10 @@
     position: relative;
 
     display: flex;
-    gap: 1em;
+    gap: 1rem;
     align-items: center;
 
-    padding: 0.8em 0 0.8em 0.8em;
+    padding: 1rem 1rem 1rem 2.5rem;
 
     font-size: 1.2rem;
     color: #adb5bd;
@@ -222,7 +221,7 @@
 
     .label {
       flex-shrink: 0;
-      padding: 0.3125em 0.45em;
+      margin: -0.5rem 0;
     }
 
     &.active {
@@ -235,7 +234,7 @@
       color: #e9ecef;
 
       &::before {
-        transform: translateX(0.25em);
+        transform: translateX(0.35rem);
       }
 
       &.active {

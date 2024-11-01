@@ -4,7 +4,7 @@
 
   display: inline-block;
 
-  max-width: 22em;
+  max-width: 30rem;
   padding: 0.9rem 1.15rem;
 
   font-size: 1.2rem;
@@ -28,8 +28,8 @@
 
     display: inline-block;
 
-    width: 0.75em;
-    height: 0.75em;
+    width: 1rem;
+    height: 1rem;
 
     background: var(--color-heading);
     border-color: var(--color-heading);
@@ -46,28 +46,28 @@
   &_top::before {
     top: 100%;
     left: 50%;
-    transform: translate(-50%, -0.5em) rotate(45deg);
+    transform: translate(-50%, -0.75rem) rotate(45deg);
   }
 
   // .tooltip_bottom
   &_bottom::before {
     bottom: 100%;
     left: 50%;
-    transform: translate(-50%, 0.5em) rotate(45deg);
+    transform: translate(-50%, 0.75rem) rotate(45deg);
   }
 
   // .tooltip_left
   &_left::before {
     top: 50%;
     left: 100%;
-    transform: translate(-0.5em, -50%) rotate(45deg);
+    transform: translate(-0.75rem, -50%) rotate(45deg);
   }
 
   // .tooltip_right
   &_right::before {
     top: 50%;
     right: 100%;
-    transform: translate(0.5em, -50%) rotate(45deg);
+    transform: translate(0.75rem, -50%) rotate(45deg);
   }
 }
 

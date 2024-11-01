@@ -165,7 +165,7 @@
                   <div class="form__input">
                     <div class="input-group">
                       <span><i class="ti ti-calendar"></i></span>
-                      <input type="text" data-picker="date">
+                      <input type="text" data-picker="date" placeholder="Date">
                     </div>
                   </div>
                 </div>
@@ -292,7 +292,7 @@
                   </div>
 
                   <div class="form__input">
-                    <input type="text" data-picker="date">
+                    <input type="text" data-picker="date" placeholder="Date">
                   </div>
                 </div>
 
@@ -302,7 +302,7 @@
                   </div>
 
                   <div class="form__input">
-                    <input type="text" data-picker="datetime">
+                    <input type="text" data-picker="datetime" placeholder="DateTime">
                   </div>
                 </div>
 
@@ -312,7 +312,7 @@
                   </div>
 
                   <div class="form__input">
-                    <input type="text" data-picker="date" data-multiple>
+                    <input type="text" data-picker="date" data-multiple placeholder="Multiple">
                   </div>
                 </div>
 
@@ -322,7 +322,7 @@
                   </div>
 
                   <div class="form__input">
-                    <input type="text" data-picker="date" data-range>
+                    <input type="text" data-picker="date" data-range placeholder="Range">
                   </div>
                 </div>
 
@@ -332,7 +332,7 @@
                   </div>
 
                   <div class="form__input">
-                    <input type="text" data-picker="month">
+                    <input type="text" data-picker="month" placeholder="Month picke">
                   </div>
                 </div>
 
@@ -342,7 +342,7 @@
                   </div>
 
                   <div class="form__input">
-                    <input type="text" data-picker="time">
+                    <input type="text" data-picker="time" placeholder="Time picker">
                   </div>
                 </div>
               </form>
@@ -364,7 +364,7 @@
                   </div>
 
                   <div class="form__input">
-                    <input type="text" data-maska="+38 (###) ### ## ##">
+                    <input type="text" data-maska="+38 (0A#) ### ## ##" data-maska-tokens="A:[3,5-9]" placeholder="+38 (000) 000 00 00">
                   </div>
                 </div>
 
@@ -374,7 +374,7 @@
                   </div>
 
                   <div class="form__input">
-                    <input type="text" data-maska="!#HHHHHH" data-maska-tokens="H:[0-9a-fA-F]">
+                    <input type="text" data-maska="!#HHHHHH" data-maska-tokens="H:[0-9a-fA-F]" placeholder="#123456">
                   </div>
                 </div>
 
@@ -384,7 +384,7 @@
                   </div>
 
                   <div class="form__input">
-                    <input type="text" data-maska="#00.#00.#00.#00" data-maska-tokens="0:[0-9]:optional">
+                    <input type="text" data-maska="#00.#00.#00.#00" data-maska-tokens="0:[0-9]:optional" placeholder="xxx.xxx.xxx.xxx">
                   </div>
                 </div>
 
@@ -394,7 +394,7 @@
                   </div>
 
                   <div class="form__input">
-                    <input type="text" data-maska="0.99" data-maska-tokens="0:\d:multiple|9:\d:optional">
+                    <input type="text" data-maska="0.99" data-maska-tokens="0:\d:multiple|9:\d:optional" placeholder="123.45">
                   </div>
                 </div>
               </form>

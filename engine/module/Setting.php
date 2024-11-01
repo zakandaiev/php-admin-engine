@@ -45,12 +45,29 @@ class Setting
     $moduleName = $moduleName ?? Module::getName();
 
     if (!self::exists($moduleName)) {
-      return null;
+      return false;
     }
 
-    self::$setting->{$moduleName}->{$propertyName} = $data;
+    $currentLanguage = site('language_current');
+    $siteLanguage = site('language');
 
-    // TODO update to database
+    $oldProperyValue = self::$setting->{$moduleName}->{$propertyName};
+    $newProperyValue = $data;
+
+    if (
+      is_object($oldProperyValue)
+      && (
+        property_exists($oldProperyValue, $currentLanguage)
+        || property_exists($oldProperyValue, $siteLanguage)
+      )
+    ) {
+      $oldProperyValue->$currentLanguage = $data;
+      $newProperyValue = $oldProperyValue;
+    }
+
+    self::$setting->{$moduleName}->{$propertyName} = $newProperyValue;
+
+    self::update($moduleName, $propertyName, $newProperyValue);
 
     return true;
   }
@@ -85,7 +102,7 @@ class Setting
     return true;
   }
 
-  public static function loadFromDatabase()
+  protected static function loadFromDatabase()
   {
     $setting = [];
 

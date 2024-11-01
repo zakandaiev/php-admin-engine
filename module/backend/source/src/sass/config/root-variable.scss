@@ -26,7 +26,10 @@
   --border-2: var(--border-width-2) solid var(--color-border);
 
   --shadow: 0 0 1.4rem 0 rgb(33 37 41 / 5%);
+  --shadow-2: 0 0 1.4rem 0 rgb(33 37 41 / 25%);
+
 	--drop-shadow: drop-shadow(0 0 1.4rem rgb(33 37 41 / 5%));
+	--drop-shadow-2: drop-shadow(0 0 1.4rem rgb(33 37 41 / 25%));
 
   --transition-time: 0.3s;
   --transition: all var(--transition-time);

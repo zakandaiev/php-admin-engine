@@ -3,10 +3,10 @@ $languages = site('languages');
 ?>
 
 <?php if (count($languages) > 1) : ?>
-  <div class="header__item dropdown dropdown_bottom-right">
+  <div class="header__item dropdown">
     <img src="<?= pathResolveUrl(Asset::url(), lang('icon')) ?>" class="fit-cover radius-round" alt="<?= lang() ?>">
 
-    <div class="dropdown__menu">
+    <div class="dropdown__menu" data-position="bottom-right">
       <?php foreach ($languages as $language) : ?>
         <?php if ($language['key'] === site('language_current')) continue; ?>
 

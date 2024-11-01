@@ -24,13 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
 // OPEN
 document.addEventListener('click', (event) => {
   const trigger = event.target.closest('[data-modal]');
-
   if (!trigger) {
     return false;
   }
 
   const modal = document.querySelector(trigger.getAttribute('data-modal'));
-
   if (!modal) {
     return false;
   }

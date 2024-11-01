@@ -5,7 +5,9 @@ namespace engine\theme;
 use engine\Config;
 use engine\Engine;
 use engine\http\Request;
+use engine\module\Hook;
 use engine\util\File;
+use engine\util\Text;
 
 class Page
 {
@@ -115,7 +117,7 @@ class Page
           $siteDescription = site('description');
 
           if (!empty($siteDescription)) {
-            $seoDescription = '. ' . $siteDescription;
+            $seoDescription .= ' — ' . $siteDescription;
           }
 
           self::$meta['seo_description'] = $seoDescription;
@@ -123,9 +125,15 @@ class Page
           return $seoDescription;
         }
       case 'seo_keywords': {
-          $seoKeywords = self::get('seo_keywords') ?? trim(preg_replace('/[\s\.;]+/', ',', self::meta('seo_description')) ?? '', ',');
+          $seoKeywords = self::get('seo_keywords');
 
-          self::$meta['seo_keywords'] = $seoKeywords;
+          if (empty($seoKeywords)) {
+            $seoKeywords = self::meta('seo_description') ?? '';
+            $seoKeywords = Text::word($seoKeywords);
+            $seoKeywords = preg_replace('/[\s\.;]+/', ',', $seoKeywords);
+          }
+
+          self::$meta['seo_keywords'] = trim($seoKeywords, ',');
 
           return $seoKeywords;
         }
@@ -272,25 +280,6 @@ class Page
 
           return $engineScript;
         }
-      case 'analytics_gtag': {
-          $gtagId = site('analytics_gtag');
-          $analyticsGtag = '';
-
-          if (!empty(site('analytics_gtag'))) {
-            $analyticsGtag = '
-<script async src="https://www.googletagmanager.com/gtag/js?id=' . $gtagId . '"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag("js", new Date());
-  gtag("config", "' . $gtagId . '");
-</script>';
-          }
-
-          self::$meta['analytics_gtag'] = $analyticsGtag;
-
-          return $analyticsGtag;
-        }
     }
 
     $title = self::meta('title');
@@ -305,7 +294,6 @@ class Page
     $altLanguages = self::meta('alt_languages');
     $favicon = self::meta('favicon');
     $engineScript = self::meta('engine_script');
-    $analyticsGtag = self::meta('analytics_gtag');
 
     $meta = self::meta('no_index_no_follow');
     $meta .= '<title>' . $title . '</title>';
@@ -322,7 +310,11 @@ class Page
     $meta .= $altLanguages;
     $meta .= $favicon;
     $meta .= $engineScript;
-    $meta .= $analyticsGtag;
+
+    $metaHookData = Hook::getData('page.meta') ?? [];
+    foreach ($metaHookData as $hookData) {
+      $meta .= $hookData;
+    }
 
     if (Config::getProperty('isEnabled', 'debug')) {
       $meta = str_replace("><", ">\n<", $meta);

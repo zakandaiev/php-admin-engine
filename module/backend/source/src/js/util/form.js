@@ -67,6 +67,10 @@ class Form {
 
     this.submit.addEventListener('click', () => {
       this.node.querySelectorAll(':invalid').forEach((item) => {
+        if (item.tagName === 'FIELDSET') {
+          return false;
+        }
+
         const column = item.closest('.form__column');
         if (column) {
           column.classList.remove('form__column_valid');
@@ -79,6 +83,10 @@ class Form {
         item.classList.add('invalid');
       });
       this.node.querySelectorAll(':valid').forEach((item) => {
+        if (item.tagName === 'FIELDSET') {
+          return false;
+        }
+
         const column = item.closest('.form__column');
         if (column) {
           column.classList.remove('form__column_invalid');
@@ -192,18 +200,22 @@ class Form {
         this.api.delayMs,
       );
 
-      if (data.code === 200 && data.status === 'success') {
-        this.successRedirect(data);
-        this.successResetForm();
+      const isSuccess = data.code === 200 && data.status === 'success';
 
-        toast(this.dataMessage || data.message, data.status);
+      if (isSuccess) {
+        const redirectResult = this.successRedirect(data);
+        if (!redirectResult) {
+          this.successResetForm();
+
+          toast(this.dataMessage || data.message, data.status);
+        }
       } else {
         this.showErrors(data.data || []);
 
         toast(data.message, data.status);
       }
 
-      this.enableForm();
+      this.enableForm(isSuccess);
     });
   }
 
@@ -302,12 +314,25 @@ class Form {
     return true;
   }
 
-  enableForm() {
+  enableForm(isSuccess = false) {
     this.node.removeAttribute('disabled', 'disabled');
     this.node.classList.remove(this.dataClass);
     this.submit.disabled = false;
 
-    this.node.querySelectorAll('input, textarea, select').forEach((input) => input.classList.remove('valid', 'invalid'));
+    if (!isSuccess) {
+      return true;
+    }
+
+    this.node.querySelectorAll('input, textarea, select').forEach((input) => {
+      const column = input.closest('.form__column');
+      if (column) {
+        column.classList.remove('form__column_valid', 'form__column_invalid');
+
+        return true;
+      }
+
+      input.classList.remove('valid', 'invalid');
+    });
 
     return true;
   }
@@ -346,7 +371,7 @@ class Form {
       window.location.href = decodeURI(this.dataRedirect).replaceAll(/(\$[\w\d\-_]+)/g, data?.data);
     }
 
-    return false;
+    return this.dataRedirect ? true : false;
   }
 
   successResetForm() {

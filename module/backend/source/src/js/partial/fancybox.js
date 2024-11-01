@@ -3,10 +3,10 @@ import { Fancybox } from '@fancyapps/ui';
 document.addEventListener('DOMContentLoaded', () => {
   let options = {};
 
-  if (typeof Engine !== 'undefined' && Engine.translation && Engine.translation.fancybox) {
+  if (window?.Engine?.translation?.fancybox) {
     options = {
       ...options,
-      l10n: Engine.translation.fancybox,
+      l10n: window.Engine.translation.fancybox,
     };
   }
 

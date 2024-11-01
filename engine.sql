@@ -12,34 +12,35 @@ CREATE TABLE IF NOT EXISTS `%prefix%_setting` (
 
 INSERT INTO `%prefix%_setting` (`module`, `name`, `value`) VALUES
 ('engine', 'language', 'en'),
+('engine', 'name', '{"en":"%site_name%"}'),
+('engine', 'description', '{"en":null}'),
 ('engine', 'enable_registration', 'true'),
 ('engine', 'enable_password_restore', 'true'),
 ('engine', 'moderate_comments', 'false'),
 ('engine', 'no_index_no_follow', 'false'),
-('engine', 'name', '{"en":"%site_name%"}'),
-('engine', 'description', '{"en":null}'),
-('engine', 'analytics_gtag', NULL),
 
-('backend', 'pagination_limit', '10'),
 ('backend', 'favicon', NULL),
 ('backend', 'logo', NULL),
 ('backend', 'logo_alt', NULL),
 ('backend', 'placeholder_avatar', NULL),
 ('backend', 'placeholder_image', NULL),
+('backend', 'pagination_limit', '10'),
 
-('frontend', 'pagination_limit', '10'),
 ('frontend', 'favicon', NULL),
 ('frontend', 'logo', NULL),
 ('frontend', 'logo_alt', NULL),
 ('frontend', 'placeholder_avatar', NULL),
 ('frontend', 'placeholder_image', NULL),
+('frontend', 'pagination_limit', '10'),
 
 ('contact', 'address', '{"en":null}'),
 ('contact', 'coordinate_x', NULL),
 ('contact', 'coordinate_y', NULL),
 ('contact', 'work_hours', '{"en":null}'),
 ('contact', 'email', '%contact_email%'),
-('contact', 'phones', NULL);
+('contact', 'phones', NULL),
+
+('analytics', 'google_tag', NULL);
 
 CREATE TABLE IF NOT EXISTS `%prefix%_user` (
   `id` VARCHAR(32) NOT NULL,
@@ -51,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `%prefix%_user` (
   `avatar` TEXT DEFAULT NULL,
   `setting` TEXT DEFAULT NULL,
   `auth_token` VARCHAR(256) DEFAULT NULL,
-  `auth_ip` VARCHAR(32) DEFAULT NULL,
+  `auth_ip` VARCHAR(64) DEFAULT NULL,
   `auth_date` TIMESTAMP NULL DEFAULT NULL,
   `is_enabled` BOOLEAN NOT NULL DEFAULT TRUE,
   `date_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -155,7 +156,7 @@ CREATE TABLE IF NOT EXISTS `%prefix%_form` (
   `item_id` VARCHAR(256) DEFAULT NULL,
   `is_match_request` BOOLEAN NOT NULL DEFAULT FALSE,
   `date_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `ip` VARCHAR(32) NOT NULL,
+  `ip` VARCHAR(64) NOT NULL,
   PRIMARY KEY  (`token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -215,7 +216,7 @@ CREATE TABLE IF NOT EXISTS `%prefix%_comment` (
   `message` TEXT NOT NULL,
   `date_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_edited` TIMESTAMP DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `ip` VARCHAR(32) DEFAULT NULL,
+  `ip` VARCHAR(64) DEFAULT NULL,
   `is_approved` BOOLEAN NOT NULL DEFAULT FALSE,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -260,7 +261,7 @@ CREATE TABLE IF NOT EXISTS `%prefix%_feedback` (
   `email` VARCHAR(200) NOT NULL,
   `subject` VARCHAR(100) DEFAULT NULL,
   `message` TEXT NOT NULL,
-  `ip` VARCHAR(32) DEFAULT NULL,
+  `ip` VARCHAR(64) DEFAULT NULL,
   `is_read` BOOLEAN NOT NULL DEFAULT FALSE,
   `date_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`)

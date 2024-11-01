@@ -20,12 +20,13 @@ import '@/js/partial/tooltip';
 import '@/js/partial/sidebar';
 
 /* ==========  PLUGINS  ========== */
+import '@/js/partial/form';
+
 import '@/js/partial/air-datepicker';
 import '@/js/partial/chart';
 import '@/js/partial/data-action';
 import '@/js/partial/fancybox';
 import '@/js/partial/filepond';
-import '@/js/partial/form';
 import '@/js/partial/maska';
 import '@/js/partial/slimselect';
 import '@/js/partial/sortable';
