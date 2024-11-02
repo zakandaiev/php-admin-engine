@@ -50,7 +50,7 @@ class Auth extends Model
 
   public function login()
   {
-    if (empty($this->table) || empty($this->column)) {
+    if (!$this->hasTable()) {
       return false;
     }
 
@@ -59,8 +59,8 @@ class Auth extends Model
       return false;
     }
 
-    $email = @$this->getColumn('email')['value'];
-    $password = @$this->getColumn('password')['value'];
+    $email = $this->getColumnValue('email');
+    $password = $this->getColumnValue('password');
 
     $query = new Query('SELECT * FROM {user} WHERE email=:email');
     $user = $query->execute(['email' => $email])->fetch();
@@ -80,7 +80,7 @@ class Auth extends Model
 
   public function register()
   {
-    if (empty($this->table) || empty($this->column)) {
+    if (!$this->hasTable()) {
       return false;
     }
 
@@ -89,9 +89,9 @@ class Auth extends Model
       return false;
     }
 
-    $name = @$this->getColumn('name')['value'];
-    $email = @$this->getColumn('email')['value'];
-    $password = @$this->getColumn('password')['value'];
+    $name = $this->getColumnValue('name');
+    $email = $this->getColumnValue('email');
+    $password = $this->getColumnValue('password');
 
     $query = new Query('SELECT count(*) FROM {user} WHERE email=:email');
     $userCount = $query->execute(['email' => $email])->fetchColumn();
@@ -106,7 +106,7 @@ class Auth extends Model
 
   public function restore()
   {
-    if (empty($this->table) || empty($this->column)) {
+    if (!$this->hasTable()) {
       return false;
     }
 
@@ -115,7 +115,7 @@ class Auth extends Model
       return false;
     }
 
-    $email = @$this->getColumn('email')['value'];
+    $email = $this->getColumnValue('email');
 
     $query = new Query('SELECT * FROM {user} WHERE email=:email');
     $user = $query->execute(['email' => $email])->fetch();

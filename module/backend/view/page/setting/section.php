@@ -1,17 +1,20 @@
 <?php
 
+use engine\module\Hook;
+
 $title = t('setting.' . $section . '.title');
 
 Page::set('title', $title);
-
 Page::breadcrumb('add', $title);
+
+$columnHookData = Hook::getData('setting.column') ?? [];
 
 $columns = [];
 foreach (settingGet($section) as $key => $value) {
   $columns[$key] = [
-    'label' => t('setting.column.' . $key),
-    'placeholder' => t('setting.column.' . $key . '_placeholder'),
-    'value' => site($key)
+    'label' => $columnHookData[$key]['label'] ?? t('setting.column.' . $key),
+    'placeholder' => $columnHookData[$key]['placeholder'] ?? t('setting.column.' . $key . '_placeholder'),
+    'value' => site($key, @$columnHookData[$key]['module'])
   ];
 
   if (in_array($key, ['favicon', 'logo', 'logo_alt', 'placeholder_avatar', 'placeholder_image'])) {

@@ -3,6 +3,7 @@
 namespace engine\i18n;
 
 use engine\Config;
+use engine\Engine;
 use engine\module\Module;
 use engine\module\Setting;
 use engine\http\Cookie;
@@ -113,7 +114,7 @@ class I18n
   public static function translate($key, $data = null)
   {
     $moduleExtends = Module::getProperty('extends');
-    if (!in_array($moduleExtends, self::$loadedModules)) {
+    if ($moduleExtends && !in_array($moduleExtends, self::$loadedModules)) {
       self::$loadedModules[] = $moduleExtends;
       self::loadTranslations($moduleExtends);
     };
@@ -217,20 +218,25 @@ class I18n
   protected static function loadTranslations($module)
   {
     $pathToLanguageFile = Path::resolve(Path::file('i18n', $module), self::getProperty('fileName'));
-
     if (!is_file($pathToLanguageFile)) {
       return false;
     }
 
+    $timeStart = hrtime(true);
+
     $content = file_get_contents($pathToLanguageFile);
     $content = json_decode($content, true);
-
     if (empty($content)) {
       return false;
     }
 
     self::$translation = array_merge(self::$translation, $content);
     self::$translationFlat = self::getFlattenTranslations(self::$translation);
+
+    $timeEnd = hrtime(true);
+    $timeResult = $timeEnd - $timeStart;
+    $timeResult /= 1e+6; // convert ns to ms
+    self::addTranslationsLoadToEngineDebug($timeResult, $pathToLanguageFile);
 
     return true;
   }
@@ -248,5 +254,21 @@ class I18n
     }
 
     return $returnArr;
+  }
+
+  protected static function addTranslationsLoadToEngineDebug($timeResult, $pathToLanguageFile)
+  {
+    if (!self::$isDebug) {
+      return false;
+    }
+
+    $timeMessage = "\n  I18n:";
+    $timeMessage .= "\n    - execution time: $timeResult ms";
+    $timeMessage .= "\n    - translations file: $pathToLanguageFile";
+    $timeMessage .= "\n";
+
+    Engine::addDebugData($timeMessage);
+
+    return true;
   }
 }

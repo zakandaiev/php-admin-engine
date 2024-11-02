@@ -80,9 +80,9 @@ table {
 
   // .table__actions
   &__actions {
-    width: 8.6rem;
-    min-width: 8.6rem;
-    max-width: 8.6rem;
+    width: 9rem;
+    min-width: 9rem;
+    max-width: 9rem;
     text-align: right;
   }
 
@@ -102,6 +102,7 @@ table {
     line-height: 1;
     color: var(--color-text);
     text-align: center;
+    vertical-align: middle;
 
     &.submit {
       color: var(--color-text-muted);

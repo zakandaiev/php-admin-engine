@@ -10,7 +10,7 @@
         </div>
         <div class="box__body text-center">
 
-          <button class="btn btn_primary" data-modal="#modal-primary">Primary</button>
+          <button class="btn btn_primary" data-modal="modal-primary">Primary</button>
 
           <div id="modal-primary" class="modal">
             <header class="modal__header">
@@ -30,7 +30,7 @@
             </footer>
           </div>
 
-          <button class="btn btn_secondary" data-modal="#modal-secondary">Secondary</button>
+          <button class="btn btn_secondary" data-modal="modal-secondary">Secondary</button>
 
           <div id="modal-secondary" class="modal">
             <header class="modal__header">
@@ -50,7 +50,7 @@
             </footer>
           </div>
 
-          <button class="btn btn_success" data-modal="#modal-success">Success</button>
+          <button class="btn btn_success" data-modal="modal-success">Success</button>
 
           <div id="modal-success" class="modal">
             <header class="modal__header">
@@ -70,7 +70,7 @@
             </footer>
           </div>
 
-          <button class="btn btn_error" data-modal="#modal-error">Error</button>
+          <button class="btn btn_error" data-modal="modal-error">Error</button>
 
           <div id="modal-error" class="modal">
             <header class="modal__header">
@@ -90,7 +90,7 @@
             </footer>
           </div>
 
-          <button class="btn btn_warning" data-modal="#modal-warning">Warning</button>
+          <button class="btn btn_warning" data-modal="modal-warning">Warning</button>
 
           <div id="modal-warning" class="modal">
             <header class="modal__header">
@@ -110,7 +110,7 @@
             </footer>
           </div>
 
-          <button class="btn btn_info" data-modal="#modal-info">Info</button>
+          <button class="btn btn_info" data-modal="modal-info">Info</button>
 
           <div id="modal-info" class="modal">
             <header class="modal__header">
@@ -143,7 +143,7 @@
         <div class="box__body text-center">
           <div class="mb-6">
 
-            <button class="btn btn_primary" data-modal="#modal-small">Small</button>
+            <button class="btn btn_primary" data-modal="modal-small">Small</button>
 
             <div id="modal-small" class="modal modal_sm">
               <header class="modal__header">
@@ -163,7 +163,7 @@
               </footer>
             </div>
 
-            <button class="btn btn_primary" data-modal="#modal-medium">Medium</button>
+            <button class="btn btn_primary" data-modal="modal-medium">Medium</button>
 
             <div id="modal-medium" class="modal">
               <header class="modal__header">
@@ -183,7 +183,7 @@
               </footer>
             </div>
 
-            <button class="btn btn_primary" data-modal="#modal-large">Large</button>
+            <button class="btn btn_primary" data-modal="modal-large">Large</button>
 
             <div id="modal-large" class="modal modal_lg">
               <header class="modal__header">
@@ -207,7 +207,7 @@
 
           <div>
 
-            <button class="btn btn_primary" data-modal="#modal-centered-small">Centered small</button>
+            <button class="btn btn_primary" data-modal="modal-centered-small">Centered small</button>
 
             <div id="modal-centered-small" class="modal modal_sm modal_center">
               <header class="modal__header">
@@ -227,7 +227,7 @@
               </footer>
             </div>
 
-            <button class="btn btn_primary" data-modal="#modal-centered-medium">Centered medium</button>
+            <button class="btn btn_primary" data-modal="modal-centered-medium">Centered medium</button>
 
             <div id="modal-centered-medium" class="modal modal_center">
               <header class="modal__header">
@@ -247,7 +247,7 @@
               </footer>
             </div>
 
-            <button class="btn btn_primary" data-modal="#modal-centered-large">Centered large</button>
+            <button class="btn btn_primary" data-modal="modal-centered-large">Centered large</button>
 
             <div id="modal-centered-large" class="modal modal_lg modal_center">
               <header class="modal__header">

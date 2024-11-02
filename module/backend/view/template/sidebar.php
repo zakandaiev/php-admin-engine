@@ -2,7 +2,7 @@
 
 use engine\module\Hook;
 
-$sidebar = Hook::getData('sidebar');
+$sidebar = Hook::getData('sidebar') ?? [];
 
 // TODO
 function checkRouteAccess($route)
@@ -91,52 +91,52 @@ function isRouteParentActive($route = [])
   </a>
 
   <nav class="sidebar__nav">
-    <?php foreach ($sidebar as $item) : ?>
+    <?php foreach ($sidebar as $route) : ?>
       <?php
-      if (!@$item['isPublic'] && !checkRouteAccess(@$item['name'])) {
+      if (!@$route['isPublic'] && !checkRouteAccess(@$route['name'])) {
         continue;
       }
       ?>
 
-      <?php if (@$item['isSeparator'] === true) : ?>
-        <span class="sidebar__separator"><?= $item['text'] ?></span>
-      <?php elseif (is_array($item['name'])) : ?>
-        <div class="sidebar__collapse <?php if (isRouteParentActive($item)) : ?>active<?php endif; ?>">
-          <span class="sidebar__item <?php if (isRouteParentActive($item)) : ?>active<?php endif; ?>">
-            <i class="ti ti-<?= $item['icon'] ?>"></i>
-            <span class="sidebar__text"><?= $item['text'] ?></span>
+      <?php if (@$route['isSeparator'] === true) : ?>
+        <span data-id="<?= @$route['id'] ?>" class="sidebar__separator"><?= $route['text'] ?></span>
+      <?php elseif (is_array($route['name'])) : ?>
+        <div data-id="<?= @$route['id'] ?>" class="sidebar__collapse <?php if (isRouteParentActive($route)) : ?>active<?php endif; ?>">
+          <span class="sidebar__item <?php if (isRouteParentActive($route)) : ?>active<?php endif; ?>">
+            <i class="ti ti-<?= $route['icon'] ?>"></i>
+            <span class="sidebar__text"><?= $route['text'] ?></span>
           </span>
 
           <div class="sidebar__collapse-menu">
-            <?php foreach ($item['name'] as $key => $value) : ?>
-              <a href="<?= routeLink($value['name'], @$value['parameter'], @$value['query'], @$value['module']) ?>" class="sidebar__collapse-item <?php if (isRouteActive($value)) : ?>active<?php endif; ?>">
-                <span class="sidebar__text"><?= $key ?></span>
+            <?php foreach ($route['name'] as $routeInner) : ?>
+              <a data-id="<?= @$routeInner['id'] ?>" href="<?= routeLink($routeInner['name'], @$routeInner['parameter'], @$routeInner['query'], @$routeInner['module']) ?>" class="sidebar__collapse-item <?php if (isRouteActive($routeInner)) : ?>active<?php endif; ?>">
+                <span class="sidebar__text"><?= $routeInner['text'] ?></span>
                 <!-- <span class="label label_primary">2</span> -->
               </a>
             <?php endforeach; ?>
           </div>
         </div>
       <?php else : ?>
-        <a href="<?= routeLink($item['name'], @$item['parameter'], @$value['query'], @$item['module']) ?>" class="sidebar__item <?php if (isRouteActive($item)) : ?>active<?php endif; ?>">
-          <i class="ti ti-<?= $item['icon'] ?>"></i>
-          <span class="sidebar__text"><?= $item['text'] ?></span>
+        <a data-id="<?= @$route['id'] ?>" href="<?= routeLink($route['name'], @$route['parameter'], @$value['query'], @$route['module']) ?>" class="sidebar__item <?php if (isRouteActive($route)) : ?>active<?php endif; ?>">
+          <i class="ti ti-<?= $route['icon'] ?>"></i>
+          <span class="sidebar__text"><?= $route['text'] ?></span>
           <?php
           if (false) :
             // TODO
             // if(
-            // 	isset($item['label'])
+            // 	isset($route['label'])
             // 	&& (
-            // 		isClosure($item['label'])
+            // 		isClosure($route['label'])
             // 		||
-            // 		(!isClosure($item['label']) && !empty($item['label']))
+            // 		(!isClosure($route['label']) && !empty($route['label']))
             // 	)
             // ):
           ?>
-            <span class="label label_<?php if (isset($item['label_color'])) : ?><?= $item['label_color'] ?><?php else : ?>primary<?php endif; ?>">
-              <?php if (isClosure($item['label'])) : ?>
-                <?= $item['label']() ?>
+            <span class="label label_<?php if (isset($route['label_color'])) : ?><?= $route['label_color'] ?><?php else : ?>primary<?php endif; ?>">
+              <?php if (isClosure($route['label'])) : ?>
+                <?= $route['label']() ?>
               <?php else : ?>
-                <?= $item['label'] ?>
+                <?= $route['label'] ?>
               <?php endif; ?>
             </span>
           <?php endif; ?>

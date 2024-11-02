@@ -493,9 +493,9 @@ function site($key, $module = null)
   }
 
   if (is_object($value) && property_exists($value, site('language_current'))) {
-    $value = @$value->{site('language_current')};
+    $value = $value->{site('language_current')};
   } else if (is_object($value) && property_exists($value, site('language'))) {
-    $value = @$value->{site('language')};
+    $value = $value->{site('language')};
   }
 
   switch ($key) {

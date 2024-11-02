@@ -25,6 +25,8 @@ class Router
 
   public static function watch()
   {
+    Module::loadHooks();
+
     self::checkForm();
     self::checkRoutes();
     self::check404();
@@ -142,10 +144,6 @@ class Router
       return false;
     }
 
-    // TODO
-    // need no emptu module::setName before call hooks
-    // Module::loadHooks();
-
     $user = new User();
     $form = new Form(Request::uriParts(0));
 
@@ -212,7 +210,6 @@ class Router
         self::$route[$key] = $value;
       }
 
-      Module::loadHooks();
       Module::setName($module);
 
       return true;

@@ -182,6 +182,15 @@ abstract class Validation
     return in_array($columnName, $this->columnKeysToValidate);
   }
 
+  public function getColumnsToValidate()
+  {
+    if ($this->hasColumnKeysToValidate()) {
+      return array_intersect_key($this->getColumn(), array_flip($this->getColumnKeysToValidate()));
+    }
+
+    return $this->getColumn();
+  }
+
   public function flushError()
   {
     $this->error = [];

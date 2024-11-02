@@ -7,6 +7,7 @@ use \PDOException;
 use \Exception;
 
 use engine\Config;
+use engine\Engine;
 use engine\database\Database;
 use engine\database\Filter;
 use engine\database\Pagination;
@@ -263,7 +264,7 @@ class Query
     $this->addBinding($params);
 
     if ($this->debug) {
-      debug(trim($this->sql ?? ''), $this->binding);
+      debug(trim($this->sql ?? ''), $this->binding, $this->getCleanSql());
     }
 
     if ($this->cache) {
@@ -277,15 +278,24 @@ class Query
     $this->bind();
 
     try {
+      $timeStart = hrtime(true);
+
       $this->statement->execute();
+
+      $timeEnd = hrtime(true);
+      $timeResult = $timeEnd - $timeStart;
+      $timeResult /= 1e+6; // convert ns to ms
+
+      $this->addQueryToEngineDebug($timeResult);
     } catch (PDOException $error) {
       $this->error['message'] = $error->getMessage();
 
       if (Request::method() === 'get' && Config::getProperty('isEnabled', 'debug')) {
-        debug($this->error, $this->sql, $this->binding);
+        debug($this->error, $this->sql, $this->binding, $this->getCleanSql());
       } else if (Config::getProperty('isEnabled', 'debug')) {
         $this->error['sql'] = $this->sql;
         $this->error['binding'] = $this->binding;
+        $this->error['sqlClean'] = $this->getCleanSql();
       }
     }
 
@@ -399,5 +409,40 @@ class Query
     }
 
     return $this->statement->{$type}($mode);
+  }
+
+  protected function addQueryToEngineDebug($timeResult)
+  {
+    if (!Config::getProperty('isEnabled', 'debug')) {
+      return false;
+    }
+
+    $timeMessage = "\n  Query:";
+    $timeMessage .= "\n    - execution time: $timeResult ms";
+    $timeMessage .= "\n    - sql: " . $this->getCleanSql();
+    $timeMessage .= "\n";
+
+    Engine::addDebugData($timeMessage);
+
+    return true;
+  }
+
+  protected function getCleanSql()
+  {
+    return preg_replace_callback(
+      '/:[\w\d\-\_]+/',
+      function ($matches) {
+        $param = $matches[0];
+        $bindingParamKey = ltrim($param, ':');
+        $bindingValue = $this->binding[$bindingParamKey] ?? $param;
+
+        if (is_string($bindingValue)) {
+          $bindingValue = "'$bindingValue'";
+        }
+
+        return $bindingValue;
+      },
+      $this->sql
+    );
   }
 }

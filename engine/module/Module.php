@@ -112,7 +112,7 @@ class Module
 
     uasort($modules, function ($module1, $module2) {
       if (isset($module1['priority']) && isset($module2['priority'])) {
-        return $module2['priority'] <=> $module1['priority'];
+        return $module1['priority'] <=> $module2['priority'];
       }
       return 0;
     });
@@ -132,16 +132,7 @@ class Module
 
     $path = Path::file('module');
 
-    $modules = self::$moduleList;
-
-    uasort($modules, function ($module1, $module2) {
-      if (isset($module1['priority']) && isset($module2['priority'])) {
-        return $module1['priority'] <=> $module2['priority'];
-      }
-      return 0;
-    });
-
-    foreach ($modules as $module) {
+    foreach (self::$moduleList as $module) {
       if (!$module['isEnabled']) {
         continue;
       }

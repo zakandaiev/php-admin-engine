@@ -3,6 +3,7 @@
 namespace module\backend\model;
 
 use engine\database\Model;
+use engine\module\Hook;
 use engine\module\Setting as ModuleSetting;
 
 class Setting extends Model
@@ -84,12 +85,17 @@ class Setting extends Model
       'max' => 1000
     ]);
 
+    $columnHookData = Hook::getData('setting.column') ?? [];
+    foreach ($columnHookData as $columnName => $columnModel) {
+      $this->setColumn($columnName, $columnModel);
+    }
+
     parent::__construct($columnData, $columnKeysToValidate);
   }
 
   public function editSection()
   {
-    if (empty($this->table) || empty($this->column)) {
+    if (!$this->hasTable()) {
       return false;
     }
 
@@ -98,7 +104,7 @@ class Setting extends Model
       return false;
     }
 
-    foreach ($this->getColumn() as $settingName => $setting) {
+    foreach ($this->getColumnsToValidate() as $settingName => $setting) {
       ModuleSetting::setProperty($setting['value'], $settingName, $this->itemId);
     }
 

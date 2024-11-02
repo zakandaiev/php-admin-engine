@@ -16,7 +16,9 @@ function getUiSections()
 
     $uiSectionName = fileGetName($uiSection);
     $uiSectionNameFormatted = ucfirst(str_replace('-', ' ', $uiSectionName));
-    $uiSectionsFormatted[$uiSectionNameFormatted] = [
+    $uiSectionsFormatted[] = [
+      'id' => 'dev.ui.' . $uiSectionName,
+      'text' => $uiSectionNameFormatted,
       'name' => 'ui.section',
       'parameter' => ['section' => $uiSectionName]
     ];
@@ -26,30 +28,35 @@ function getUiSections()
 }
 
 Hook::run('sidebar.prepend', [
+  'id' => 'dev.ui-separator',
   'text' => '',
   'isSeparator' => true,
   'name' => 'log'
 ]);
 
 Hook::run('sidebar.prepend', [
+  'id' => 'dev.ui',
   'icon' => 'layout',
   'text' => 'UI',
   'name' => getUiSections()
 ]);
 
 Hook::run('sidebar.prepend', [
+  'id' => 'dev.log',
   'icon' => 'activity',
   'text' => 'Logs',
   'name' => 'log'
 ]);
 
 Hook::run('sidebar.prepend', [
+  'id' => 'dev.module',
   'icon' => 'box',
   'text' => 'Modules',
   'name' => 'module'
 ]);
 
 Hook::run('sidebar.prepend', [
+  'id' => 'dev.log-separator',
   'text' => 'Dev',
   'isSeparator' => true,
   'name' => 'log'

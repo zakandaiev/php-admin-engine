@@ -28,7 +28,7 @@ document.addEventListener('click', (event) => {
     return false;
   }
 
-  const modal = document.querySelector(trigger.getAttribute('data-modal'));
+  const modal = document.getElementById(trigger.getAttribute('data-modal'));
   if (!modal) {
     return false;
   }

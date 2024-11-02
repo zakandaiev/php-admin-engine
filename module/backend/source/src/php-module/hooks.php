@@ -3,7 +3,7 @@
 use engine\module\Hook;
 use engine\module\Module;
 
-############################# PAGE META #############################
+############################# EXTEND PAGE META #############################
 Hook::setData('page.meta', []);
 
 Hook::register('page.meta.add', function ($data) {
@@ -17,32 +17,28 @@ Hook::register('page.meta.add', function ($data) {
   Hook::setData('page.meta', $meta);
 });
 
-############################# SIDEBAR #############################
-function formatRoute($route = [])
-{
-  $route['module'] = Module::getName();
+############################# EXTEND SETTING MODEL #############################
+Hook::setData('setting.column', []);
 
-  if (isset($route['name']) && is_array($route['name'])) {
-    $innerRoutes = [];
-
-    foreach ($route['name'] as $key => $item) {
-      if (!isset($item) || !is_array($item) || !isset($item['name'])) {
-        continue;
-      }
-
-      $innerRoutes[$key] = [...$item, 'module' => Module::getName()];
-    }
-
-    if (empty($innerRoutes)) {
-      return false;
-    }
-
-    $route['name'] = $innerRoutes;
+Hook::register('setting.column.add', function ($columnName, $columnModel) {
+  if (empty($columnName) || !is_array($columnModel) || empty($columnModel)) {
+    return false;
   }
 
-  return $route;
+  $meta = Hook::getData('setting.column') ?? [];
+  $meta[$columnName] = formatSettingColumn($columnModel);
+
+  Hook::setData('setting.column', $meta);
+});
+
+function formatSettingColumn($columnModel = [])
+{
+  $columnModel['module'] = $columnModel['module'] ?? Module::getName();
+
+  return $columnModel;
 }
 
+############################# EXTEND SIDEBAR #############################
 Hook::setData('sidebar', []);
 
 Hook::register('sidebar.append', function ($route) {
@@ -51,7 +47,7 @@ Hook::register('sidebar.append', function ($route) {
   }
 
   $sidebar = Hook::getData('sidebar') ?? [];
-  $sidebar[] = formatRoute($route);
+  $sidebar[] = formatSidebarRoute($route);
   Hook::setData('sidebar', $sidebar);
 });
 
@@ -61,9 +57,55 @@ Hook::register('sidebar.prepend', function ($route) {
   }
 
   $sidebar = Hook::getData('sidebar') ?? [];
-  array_unshift($sidebar, formatRoute($route));
+  array_unshift($sidebar, formatSidebarRoute($route));
   Hook::setData('sidebar', $sidebar);
 });
+
+Hook::register('sidebar.append.after', function ($id, $routeToAppend) {
+  $sidebar = Hook::getData('sidebar') ?? [];
+
+  $sidebarFormatted = [];
+  foreach ($sidebar as $route) {
+    if (is_string($route['name']) && @$route['id'] === $id) {
+      $sidebarFormatted[] = $route;
+      $sidebarFormatted[] = formatSidebarRoute($routeToAppend);
+    } else if (is_array($route['name'])) {
+      foreach ($route['name'] as $routeInner) {
+        if (@$routeInner['id'] === $id) {
+          $route['name'][] = formatSidebarRoute($routeToAppend);
+        }
+      }
+      $sidebarFormatted[] = $route;
+    } else {
+      $sidebarFormatted[] = $route;
+    }
+  }
+
+  Hook::setData('sidebar', $sidebarFormatted);
+});
+
+function formatSidebarRoute($route = [])
+{
+  $route['module'] = $route['module'] ?? Module::getName();
+
+  if (isset($route['name']) && is_array($route['name'])) {
+    $innerRoutes = [];
+
+    foreach ($route['name'] as $innerRoute) {
+      if (!isset($innerRoute) || !is_array($innerRoute) || !isset($innerRoute['name'])) {
+        continue;
+      }
+
+      $innerRoute['module'] = $innerRoute['module'] ?? Module::getName();
+
+      $innerRoutes[] = $innerRoute;
+    }
+
+    $route['name'] = $innerRoutes;
+  }
+
+  return $route;
+}
 
 // ############################# NOTIFICATION #############################
 // $GLOBALS['notification'] = [];
@@ -308,8 +350,9 @@ Hook::register('sidebar.prepend', function ($route) {
 // 	]
 // );
 
-############################# RUN - SIDEBAR #############################
+############################# SET SIDEBAR #############################
 Hook::run('sidebar.append', [
+  'id' => 'backend.dashboard',
   'icon' => 'home',
   'text' => t('sidebar.dashboard'),
   'name' => 'dashboard',
@@ -317,6 +360,7 @@ Hook::run('sidebar.append', [
 ]);
 
 Hook::run('sidebar.append', [
+  'id' => 'backend.profile',
   'icon' => 'user-circle',
   'label' => function () {
     $notifications_count = User::get()->notifications_count;
@@ -328,18 +372,21 @@ Hook::run('sidebar.append', [
 ]);
 
 Hook::run('sidebar.append', [
+  'id' => 'backend.page-separator',
   'text' => t('sidebar.content'),
   'isSeparator' => true,
   'name' => 'page'
 ]);
 
 Hook::run('sidebar.append', [
+  'id' => 'backend.page',
   'icon' => 'file-text',
   'text' => t('sidebar.pages'),
   'name' => 'page'
 ]);
 
 Hook::run('sidebar.append', [
+  'id' => 'backend.comment',
   'icon' => 'message',
   'label' => function () {
     $count = \module\backend\model\Comment::getInstance()->countUnapprovedComments();
@@ -350,24 +397,28 @@ Hook::run('sidebar.append', [
 ]);
 
 Hook::run('sidebar.append', [
+  'id' => 'backend.menu',
   'icon' => 'menu-2',
   'text' => t('sidebar.menu'),
   'name' => 'menu'
 ]);
 
 Hook::run('sidebar.append', [
+  'id' => 'backend.translation',
   'icon' => 'world',
   'text' => t('sidebar.translations'),
   'name' => 'translation'
 ]);
 
 Hook::run('sidebar.append', [
+  'id' => 'backend.user-separator',
   'text' => t('sidebar.administration'),
   'isSeparator' => true,
   'name' => 'user'
 ]);
 
 Hook::run('sidebar.append', [
+  'id' => 'backend.feedback',
   'icon' => 'message-circle',
   'label' => function () {
     $count = \module\backend\model\Feedback::getInstance()->countUnreadContacts();
@@ -378,14 +429,19 @@ Hook::run('sidebar.append', [
 ]);
 
 Hook::run('sidebar.append', [
+  'id' => 'backend.group',
   'icon' => 'users',
   'text' => t('sidebar.users'),
   'name' => [
-    t('sidebar.groups') => [
+    [
+      'id' => 'backend.group.list',
+      'text' => t('sidebar.groups'),
       'name' => 'group.list',
       'activeRoutes' => ['group.add', 'group.edit', 'group.translation.edit']
     ],
-    t('sidebar.users') => [
+    [
+      'id' => 'backend.user.list',
+      'text' => t('sidebar.users'),
       'name' => 'user.list',
       'activeRoutes' => ['user.add', 'user.edit']
     ]
@@ -393,24 +449,27 @@ Hook::run('sidebar.append', [
 ]);
 
 Hook::run('sidebar.append', [
+  'id' => 'backend.setting',
   'icon' => 'settings',
   'text' => t('sidebar.settings'),
   'name' => [
-    t('sidebar.main') => [
+    [
+      'id' => 'backend.setting.engine',
+      'text' => t('sidebar.main'),
       'name' => 'setting.section',
       'parameter' => ['section' => 'engine']
     ],
-    t('sidebar.admin') => [
+    [
+      'id' => 'backend.setting.backend',
+      'text' => t('sidebar.admin'),
       'name' => 'setting.section',
       'parameter' => ['section' => 'backend']
     ],
-    t('sidebar.site') => [
+    [
+      'id' => 'backend.setting.frontend',
+      'text' => t('sidebar.site'),
       'name' => 'setting.section',
       'parameter' => ['section' => 'frontend']
-    ],
-    t('sidebar.contacts') => [
-      'name' => 'setting.section',
-      'parameter' => ['section' => 'contact']
     ]
   ]
 ]);

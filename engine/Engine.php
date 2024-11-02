@@ -21,10 +21,12 @@ class Engine
   const REPOSITORY_URL = 'https://github.com/zakandaiev/php-admin-engine';
   const WEBSITE_URL = 'https://github.com/zakandaiev/php-admin-engine';
 
+  protected static $config = [];
+  protected static $debugData = [];
+  protected static $isDebug;
   protected static $timeStart;
   protected static $timeEnd;
   protected static $timeResult;
-  protected static $isDebug;
 
   public static function start()
   {
@@ -35,11 +37,10 @@ class Engine
       ini_set('display_errors', '1');
       ini_set('display_startup_errors', '1');
       error_reporting(E_ALL);
-
-      self::$timeStart = hrtime(true);
     }
 
-    $config = Config::get('engine');
+    self::$config = Config::get('engine');
+    self::$timeStart = hrtime(true);
 
     $isInstalled = Config::getProperty('isInstalled', 'engine') ?? false;
     if (!$isInstalled) {
@@ -56,8 +57,8 @@ class Engine
     I18n::initialize();
     Router::initialize();
 
-    $config['isReady'] = true;
-    Config::set('engine', $config);
+    self::$config['isReady'] = true;
+    Config::set('engine', self::$config);
 
     Router::watch();
   }
@@ -66,12 +67,33 @@ class Engine
   {
     Database::finalize();
 
-    if (self::$isDebug) {
-      self::$timeEnd = hrtime(true);
-      self::$timeResult = self::$timeEnd - self::$timeStart;
-      self::$timeResult /= 1e+6; // convert ns to ms
+    self::$timeEnd = hrtime(true);
+    self::$timeResult = self::$timeEnd - self::$timeStart;
+    self::$timeResult /= 1e+6; // convert ns to ms
+    self::addDebugData('Total execution time: ' . self::$timeResult . ' ms');
 
-      echo PHP_EOL . '<!-- Execution time: ' . self::$timeResult . ' ms -->';
+    self::renderDebugData();
+  }
+
+  public static function addDebugData($data)
+  {
+    self::$debugData[] = $data;
+  }
+
+  protected static function renderDebugData()
+  {
+    if (!self::$isDebug) {
+      return false;
     }
+
+    foreach (self::$debugData as $key => $data) {
+      echo "<!-- $data -->";
+
+      if (isset(self::$debugData[$key + 1])) {
+        echo "\n\n";
+      }
+    }
+
+    return true;
   }
 }
