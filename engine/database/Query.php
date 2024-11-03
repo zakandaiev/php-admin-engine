@@ -434,9 +434,14 @@ class Query
       function ($matches) {
         $param = $matches[0];
         $bindingParamKey = ltrim($param, ':');
-        $bindingValue = $this->binding[$bindingParamKey] ?? $param;
+        $bindingValue = $param;
+        if (is_scalar($this->binding[$bindingParamKey])) {
+          $bindingValue = $this->binding[$bindingParamKey] ?? 'null';
+        } else if (is_null($this->binding[$bindingParamKey])) {
+          $bindingValue = 'null';
+        }
 
-        if (is_string($bindingValue)) {
+        if (is_string($bindingValue) && $bindingValue !== 'null') {
           $bindingValue = "'$bindingValue'";
         }
 
