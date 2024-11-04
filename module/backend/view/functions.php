@@ -22,7 +22,7 @@ function getFormBox($table, $title, $column, $formHtml)
 
     foreach ($translations as $language) {
       $routeName = "$table.translation.edit";
-      $i18nTooltip = "$table.translation_edit";
+      $i18nTooltip = "$table.translation.edit";
 
       $html .= '<a href="' . routeLink($routeName, ['id' => @$column->id, 'language' => $language]) . '" data-tooltip="top" title="' . t($i18nTooltip, t("i18n.$language")) . '">';
       $html .= '<img class="d-inline-block w-1em h-1em vertical-align-middle radius-round" src="' . pathResolveUrl(Asset::url(), lang('icon', $language)) . '" alt="' . $language . '">&nbsp;';
@@ -53,7 +53,7 @@ function getFormBox($table, $title, $column, $formHtml)
 ############################# TABLE BUILDER #############################
 function getColumnToggle($table, $columnName, $columnValue, $column)
 {
-  $tooltip = $column->$columnName ? t("$table.list.deactivate_this_$table") : t("$table.list.activate_this_$table");
+  $tooltip = $column->$columnName ? t("$table.list.deactivate_this") : t("$table.list.activate_this");
 
   $html = '<button type="button" data-action="' . Form::edit($table, $column->id, true) . '" data-body="' . textHtml(json_encode([$columnName => !$columnValue])) . '" data-redirect="this" data-tooltip="top" title="' . $tooltip . '" class="table__action">';
   $html .= iconBoolean($columnValue);

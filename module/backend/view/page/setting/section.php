@@ -12,9 +12,9 @@ $columnHookData = Hook::getData('setting.column') ?? [];
 $columns = [];
 foreach (settingGet($section) as $key => $value) {
   $columns[$key] = [
-    'label' => $columnHookData[$key]['label'] ?? t('setting.column.' . $key),
-    'placeholder' => $columnHookData[$key]['placeholder'] ?? t('setting.column.' . $key . '_placeholder'),
-    'value' => site($key, @$columnHookData[$key]['module'])
+    'label' => $columnHookData[$key]['label'] ?? t('setting.column.' . $key . '.label'),
+    'placeholder' => $columnHookData[$key]['placeholder'] ?? t('setting.column.' . $key . '.placeholder'),
+    'value' => site($key, @$columnHookData[$key]['module'] ?? $section)
   ];
 
   if (in_array($key, ['favicon', 'logo', 'logo_alt', 'placeholder_avatar', 'placeholder_image'])) {
@@ -43,7 +43,10 @@ $form = new BuilderForm([
   'attributes' => [
     'data-validate'
   ],
-  'columns' => $columns
+  'columns' => $columns,
+  'submitButton' => t('setting.' . $section . '.submit_button'),
+  'submitError' => t('setting.' . $section . '.submit_error'),
+  'submitSuccess' => t('setting.' . $section . '.submit_success')
 ]);
 ?>
 

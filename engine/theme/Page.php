@@ -138,7 +138,7 @@ class Page
           return $seoKeywords;
         }
       case 'seo_image': {
-          $image = self::get('seo_image') ?? self::get('image') ?? site('logo');
+          $image = self::get('seo_image') ?? self::get('image') ?? site('logo') ?? site('logo_alt');
 
           $seoImage = !empty($image) ? site('url') . '/' . $image : null;
 

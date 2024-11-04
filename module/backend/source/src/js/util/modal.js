@@ -21,9 +21,17 @@ function openModal(modal) {
   }
 
   document.querySelectorAll('.modal').forEach((m) => {
-    if (m === modal) {
+    if (m.id === modal.id) {
+      if (!m.classList.contains('active')) {
+        m.dispatchEvent(new CustomEvent('open', { bubbles: true }));
+      }
+
       m.classList.add('active');
     } else {
+      if (m.classList.contains('active')) {
+        m.dispatchEvent(new CustomEvent('close', { bubbles: true }));
+      }
+
       m.classList.remove('active');
     }
   });
@@ -39,9 +47,19 @@ function openModal(modal) {
 
 function closeModal(modal = null) {
   if (modal) {
+    if (modal.classList.contains('active')) {
+      modal.dispatchEvent(new CustomEvent('close', { bubbles: true }));
+    }
+
     modal.classList.remove('active');
   } else {
-    document.querySelectorAll('.modal').forEach((m) => m.classList.remove('active'));
+    document.querySelectorAll('.modal').forEach((m) => {
+      if (m.classList.contains('active')) {
+        m.dispatchEvent(new CustomEvent('close', { bubbles: true }));
+      }
+
+      m.classList.remove('active');
+    });
   }
 
   document.body.classList.remove('modal-open');
@@ -119,7 +137,7 @@ function createModal(title, options = {}) {
 
     modal.appendChild(modalFooter);
 
-    modal.instance = {
+    modal.modal = {
       open: () => openModal(modal),
       close: () => closeModal(modal),
       destroy: () => {

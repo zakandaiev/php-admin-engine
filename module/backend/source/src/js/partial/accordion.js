@@ -2,14 +2,12 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('click', (event) => {
     const accordion = event.target.closest('.accordion');
     const isBodyClick = event.target.closest('.accordion__body');
-
     if (!accordion || isBodyClick) {
       return false;
     }
 
     const header = accordion.querySelector('.accordion__header');
     const body = accordion.querySelector('.accordion__body');
-
     if (!header || !body) {
       return false;
     }
@@ -45,8 +43,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.querySelectorAll('.accordion').forEach((accordion) => {
     const body = accordion.querySelector('.accordion__body');
+    if (!body) {
+      return false;
+    }
 
-    if (!body || !accordion.hasAttribute('data-active')) {
+    const observer = new MutationObserver(() => {
+      if (!accordion.classList.contains('accordion_active')) {
+        return false;
+      }
+
+      body.style.height = 'auto';
+      const bodyHeight = body.scrollHeight;
+
+      body.style.height = '0px';
+      body.style.height = `${bodyHeight}px`;
+    });
+
+    observer.observe(accordion, {
+      childList: true,
+      subtree: true,
+    });
+
+    if (!accordion.hasAttribute('data-active')) {
       return false;
     }
 

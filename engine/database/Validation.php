@@ -153,6 +153,31 @@ abstract class Validation
     return @$this->column[$columnName]['value'];
   }
 
+  public function setColumnProperty($columnName, $propertyName, $value = null)
+  {
+    if (!$this->hasColumn($columnName)) {
+      return false;
+    }
+
+    $this->column[$columnName][$propertyName] = $value;
+
+    return true;
+  }
+
+  public function hasColumnProperty($columnName, $propertyName)
+  {
+    if (!$this->hasColumn($columnName)) {
+      return false;
+    }
+
+    return isset($this->column[$columnName][$propertyName]);
+  }
+
+  public function getColumnProperty($columnName, $propertyName)
+  {
+    return @$this->column[$columnName][$propertyName];
+  }
+
   public function setColumnKeysToValidate($value = null)
   {
     $this->columnKeysToValidate = $value ?? [];
@@ -172,6 +197,10 @@ abstract class Validation
 
   public function setColumnKeyToValidate($columnName)
   {
+    if (in_array($columnName, $this->columnKeysToValidate)) {
+      return false;
+    }
+
     $this->columnKeysToValidate[] = $columnName;
 
     return true;
@@ -206,6 +235,10 @@ abstract class Validation
       return true;
     }
 
+    if (in_array($columnName, $this->error)) {
+      return false;
+    }
+
     $this->error[] = [
       'column' => $columnName,
       'validation' => $validation,
@@ -227,26 +260,26 @@ abstract class Validation
 
   public function validate()
   {
-    foreach ($this->column as $columnName => $columnDefinition) {
+    foreach ($this->getColumn() as $columnName => $columnDefinition) {
       $result = $this->validateColumn($columnName);
 
       if ($result !== true) {
-        $this->error[] = $result;
+        $this->setError($result);
       }
     }
 
-    return empty($this->error) ? true : false;
+    return $this->hasError();
   }
 
   public function validateColumn($columnName)
   {
     $result = true;
 
-    if (!empty($this->columnKeysToValidate) && !in_array($columnName, $this->columnKeysToValidate)) {
+    if ($this->hasColumnKeysToValidate() && !$this->hasColumnKeyToValidate($columnName)) {
       return $result;
     }
 
-    $columnDefinition = @$this->column[$columnName];
+    $columnDefinition = $this->getColumn($columnName);
     if (!$columnDefinition) {
       return $result;
     }
@@ -254,7 +287,7 @@ abstract class Validation
     $columnType = $columnDefinition['type'];
     $columnValue = @$columnDefinition['value'];
 
-    $this->column[$columnName]['value'] = $columnValue;
+    $this->setColumnValue($columnName, $columnValue);
 
     if (@$columnDefinition['required'] !== true && $columnValue === null) {
       return $result;
@@ -273,7 +306,7 @@ abstract class Validation
       if ($validationResult !== true) {
         $result = [
           'column' => $columnName,
-          'validation' => $columnDefinition[$validationName . 'Message'] ?? I18n::translate("{$this->table}.$columnName.validation.$validationName", $columnDefinition),
+          'validation' => $columnDefinition['message'][$validationName] ?? I18n::translate("{$this->table}.$columnName.validation.$validationName", $columnDefinition),
           'value' => $columnValue
         ];
 
@@ -284,7 +317,7 @@ abstract class Validation
     return $result;
   }
 
-  protected function validateRequired($type, $rule, $value)
+  protected function validateRequired($type, $rule, $value, $column)
   {
     if ($rule !== true && empty($value)) {
       return true;
@@ -299,6 +332,10 @@ abstract class Validation
         }
       case 'number': {
           $result = is_numeric($value);
+          break;
+        }
+      case 'file': {
+          $result = $column['isUpload'] || !empty($value) ? true : false;
           break;
         }
       default: {
@@ -493,7 +530,7 @@ abstract class Validation
       return true;
     }
 
-    $fileExtension = strtolower(File::getExtension($value));
+    $fileExtension = strtolower(File::getExtension(!empty($value) ? $value : @$column['toUpload']['name']));
     if (!in_array($fileExtension, $rule)) {
       return false;
     }
@@ -517,7 +554,7 @@ abstract class Validation
       return true;
     }
 
-    return $value['size'] > $rule ? false : true;
+    return $column['toUpload']['size'] > $rule ? false : true;
   }
 
   protected function validateIsArray($type, $rule, $value)

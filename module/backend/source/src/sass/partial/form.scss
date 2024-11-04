@@ -398,11 +398,76 @@ input[type="range"] {
   // .form__input
   &__input {
     position: relative;
-    display: flex;
-    gap: 1rem;
+    display: block;
 
     & > * {
       width: 100%;
+    }
+
+    & > table  {
+      border-collapse: initial;
+
+      th, td {
+        padding: 0.75rem 1.4rem;
+        line-height: 1.215;
+        border-left: var(--border);
+
+        &:last-child {
+          border-right: var(--border);
+        }
+      }
+
+      & > thead > tr {
+        & > * {
+          padding: 0.5rem 1.4rem;
+        }
+
+        &:first-child {
+          & > * {
+            border-top: var(--border);
+          }
+
+          & > *:first-child {
+            border-top-left-radius: var(--radius-xs);
+          }
+
+          & > *:last-child {
+            border-top-right-radius: var(--radius-xs);
+          }
+        }
+
+        &:last-child {
+          & > *:first-child {
+            border-bottom-left-radius: var(--radius-xs);
+          }
+
+          & > *:last-child {
+            border-bottom-right-radius: var(--radius-xs);
+          }
+        }
+      }
+
+      &:has(tbody tr) > thead > tr:last-child > *:first-child {
+        border-bottom-left-radius: 0;
+      }
+
+      &:has(tbody tr) > thead > tr:last-child > *:last-child {
+        border-bottom-right-radius: 0;
+      }
+
+      & > tbody > tr:last-child {
+        & > * {
+          border-bottom: var(--border);
+        }
+
+        & > *:first-child {
+          border-bottom-left-radius: var(--radius-xs);
+        }
+
+        & > *:last-child {
+          border-bottom-right-radius: var(--radius-xs);
+        }
+      }
     }
   }
 
@@ -467,6 +532,20 @@ input[type="range"] {
       & > input, & > textarea, & > select {
         border-color: var(--color-error);
       }
+
+      & > table {
+        th, td {
+          border-color: var(--color-error);
+        }
+
+        & > thead > tr:first-child > * {
+          border-top-color: var(--color-error);
+        }
+
+        & > tbody > tr:last-child > * {
+          border-bottom-color: var(--color-error);
+        }
+      }
     }
   }
 
@@ -475,6 +554,20 @@ input[type="range"] {
     & > .form__input {
       & > input, & > textarea, & > select {
         border-color: var(--color-success);
+      }
+
+      & > table {
+        th, td {
+          border-color: var(--color-success);
+        }
+
+        & > thead > tr:first-child > * {
+          border-top-color: var(--color-success);
+        }
+
+        & > tbody > tr:last-child > * {
+          border-bottom-color: var(--color-success);
+        }
       }
     }
   }
@@ -488,7 +581,7 @@ input[type="range"] {
   // .form__column_required
   &__column_required {
     &  > .form__label::after {
-      content: "*";
+      content: " *";
       color: var(--color-error);
     }
   }

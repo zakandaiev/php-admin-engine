@@ -64,7 +64,7 @@ class DataAction {
       );
 
       if (data.status === 'success') {
-        const redirectResult = this.successRedirect(data);
+        const redirectResult = this.successRedirect(data.data);
         if (!redirectResult) {
           this.successCounters();
           this.successRemoveNodes();
@@ -154,7 +154,15 @@ class DataAction {
     if (this.dataRedirect === 'this') {
       document.location.reload();
     } else if (this.dataRedirect) {
-      window.location.href = decodeURI(this.dataRedirect).replaceAll(/(\$[\w\d\-_]+)/g, data?.data);
+      let redirectLink = decodeURI(this.dataRedirect);
+
+      if (typeof data === 'object' && data !== null) {
+        redirectLink = redirectLink.replaceAll(/(\$[\w\d\-_]+)/g, (match) => data[match.slice(1)] || match);
+      } else {
+        redirectLink = redirectLink.replaceAll(/(\$[\w\d\-_]+)/g, data);
+      }
+
+      window.location.href = redirectLink;
     }
 
     return this.dataRedirect ? true : false;

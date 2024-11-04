@@ -6,52 +6,314 @@
   "breadcrumb": {
     "home": "Home"
   },
+  "date": {
+    "last_edited": "Last edit: {v}"
+  },
   "pagination": {
     "total": "Total"
   },
-  "sidebar": {
-    "dashboard": "Dashboard",
-    "profile": "Profile",
-    "content": "Content",
-    "pages": "Pages",
-    "comments": "Comments",
-    "menu": "Menu",
-    "translations": "Translations",
-    "administration": "Administration",
-    "feedback": "Feedback",
-    "users": "Users",
-    "groups": "Groups",
-    "settings": "Settings",
-    "main": "Main",
-    "site": "Site",
-    "contacts": "Contacts"
-  },
+  "header": {},
   "navbar": {
     "open_site": "Open site"
   },
+  "dashboard": {
+    "title": "Dashboard",
+    "sidebar": "Dashboard"
+  },
+  "content": {
+    "sidebar": "Content"
+  },
   "profile": {
+    "title": "Profile",
+    "sidebar": "Profile",
     "dropdown": {
       "profile": "Profile",
       "settings": "Settings",
       "logout": "Log out"
     }
   },
+  "page": {
+    "title": "Pages",
+    "sidebar": "Pages"
+  },
+  "comment": {
+    "title": "Comments",
+    "sidebar": "Comments"
+  },
+  "menu": {
+    "title": "Menu",
+    "sidebar": "Menu"
+  },
+  "translation": {
+    "sidebar": "Translations",
+    "plural": "{s} translation | {s} translations | {s} translations",
+    "list": {
+      "title": "Translations",
+      "placeholder": "There are no translations yet",
+      "add": "Add translation",
+      "edit": "Edit this translation",
+      "delete": "Delete this translation",
+      "delete_confirm": "Do you want to delete this translation?"
+    },
+    "add": {
+      "title": "Add translation",
+      "submit_button": "Add translation",
+      "submit_error": "Error",
+      "submit_success": "Translation created"
+    },
+    "edit": {
+      "title": "Edit translation",
+      "submit_error": "Error",
+      "submit_button": "Edit translation",
+      "submit_success": "Translation edited"
+    },
+    "column": {
+      "module": {
+        "label": "Module",
+        "placeholder": "Select module"
+      },
+      "language": {
+        "label": "Language code",
+        "placeholder": "For example: en"
+      },
+      "region": {
+        "label": "Language region",
+        "placeholder": "For example: us"
+      },
+      "icon": {
+        "label": "Language icon",
+        "placeholder": "Requires .png format"
+      },
+      "translation": {
+        "label": "Translation",
+        "placeholder": "Requires JSON format"
+      }
+    }
+  },
+  "administration": {
+    "sidebar": "Administration"
+  },
+  "feedback": {
+    "title": "Feedback",
+    "sidebar": "Feedback"
+  },
   "group": {
+    "sidebar": "Groups",
     "plural": "{s} group | {s} groups | {s} groups",
     "list": {
-      "title": "Groups"
+      "title": "Groups",
+      "placeholder": "There are no groups yet",
+      "add": "Add group",
+      "edit": "Edit this group",
+      "delete": "Delete this group",
+      "delete_confirm": "Do you want to delete this group?",
+      "activate_this": "Activate this group",
+      "deactivate_this": "Deactivate this group"
+    },
+    "add": {
+      "title": "Add group",
+      "submit_button": "Add group",
+      "submit_error": "Error",
+      "submit_success": "Group created"
+    },
+    "edit": {
+      "title": "Edit group",
+      "submit_error": "Error",
+      "submit_button": "Edit group",
+      "submit_success": "Group edited"
+    },
+    "translation": {
+      "title": "Edit group translation",
+      "edit": "Edit group translation for {v} language",
+      "submit_error": "Error",
+      "submit_button": "Edit group translation",
+      "submit_success": "Group translation edited"
+    },
+    "column": {
+      "name": {
+        "label": "Name",
+        "placeholder": "Name"
+      },
+      "translations": {
+        "label": "Translations",
+        "placeholder": "Translations"
+      },
+      "count_routes": {
+        "label": "Routes count",
+        "placeholder": "Routes count"
+      },
+      "count_users": {
+        "label": "Users count",
+        "placeholder": "Users count"
+      },
+      "date_created": {
+        "label": "Date created",
+        "placeholder": "Date created"
+      },
+      "is_enabled": {
+        "label": "Enabled",
+        "placeholder": "Enabled"
+      },
+      "access_all": {
+        "label": "Access all",
+        "placeholder": "Access all"
+      },
+      "route": {
+        "label": "Routes",
+        "placeholder": "Select routes"
+      },
+      "user_id": {
+        "label": "Users",
+        "placeholder": "Select users"
+      }
     }
   },
   "user": {
+    "sidebar": "Users",
     "plural": "{s} user | {s} users | {s} users",
     "list": {
-      "title": "Users"
+      "title": "Users",
+      "placeholder": "There are no users yet",
+      "add": "Add user",
+      "edit": "Edit this user",
+      "delete": "Delete this user",
+      "delete_confirm": "Do you want to delete this user?",
+      "activate_this": "Activate this user",
+      "deactivate_this": "Deactivate this user"
+    },
+    "add": {
+      "title": "Add user",
+      "submit_button": "Add user",
+      "submit_error": "Error",
+      "submit_success": "User created"
+    },
+    "edit": {
+      "title": "Edit user",
+      "submit_button": "Edit user",
+      "submit_error": "Error",
+      "submit_success": "User edited"
+    },
+    "column": {
+      "name": {
+        "label": "Name",
+        "placeholder": "Name"
+      },
+      "count_groups": {
+        "label": "Groups count",
+        "placeholder": "Groups count"
+      },
+      "date_created": {
+        "label": "Date created",
+        "placeholder": "Date created"
+      },
+      "auth_date": {
+        "label": "Last auth",
+        "placeholder": "Last auth"
+      },
+      "is_enabled": {
+        "label": "Enabled",
+        "placeholder": "Enabled"
+      },
+      "group_id": {
+        "label": "Groups",
+        "placeholder": "Select groups"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Email"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Password"
+      },
+      "avatar": {
+        "label": "Avatar",
+        "placeholder": "Avatar"
+      },
+      "setting": {
+        "label": "Settings",
+        "placeholder": "Settings"
+      }
     }
   },
-  "product": {
-    "plural": "{s} product | {s} products | {s} products",
-    "list": {
-      "title": "Products"
+  "setting": {
+    "sidebar": {
+      "setting": "Settings",
+      "engine": "Main",
+      "backend": "Admin",
+      "frontend": "Site"
+    },
+    "engine": {
+      "title": "Main",
+      "submit_button": "Save settings",
+      "submit_error": "Error",
+      "submit_success": "Settings saved"
+    },
+    "backend": {
+      "title": "Admin",
+      "submit_button": "Save settings",
+      "submit_error": "Error",
+      "submit_success": "Settings saved"
+    },
+    "frontend": {
+      "title": "Site",
+      "submit_button": "Save settings",
+      "submit_error": "Error",
+      "submit_success": "Settings saved"
+    },
+    "column": {
+      "language": {
+        "label": "Language",
+        "placeholder": "Select default language"
+      },
+      "enable_registration": {
+        "label": "Enable registration",
+        "placeholder": "Enable registration"
+      },
+      "enable_password_restore": {
+        "label": "Enable password restore",
+        "placeholder": "Enable password restore"
+      },
+      "moderate_comments": {
+        "label": "Moderate comments",
+        "placeholder": "Moderate comments"
+      },
+      "no_index_no_follow": {
+        "label": "Set noindex and nofollow for all pages",
+        "placeholder": "Set noindex and nofollow for all pages"
+      },
+      "name": {
+        "label": "Site name",
+        "placeholder": "Site name"
+      },
+      "description": {
+        "label": "Site description",
+        "placeholder": "Site short description"
+      },
+      "pagination_limit": {
+        "label": "Pagination limit",
+        "placeholder": "Pagination limit"
+      },
+      "favicon": {
+        "label": "Favicon",
+        "placeholder": "Favicon"
+      },
+      "logo": {
+        "label": "Logo",
+        "placeholder": "Logo"
+      },
+      "logo_alt": {
+        "label": "Logo alternative",
+        "placeholder": "Logo alternative"
+      },
+      "placeholder_avatar": {
+        "label": "Placeholder for avatars",
+        "placeholder": "Placeholder for avatars"
+      },
+      "placeholder_image": {
+        "label": "Placeholder for images",
+        "placeholder": "Placeholder for images"
+      }
     }
   }
 }

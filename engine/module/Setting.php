@@ -51,23 +51,23 @@ class Setting
     $currentLanguage = site('language_current');
     $siteLanguage = site('language');
 
-    $oldProperyValue = self::$setting->{$moduleName}->{$propertyName};
-    $newProperyValue = $data;
+    $oldPropertyValue = self::$setting->{$moduleName}->{$propertyName};
+    $newPropertyValue = $data;
 
     if (
-      is_object($oldProperyValue)
+      is_object($oldPropertyValue)
       && (
-        property_exists($oldProperyValue, $currentLanguage)
-        || property_exists($oldProperyValue, $siteLanguage)
+        property_exists($oldPropertyValue, $currentLanguage)
+        || property_exists($oldPropertyValue, $siteLanguage)
       )
     ) {
-      $oldProperyValue->$currentLanguage = $data;
-      $newProperyValue = $oldProperyValue;
+      $oldPropertyValue->$currentLanguage = $data;
+      $newPropertyValue = $oldPropertyValue;
     }
 
-    self::$setting->{$moduleName}->{$propertyName} = $newProperyValue;
+    self::$setting->{$moduleName}->{$propertyName} = $newPropertyValue;
 
-    self::update($moduleName, $propertyName, $newProperyValue);
+    self::update($moduleName, $propertyName, $newPropertyValue);
 
     return true;
   }

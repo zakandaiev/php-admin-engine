@@ -10,14 +10,14 @@ $table = new BuilderTable([
   // 'filter' => 'Group', TODO filter from model like Form
   'title' => $title,
   'data' => $groups,
-  'placeholder' => t('group.page.list.placeholder'),
+  'placeholder' => t('group.list.placeholder'),
   'actions' => [
     ['name' => t('group.list.add'), 'url' => routeLink('group.add')]
   ],
   'columns' => [
     'name' => [
       'type' => 'text',
-      'title' => t('group.column.name')
+      'title' => t('group.column.name.label')
     ],
     'translations' => [
       'type' => function ($value, $item) {
@@ -25,32 +25,32 @@ $table = new BuilderTable([
 
         return getColumnTranslations('group', $value, $item);
       },
-      'title' => t('group.column.translations')
+      'title' => t('group.column.translations.label')
     ],
     'count_routes' => [
       'type' => function ($value, $item) {
         if ($item->access_all) {
-          return t('group.column.access_all');
+          return t('group.column.access_all.label');
         }
 
         return $value;
       },
-      'title' => t('group.column.count_routes')
+      'title' => t('group.column.count_routes.label')
     ],
     'count_users' => [
       'type' => 'text',
-      'title' => t('group.column.count_users')
+      'title' => t('group.column.count_users.label')
     ],
     'date_created' => [
       'type' => 'dateWhen',
       'format' => 'd.m.Y H:i',
-      'title' => t('group.column.date_created')
+      'title' => t('group.column.date_created.label')
     ],
     'is_enabled' => [
       'type' => function ($value, $item) {
         return getColumnToggle('group', 'is_enabled', $value, $item);
       },
-      'title' => t('group.column.is_enabled')
+      'title' => t('group.column.is_enabled.label')
     ],
     'table_actions' => [
       'tdClassName' => 'table__actions',

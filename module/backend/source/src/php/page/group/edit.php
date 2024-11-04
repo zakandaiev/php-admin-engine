@@ -18,27 +18,30 @@ $form = new BuilderForm([
   ],
   'columns' => [
     'name' => [
-      'label' => t('group.column.name'),
-      'placeholder' => t('group.column.name_placeholder')
+      'label' => t('group.column.name.label'),
+      'placeholder' => t('group.column.name.placeholder')
     ],
     'route' => [
-      'label' => t('group.column.routes'),
-      'placeholder' => t('group.column.routes_placeholder'),
+      'label' => t('group.column.route.label'),
+      'placeholder' => t('group.column.route.placeholder'),
       'data-addable' => '/(any|delete|get|options|patch|post|put)@\/[0-9a-z\/\*\$\-\_]+/g'
     ],
     'user_id' => [
-      'label' => t('group.column.users'),
-      'placeholder' => t('group.column.users_placeholder')
+      'label' => t('group.column.user_id.label'),
+      'placeholder' => t('group.column.user_id.placeholder')
     ],
     'is_enabled' => [
-      'label' => t('group.column.is_enabled'),
-      'placeholder' => t('group.column.is_enabled_placeholder')
+      'label' => t('group.column.is_enabled.label'),
+      'placeholder' => t('group.column.is_enabled.placeholder')
     ],
     'access_all' => [
-      'label' => t('group.column.access_all'),
-      'placeholder' => t('group.column.access_all_placeholder')
+      'label' => t('group.column.access_all.label'),
+      'placeholder' => t('group.column.access_all.placeholder')
     ],
-  ]
+  ],
+  'submitButton' => t('group.edit.submit_button'),
+  'submitError' => t('group.edit.submit_error'),
+  'submitSuccess' => t('group.edit.submit_success')
 ]);
 ?>
 

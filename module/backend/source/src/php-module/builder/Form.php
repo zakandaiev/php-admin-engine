@@ -4,19 +4,27 @@ namespace module\backend\builder;
 
 use engine\i18n\I18n;
 use engine\theme\Form as ThemeForm;
+use engine\util\Hash;
 use engine\util\Path;
 use engine\util\Text;
 
 class Form
 {
+  protected $module;
   protected $action;
   protected $modelName;
   protected $itemId;
   protected $isMatchRequest;
   protected $formClassName;
-  protected $submitText;
-  protected $submitClassName;
-  protected $submitColClassName;
+  protected $submitButton;
+  protected $submitError;
+  protected $submitSuccess;
+  protected $submitButtonClass;
+  protected $submitColClass;
+  protected $modalId;
+  protected $modalTitle;
+  protected $modalCancel;
+  protected $modalClassName;
   protected $attributes = [];
   protected $columns = [];
   protected $values = [];
@@ -29,15 +37,21 @@ class Form
 
   public function __construct($interface = [])
   {
+    $this->module = @$interface['module'];
     $this->action = @$interface['action'];
     $this->modelName = @$interface['modelName'];
     $this->itemId = @$interface['itemId'];
     $this->isMatchRequest = $interface['isMatchRequest'] ?? false;
     $this->formClassName = @$interface['formClassName'];
-    $this->submitText = @$interface['submitText'];
-    $this->submitClassName = @$interface['submitClassName'];
-    $this->submitColClassName = @$interface['submitColClassName'];
-    $this->attributes = @$interface['attributes'];
+    $this->submitButton = @$interface['submitButton'];
+    $this->submitError = @$interface['submitError'];
+    $this->submitSuccess = @$interface['submitSuccess'];
+    $this->submitButtonClass = @$interface['submitButtonClass'];
+    $this->submitColClass = @$interface['submitColClass'];
+    $this->modalTitle = @$interface['modalTitle'];
+    $this->modalCancel = $interface['modalCancel'] ?? I18n::translate('form.cancel');
+    $this->modalClassName = @$interface['modalClassName'];
+    $this->attributes = @$interface['attributes'] ?? [];
     $this->columns = $interface['columns'] ?? [];
     $this->values = @$interface['values'];
 
@@ -50,19 +64,81 @@ class Form
       return $this;
     }
     $this->isModelActive = true;
+    $this->model->setSubmitMessage('error', $this->submitError);
+    $this->model->setSubmitMessage('success', $this->submitSuccess);
 
-    $this->token = ThemeForm::generateToken($this->action, $this->modelName, $this->itemId, $this->isMatchRequest);
+    $this->token = ThemeForm::generateToken($this->action, $this->modelName, $this->itemId, $this->isMatchRequest, $this->module);
     if (empty($this->token)) {
       return $this;
     }
     $this->isTokenValid = true;
 
+    $this->updateAttributes();
+
     return $this;
+  }
+
+  protected function loadModel()
+  {
+    $model = Path::class('model', $this->module) . '\\' . $this->modelName;
+
+    if (class_exists($model)) {
+      $values = (array)$this->values ?? [];
+
+      $modelInstance = $model::getInstance($this->module);
+      if (!$modelInstance) {
+        return new $model($values);
+      }
+
+      $modelInstance->setData($values);
+
+      return $modelInstance;
+    }
+
+    return null;
+  }
+
+  protected function updateAttributes()
+  {
+    $hasMessageError = false;
+    $hasMessage = false;
+
+    foreach ($this->attributes as $attribute) {
+      if (strpos($attribute, 'data-message-error') !== false) {
+        $hasMessageError = true;
+      }
+      if (strpos($attribute, 'data-message=') !== false) {
+        $hasMessage = true;
+      }
+    }
+
+    if ($this->submitError && !$hasMessageError) {
+      $this->attributes[] = 'data-message-error="' . $this->submitError . '"';
+    }
+    if ($this->submitSuccess && !$hasMessage) {
+      $this->attributes[] = 'data-message="' . $this->submitSuccess . '"';
+    }
+
+    return true;
   }
 
   public function isFormActiveAndValid()
   {
     return $this->isModelActive && $this->isTokenValid;
+  }
+
+  public function getModalId()
+  {
+    if (empty($this->modalId)) {
+      $this->modalId = 'modal-form-' . Hash::token();
+    }
+
+    return $this->modalId;
+  }
+
+  public function getColumns()
+  {
+    return array_merge_recursive($this->model->getColumn(), $this->columns);
   }
 
   public function render()
@@ -76,11 +152,28 @@ class Form
       return false;
     }
 
+    $formClass = isset($this->formClassName) ? $this->formClassName : 'row gap-xs';
+    $formAttributes = isset($this->attributes) ? implode(' ', $this->attributes) : '';
+
     $html = '';
 
-    $formClass = isset($this->formClassName) ? 'class="' . $this->formClassName . '"' : 'form row gap-xs';
-    $formAttributes = isset($this->attributes) ? implode(' ', $this->attributes) : '';
-    $html .= '<form action="' . $this->token . '" class="' . $formClass . '" ' . $formAttributes . '>';
+    if (isset($this->modalTitle)) {
+      $modalClass = isset($this->modalClassName) ? $this->modalClassName : 'modal_center';
+
+      $html .= '<div id="' . $this->getModalId() . '" data-action="' . $this->token . '" class="modal ' . $modalClass . '" ' . $formAttributes . '>';
+
+      $html .= '<header class="modal__header">';
+      $html .= '<span>' . $this->modalTitle . '</span>';
+      $html .= '<button type="button" class="modal__close" data-modal-close>';
+      $html .= '<i class="ti ti-x"></i>';
+      $html .= '</button>';
+      $html .= '</header>';
+
+      $html .= '<div class="modal__body">';
+      $html .= '<div class="form ' . $formClass . '">';
+    } else {
+      $html .= '<form action="' . $this->token . '" class="form ' . $formClass . '" ' . $formAttributes . '>';
+    }
 
     foreach ($this->columns as $columnName => $column) {
       $html .= $this->getColumnHtml($columnName);
@@ -88,29 +181,13 @@ class Form
 
     $html .= $this->getSubmitHtml();
 
-    $html .= '</form>';
-
-    return $html;
-  }
-
-  protected function loadModel()
-  {
-    $model = Path::class('model') . '\\' . $this->modelName;
-
-    if (class_exists($model)) {
-      $values = (array)$this->values ?? [];
-
-      $modelInstance = $model::getInstance();
-      if (!$modelInstance) {
-        return new $model($values);
-      }
-
-      $modelInstance->setData($values);
-
-      return $modelInstance;
+    if (isset($this->modalTitle)) {
+      $html .= '</div>';
+    } else {
+      $html .= '</form>';
     }
 
-    return null;
+    return $html;
   }
 
   protected function getColumnHtml($columnName)
@@ -140,15 +217,29 @@ class Form
 
   protected function getSubmitHtml()
   {
-    $submitText = isset($this->submitText) ? $this->submitText : I18n::translate('form.submit');
-    $submitClassName = isset($this->submitClassName) ? $this->submitClassName : 'btn btn_primary';
-    $submitColClassName = isset($this->submitColClassName) ? $this->submitColClassName : 'col-xs-12 form__submit';
+    $submitButton = isset($this->submitButton) ? $this->submitButton : I18n::translate('form.submit');
+    $submitButtonClass = isset($this->submitButtonClass) ? $this->submitButtonClass : 'btn btn_primary';
+    $submitColClass = isset($this->submitColClass) ? $this->submitColClass : 'col-xs-12';
 
-    $html = '<div class="' . $submitColClassName . '" data-form-type="submit">';
-    $html .= '<button type="submit" class="' . $submitClassName . '">';
-    $html .= $submitText;
-    $html .= '</button>';
-    $html .= '</div>';
+    $html = '';
+
+    if (isset($this->modalTitle)) {
+      $html .= '</div>';
+      $html .= '</div>';
+
+      $html .= '<footer class="modal__footer ' . $submitColClass . '" data-form-type="submit">';
+      $html .= '<button type="button" class="btn btn_cancel" data-modal-close>Cancel</button>';
+      $html .= '<button type="submit" class="' . $submitButtonClass . '">';
+      $html .= $submitButton;
+      $html .= '</button>';
+      $html .= '</footer>';
+    } else {
+      $html .= '<div class="form__submit ' . $submitColClass . '" data-form-type="submit">';
+      $html .= '<button type="submit" class="' . $submitButtonClass . '">';
+      $html .= $submitButton;
+      $html .= '</button>';
+      $html .= '</div>';
+    }
 
     return $html;
   }
@@ -166,6 +257,11 @@ class Form
     $inputType = $column['type'];
     $inputValue = $column['value'];
     $inputMultiple = @$column['isMultiple'] === true ? true : false;
+    if ($inputType === 'checkbox') {
+      $inputMultiple = true;
+    } else if ($inputType === 'radio') {
+      $inputMultiple = false;
+    }
 
     // SET LABEL
     if (isset($column['label'])) {
@@ -181,17 +277,17 @@ class Form
     $inputAttributes = [];
     foreach ($column as $attrName => $attrValue) {
       if (
-        in_array($attrName, ['className', 'folder', 'foreign', 'label', 'options', 'regex', 'isForeignDeleteSkip', 'isMultiple'])
+        in_array($attrName, ['className', 'folder', 'foreign', 'form', 'html', 'label', 'module', 'options', 'regex', 'isForeignDeleteSkip', 'isMultiple'])
         || ($attrName === 'required' && @$attrValue !== true)
-        || ($attrName === 'type' && in_array($inputType, ['date', 'datetime', 'month', 'time']))
-        || ($attrName === 'value' && in_array($inputType, ['checkbox', 'radio',  'select', 'textarea', 'wysiwyg']))
+        || ($attrName === 'type' && in_array($inputType, ['date', 'datetime', 'month', 'time', 'dataTable']))
+        || ($attrName === 'value' && in_array($inputType, ['checkbox', 'radio',  'select', 'textarea', 'wysiwyg', 'dataTable']))
       ) {
         continue;
       }
 
       switch ($attrName) {
         case 'name': {
-            if ($inputMultiple) {
+            if ($inputMultiple && !in_array($inputType, ['date', 'datetime', 'month', 'time'])) {
               $attrValue = $attrValue . '[]';
             }
 
@@ -254,7 +350,15 @@ class Form
                 $attrValue = json_encode($attrValue, JSON_UNESCAPED_SLASHES);
               }
             } else if ($inputType === 'datetime') {
-              $attrValue = str_replace(' ', 'T', $attrValue) . 'Z';
+              if ($inputMultiple) {
+                $attrValue = array_map(function ($v) {
+                  return str_replace(' ', 'T', $v) . 'Z';
+                }, $attrValue);
+              } else {
+                $attrValue = str_replace(' ', 'T', $attrValue) . 'Z';
+              }
+            } else if ($inputMultiple && in_array($inputType, ['date', 'month', 'time'])) {
+              $attrValue = implode(' - ', $attrValue);
             }
 
             break;
@@ -380,6 +484,39 @@ class Form
           $multiple = $inputMultiple ? ' multiple' : '';
 
           $inputHtml = '<input ' . implode(' ', $inputAttributes) . $multiple . '>';
+
+          break;
+        }
+      case 'html': {
+          $inputHtml = $column['html'];
+
+          break;
+        }
+      case 'dataTable': {
+          $dataTableForm = isClosure(@$column['form']) ? $column['form']($this->itemId, $this->values) : false;
+          if (!$dataTableForm || !$dataTableForm->isFormActiveAndValid()) {
+            break;
+          }
+
+          $columns = [];
+          foreach ($dataTableForm->getColumns() as $colName => $col) {
+            if (!isset($col['type'])) {
+              continue;
+            }
+
+            $columns[] = [
+              'name' => $colName,
+              'type' => $col['type'],
+              'label' => $col['label'] ?? $colName,
+              'options' => isClosure(@$col['options']) ? $col['options']($this->itemId, $this->values) : []
+            ];
+          }
+
+          $inputAttributes[] = 'data-column="' . Text::html(json_encode($columns)) . '"';
+
+          $inputHtml = '<textarea data-table="' . $dataTableForm->getModalId() . '" ' . implode(' ', $inputAttributes) . '>' . Text::html($inputValue ? json_encode($inputValue) : '') . '</textarea>';
+
+          $inputHtml .= $dataTableForm->renderHtml() ?? '';
 
           break;
         }

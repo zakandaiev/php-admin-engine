@@ -3,8 +3,9 @@
 use module\backend\builder\Form;
 
 $title = t('auth.registration.title');
-
 Page::set('title', $title);
+
+$logoImage = site('logo') ?? site('logo_alt');
 
 $form = new Form([
   'action' => 'register',
@@ -28,8 +29,8 @@ $form = new Form([
       'placeholder' => t('auth.column.password_placeholder')
     ],
   ],
-  'submitText' => t('auth.registration.submit'),
-  'submitClassName' => 'btn btn_primary btn_fit'
+  'submitButton' => t('auth.registration.submit'),
+  'submitButtonClass' => 'btn btn_primary btn_fit'
 ]);
 ?>
 
@@ -44,8 +45,8 @@ $form = new Form([
         <div class="col-xs-12 col-sm-10 col-md-6 col-lg-4 mx-auto">
 
           <div class="text-center">
-            <?php if (!empty(site('logo'))) : ?>
-              <img class="d-inline-block w-25 mb-2" src="<?= pathResolveUrl(null, site('logo')) ?>" data-src-dark="<?= pathResolveUrl(null, site('logo_alt')) ?>" alt="Logo">
+            <?php if (!empty($logoImage)) : ?>
+              <img class="d-inline-block h-8rem mb-2" src="<?= pathResolveUrl(null, $logoImage) ?>" alt="Logo">
             <?php else : ?>
               <h1 class="font-size-32 mb-2"><?= site('name') ?></h1>
             <?php endif; ?>

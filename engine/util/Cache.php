@@ -15,45 +15,42 @@ class Cache
 
   public static function set($key, $data = null, $lifetime = null)
   {
-    $path = Path::file('cache');
+    $name = md5($key);
+    $extension = trim(Config::getProperty('extension', 'cache'), '.');
 
-    if (!file_exists($path)) {
-      mkdir($path, 0755, true);
-    }
-
-    $key = md5($key);
-
-    $path = $path . '/' . $key . '.' . trim(Config::getProperty('extension', 'cache'), '.');
+    $path = Path::resolve(Path::file('cache'), $name, $extension);
 
     $content[self::CACHE_KEY['data']] = $data;
     $content[self::CACHE_KEY['expires']] = time() + intval($lifetime ?? Config::getProperty('cache', 'lifetime'));
 
     $content = serialize($content);
 
-    try {
-      file_put_contents($path, $content);
-    } catch (\Exception $error) {
-      throw new \Exception(sprintf('Cache error: %s.', $error->getMessage()));
-    }
+    File::createFile($path, $content);
 
-    $user_id = @User::get()->id ?? 'unlogged';
-    $user_ip = Request::ip();
     // TODO
-    // Log::write("Cache key: $key created by user ID: $user_id from IP: $user_ip", 'cache');
+    // $user_id = @User::get()->id ?? 'unlogged';
+    // $user_ip = Request::ip();
+    // Log::write("Cache key: $name created by user ID: $user_id from IP: $user_ip", 'cache');
 
     return true;
   }
 
   public static function get($key)
   {
-    $path = Path::file('cache') . '/' . md5($key) . '.' . trim(Config::getProperty('extension', 'cache'), '.');
+    $name = md5($key);
+    $extension = trim(Config::getProperty('extension', 'cache'), '.');
 
-    if (is_file($path)) {
-      $content = unserialize(file_get_contents($path));
+    $path = Path::resolve(Path::file('cache'), $name, $extension);
 
-      if (time() <= $content[self::CACHE_KEY['expires']]) {
-        return $content[self::CACHE_KEY['data']];
-      }
+    $content = File::getContent($path);
+    if (!$content) {
+      return false;
+    }
+
+    $content = unserialize($content);
+
+    if (time() <= $content[self::CACHE_KEY['expires']]) {
+      return $content[self::CACHE_KEY['data']];
     }
 
     return false;
@@ -61,15 +58,12 @@ class Cache
 
   public static function delete($key)
   {
-    $key = md5($key);
+    $name = md5($key);
+    $extension = trim(Config::getProperty('extension', 'cache'), '.');
 
-    $path = Path::file('cache') . '/' . $key . '.' . trim(Config::getProperty('extension', 'cache'), '.');
+    $path = Path::resolve(Path::file('cache'), $name, $extension);
 
-    if (!is_file($path)) {
-      return false;
-    }
-
-    unlink($path);
+    File::delete($path);
 
     $user_id = @User::get()->id ?? 'unlogged';
     $user_ip = Request::ip();

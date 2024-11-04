@@ -5,6 +5,7 @@ namespace engine\theme;
 use engine\Config;
 use engine\module\Module;
 use engine\router\Route;
+use engine\util\File;
 use engine\util\Hash;
 use engine\util\Path;
 use engine\util\Text;
@@ -141,10 +142,6 @@ class Asset
       return self::getContent($fileName, Module::getProperty('extends'));
     }
 
-    if (is_file($pathToFile)) {
-      return file_get_contents($pathToFile);
-    }
-
-    return null;
+    return File::getContent($pathToFile);
   }
 }

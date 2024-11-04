@@ -21,13 +21,16 @@ $form = new BuilderForm([
   ],
   'columns' => [
     'name' => [
-      'label' => t('group.column.name'),
-      'placeholder' => t('group.column.name_placeholder')
+      'label' => t('group.column.name.label'),
+      'placeholder' => t('group.column.name.placeholder')
     ],
     'language' => [
       'type' => 'hidden'
     ],
-  ]
+  ],
+  'submitButton' => t('group.translation.submit_button'),
+  'submitError' => t('group.translation.submit_error'),
+  'submitSuccess' => t('group.translation.submit_success')
 ]);
 ?>
 

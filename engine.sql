@@ -40,7 +40,8 @@ INSERT INTO `%prefix%_setting` (`module`, `name`, `value`) VALUES
 ('contact', 'email', '%contact_email%'),
 ('contact', 'phones', NULL),
 
-('analytic', 'google_tag', NULL);
+('analytic', 'google_analytics', NULL),
+('analytic', 'google_tag_manager', NULL);
 
 CREATE TABLE IF NOT EXISTS `%prefix%_user` (
   `id` VARCHAR(32) NOT NULL,

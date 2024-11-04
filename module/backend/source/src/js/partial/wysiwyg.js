@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
       wysiwyg.classList.contains('wysiwyg_fullscreen') ? minimize() : maximize();
     }
 
-    // IMAGE UPLOAD
+    // TODO IMAGE UPLOAD
     // const Image = editor.import('formats/image');
     // Image.className = 'image-fluid';
     // editor.register(Image, true);
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 	};
     // }
 
-    wysiwyg.instance = editor;
-    textarea.instance = editor;
+    wysiwyg.wysiwyg = editor;
+    textarea.wysiwyg = editor;
   });
 });

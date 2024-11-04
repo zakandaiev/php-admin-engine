@@ -25,9 +25,37 @@ class Upload
     return $this;
   }
 
+  public function set($key, $value = null)
+  {
+    $this->file[$key] = $value;
+
+    return true;
+  }
+
+  public function has($key)
+  {
+    return isset($this->file[$key]);
+  }
+
   public function get($key = null)
   {
     return isset($key) ? @$this->file[$key] : $this->file;
+  }
+
+  public function setName($name)
+  {
+    if (empty($this->file)) {
+      return false;
+    }
+
+    $oldName = $this->file['name'];
+    $newName = $name . '.' . $this->file['extension'];
+
+    $this->file['name'] = $newName;
+    $this->file['path'] = str_replace($oldName, $newName, $this->file['path']);
+    $this->file['pathFull'] = str_replace($oldName, $newName, $this->file['pathFull']);
+
+    return true;
   }
 
   public function execute()

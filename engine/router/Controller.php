@@ -22,7 +22,7 @@ abstract class Controller
   protected $view;
   protected $user;
 
-  protected static $instance;
+  protected static $instanceGroupedByModule;
 
   public function __construct()
   {
@@ -43,7 +43,7 @@ abstract class Controller
     $this->view = new View();
     $this->user = new User();
 
-    self::$instance = $this;
+    self::$instanceGroupedByModule[Module::getName()] = $this;
   }
 
   public function error($code = '404')
@@ -63,9 +63,9 @@ abstract class Controller
     return $this->model;
   }
 
-  public static function getInstance()
+  public static function getInstance($module = null)
   {
-    return self::$instance;
+    return @self::$instanceGroupedByModule[$module ?? Module::getName()];
   }
 
   protected function loadModel($modelName, $module = null)

@@ -37,7 +37,7 @@ class Path
     return null;
   }
 
-  public static function file($section = '', $module = null)
+  public static function file($section = '', $module = null, $withoutRootDir = null)
   {
     $module = $module ?? Module::getName();
     $section = strtolower($section);
@@ -46,15 +46,15 @@ class Path
       case 'engine':
       case 'module':
       case 'theme': {
-          return self::resolve(true, $section);
+          return self::resolve($withoutRootDir ? '' : true, $section);
         }
       case 'log':
       case 'upload': {
-          return self::resolve(true, trim(Config::getProperty('folder', $section), '/'));
+          return self::resolve($withoutRootDir ? '' : true, trim(Config::getProperty('folder', $section), '/'));
         }
       case 'controller':
       case 'model': {
-          return self::resolve(self::file('module'), $module, $section);
+          return self::resolve(self::file('module', null, $withoutRootDir), $module, $section);
         }
       case 'i18n':
       case 'form':
@@ -62,26 +62,26 @@ class Path
       case 'filter':
       case 'mail': {
           if ($module === 'frontend') {
-            return self::resolve(self::file('theme'), $module, $section);
+            return self::resolve(self::file('theme', null, $withoutRootDir), $module, $section);
           }
 
-          return self::resolve(self::file('module'), $module, $section);
+          return self::resolve(self::file('module', null, $withoutRootDir), $module, $section);
         }
       case 'view': {
           if ($module === 'frontend') {
-            return self::file('theme');
+            return self::file('theme', null, $withoutRootDir);
           }
 
-          return self::resolve(self::file('module'), $module, $section);
+          return self::resolve(self::file('module', null, $withoutRootDir), $module, $section);
         }
       case 'asset':
       case 'error':
       case 'page':
       case 'template': {
-          return self::resolve(self::file('view', $module), $section);
+          return self::resolve(self::file('view', $module, $withoutRootDir), $section);
         }
       case 'config': {
-          return self::resolve(self::file('module'), $module, 'config.php');
+          return self::resolve(self::file('module', null, $withoutRootDir), $module, 'config.php');
         }
       case 'temp': {
           if (Config::getProperty('isSharedHosting', 'engine') === true) {
@@ -93,14 +93,14 @@ class Path
           return sys_get_temp_dir();
         }
       case 'cache': {
-          return self::resolve(self::file('temp'), trim(Config::getProperty('folder', $section), '/'));
+          return self::resolve(self::file('temp', null, $withoutRootDir), trim(Config::getProperty('folder', $section), '/'));
         }
     }
 
-    return ROOT_DIR;
+    return $withoutRootDir ? '' : ROOT_DIR;
   }
 
-  public static function url($section = '', $module = null)
+  public static function url($section = '', $module = null, $withoutBaseUrl = null)
   {
     $urlBase = Request::base();
     $module = $module ?? Module::getName();
@@ -109,21 +109,21 @@ class Path
     switch ($section) {
       case 'module':
       case 'theme': {
-          return self::resolve($urlBase, $section);
+          return self::resolve($withoutBaseUrl ? '' : $urlBase, $section);
         }
 
       case 'view': {
           if ($module === 'frontend') {
-            return self::url('theme');
+            return self::url('theme', null, $withoutBaseUrl);
           }
 
-          return self::resolve(self::url('module'), $module, $section);
+          return self::resolve(self::url('module', null, $withoutBaseUrl), $module, $section);
         }
       case 'asset': {
-          return self::resolve(self::url('view', $module), $section);
+          return self::resolve(self::url('view', $module, $withoutBaseUrl), $section);
         }
       case 'upload': {
-          return self::resolve($urlBase, trim(Config::getProperty('folder', $section), '/'));
+          return self::resolve($withoutBaseUrl ? '' : $urlBase, trim(Config::getProperty('folder', $section), '/'));
         }
     }
 

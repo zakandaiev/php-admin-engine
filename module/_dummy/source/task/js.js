@@ -22,7 +22,7 @@ function js() {
       requireReturnsDefault: true,
       sourceMap: isDev,
     }),
-    multiInput.default(),
+    multiInput(),
   ];
 
   if (isProd) {

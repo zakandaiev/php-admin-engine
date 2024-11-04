@@ -15,6 +15,8 @@ registerPlugin(FilePondPluginImageExifOrientation);
 
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('input[type="file"]').forEach((input) => {
+    const formInput = input.closest('.form__input');
+
     const pond = create(input, {
       server: {
         load: async (uri, load, error) => {
@@ -44,6 +46,10 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
           const inputFiles = input.multiple ? JSON.parse(inputFilesRaw) : [inputFilesRaw];
           inputFiles.forEach((file) => {
+            if (!file || file === 'null') {
+              return false;
+            }
+
             files.push({
               source: file,
               options: {
@@ -83,7 +89,9 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    input.instance = pond;
+    if (formInput) {
+      formInput.pond = pond;
+    }
   });
 
   document.addEventListener('FilePond:updatefiles', (e) => {

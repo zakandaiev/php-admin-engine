@@ -3,11 +3,21 @@ import toast from '@/js/util/toast';
 
 // TODO
 // form behavior
-// refactor all
 
 class Form {
+  #registered = {};
+
   constructor(node, options = {}) {
     this.initializeVariables(node, options);
+  }
+
+  addEventListener(name, callback) {
+    if (!this.#registered[name]) this.#registered[name] = [];
+    this.#registered[name].push(callback);
+  }
+
+  triggerEvent(name, args) {
+    this.#registered[name]?.forEach((fnc) => fnc.apply(this, args));
   }
 
   initializeVariables(node, options = {}) {
@@ -38,6 +48,7 @@ class Form {
     this.dataReset = this.node.hasAttribute('data-reset') ? true : false;
     this.dataRedirect = this.node.getAttribute('data-redirect');
     this.dataMessage = this.node.getAttribute('data-message');
+    this.dataMessageError = this.node.getAttribute('data-message-error');
     this.api = {
       delayMs: this.node.getAttribute('data-delay')
         ? parseInt(this.node.getAttribute('data-delay'), 10)
@@ -58,6 +69,8 @@ class Form {
     this.insertLoader();
     this.initSubmit();
     this.listenSubmit();
+
+    this.node.form = this;
   }
 
   initValidation() {
@@ -157,26 +170,6 @@ class Form {
   listenSubmit() {
     this.node.addEventListener('submit', async (event) => {
       if (this.dataSubmitNative) {
-        this.node.querySelectorAll('[name]').forEach((input) => {
-          if (input.hasAttribute('data-picker') && input.instance && input.instance.selectedDates) {
-            const pickerType = input.getAttribute('data-picker');
-
-            if (!['date', 'datetime', 'month'].includes(pickerType)) {
-              return false;
-            }
-
-            if (input.hasAttribute('data-multiple') || input.hasAttribute('data-range')) {
-              input.value = input.instance.selectedDates.map((d) => this.getFormattedDate(pickerType, d)).join(' - ');
-            } else {
-              input.value = input.value.length && input.instance.selectedDates.length ? this.getFormattedDate(pickerType, input.instance.selectedDates[0]) : '';
-            }
-          }
-
-          if (this.dataUnsetNull && !input.value.length) {
-            input.setAttribute('disabled', true);
-          }
-        });
-
         return false;
       }
 
@@ -203,7 +196,7 @@ class Form {
       const isSuccess = data.code === 200 && data.status === 'success';
 
       if (isSuccess) {
-        const redirectResult = this.successRedirect(data);
+        const redirectResult = this.successRedirect(data.data);
         if (!redirectResult) {
           this.successResetForm();
 
@@ -212,10 +205,12 @@ class Form {
       } else {
         this.showErrors(data.data || []);
 
-        toast(data.message, data.status);
+        toast(this.dataMessageError || data.message, data.status);
       }
 
       this.enableForm(isSuccess);
+
+      this.triggerEvent('submit', [data]);
     });
   }
 
@@ -238,39 +233,11 @@ class Form {
       data.set(this.options.csrf.key, this.options.csrf.token);
     }
 
-    this.formatDates(data);
-
     if (this.dataUnsetNull) {
       this.unsetNullFormData(data);
     }
 
     return data;
-  }
-
-  formatDates(data) {
-    // eslint-disable-next-line
-    for (const pair of data.entries()) {
-      const name = pair[0];
-      const input = this.node.querySelector(`[name="${name}"]`);
-
-      if (input && input.hasAttribute('data-picker') && input.instance && input.instance.selectedDates) {
-        const pickerType = input.getAttribute('data-picker');
-
-        if (!['date', 'datetime', 'month'].includes(pickerType)) {
-          return false;
-        }
-
-        if (input.hasAttribute('data-multiple') || input.hasAttribute('data-range')) {
-          data.delete(name);
-          input.instance.selectedDates.forEach((d) => data.append(name, this.getFormattedDate(pickerType, d)));
-        } else {
-          data.set(
-            name,
-            input.value.length && input.instance.selectedDates.length ? this.getFormattedDate(pickerType, input.instance.selectedDates[0]) : '',
-          );
-        }
-      }
-    }
   }
 
   // eslint-disable-next-line
@@ -284,26 +251,6 @@ class Form {
         data.delete(name);
       }
     }
-  }
-
-  // eslint-disable-next-line
-  getFormattedDate(type, date) {
-    const d = new Date(date.valueOf());
-    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-
-    if (type === 'date') {
-      return d.toJSON().slice(0, 10);
-    }
-
-    if (type === 'datetime') {
-      return d.toJSON().slice(0, 19).replace('T', ' ');
-    }
-
-    if (type === 'month') {
-      return d.toJSON().slice(0, 7);
-    }
-
-    return false;
   }
 
   disableForm() {
@@ -368,7 +315,15 @@ class Form {
     if (this.dataRedirect === 'this') {
       document.location.reload();
     } else if (this.dataRedirect) {
-      window.location.href = decodeURI(this.dataRedirect).replaceAll(/(\$[\w\d\-_]+)/g, data?.data);
+      let redirectLink = decodeURI(this.dataRedirect);
+
+      if (typeof data === 'object' && data !== null) {
+        redirectLink = redirectLink.replaceAll(/(\$[\w\d\-_]+)/g, (match) => data[match.slice(1)] || match);
+      } else {
+        redirectLink = redirectLink.replaceAll(/(\$[\w\d\-_]+)/g, data);
+      }
+
+      window.location.href = redirectLink;
     }
 
     return this.dataRedirect ? true : false;
@@ -376,12 +331,141 @@ class Form {
 
   successResetForm() {
     if (this.dataReset) {
-      this.node.reset();
+      this.resetInputs();
 
       return true;
     }
 
     return false;
+  }
+
+  resetInputs() {
+    this.node.reset();
+
+    // RESET CUSTOM FILES
+    this.node.querySelectorAll('.form__input').forEach((formInput) => {
+      if (!formInput.pond) {
+        return false;
+      }
+
+      formInput.pond.setOptions({
+        files: [],
+      });
+    });
+
+    // RESET CUSTOM SELECTS
+    this.node.querySelectorAll('select').forEach((input) => {
+      if (input.slim) {
+        input.slim.setSelected([]);
+        return true;
+      }
+
+      input.selectedIndex = 0;
+    });
+
+    // RESET CUSTOM WYSIWYGS
+    this.node.querySelectorAll('[data-wysiwyg]').forEach((input) => {
+      if (input.wysiwyg) {
+        input.wysiwyg.root.innerHTML = '';
+
+        return true;
+      }
+
+      input.value = '';
+    });
+
+    return true;
+  }
+
+  resetForm() {
+    this.resetInputs();
+
+    setTimeout(() => {
+      this.enableForm(true);
+    }, 100);
+
+    return true;
+  }
+
+  populateInputs(data = []) {
+    data.forEach((item) => {
+      const input = this.node.querySelector(`[name*="${item.name}"]`);
+      if (!input) {
+        return false;
+      }
+
+      this.setInputValue(input, item.type, item.value);
+    });
+
+    setTimeout(() => {
+      this.enableForm(true);
+    }, 100);
+
+    return true;
+  }
+
+  setInputValue(input, type, value = '') {
+    if (type === 'boolean' || type === 'checkbox' || type === 'radio') {
+      this.node.querySelectorAll(`[name*="${input.name}"]`).forEach((i) => {
+        if (
+          value === i.value
+          || (value === true && i.value === 'true')
+          || (Array.isArray(value) && value.includes(i.value))
+        ) {
+          i.checked = true;
+        } else {
+          i.checked = false;
+        }
+      });
+    } else if (['date', 'datetime', 'month', 'time'].includes(type) && Array.isArray(value)) {
+      input.value = value.join(' - ');
+      input.dispatchEvent(new CustomEvent('change', { bubbles: true }));
+    } else if (type === 'file') {
+      const formInput = input.closest('.form__input');
+      if (!formInput || !formInput.pond) {
+        return false;
+      }
+
+      const files = [];
+
+      try {
+        const inputFiles = Array.isArray(value) ? value : [value];
+        inputFiles.forEach((file) => {
+          if (!file || file === 'null') {
+            return false;
+          }
+
+          files.push({
+            source: file,
+            options: {
+              type: 'local',
+            },
+          });
+        });
+      } catch (error) {
+        // do nothing
+      }
+
+      formInput.pond.setOptions({
+        files,
+      });
+    } else if (type === 'select') {
+      if (input.slim) {
+        input.slim.setSelected(value);
+      } else {
+        input.selectedIndex = value || 0;
+      }
+    } else if (type === 'wysiwyg') {
+      if (input.wysiwyg) {
+        input.wysiwyg.root.innerHTML = value;
+      } else {
+        input.value = value;
+      }
+    } else {
+      input.value = value;
+    }
+
+    return true;
   }
 }
 

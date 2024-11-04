@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
       menu.remove();
     }
 
-    dropdown.instance = instance;
+    dropdown.dropdown = instance;
   });
 
   // CLICK
@@ -28,11 +28,11 @@ document.addEventListener('DOMContentLoaded', () => {
     closeAllDropdowns(event.target);
 
     const trigger = event.target.closest('.dropdown');
-    if (!trigger || !trigger.instance) {
+    if (!trigger || !trigger.dropdown) {
       return false;
     }
 
-    trigger.instance.open();
+    trigger.dropdown.open();
   });
 
   // SCROLL
@@ -144,8 +144,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function closeAllDropdowns(clickTarget) {
     document.querySelectorAll('.dropdown').forEach((dropdown) => {
-      if (dropdown.instance) {
-        dropdown.instance.close(clickTarget);
+      if (dropdown.dropdown) {
+        dropdown.dropdown.close(clickTarget);
       }
     });
   }

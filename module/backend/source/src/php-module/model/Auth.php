@@ -54,6 +54,8 @@ class Auth extends Model
       return false;
     }
 
+    $this->modifyColumns();
+
     $this->validate();
     if ($this->hasError()) {
       return false;
@@ -84,6 +86,8 @@ class Auth extends Model
       return false;
     }
 
+    $this->modifyColumns();
+
     $this->validate();
     if ($this->hasError()) {
       return false;
@@ -109,6 +113,8 @@ class Auth extends Model
     if (!$this->hasTable()) {
       return false;
     }
+
+    $this->modifyColumns();
 
     $this->validate();
     if ($this->hasError()) {

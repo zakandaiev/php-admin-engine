@@ -2,37 +2,59 @@
 
 namespace engine\database;
 
+use engine\Config;
 use engine\database\Validation;
 use engine\http\Request;
-use engine\util\Date;
+use engine\module\Module;
 use engine\util\Upload;
 
 abstract class Model extends Validation
 {
-  protected static $instance;
   protected $columnForeign = [];
+  protected $submitMessage = [];
+
+  protected static $instanceGroupedByModule = [];
 
   public function __construct($columnData = null, $columnKeysToValidate = null)
   {
     $this->setData($columnData, $columnKeysToValidate);
 
-    self::$instance = $this;
+    self::$instanceGroupedByModule[Module::getName()] = $this;
   }
 
-  public static function getInstance()
+  public static function getInstance($module = null)
   {
-    return self::$instance;
+    return @self::$instanceGroupedByModule[$module ?? Module::getName()];
+  }
+
+  public function setSubmitMessage($key, $value = null)
+  {
+    $this->submitMessage[$key] = $value;
+
+    return true;
+  }
+
+  public function hasSubmitMessage($key)
+  {
+    return isset($this->submitMessage[$key]);
+  }
+
+  public function getSubmitMessage($key = null)
+  {
+    return isset($key) ? @$this->submitMessage[$key] : $this->submitMessage;
   }
 
   public function setData($columnData = null, $columnKeysToValidate = null)
   {
-    foreach ($this->column as $columnName => $column) {
-      $this->column[$columnName]['value'] = $this->formatColumnValue($column['type'], $columnData[$columnName] ?? $column['value'] ?? null, $columnName);
+    $primaryKey = $this->getPrimaryKey();
+    if ($primaryKey && is_array($columnKeysToValidate)) {
+      $columnKeysToValidate[] = $primaryKey;
     }
 
-    if (is_array($columnKeysToValidate)) {
-      $columnKeysToValidate[] = $this->getPrimaryKey();
-      $this->columnKeysToValidate = $columnKeysToValidate;
+    $this->setColumnKeysToValidate($columnKeysToValidate);
+
+    foreach ($this->getColumn() as $columnName => $column) {
+      $this->formatColumnValue($columnName, $column['type'], $columnData[$columnName] ?? $column['value'] ?? null, $column);
     }
 
     return $this;
@@ -40,28 +62,16 @@ abstract class Model extends Validation
 
   public function add()
   {
-    if (!$this->hasTable()) {
-      return false;
-    }
-
     return $this->processQuery(__FUNCTION__);
   }
 
   public function edit()
   {
-    if (!$this->hasTable()) {
-      return false;
-    }
-
     return $this->processQuery(__FUNCTION__);
   }
 
   public function delete()
   {
-    if (!$this->hasTable()) {
-      return false;
-    }
-
     return $this->processQuery(__FUNCTION__);
   }
 
@@ -147,41 +157,51 @@ abstract class Model extends Validation
     return $pkValue;
   }
 
-  protected function formatColumnValue($type, $value, $name)
+  protected function formatColumnValue($name, $type, $value, $column)
   {
+    $valueFormatted = $value === '' ? null : $value;
+
     if ($type === 'boolean') {
-      return $value === true || in_array($value, ['on', 'yes', '1', 'true']) ? true : false;
-    }
-
-    if ($type === 'number') {
-      return !empty($value) && is_numeric($value) ? floatval($value) : null;
-    }
-
-    if ($type === 'file') {
-      $this->column[$name]['isUpload'] = false;
-      $this->column[$name]['maxSize'] = $this->column[$name]['maxSize'] ?? Upload::getMaxSize();
-      $this->column[$name]['extensions'] = $this->column[$name]['extensions'] ?? Upload::getExtensions();
+      $valueFormatted = $value === true || in_array($value, ['on', 'yes', '1', 'true']) ? true : false;
+    } else if ($type === 'number') {
+      $valueFormatted = !empty($value) && is_numeric($value) ? floatval($value) : null;
+    } else if (in_array($type, ['date', 'datetime', 'month', 'time']) && @$column[$name]['isMultiple'] === true) {
+      $valueFormatted = !empty($value) ? explode(' - ', $value) : [];
+    } else if ($type === 'file') {
+      $this->setColumnProperty($name, 'isUpload', false);
+      $this->setColumnProperty($name, 'maxSize', $column[$name]['maxSize'] ?? Upload::getMaxSize());
+      $this->setColumnProperty($name, 'extensions', $column[$name]['extensions'] ?? Upload::getExtensions());
 
       $files = Request::files($name);
       if (
         (isset($files['tmp_name']) && !is_array($files['tmp_name']) && !empty($files['tmp_name']))
         || (isset($files['tmp_name']) && is_array($files['tmp_name']) && !empty($files['tmp_name'][0]))
       ) {
-        $this->column[$name]['isUpload'] = true;
-        $this->column[$name]['toUpload'] = $files;
+        $this->setColumnProperty($name, 'isUpload', true);
+        $this->setColumnProperty($name, 'toUpload', $files);
       }
-
-      return $value;
     }
 
-    $value = $value === '' ? null : $value;
+    $this->setColumnValue($name, $valueFormatted);
 
-    return $value;
+    return true;
   }
 
   protected function processQuery($action)
   {
-    if (!$this->hasTable() || empty($this->column)) {
+    if (!$this->hasTable()) {
+      if (Config::getProperty('isEnabled', 'debug')) {
+        $this->setSubmitMessage('error', 'Model table is empty');
+      }
+
+      return false;
+    }
+
+    if (empty($this->getColumn())) {
+      if (Config::getProperty('isEnabled', 'debug')) {
+        $this->setSubmitMessage('error', 'Model column list is empty');
+      }
+
       return false;
     }
 
@@ -194,13 +214,13 @@ abstract class Model extends Validation
 
     $table = $this->getTable();
     $pkName = $this->getPrimaryKey();
-    $pkValue = $this->hasItemId() ? $this->getItemId() : @$this->column[$pkName]['value'];
+    $pkValue = $this->hasItemId() ? $this->getItemId() : @$this->getColumnValue($pkName);
 
     $this->prepareForeignColumns();
     $this->prepareMediaColumns();
 
     $columnValues = [];
-    foreach ($this->column as $columnName => $column) {
+    foreach ($this->getColumn() as $columnName => $column) {
       if (isset($column['foreign']) || ($this->hasColumnKeysToValidate() && !$this->hasColumnKeyToValidate($columnName))) {
         continue;
       }
@@ -209,6 +229,10 @@ abstract class Model extends Validation
     }
 
     if (empty($columnValues)) {
+      if (Config::getProperty('isEnabled', 'debug')) {
+        $this->setSubmitMessage('error', 'Model column list is invalid');
+      }
+
       return false;
     }
 
@@ -240,7 +264,7 @@ abstract class Model extends Validation
 
   protected function modifyColumns()
   {
-    foreach ($this->column as $columnName => $column) {
+    foreach ($this->getColumn() as $columnName => $column) {
       if (isset($column['unsetNull']) && $column['unsetNull'] === true && (@$column['value'] === null || @$column['value'] === '')) {
         $this->unsetColumn($columnName);
         continue;
@@ -250,7 +274,7 @@ abstract class Model extends Validation
         continue;
       }
 
-      $modifiedValue = $column['modify'](@$column['value'], $column, $this->column);
+      $modifiedValue = $column['modify'](@$column['value'], $column, $this->getColumn());
 
       $this->setColumnValue($columnName, $modifiedValue);
     }
@@ -258,7 +282,7 @@ abstract class Model extends Validation
 
   protected function prepareForeignColumns()
   {
-    foreach ($this->column as $columnName => $column) {
+    foreach ($this->getColumn() as $columnName => $column) {
       if (!isset($column['foreign']) || empty($column['foreign']) || ($this->hasColumnKeysToValidate() && !$this->hasColumnKeyToValidate($columnName))) {
         continue;
       }
@@ -385,13 +409,15 @@ abstract class Model extends Validation
 
   protected function prepareMediaColumns()
   {
-    foreach ($this->column as $columnName => $column) {
+    foreach ($this->getColumn() as $columnName => $column) {
       if (@$column['isUpload'] !== true) {
         continue;
       }
 
       if (@$column['isMultiple'] === true) {
-        $this->column[$columnName]['upload'] = [];
+        $upload = [];
+        $value = [];
+
         foreach ($column['toUpload']['tmp_name'] as $key => $tmpName) {
           $file = [
             'name' => $column['toUpload']['name'][$key],
@@ -402,15 +428,21 @@ abstract class Model extends Validation
             'size' => $column['toUpload']['size'][$key]
           ];
 
-          $upload = new Upload($file, @$column['folder']);
-          $uploadPath = $upload->get('path');
+          $uploadClass = new Upload($file, @$column['folder']);
+          $uploadPath = $uploadClass->get('path');
 
-          $this->column[$columnName]['upload'][] = $upload;
-          $this->column[$columnName]['value'][] = $uploadPath;
+          $upload[] = $uploadClass;
+          $value[] = $uploadPath;
         }
+
+        $this->setColumnProperty($columnName, 'upload', $upload);
+        $this->setColumnValue($columnName, $value);
       } else {
-        $this->column[$columnName]['upload'] = new Upload($column['toUpload'], @$column['folder']);
-        $this->column[$columnName]['value'] = $this->column[$columnName]['upload']->get('path');
+        $uploadClass = new Upload($column['toUpload'], @$column['folder']);
+        $uploadPath = $uploadClass->get('path');
+
+        $this->setColumnProperty($columnName, 'upload', $uploadClass);
+        $this->setColumnValue($columnName, $uploadPath);
       }
     }
 
@@ -419,7 +451,7 @@ abstract class Model extends Validation
 
   protected function processMediaColumns()
   {
-    foreach ($this->column as $columnName => $column) {
+    foreach ($this->getColumn() as $columnName => $column) {
       if (@$column['isUpload'] !== true) {
         continue;
       }

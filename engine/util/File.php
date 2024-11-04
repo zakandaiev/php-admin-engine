@@ -42,6 +42,15 @@ class File
     return round($size, 2) . ' ' . $units[$i];
   }
 
+  public static function getContent($pathToFile)
+  {
+    if (is_file($pathToFile)) {
+      return file_get_contents($pathToFile);
+    }
+
+    return null;
+  }
+
   public static function createDir($directory, $permissions = 0755, $recursive = true)
   {
     if (!file_exists($directory)) {
@@ -60,24 +69,24 @@ class File
     return file_put_contents($path, $content, $flags);
   }
 
-  public static function globRecursive($pattern, $flags = 0)
+  public static function delete($path)
   {
-    $files = glob($pattern, $flags);
-
-    foreach (glob(dirname($pattern) . '/*', GLOB_ONLYDIR | GLOB_NOSORT) as $dir) {
-      $files = array_merge($files, self::globRecursive($dir . '/' . basename($pattern), $flags));
+    if (is_dir($path)) {
+      return rmdir($path);
+    } else if (is_file($path)) {
+      return unlink($path);
     }
 
-    return $files;
+    return false;
   }
 
-  public static function rmdirRecursive($path)
+  public static function deleteRecurcive($path)
   {
     if (is_dir($path)) {
       $files = array_diff(scandir($path), array('.', '..'));
 
       foreach ($files as $file) {
-        self::rmdirRecursive(realpath($path) . '/' . $file);
+        self::deleteRecurcive(realpath($path) . '/' . $file);
       }
 
       return rmdir($path);
@@ -88,8 +97,14 @@ class File
     return false;
   }
 
-  public static function upload()
+  public static function globRecursive($pattern, $flags = 0)
   {
-    // TODO
+    $files = glob($pattern, $flags);
+
+    foreach (glob(dirname($pattern) . '/*', GLOB_ONLYDIR | GLOB_NOSORT) as $dir) {
+      $files = array_merge($files, self::globRecursive($dir . '/' . basename($pattern), $flags));
+    }
+
+    return $files;
   }
 }

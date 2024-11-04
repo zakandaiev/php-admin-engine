@@ -92,6 +92,11 @@ function fileGetSize($path)
   return File::getSize($path);
 }
 
+function fileGetContent($path)
+{
+  return File::getContent($path);
+}
+
 function fileCreateDir($directory, $permissions = null, $recursive = null)
 {
   return File::createDir($directory, $permissions ?? 0755, $recursive ?? true);
@@ -102,14 +107,19 @@ function fileCreateFile($path, $content = null, $flags = null)
   return File::createFile($path, $content ?? PHP_EOL, $flags ?? 0);
 }
 
+function fileDelete($path)
+{
+  return File::delete($path);
+}
+
+function fileDeleteRecurcive($path)
+{
+  return File::deleteRecurcive($path);
+}
+
 function fileGlobRecursive($pattern, $flags = null)
 {
   return File::globRecursive($pattern, $flags ?? 0);
-}
-
-function fileRmdirRecursive($path)
-{
-  return File::rmdirRecursive($path);
 }
 
 ############################# HASH #############################
@@ -306,11 +316,11 @@ function lang($key = null, $language = null, $mixed = null)
         break;
       }
     case 'icon': {
-        $value = Path::resolveUrl('img', 'flag', $language . '.' . ($mixed ?? 'png'));
+        $value = Path::resolveUrl('img', 'i18n', $language . '.' . ($mixed ?? 'png'));
         break;
       }
     case 'icon_url': {
-        $value = Path::resolveUrl(Asset::url(), 'img', 'flag', $language . '.' . ($mixed ?? 'png'));
+        $value = Path::resolveUrl(Asset::url(), 'img', 'i18n', $language . '.' . ($mixed ?? 'png'));
         break;
       }
   }

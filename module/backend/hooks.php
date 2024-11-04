@@ -354,7 +354,7 @@ function formatSidebarRoute($route = [])
 Hook::run('sidebar.append', [
   'id' => 'backend.dashboard',
   'icon' => 'home',
-  'text' => t('sidebar.dashboard'),
+  'text' => t('dashboard.sidebar'),
   'name' => 'dashboard',
   'isPublic' => true
 ]);
@@ -366,14 +366,14 @@ Hook::run('sidebar.append', [
     $notifications_count = User::get()->notifications_count;
     return $notifications_count > 0 ? $notifications_count : null;
   },
-  'text' => t('sidebar.profile'),
+  'text' => t('profile.sidebar'),
   'name' => 'profile',
   'isPublic' => true
 ]);
 
 Hook::run('sidebar.append', [
   'id' => 'backend.page-separator',
-  'text' => t('sidebar.content'),
+  'text' => t('content.sidebar'),
   'isSeparator' => true,
   'name' => 'page'
 ]);
@@ -381,7 +381,7 @@ Hook::run('sidebar.append', [
 Hook::run('sidebar.append', [
   'id' => 'backend.page',
   'icon' => 'file-text',
-  'text' => t('sidebar.pages'),
+  'text' => t('page.sidebar'),
   'name' => 'page'
 ]);
 
@@ -392,27 +392,27 @@ Hook::run('sidebar.append', [
     $count = \module\backend\model\Comment::getInstance()->countUnapprovedComments();
     return $count > 0 ? $count : null;
   },
-  'text' => t('sidebar.comments'),
+  'text' => t('comment.sidebar'),
   'name' => 'comment'
 ]);
 
 Hook::run('sidebar.append', [
   'id' => 'backend.menu',
   'icon' => 'menu-2',
-  'text' => t('sidebar.menu'),
+  'text' => t('menu.sidebar'),
   'name' => 'menu'
 ]);
 
 Hook::run('sidebar.append', [
   'id' => 'backend.translation',
   'icon' => 'world',
-  'text' => t('sidebar.translations'),
-  'name' => 'translation'
+  'text' => t('translation.sidebar'),
+  'name' => 'translation.list'
 ]);
 
 Hook::run('sidebar.append', [
   'id' => 'backend.user-separator',
-  'text' => t('sidebar.administration'),
+  'text' => t('administration.sidebar'),
   'isSeparator' => true,
   'name' => 'user'
 ]);
@@ -424,24 +424,24 @@ Hook::run('sidebar.append', [
     $count = \module\backend\model\Feedback::getInstance()->countUnreadContacts();
     return $count > 0 ? $count : null;
   },
-  'text' => t('sidebar.feedback'),
+  'text' => t('feedback.sidebar'),
   'name' => 'feedback'
 ]);
 
 Hook::run('sidebar.append', [
   'id' => 'backend.group',
   'icon' => 'users',
-  'text' => t('sidebar.users'),
+  'text' => t('user.sidebar'),
   'name' => [
     [
       'id' => 'backend.group.list',
-      'text' => t('sidebar.groups'),
+      'text' => t('group.sidebar'),
       'name' => 'group.list',
       'activeRoutes' => ['group.add', 'group.edit', 'group.translation.edit']
     ],
     [
       'id' => 'backend.user.list',
-      'text' => t('sidebar.users'),
+      'text' => t('user.sidebar'),
       'name' => 'user.list',
       'activeRoutes' => ['user.add', 'user.edit']
     ]
@@ -451,23 +451,23 @@ Hook::run('sidebar.append', [
 Hook::run('sidebar.append', [
   'id' => 'backend.setting',
   'icon' => 'settings',
-  'text' => t('sidebar.settings'),
+  'text' => t('setting.sidebar.setting'),
   'name' => [
     [
       'id' => 'backend.setting.engine',
-      'text' => t('sidebar.main'),
+      'text' => t('setting.sidebar.engine'),
       'name' => 'setting.section',
       'parameter' => ['section' => 'engine']
     ],
     [
       'id' => 'backend.setting.backend',
-      'text' => t('sidebar.admin'),
+      'text' => t('setting.sidebar.backend'),
       'name' => 'setting.section',
       'parameter' => ['section' => 'backend']
     ],
     [
       'id' => 'backend.setting.frontend',
-      'text' => t('sidebar.site'),
+      'text' => t('setting.sidebar.frontend'),
       'name' => 'setting.section',
       'parameter' => ['section' => 'frontend']
     ]

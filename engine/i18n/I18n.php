@@ -52,7 +52,8 @@ class I18n
 
   public static function get($languageKey = null, $moduleName = null)
   {
-    $languageKey = self::getCurrent($moduleName);
+    $moduleName = $moduleName ?? Module::getName();
+    $languageKey = $languageKey ?? self::getCurrent($moduleName);
     $moduleExtends = Module::getProperty('extends');
 
     if (self::has($languageKey, $moduleName)) {
@@ -64,7 +65,8 @@ class I18n
 
   public static function hasProperty($propertyName, $languageKey = null, $moduleName = null)
   {
-    $languageKey = self::getCurrent($moduleName);
+    $moduleName = $moduleName ?? Module::getName();
+    $languageKey = $languageKey ?? self::getCurrent($moduleName);
     $moduleExtends = Module::getProperty('extends');
 
     if (isset(Module::getProperty('languages', $moduleName)[$languageKey][$propertyName])) {
@@ -74,9 +76,10 @@ class I18n
     return isset(Module::getProperty('languages', $moduleExtends)[$languageKey][$propertyName]);
   }
 
-  public static function getProperty($propertyName, $languageKey = null, $moduleName = null)
+  public static function getProperty($propertyName, $languageKey = null, $moduleName = null, $d = false)
   {
-    $languageKey = self::getCurrent($moduleName);
+    $moduleName = $moduleName ?? Module::getName();
+    $languageKey = $languageKey ?? self::getCurrent($moduleName);
     $moduleExtends = Module::getProperty('extends');
 
     if (self::hasProperty($propertyName, $languageKey, $moduleName)) {
@@ -217,20 +220,18 @@ class I18n
 
   protected static function loadTranslations($module)
   {
-    $pathToLanguageFile = Path::resolve(Path::file('i18n', $module), self::getProperty('fileName'));
-    if (!is_file($pathToLanguageFile)) {
-      return false;
-    }
-
     $timeStart = hrtime(true);
 
-    $content = file_get_contents($pathToLanguageFile);
-    $content = json_decode($content, true);
+    $pathToLanguageFile = Path::resolve(Path::file('i18n', $module), self::getProperty('fileName'));
+
+    $content = File::getContent($pathToLanguageFile);
     if (empty($content)) {
       return false;
     }
 
-    self::$translation = array_merge(self::$translation, $content);
+    $decodedContent = json_decode($content, true);
+
+    self::$translation = array_merge_recursive(self::$translation, $decodedContent);
     self::$translationFlat = self::getFlattenTranslations(self::$translation);
 
     $timeEnd = hrtime(true);

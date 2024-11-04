@@ -99,8 +99,16 @@ class Setting extends Model
       return false;
     }
 
+    $this->modifyColumns();
+
     $this->validate();
     if ($this->hasError()) {
+      return false;
+    }
+
+    $this->prepareMediaColumns();
+    $resultMedia = $this->processMediaColumns();
+    if (!$resultMedia) {
       return false;
     }
 

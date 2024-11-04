@@ -31,3 +31,5 @@ import '@/js/partial/maska';
 import '@/js/partial/slimselect';
 import '@/js/partial/sortable';
 import '@/js/partial/wysiwyg';
+
+import '@/js/partial/data-table';

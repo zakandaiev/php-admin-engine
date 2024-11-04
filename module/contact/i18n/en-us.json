@@ -1,0 +1,44 @@
+{
+  "setting": {
+    "sidebar": {
+      "contact": "Contacts"
+    },
+    "contact": {
+      "title": "Contacts",
+      "submit_button": "Save settings",
+      "submit_error": "Error",
+      "submit_success": "Settings saved"
+    },
+    "column": {
+      "address": {
+        "label": "Address",
+        "placeholder": "Address"
+      },
+      "coordinate_x": {
+        "label": "Coordinate X",
+        "placeholder": "Coordinate X"
+      },
+      "coordinate_y": {
+        "label": "Coordinate Y",
+        "placeholder": "Coordinate Y"
+      },
+      "work_hours": {
+        "label": "Work hours",
+        "placeholder": "Work hours"
+      },
+      "email": {
+        "label": "Contact email",
+        "placeholder": "Contact email"
+      },
+      "phones": {
+        "label": "Phones",
+        "placeholder": "Phones",
+        "add": {
+          "title": "Add phone",
+          "label": "Phone",
+          "placeholder": "Phone"
+        }
+      }
+    }
+  }
+}

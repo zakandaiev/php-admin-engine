@@ -109,21 +109,24 @@ class Form
     $this->clearExpired();
 
     $result = $this->model->{$this->action}();
+
+    $submitMessageSuccess = $this->model->hasSubmitMessage('success') ? $this->model->getSubmitMessage('success') : I18n::translate('form.success');
+    $submitMessageError = $this->model->hasSubmitMessage('error') ? $this->model->getSubmitMessage('error') : I18n::translate('form.error');
+
     if ($result) {
       $answer['status'] = 'success';
-      $answer['message'] = I18n::translate('form.success');
+      $answer['message'] = $submitMessageSuccess;
       $answer['data'] = $result;
       $answer['code'] = 200;
     } else {
       $answer['status'] = 'error';
-      $answer['message'] = I18n::translate('form.error');
+      $answer['message'] = $submitMessageError;
       $answer['data'] = $this->model->getError();
       $answer['code'] = 400;
     }
 
     // TODO
     // executePost
-    // submitMessage
     // forceNoAnswer
 
     Response::answer(@$answer['status'], @$answer['message'], @$answer['data'], @$answer['code']);
@@ -145,23 +148,29 @@ class Form
 
   protected function loadModel()
   {
-    $model = Path::class('model') . '\\' . $this->modelName;
-
-    if (class_exists($model)) {
-      $values = Request::get();
-      $columnKeysToValidate = $this->isMatchRequest ? array_keys($values) : null;
-
-      $modelInstance = $model::getInstance();
-      if (!$modelInstance) {
-        return new $model($values, $columnKeysToValidate);
-      }
-
-      $modelInstance->setData($values, $columnKeysToValidate);
-
-      return $modelInstance;
+    $model = Path::class('model', $this->module) . '\\' . $this->modelName;
+    $moduleExtends = Module::getProperty('extends');
+    if (!class_exists($model) && $moduleExtends) {
+      $model = Path::class('model', $moduleExtends) . '\\' . $this->modelName;
     }
 
-    return null;
+    if (!class_exists($model)) {
+      return null;
+    }
+
+    $values = Request::get();
+    $columnKeysToValidate = $this->isMatchRequest ? array_merge(array_keys($values), array_keys(Request::files())) : null;
+
+    $modelInstance = $model::getInstance();
+    if (!$modelInstance) {
+      return new $model($values, $columnKeysToValidate);
+    }
+
+    // TODO - убрать лишний параметр в создании модели $columnKeysToValidate, использовать метод $model->setColumnKeysToValidate
+
+    $modelInstance->setData($values, $columnKeysToValidate);
+
+    return $modelInstance;
   }
 
   public static function add($modelName, $isMatchRequest = null)
@@ -179,20 +188,33 @@ class Form
     return self::generateToken(__FUNCTION__, $modelName, $itemId, $isMatchRequest);
   }
 
-  public static function isModelExists($modelName)
+  public static function isModelExists($modelName, $moduleName = null)
   {
-    $model = Path::class('model') . '\\' . $modelName;
+    $model = Path::class('model', $moduleName) . '\\' . $modelName;
+    if (class_exists($model)) {
+      return true;
+    }
 
-    return class_exists($model);
+    $moduleExtends = Module::getProperty('extends');
+    if (!$moduleExtends) {
+      return false;
+    }
+
+    $modelFromExtendedModule = Path::class('model', $moduleExtends) . '\\' . $modelName;
+    if (class_exists($modelFromExtendedModule)) {
+      return true;
+    }
+
+    return false;
   }
 
-  public static function generateToken($action, $modelName, $itemId = null, $isMatchRequest = null)
+  public static function generateToken($action, $modelName, $itemId = null, $isMatchRequest = null, $moduleName = null)
   {
-    if (!self::isModelExists($modelName)) {
+    if (!self::isModelExists($modelName, $moduleName)) {
       return null;
     }
 
-    $tokenExists = self::isFormExistsAndActive($action, $modelName, $itemId, $isMatchRequest);
+    $tokenExists = self::isFormExistsAndActive($action, $modelName, $itemId, $isMatchRequest, $moduleName);
     if ($tokenExists) {
       return Path::resolveUrl(null, $tokenExists);
     }
@@ -201,7 +223,7 @@ class Form
 
     $bindParams = [
       'token' => $token,
-      'module' => Module::getName(),
+      'module' => $moduleName ?? Module::getName(),
       'action' => $action,
       'model_name' => $modelName,
       'ip' => Request::ip()
@@ -221,10 +243,10 @@ class Form
     return Path::resolveUrl(null, $token);
   }
 
-  protected static function isFormExistsAndActive($action, $modelName, $itemId = null, $isMatchRequest = null)
+  protected static function isFormExistsAndActive($action, $modelName, $itemId = null, $isMatchRequest = null, $moduleName = null)
   {
     $bindParams = [
-      'module' => Module::getName(),
+      'module' => $moduleName ?? Module::getName(),
       'model_name' => $modelName,
       'action' => $action,
       'ip' => Request::ip()

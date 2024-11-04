@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const container = initModalContainer();
 
   document.querySelectorAll('.modal').forEach((modal) => {
-    const instance = {
+    const modalInstance = {
       open: () => openModal(modal),
       close: () => closeModal(modal),
       destroy: () => {
@@ -15,9 +15,37 @@ document.addEventListener('DOMContentLoaded', () => {
       },
     };
 
-    modal.instance = instance;
+    modal.modal = modalInstance;
 
     container.appendChild(modal);
+
+    if (modal.id.startsWith('modal-form-') && modal.hasAttribute('data-action')) {
+      const formNode = document.createElement('form');
+
+      formNode.modal = {
+        open: () => openModal(formNode),
+        close: () => closeModal(formNode),
+        destroy: () => {
+          closeModal(formNode);
+
+          formNode.remove();
+        },
+      };
+
+      [...modal.attributes].forEach((attr) => {
+        if (attr.name === 'data-action') {
+          formNode.setAttribute('action', attr.value);
+        } else {
+          formNode.setAttribute(attr.name, attr.value);
+        }
+      });
+
+      while (modal.firstChild) {
+        formNode.appendChild(modal.firstChild);
+      }
+
+      modal.parentNode.replaceChild(formNode, modal);
+    }
   });
 });
 
@@ -44,8 +72,9 @@ document.addEventListener('click', (event) => {
 
   const close = event.target.closest('[data-modal-close]');
   const modal = event.target.closest('.modal') || (close ? document.querySelector(close.getAttribute('data-modal-close')) : null);
+  const datepicker = event.target.closest('.air-datepicker-global-container');
 
-  if ((close && modal) || (!close && !modal)) {
+  if ((close && modal) || (!close && !modal && !datepicker)) {
     closeModal(modal);
   }
 });

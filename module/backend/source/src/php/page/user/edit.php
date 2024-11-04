@@ -18,45 +18,44 @@ $form = new BuilderForm([
   ],
   'columns' => [
     'group_id' => [
-      'label' => t('user.column.groups'),
-      'placeholder' => t('user.column.groups_placeholder'),
+      'label' => t('user.column.group_id.label'),
+      'placeholder' => t('user.column.group_id.placeholder')
     ],
     'email' => [
-      'label' => t('user.column.email'),
-      'placeholder' => t('user.column.email_placeholder'),
+      'label' => t('user.column.email.label'),
+      'placeholder' => t('user.column.email.placeholder'),
       'className' => 'col-xs-12 col-md-6 col-lg-3'
     ],
     'password' => [
       'type' => 'text',
       'required' => false,
       'value' => '',
-      'label' => t('user.column.password'),
-      'placeholder' => t('user.column.password_placeholder'),
+      'label' => t('user.column.password.label'),
+      'placeholder' => t('user.column.password.placeholder'),
       'className' => 'col-xs-12 col-md-6 col-lg-3'
     ],
     'name' => [
-      'label' => t('user.column.name'),
-      'placeholder' => t('user.column.name_placeholder'),
+      'label' => t('user.column.name.label'),
+      'placeholder' => t('user.column.name.placeholder'),
       'className' => 'col-xs-12 col-md-6 col-lg-3'
     ],
     'avatar' => [
-      'label' => t('user.column.avatar'),
-      'placeholder' => t('user.column.avatar_placeholder'),
+      'label' => t('user.column.avatar.label'),
+      'placeholder' => t('user.column.avatar.placeholder'),
       'className' => 'col-xs-12 col-md-6 col-lg-3'
     ],
     'setting' => [
-      'label' => t('user.column.setting'),
-      'placeholder' => t('user.column.setting_placeholder')
+      'label' => t('user.column.setting.label'),
+      'placeholder' => t('user.column.setting.placeholder')
     ],
     'is_enabled' => [
-      'label' => t('user.column.is_enabled'),
-      'placeholder' => t('user.column.is_enabled_placeholder')
+      'label' => t('user.column.is_enabled.label'),
+      'placeholder' => t('user.column.is_enabled.placeholder')
     ],
-    'date_created' => [
-      'label' => t('user.column.date_created'),
-      'placeholder' => t('user.column.date_created_placeholder')
-    ]
-  ]
+  ],
+  'submitButton' => t('user.edit.submit_button'),
+  'submitError' => t('user.edit.submit_error'),
+  'submitSuccess' => t('user.edit.submit_success')
 ]);
 ?>
 

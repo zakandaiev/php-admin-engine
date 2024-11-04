@@ -4,6 +4,10 @@
   cursor: pointer;
 }
 
+.air-datepicker-global-container {
+  z-index: var(--zi-modal);
+}
+
 .air-datepicker {
   --adp-font-family: var(--font);
   --adp-font-size: 1.4rem;

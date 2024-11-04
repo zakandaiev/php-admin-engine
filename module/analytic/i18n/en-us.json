@@ -1,0 +1,23 @@
+{
+  "setting": {
+    "sidebar": {
+      "analytic": "Analytics"
+    },
+    "analytic": {
+      "title": "Analytics",
+      "submit_button": "Save settings",
+      "submit_error": "Error",
+      "submit_success": "Settings saved"
+    },
+    "column": {
+      "google_analytics": {
+        "label": "Google Analytics ID",
+        "placeholder": "G-XXXXXXXXXX"
+      },
+      "google_tag_manager": {
+        "label": "Google Tag Maneger ID",
+        "placeholder": "GTM-XXXXXXXX"
+      }
+    }
+  }
+}

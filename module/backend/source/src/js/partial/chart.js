@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const instance = new Chart(chart, data);
 
-    chart.instance = instance;
+    chart.chart = instance;
 
     function isJson(item) {
       let value = typeof item !== 'string' ? JSON.stringify(item) : item;

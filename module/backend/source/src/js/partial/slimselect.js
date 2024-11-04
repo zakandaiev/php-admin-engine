@@ -45,11 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
       };
     }
 
-    const s = new SlimSelect({
+    const slimselect = new SlimSelect({
       select,
       settings: {
-        contentLocation: wrapper,
-        contentPosition: 'relative',
+        // contentLocation: wrapper,
+        // contentPosition: 'relative',
         allowDeselect: select.required === true ? false : true,
         alwaysOpen: select.hasAttribute('data-always-open') ? true : false,
         minSelected: select.hasAttribute('data-min') ? select.getAttribute('data-min') : null,
@@ -69,8 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
       events,
     });
 
-    select.instance = s;
     select.removeAttribute('style');
-    wrapper.instance = s;
   });
 });

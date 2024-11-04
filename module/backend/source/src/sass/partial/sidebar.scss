@@ -58,8 +58,8 @@
     // .sidebar__logo-image
     &-image {
       display: block;
-      width: auto;
-      height: 10rem;
+      max-width: 100%;
+      max-height: 8rem;
       object-fit: contain;
     }
 

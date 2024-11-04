@@ -3,10 +3,11 @@ const query = new Proxy(new URLSearchParams(window.location.search), {
 });
 
 const route = {
-  path: window.location.pathname,
+  uri: window.location.pathname,
   url: window.location.href,
   base: `${window.location.protocol}//${window.location.host}`,
   query,
+  // TODO resolve path
 };
 
 export default route;

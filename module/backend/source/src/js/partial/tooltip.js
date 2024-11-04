@@ -44,13 +44,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.addEventListener('mouseout', (event) => {
     const trigger = event.target.closest('[data-tooltip]');
-
     if (!trigger) {
       return false;
     }
 
     const { tooltip } = trigger;
-
     if (!tooltip) {
       return false;
     }

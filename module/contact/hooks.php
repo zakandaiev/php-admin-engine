@@ -1,11 +1,13 @@
 <?php
 
 use engine\module\Hook;
+use engine\module\Module;
+use module\backend\builder\Form;
 
 ############################# EXTEND BACKEND SIDEBAR #############################
 Hook::run('sidebar.append.after', 'backend.setting.frontend', [
   'id' => 'contact.setting.contact',
-  'text' => t('sidebar.contact'),
+  'text' => t('setting.sidebar.contact'),
   'name' => 'setting.section',
   'parameter' => ['section' => 'contact'],
   'module' => 'backend'
@@ -36,10 +38,30 @@ Hook::run('setting.column.add', 'work_hours', [
 ]);
 Hook::run('setting.column.add', 'email', [
   'type' => 'email',
+  'required' => true,
   'min' => 6,
   'max' => 256
 ]);
+
+$moduleName = Module::getName();
 Hook::run('setting.column.add', 'phones', [
-  'type' => 'table',
-  'model' => 'table'
+  'type' => 'dataTable',
+  'form' => function () use ($moduleName) {
+    return new Form([
+      'module' => $moduleName,
+      'action' => 'execute',
+      'modelName' => 'DataPhone',
+      'isMatchRequest' => true,
+      'modalTitle' => t('setting.column.phones.add.title'),
+      'attributes' => [
+        'data-validate'
+      ],
+      'columns' => [
+        'phone' => [
+          'label' => t('setting.column.phones.add.label'),
+          'placeholder' => t('setting.column.phones.add.placeholder')
+        ]
+      ]
+    ]);
+  }
 ]);

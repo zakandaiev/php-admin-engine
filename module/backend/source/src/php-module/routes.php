@@ -11,6 +11,19 @@ Router::register('get', '/backend/reset-password', 'Auth@getRestore', 'reset-pas
 ############################# DASHBOARD #############################
 Router::register('get', ['/backend', '/backend/dashboard'], 'Dashboard@getDashboard', 'dashboard', ['isPublic' => true]);
 
+
+
+
+
+
+############################# TRANSLATION #############################
+Router::register('get', '/backend/translation', 'Translation@getList', 'translation.list');
+Router::register('get', '/backend/translation/add', 'Translation@getAdd', 'translation.add');
+Router::register('get', '/backend/translation/edit/$module/$language', 'Translation@getEdit', 'translation.edit');
+
+############################# FEEDBACK #############################
+// TODO
+
 ############################# GROUP #############################
 Router::register('get', '/backend/group', 'Group@getList', 'group.list');
 Router::register('get', '/backend/group/add', 'Group@getAdd', 'group.add');

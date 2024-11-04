@@ -108,7 +108,9 @@
   // .modal__body
   &__body {
     overflow: hidden auto;
+    overscroll-behavior: contain;
     display: block;
+
     max-height: calc(100vh - 12rem - var(--gap) * 2);
     padding: 2rem;
   }

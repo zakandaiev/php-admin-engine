@@ -2,6 +2,7 @@
 
 use engine\module\Hook;
 
+$logoImage = site('logo_alt') ?? site('logo');
 $sidebar = Hook::getData('sidebar') ?? [];
 
 // TODO
@@ -83,8 +84,8 @@ function isRouteParentActive($route = [])
 
 <aside class="sidebar">
   <a class="sidebar__logo" href="<?= routeLink('dashboard', null, null, 'backend') ?>">
-    <?php if (!empty(site('logo_alt'))) : ?>
-      <img class="sidebar__logo-image" src="<?= pathResolveUrl(null, site('logo_alt')) ?>" alt="Logo">
+    <?php if (!empty($logoImage)) : ?>
+      <img class="sidebar__logo-image" src="<?= pathResolveUrl(null, $logoImage) ?>" alt="Logo">
     <?php else : ?>
       <span class="sidebar__logo-text"><?= site('name') ?></span>
     <?php endif; ?>

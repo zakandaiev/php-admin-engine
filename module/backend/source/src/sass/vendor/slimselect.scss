@@ -74,16 +74,18 @@
 }
 
 .ss-content {
-  position: absolute;
-  z-index: var(--zi-default);
-  right: 0;
-  left: 0;
-
-  height: auto;
+  // position: absolute;
+  // z-index: var(--zi-default);
+  // right: 0;
+  // left: 0;
+  // height: auto;
+  // REFACTOR
+  z-index: var(--zi-modal);
 
   &.ss-relative {
-    position: absolute;
-    height: auto;
+    // position: absolute;
+    // height: auto;
+    // REFACTOR
   }
 
   .ss-list {

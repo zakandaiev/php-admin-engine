@@ -20,7 +20,6 @@
     display: flex;
     gap: 1rem;
     align-items: center;
-    justify-content: space-between;
 
     padding: 1.5rem 2rem;
 
@@ -28,8 +27,12 @@
     font-weight: var(--font-medium);
     color: var(--color-text);
 
+    & > span {
+      flex: 1 1 auto;
+    }
+
     & > .ti {
-      flex-shrink: 0;
+      flex: 0 0 auto;
       font-size: 2rem;
       transition: var(--transition);
     }
@@ -55,7 +58,7 @@
 
   // .accordion_active
   &_active {
-    & > .accordion__header > .ti {
+    & > .accordion__header > .ti-chevron-right {
       transform: rotate(90deg);
     }
 
