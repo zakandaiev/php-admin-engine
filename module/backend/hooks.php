@@ -362,10 +362,9 @@ Hook::run('sidebar.append', [
 Hook::run('sidebar.append', [
   'id' => 'backend.profile',
   'icon' => 'user-circle',
-  'label' => function () {
-    $notifications_count = User::get()->notifications_count;
-    return $notifications_count > 0 ? $notifications_count : null;
-  },
+  // 'label' => function () {
+  //   return User::get()->notifications_count;
+  // },
   'text' => t('profile.sidebar'),
   'name' => 'profile',
   'isPublic' => true
@@ -388,10 +387,9 @@ Hook::run('sidebar.append', [
 Hook::run('sidebar.append', [
   'id' => 'backend.comment',
   'icon' => 'message',
-  'label' => function () {
-    $count = \module\backend\model\Comment::getInstance()->countUnapprovedComments();
-    return $count > 0 ? $count : null;
-  },
+  // 'label' => function () {
+  //   return \module\backend\model\Comment::getInstance()->countUnapprovedComments();
+  // },
   'text' => t('comment.sidebar'),
   'name' => 'comment'
 ]);
@@ -421,11 +419,10 @@ Hook::run('sidebar.append', [
   'id' => 'backend.feedback',
   'icon' => 'message-circle',
   'label' => function () {
-    $count = \module\backend\model\Feedback::getInstance()->countUnreadContacts();
-    return $count > 0 ? $count : null;
+    return \module\backend\model\Feedback::getInstance()->countUnreadFeedback();
   },
   'text' => t('feedback.sidebar'),
-  'name' => 'feedback'
+  'name' => 'feedback.list'
 ]);
 
 Hook::run('sidebar.append', [

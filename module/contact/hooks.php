@@ -59,9 +59,18 @@ Hook::run('setting.column.add', 'phones', [
       'columns' => [
         'phone' => [
           'label' => t('setting.column.phones.add.label'),
-          'placeholder' => t('setting.column.phones.add.placeholder')
+          'placeholder' => t('setting.column.phones.add.placeholder'),
+          'message' => [
+            'required' => t('setting.column.phones.add.required'),
+            'min' => t('setting.column.phones.add.min'),
+            'max' => t('setting.column.phones.add.max')
+          ]
         ]
-      ]
+      ],
+      'cancelButton' => t('setting.column.phones.add.cancel_button'),
+      'submitButton' => t('setting.column.phones.add.submit_button'),
+      'submitError' => t('setting.column.phones.add.submit_error'),
+      'submitSuccess' => t('setting.column.phones.add.submit_success')
     ]);
   }
 ]);

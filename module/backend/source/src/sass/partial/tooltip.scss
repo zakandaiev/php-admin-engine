@@ -1,4 +1,6 @@
 .tooltip {
+  @include ellipsis;
+
   position: fixed;
   z-index: var(--zi-tooltip);
 

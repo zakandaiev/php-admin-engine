@@ -161,6 +161,20 @@ CREATE TABLE IF NOT EXISTS `%prefix%_form` (
   PRIMARY KEY  (`token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+CREATE TABLE IF NOT EXISTS `%prefix%_feedback` (
+  `id` VARCHAR(32) NOT NULL,
+  `user_id` VARCHAR(32) DEFAULT NULL,
+  `email` VARCHAR(256) NOT NULL,
+  `subject` VARCHAR(128) DEFAULT NULL,
+  `message` TEXT NOT NULL,
+  `ip` VARCHAR(64) DEFAULT NULL,
+  `is_read` BOOLEAN NOT NULL DEFAULT FALSE,
+  `is_replied` BOOLEAN NOT NULL DEFAULT FALSE,
+  `date_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
 
 
 
@@ -254,18 +268,6 @@ CREATE TABLE IF NOT EXISTS `%prefix%_notification` (
   `is_read` BOOLEAN NOT NULL DEFAULT FALSE,
   `date_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-CREATE TABLE IF NOT EXISTS `%prefix%_feedback` (
-  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user_id` INT DEFAULT NULL,
-  `email` VARCHAR(200) NOT NULL,
-  `subject` VARCHAR(100) DEFAULT NULL,
-  `message` TEXT NOT NULL,
-  `ip` VARCHAR(64) DEFAULT NULL,
-  `is_read` BOOLEAN NOT NULL DEFAULT FALSE,
-  `date_created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO `%prefix%_notification` (`user_id`, `type`, `info`) VALUES

@@ -15,6 +15,8 @@ class User
   protected static $cookieLifetime;
   protected static $bindSessionToIp;
 
+  protected static $storedUsersById = [];
+
   public function __construct()
   {
     self::$cookieKey = self::getCookieKey();
@@ -104,6 +106,25 @@ class User
   public static function getBindSessionToIp()
   {
     return isset(self::$bindSessionToIp) ? self::$bindSessionToIp : Config::getProperty('bindSessionToIp', 'auth');
+  }
+
+  public static function getUserById($id)
+  {
+    if (isset(self::$storedUsersById[$id])) {
+      return self::$storedUsersById[$id];
+    }
+
+    $sql = 'SELECT * FROM {user} WHERE id=:id';
+    $query = new Query($sql);
+    $user = $query->execute(['id' => $id])->fetch();
+    if (!$user) {
+      return false;
+    }
+
+    $user = self::format($user);
+    self::$storedUsersById[$id] = $user;
+
+    return $user;
   }
 
   public static function format($user, $isAuthorized = null)

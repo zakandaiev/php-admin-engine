@@ -290,13 +290,25 @@ class Form {
     }
 
     data.forEach((validation) => {
-      if (!validation.column || !validation.validation) {
+      if (!validation.column || !validation.validationName || !validation.validationMessage) {
         return false;
       }
 
       const column = this.node.querySelector(`[data-column-name="${validation.column}"]`);
       if (!column) {
         return false;
+      }
+
+      const message = {};
+
+      const input = column.querySelector('[name]');
+      if (input && input.hasAttribute('data-message')) {
+        try {
+          const inputMessage = JSON.parse(input.getAttribute('data-message') || '{}') || {};
+          Object.assign(message, inputMessage);
+        } catch {
+          // do nothing
+        }
       }
 
       column.classList.remove('form__column_valid');
@@ -307,7 +319,7 @@ class Form {
         return false;
       }
 
-      errorNode.textContent = validation.validation;
+      errorNode.textContent = message[validation.validationName] || validation.validationMessage;
     });
   }
 

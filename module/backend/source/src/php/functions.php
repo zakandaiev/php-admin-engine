@@ -51,9 +51,9 @@ function getFormBox($table, $title, $column, $formHtml)
 }
 
 ############################# TABLE BUILDER #############################
-function getColumnToggle($table, $columnName, $columnValue, $column)
+function getColumnToggle($table, $columnName, $columnValue, $column, $activateMsg = 'activate', $deactivateMsg = 'deactivate')
 {
-  $tooltip = $column->$columnName ? t("$table.list.deactivate_this") : t("$table.list.activate_this");
+  $tooltip = $column->$columnName ? t("$table.list.{$deactivateMsg}_this") : t("$table.list.{$activateMsg}_this");
 
   $html = '<button type="button" data-action="' . Form::edit($table, $column->id, true) . '" data-body="' . textHtml(json_encode([$columnName => !$columnValue])) . '" data-redirect="this" data-tooltip="top" title="' . $tooltip . '" class="table__action">';
   $html .= iconBoolean($columnValue);
@@ -62,13 +62,26 @@ function getColumnToggle($table, $columnName, $columnValue, $column)
   return $html;
 }
 
-function getColumnActions($table, $columnValue, $column)
+function getColumnActions($table, $columnValue, $column, $actions = null)
 {
-  $html = ' <a href="' . routeLink("$table.edit", ['id' => $column->id]) . '" data-tooltip="top" title="' . t("$table.list.edit") . '" class="table__action"><i class="ti ti-edit"></i></a>';
+  $actions = $actions ?? ['edit@edit', 'delete@trash'];
 
-  $html .= ' <button type="button" data-action="' . Form::delete($table, $column->id, true) . '" data-confirm="' . t("$table.list.delete_confirm", $column->name) . '" data-remove="trow" data-decrement=".pagination-output > span" data-tooltip="top" title="' . t("$table.list.delete") . '" class="table__action">';
-  $html .= '<i class="ti ti-trash"></i>';
-  $html .= '</button>';
+  $html = '';
+  foreach ($actions as $act) {
+    list($action, $icon) = explode('@', $act, 2);
+
+    if (empty($action) || empty($act)) {
+      continue;
+    }
+
+    if ($action === 'delete') {
+      $html .= ' <button type="button" data-action="' . Form::delete($table, $column->id, true) . '" data-confirm="' . t("$table.list.delete_confirm", @$column->name) . '" data-remove="trow" data-decrement=".pagination-output > span" data-tooltip="top" title="' . t("$table.list.delete") . '" class="table__action">';
+      $html .= '<i class="ti ti-' . $icon . '"></i>';
+      $html .= '</button>';
+    } else {
+      $html = ' <a href="' . routeLink("$table.$action", ['id' => $column->id]) . '" data-tooltip="top" title="' . t("$table.list.$action") . '" class="table__action"><i class="ti ti-' . $icon . '"></i></a>';
+    }
+  }
 
   return $html;
 }

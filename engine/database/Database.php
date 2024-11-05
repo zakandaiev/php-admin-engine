@@ -11,6 +11,7 @@ use engine\Config;
 class Database
 {
   protected static $connection;
+  protected static $prefix;
   protected static $isConnected = false;
 
   public static function initialize()
@@ -39,6 +40,11 @@ class Database
     return self::$connection;
   }
 
+  public static function getPrefix()
+  {
+    return self::$prefix;
+  }
+
   protected static function connect()
   {
     $isConfigExists = Config::exists('database');
@@ -58,6 +64,8 @@ class Database
       throw new Exception('Database config is invalid.');
     }
 
+    self::$prefix = $prefix;
+
     $dsn = sprintf('mysql:host=%s;dbname=%s;charset=%s', $host, $name, $charset);
 
     try {
@@ -69,5 +77,27 @@ class Database
     }
 
     return $connection ?? null;
+  }
+
+  public static function isTableExists($table)
+  {
+    if (!self::isConnected()) {
+      return false;
+    }
+
+    $replacement = '$1';
+    if (!empty(self::$prefix)) {
+      $replacement = self::$prefix . '_$1';
+    }
+
+    $sql = preg_replace('/{([\w\d\-\_]+)}/miu', $replacement, "SELECT 1 FROM {{$table}} LIMIT 1");
+
+    try {
+      $result = self::getConnection()->query($sql);
+    } catch (Exception $e) {
+      return false;
+    }
+
+    return $result !== false;
   }
 }

@@ -22,7 +22,8 @@ Router::register('get', '/backend/translation/add', 'Translation@getAdd', 'trans
 Router::register('get', '/backend/translation/edit/$module/$language', 'Translation@getEdit', 'translation.edit');
 
 ############################# FEEDBACK #############################
-// TODO
+Router::register('get', '/backend/feedback', 'Feedback@getList', 'feedback.list');
+Router::register('get', '/backend/feedback/reply/$id', 'Feedback@getReply', 'feedback.reply');
 
 ############################# GROUP #############################
 Router::register('get', '/backend/group', 'Group@getList', 'group.list');

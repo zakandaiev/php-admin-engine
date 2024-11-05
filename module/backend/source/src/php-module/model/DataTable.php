@@ -7,9 +7,9 @@ use engine\http\Response;
 
 class DataTable extends Model
 {
-  public function __construct($columnData = null, $columnKeysToValidate = null)
+  public function __construct()
   {
-    parent::__construct($columnData, $columnKeysToValidate);
+    parent::__construct();
   }
 
   public function execute()

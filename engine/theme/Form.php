@@ -163,10 +163,8 @@ class Form
 
     $modelInstance = $model::getInstance();
     if (!$modelInstance) {
-      return new $model($values, $columnKeysToValidate);
+      $modelInstance = new $model($values, $columnKeysToValidate);
     }
-
-    // TODO - убрать лишний параметр в создании модели $columnKeysToValidate, использовать метод $model->setColumnKeysToValidate
 
     $modelInstance->setData($values, $columnKeysToValidate);
 

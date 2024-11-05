@@ -2,7 +2,10 @@
 
 namespace engine\database;
 
+use engine\database\Database;
+use engine\database\Query;
 use engine\i18n\I18n;
+use engine\module\Module;
 use engine\util\File;
 
 abstract class Validation
@@ -68,7 +71,7 @@ abstract class Validation
       return $this->primaryKey;
     }
 
-    if (empty($this->table)) {
+    if (empty($this->table) || !Database::isTableExists($this->table)) {
       return false;
     }
 
@@ -304,10 +307,12 @@ abstract class Validation
       $validationResult = $this->{'validate' . ucfirst($validation)}($columnType, @$columnDefinition[$validation], $columnValue, $columnDefinition);
 
       if ($validationResult !== true) {
+        $validationPrefix = $this->table ?? Module::getName();
         $result = [
           'column' => $columnName,
-          'validation' => $columnDefinition['message'][$validationName] ?? I18n::translate("{$this->table}.$columnName.validation.$validationName", $columnDefinition),
-          'value' => $columnValue
+          'validationName' => $validationName,
+          'validationMessage' => $columnDefinition['message'][$validationName] ?? I18n::translate("$validationPrefix.column.$columnName.$validationName", $columnDefinition),
+          'value' => $columnDefinition
         ];
 
         $isColumnValidated = true;

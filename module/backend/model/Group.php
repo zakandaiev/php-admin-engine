@@ -10,8 +10,10 @@ use engine\util\Hash;
 
 class Group extends Model
 {
-  public function __construct($columnData = null, $columnKeysToValidate = null)
+  public function __construct()
   {
+    parent::__construct();
+
     $this->setTable('group');
     $this->setPrimaryKey('id');
 
@@ -69,8 +71,6 @@ class Group extends Model
       'type' => 'boolean',
       'value' => false
     ]);
-
-    parent::__construct($columnData, $columnKeysToValidate);
   }
 
   public function getGroups()

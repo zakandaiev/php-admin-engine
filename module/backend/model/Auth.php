@@ -10,8 +10,10 @@ use engine\util\Hash;
 
 class Auth extends Model
 {
-  public function __construct($columnData = null, $columnKeysToValidate = null)
+  public function __construct()
   {
+    parent::__construct();
+
     $this->setTable('user');
     $this->setPrimaryKey('id');
 
@@ -44,8 +46,6 @@ class Auth extends Model
       'min' => 8,
       'max' => 256
     ]);
-
-    parent::__construct($columnData, $columnKeysToValidate);
   }
 
   public function login()

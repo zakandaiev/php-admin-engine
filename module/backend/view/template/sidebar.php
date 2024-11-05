@@ -6,6 +6,23 @@ $logoImage = site('logo_alt') ?? site('logo');
 $sidebar = Hook::getData('sidebar') ?? [];
 
 // TODO
+function getRouteLabel($route)
+{
+  if (!isset($route['label'])) {
+    return false;
+  }
+
+  $label = isClosure($route['label']) ? $route['label']($route) : $route['label'];
+
+  $route['label'] = $label;
+
+  if (empty($label)) {
+    return false;
+  }
+
+  return $label;
+}
+
 function checkRouteAccess($route)
 {
   return true;
@@ -112,7 +129,15 @@ function isRouteParentActive($route = [])
             <?php foreach ($route['name'] as $routeInner) : ?>
               <a data-id="<?= @$routeInner['id'] ?>" href="<?= routeLink($routeInner['name'], @$routeInner['parameter'], @$routeInner['query'], @$routeInner['module']) ?>" class="sidebar__collapse-item <?php if (isRouteActive($routeInner)) : ?>active<?php endif; ?>">
                 <span class="sidebar__text"><?= $routeInner['text'] ?></span>
-                <!-- <span class="label label_primary">2</span> -->
+
+                <?php
+                $routeLabel = getRouteLabel($route);
+                if ($routeLabel):
+                ?>
+                  <span class="label label_<?php if (isset($route['labelClass'])) : ?><?= $route['labelClass'] ?><?php else : ?>primary<?php endif; ?>">
+                    <?= $routeLabel ?>
+                  </span>
+                <?php endif; ?>
               </a>
             <?php endforeach; ?>
           </div>
@@ -122,23 +147,11 @@ function isRouteParentActive($route = [])
           <i class="ti ti-<?= $route['icon'] ?>"></i>
           <span class="sidebar__text"><?= $route['text'] ?></span>
           <?php
-          if (false) :
-            // TODO
-            // if(
-            // 	isset($route['label'])
-            // 	&& (
-            // 		isClosure($route['label'])
-            // 		||
-            // 		(!isClosure($route['label']) && !empty($route['label']))
-            // 	)
-            // ):
+          $routeLabel = getRouteLabel($route);
+          if ($routeLabel):
           ?>
-            <span class="label label_<?php if (isset($route['label_color'])) : ?><?= $route['label_color'] ?><?php else : ?>primary<?php endif; ?>">
-              <?php if (isClosure($route['label'])) : ?>
-                <?= $route['label']() ?>
-              <?php else : ?>
-                <?= $route['label'] ?>
-              <?php endif; ?>
+            <span class="label label_<?php if (isset($route['labelClass'])) : ?><?= $route['labelClass'] ?><?php else : ?>primary<?php endif; ?>">
+              <?= $routeLabel ?>
             </span>
           <?php endif; ?>
         </a>

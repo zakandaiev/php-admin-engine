@@ -9,8 +9,10 @@ use engine\util\Hash;
 
 class User extends Model
 {
-  public function __construct($columnData = null, $columnKeysToValidate = null)
+  public function __construct()
   {
+    parent::__construct();
+
     $this->setTable('user');
     $this->setPrimaryKey('id');
 
@@ -71,8 +73,6 @@ class User extends Model
     $this->setColumn('setting', [
       'type' => 'text'
     ]);
-
-    parent::__construct($columnData, $columnKeysToValidate);
   }
 
   public function getUsers()
@@ -100,11 +100,7 @@ class User extends Model
 
   public function getUserById($id)
   {
-    $sql = 'SELECT * FROM {user} WHERE id=:id';
-    $query = new Query($sql);
-    $user = $query->execute(['id' => $id])->fetch();
-
-    return $user;
+    return AuthUser::getUserById($id);
   }
 
   public function getUserGroups($userId)

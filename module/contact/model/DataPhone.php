@@ -6,15 +6,15 @@ use module\backend\model\DataTable;
 
 class DataPhone extends DataTable
 {
-  public function __construct($columnData = null, $columnKeysToValidate = null)
+  public function __construct()
   {
+    parent::__construct();
+
     $this->setColumn('phone', [
       'type' => 'text',
       'required' => true,
       'min' => 8,
       'max' => 64
     ]);
-
-    parent::__construct($columnData, $columnKeysToValidate);
   }
 }

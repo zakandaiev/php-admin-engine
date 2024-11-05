@@ -11,8 +11,12 @@ use engine\util\Path;
 
 class Translation extends Model
 {
-  public function __construct($columnData = null, $columnKeysToValidate = null)
+  public function __construct()
   {
+    parent::__construct();
+
+    $this->setTable('translation');
+
     $this->setColumn('module', [
       'type' => 'select',
       'required' => true,
@@ -48,8 +52,6 @@ class Translation extends Model
     $this->setColumn('translation', [
       'type' => 'textarea'
     ]);
-
-    parent::__construct($columnData, $columnKeysToValidate);
   }
 
   public function add()

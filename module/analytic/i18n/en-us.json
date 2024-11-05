@@ -12,11 +12,17 @@
     "column": {
       "google_analytics": {
         "label": "Google Analytics ID",
-        "placeholder": "G-XXXXXXXXXX"
+        "placeholder": "G-XXXXXXXXXX",
+        "required": "This ID is required",
+        "min": "This ID is too short",
+        "max": "This ID is too long"
       },
       "google_tag_manager": {
         "label": "Google Tag Maneger ID",
-        "placeholder": "GTM-XXXXXXXX"
+        "placeholder": "GTM-XXXXXXXX",
+        "required": "This ID is required",
+        "min": "This ID is too short",
+        "max": "This ID is too long"
       }
     }
   }

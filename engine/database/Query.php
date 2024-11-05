@@ -40,7 +40,7 @@ class Query
     $this->isSelect = preg_match('/^\s*SELECT/mi', $sql) ? true : false;
     $this->cache = ($cache === true && $this->isSelect);
     $this->debug = isset($debug) && $debug ? true : false;
-    $this->prefix = Config::getProperty('prefix', 'database');
+    $this->prefix = Database::getPrefix();
 
     $replacement = '$1';
     if (!empty($this->prefix)) {

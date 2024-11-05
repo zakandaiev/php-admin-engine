@@ -13,18 +13,22 @@ abstract class Model extends Validation
   protected $columnForeign = [];
   protected $submitMessage = [];
 
-  protected static $instanceGroupedByModule = [];
+  protected static $instances = [];
 
-  public function __construct($columnData = null, $columnKeysToValidate = null)
+  public function __construct()
   {
-    $this->setData($columnData, $columnKeysToValidate);
-
-    self::$instanceGroupedByModule[Module::getName()] = $this;
+    self::$instances[get_called_class()] = $this;
   }
 
-  public static function getInstance($module = null)
+  public static function getInstance()
   {
-    return @self::$instanceGroupedByModule[$module ?? Module::getName()];
+    $calledClass = get_called_class();
+
+    if (isset(self::$instances[$calledClass])) {
+      return self::$instances[$calledClass];
+    }
+
+    return new $calledClass();
   }
 
   public function setSubmitMessage($key, $value = null)

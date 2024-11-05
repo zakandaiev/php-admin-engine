@@ -8,8 +8,10 @@ use engine\module\Setting as ModuleSetting;
 
 class Setting extends Model
 {
-  public function __construct($columnData = null, $columnKeysToValidate = null)
+  public function __construct()
   {
+    parent::__construct();
+
     $this->setTable('setting');
     $this->setPrimaryKey('id');
 
@@ -81,6 +83,7 @@ class Setting extends Model
 
     $this->setColumn('pagination_limit', [
       'type' => 'number',
+      'required' => true,
       'min' => 10,
       'max' => 1000
     ]);
@@ -89,8 +92,6 @@ class Setting extends Model
     foreach ($columnHookData as $columnName => $columnModel) {
       $this->setColumn($columnName, $columnModel);
     }
-
-    parent::__construct($columnData, $columnKeysToValidate);
   }
 
   public function editSection()

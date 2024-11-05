@@ -15,16 +15,17 @@ class Form
   protected $modelName;
   protected $itemId;
   protected $isMatchRequest;
-  protected $formClassName;
-  protected $submitButton;
+  protected $formClass;
   protected $submitError;
   protected $submitSuccess;
+  protected $submitButton;
   protected $submitButtonClass;
   protected $submitColClass;
+  protected $cancelButton;
+  protected $cancelButtonClass;
   protected $modalId;
   protected $modalTitle;
-  protected $modalCancel;
-  protected $modalClassName;
+  protected $modalClass;
   protected $attributes = [];
   protected $columns = [];
   protected $values = [];
@@ -42,15 +43,16 @@ class Form
     $this->modelName = @$interface['modelName'];
     $this->itemId = @$interface['itemId'];
     $this->isMatchRequest = $interface['isMatchRequest'] ?? false;
-    $this->formClassName = @$interface['formClassName'];
-    $this->submitButton = @$interface['submitButton'];
+    $this->formClass = @$interface['formClass'];
     $this->submitError = @$interface['submitError'];
     $this->submitSuccess = @$interface['submitSuccess'];
+    $this->submitButton = @$interface['submitButton'];
     $this->submitButtonClass = @$interface['submitButtonClass'];
     $this->submitColClass = @$interface['submitColClass'];
     $this->modalTitle = @$interface['modalTitle'];
-    $this->modalCancel = $interface['modalCancel'] ?? I18n::translate('form.cancel');
-    $this->modalClassName = @$interface['modalClassName'];
+    $this->modalClass = @$interface['modalClass'];
+    $this->cancelButton = @$interface['cancelButton'];
+    $this->cancelButtonClass = @$interface['cancelButtonClass'];
     $this->attributes = @$interface['attributes'] ?? [];
     $this->columns = $interface['columns'] ?? [];
     $this->values = @$interface['values'];
@@ -85,9 +87,9 @@ class Form
     if (class_exists($model)) {
       $values = (array)$this->values ?? [];
 
-      $modelInstance = $model::getInstance($this->module);
+      $modelInstance = $model::getInstance();
       if (!$modelInstance) {
-        return new $model($values);
+        $modelInstance = new $model($values);
       }
 
       $modelInstance->setData($values);
@@ -152,13 +154,13 @@ class Form
       return false;
     }
 
-    $formClass = isset($this->formClassName) ? $this->formClassName : 'row gap-xs';
+    $formClass = isset($this->formClass) ? $this->formClass : 'row gap-xs';
     $formAttributes = isset($this->attributes) ? implode(' ', $this->attributes) : '';
 
     $html = '';
 
     if (isset($this->modalTitle)) {
-      $modalClass = isset($this->modalClassName) ? $this->modalClassName : 'modal_center';
+      $modalClass = isset($this->modalClass) ? $this->modalClass : 'modal_center';
 
       $html .= '<div id="' . $this->getModalId() . '" data-action="' . $this->token . '" class="modal ' . $modalClass . '" ' . $formAttributes . '>';
 
@@ -200,13 +202,13 @@ class Form
     $column = $this->columns[$columnName];
     $column = ['name' => $columnName, ...$modelColumn, ...$column];
 
-    $columnClassName = isset($column['className']) ? $column['className'] : 'col-xs-12';
-    $columnClassName .= ' form__column form__column_' . $column['type'];
+    $columnClass = isset($column['className']) ? $column['className'] : 'col-xs-12';
+    $columnClass .= ' form__column form__column_' . $column['type'];
     if (@$column['required'] === true) {
-      $columnClassName .= ' form__column_required';
+      $columnClass .= ' form__column_required';
     }
 
-    $html = '<div class="' . $columnClassName . '" data-form-type="column" data-column-name="' . $columnName . '">';
+    $html = '<div class="' . $columnClass . '" data-form-type="column" data-column-name="' . $columnName . '">';
 
     $html .= $this->getColumnInputHtml($column);
 
@@ -221,6 +223,9 @@ class Form
     $submitButtonClass = isset($this->submitButtonClass) ? $this->submitButtonClass : 'btn btn_primary';
     $submitColClass = isset($this->submitColClass) ? $this->submitColClass : 'col-xs-12';
 
+    $cancelButton = isset($this->cancelButton) ? $this->cancelButton : I18n::translate('form.cancel');
+    $cancelButtonClass = isset($this->cancelButtonClass) ? $this->cancelButtonClass : 'btn btn_cancel';
+
     $html = '';
 
     if (isset($this->modalTitle)) {
@@ -228,7 +233,7 @@ class Form
       $html .= '</div>';
 
       $html .= '<footer class="modal__footer ' . $submitColClass . '" data-form-type="submit">';
-      $html .= '<button type="button" class="btn btn_cancel" data-modal-close>Cancel</button>';
+      $html .= '<button type="button" class="' . $cancelButtonClass . '" data-modal-close>' . $cancelButton . '</button>';
       $html .= '<button type="submit" class="' . $submitButtonClass . '">';
       $html .= $submitButton;
       $html .= '</button>';
@@ -298,6 +303,11 @@ class Form
             $attrValue = implode(',', array_unique(array_map(function ($v) {
               return self::getMimeByExtension($v) ?? '.' . $v;
             }, $attrValue)));
+
+            break;
+          }
+        case 'message': {
+            $attrName = 'data-message';
 
             break;
           }

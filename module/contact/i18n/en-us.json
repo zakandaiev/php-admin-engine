@@ -12,23 +12,39 @@
     "column": {
       "address": {
         "label": "Address",
-        "placeholder": "Address"
+        "placeholder": "Address",
+        "required": "Address is required",
+        "min": "Address is too short",
+        "max": "Address is too long"
       },
       "coordinate_x": {
         "label": "Coordinate X",
-        "placeholder": "Coordinate X"
+        "placeholder": "Coordinate X",
+        "required": "Coordinate X is required",
+        "min": "Coordinate X is too short",
+        "max": "Coordinate X is too long"
       },
       "coordinate_y": {
         "label": "Coordinate Y",
-        "placeholder": "Coordinate Y"
+        "placeholder": "Coordinate Y",
+        "required": "Coordinate Y is required",
+        "min": "Coordinate Y is too short",
+        "max": "Coordinate Y is too long"
       },
       "work_hours": {
         "label": "Work hours",
-        "placeholder": "Work hours"
+        "placeholder": "Work hours",
+        "required": "Work hours are required",
+        "min": "Work hours is too short",
+        "max": "Work hours is too long"
       },
       "email": {
         "label": "Contact email",
-        "placeholder": "Contact email"
+        "placeholder": "Contact email",
+        "required": "Email is required",
+        "email": "Email format is invalid",
+        "min": "Email is too short",
+        "max": "Email is too long"
       },
       "phones": {
         "label": "Phones",
@@ -36,7 +52,14 @@
         "add": {
           "title": "Add phone",
           "label": "Phone",
-          "placeholder": "Phone"
+          "placeholder": "Phone",
+          "required": "Phone is required",
+          "min": "Phone is too short",
+          "max": "Phone is too long",
+          "cancel_button": "Cancel",
+          "submit_button": "Add phone",
+          "submit_error": "Error",
+          "submit_success": ""
         }
       }
     }

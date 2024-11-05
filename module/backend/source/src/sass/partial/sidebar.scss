@@ -168,7 +168,15 @@
     & > .sidebar__item::after {
       @extend .ti;
       content: "\ea5f";
+
+      display: inline-block;
       flex-shrink: 0;
+
+      width: 1.74rem;
+
+      font-size: 1.6rem;
+      line-height: 1;
+
       transition: var(--transition);
     }
 

@@ -70,19 +70,32 @@
     "column": {
       "module": {
         "label": "Module",
-        "placeholder": "Select module"
+        "placeholder": "Select module",
+        "required": "Name is required",
+        "min": "Name is too short",
+        "max": "Name is too long",
+        "regex": "Name should contain only words"
       },
       "language": {
         "label": "Language code",
-        "placeholder": "For example: en"
+        "placeholder": "For example: en",
+        "required": "Language code is required",
+        "min": "Language code is too short",
+        "max": "Language code is too long",
+        "regex": "Language code should contain only two small letters"
       },
       "region": {
         "label": "Language region",
-        "placeholder": "For example: us"
+        "placeholder": "For example: us",
+        "required": "Language region is required",
+        "min": "Language region is too short",
+        "max": "Language region is too long",
+        "regex": "Language region should contain only two small letters"
       },
       "icon": {
         "label": "Language icon",
-        "placeholder": "Requires .png format"
+        "placeholder": "Requires .png format",
+        "required": "Language icon is required"
       },
       "translation": {
         "label": "Translation",
@@ -94,8 +107,50 @@
     "sidebar": "Administration"
   },
   "feedback": {
-    "title": "Feedback",
-    "sidebar": "Feedback"
+    "sidebar": "Feedback",
+    "list": {
+      "title": "Feedback",
+      "placeholder": "There are no messages yet",
+      "reply": "Reply for this message",
+      "delete": "Delete this message",
+      "delete_confirm": "Do you want to delete this message?",
+      "read_this": "Read this message",
+      "unread_this": "Unread this message",
+      "reply_this": "Set as replied",
+      "unreply_this": "Set as unreplied"
+    },
+    "reply": {
+      "title": "Reply for feedback message",
+      "submit_error": "Error",
+      "submit_button": "Reply",
+      "submit_success": "Message sent"
+    },
+    "column": {
+      "user_id": {
+        "label": "Author"
+      },
+      "subject": {
+        "label": "Subject"
+      },
+      "message": {
+        "label": "Message"
+      },
+      "date_created": {
+        "label": "Date"
+      },
+      "is_read": {
+        "label": "Read"
+      },
+      "is_replied": {
+        "label": "Replied"
+      },
+      "email": {
+        "label": "Email"
+      },
+      "ip": {
+        "label": "IP"
+      }
+    }
   },
   "group": {
     "sidebar": "Groups",
@@ -132,7 +187,11 @@
     "column": {
       "name": {
         "label": "Name",
-        "placeholder": "Name"
+        "placeholder": "Name",
+        "required": "Name is required",
+        "min": "Name is too short",
+        "max": "Name is too long",
+        "regex": "Name should contain only words"
       },
       "translations": {
         "label": "Translations",
@@ -160,11 +219,13 @@
       },
       "route": {
         "label": "Routes",
-        "placeholder": "Select routes"
+        "placeholder": "Select routes",
+        "required": "Address is required"
       },
       "user_id": {
         "label": "Users",
-        "placeholder": "Select users"
+        "placeholder": "Select users",
+        "required": "Address is required"
       }
     }
   },
@@ -196,7 +257,11 @@
     "column": {
       "name": {
         "label": "Name",
-        "placeholder": "Name"
+        "placeholder": "Name",
+        "required": "Name is required",
+        "min": "Name is too short",
+        "max": "Name is too long",
+        "regex": "Name should contain only words"
       },
       "count_groups": {
         "label": "Groups count",
@@ -220,11 +285,18 @@
       },
       "email": {
         "label": "Email",
-        "placeholder": "Email"
+        "placeholder": "Email",
+        "required": "Email is required",
+        "min": "Email is too short",
+        "max": "Email is too long",
+        "email": "Email format is invalid"
       },
       "password": {
         "label": "Password",
-        "placeholder": "Password"
+        "placeholder": "Password",
+        "required": "Password is required",
+        "min": "Password is too short",
+        "max": "Password is too long"
       },
       "avatar": {
         "label": "Avatar",
@@ -264,7 +336,8 @@
     "column": {
       "language": {
         "label": "Language",
-        "placeholder": "Select default language"
+        "placeholder": "Select default language",
+        "required": "Language is required"
       },
       "enable_registration": {
         "label": "Enable registration",
@@ -284,15 +357,24 @@
       },
       "name": {
         "label": "Site name",
-        "placeholder": "Site name"
+        "placeholder": "Site name",
+        "required": "Site name is required",
+        "min": "Site name is too short",
+        "max": "Site name is too long"
       },
       "description": {
         "label": "Site description",
-        "placeholder": "Site short description"
+        "placeholder": "Site short description",
+        "required": "Site description is required",
+        "min": "Site description is too short",
+        "max": "Site description is too long"
       },
       "pagination_limit": {
         "label": "Pagination limit",
-        "placeholder": "Pagination limit"
+        "placeholder": "Pagination limit",
+        "required": "Pagination limit is required",
+        "min": "Pagination limit is too small",
+        "max": "Pagination limit is too big"
       },
       "favicon": {
         "label": "Favicon",

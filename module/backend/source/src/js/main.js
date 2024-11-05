@@ -29,7 +29,7 @@ import '@/js/partial/fancybox';
 import '@/js/partial/filepond';
 import '@/js/partial/maska';
 import '@/js/partial/slimselect';
-import '@/js/partial/sortable';
 import '@/js/partial/wysiwyg';
 
 import '@/js/partial/data-table';
+import '@/js/partial/sortable';
