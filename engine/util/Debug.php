@@ -38,7 +38,7 @@ class Debug
 
       $output .= $itemOutput;
 
-      $output .= "<!--\n$itemOutputRaw-->";
+      $output .= "\n\n<!--\n$itemOutputRaw-->\n\n";
 
       if (isset($data[$key + 1])) {
         $output .= '<hr style="display:block;margin:10px 0;border:1px dashed #2f4f4f">';

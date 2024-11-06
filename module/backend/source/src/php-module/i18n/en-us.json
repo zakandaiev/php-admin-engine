@@ -121,6 +121,7 @@
     },
     "reply": {
       "title": "Reply for feedback message",
+      "from": "From",
       "submit_error": "Error",
       "submit_button": "Reply",
       "submit_success": "Message sent"

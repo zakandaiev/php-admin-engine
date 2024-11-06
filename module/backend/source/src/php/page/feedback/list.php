@@ -20,7 +20,7 @@ $table = new BuilderTable([
       'type' => function ($value, $item) use ($ipChecker) {
         $output = '';
 
-        if (!empty($item->user)) {
+        if (isset($item->user->fullname)) {
           $output .= '<b>' . t('feedback.column.user_id.label') . '</b>: ' . $item->user->fullname . '<br>';
         }
         $output .= '<b>' . t('feedback.column.email.label') . '</b>: ' . $item->email . '<br>';

@@ -15,15 +15,13 @@ Hook::run('sidebar.append.after', 'backend.setting.frontend', [
 Hook::run('setting.column.add', 'google_analytics', [
   'type' => 'text',
   'min' => 2,
-  'max' => 64,
-  'className' => 'col-xs-12 col-md-6 col-lg-3'
+  'max' => 64
 ]);
 
 Hook::run('setting.column.add', 'google_tag_manager', [
   'type' => 'text',
   'min' => 2,
-  'max' => 64,
-  'className' => 'col-xs-12 col-md-6 col-lg-3'
+  'max' => 64
 ]);
 
 ############################# SET PAGE META #############################

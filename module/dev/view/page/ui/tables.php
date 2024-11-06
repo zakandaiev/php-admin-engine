@@ -8,7 +8,7 @@
         <div class="box__header">
           <h4 class="box__title">Basic table</h4>
         </div>
-        <div class="box__body">
+        <div class="box__body p-0">
 
           <table class="table">
             <thead>
@@ -19,7 +19,7 @@
                 <th></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody class="last-row-borderless">
               <tr>
                 <td>Vanessa Tucker</td>
                 <td>864-348-0485</td>
@@ -82,7 +82,7 @@
         <div class="box__header">
           <h4 class="box__title">Striped table</h4>
         </div>
-        <div class="box__body">
+        <div class="box__body p-0">
 
           <table class="table table_striped">
             <thead>
@@ -93,7 +93,7 @@
                 <th></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody class="last-row-borderless">
               <tr>
                 <td>Vanessa Tucker</td>
                 <td>864-348-0485</td>
@@ -156,7 +156,7 @@
         <div class="box__header">
           <h4 class="box__title">Small basic table</h4>
         </div>
-        <div class="box__body">
+        <div class="box__body p-0">
 
           <table class="table table_sm">
             <thead>
@@ -167,7 +167,7 @@
                 <th></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody class="last-row-borderless">
               <tr>
                 <td>Vanessa Tucker</td>
                 <td>864-348-0485</td>
@@ -230,7 +230,7 @@
         <div class="box__header">
           <h4 class="box__title">Small striped table</h4>
         </div>
-        <div class="box__body">
+        <div class="box__body p-0">
 
           <table class="table table_sm table_striped">
             <thead>
@@ -241,7 +241,7 @@
                 <th></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody class="last-row-borderless">
               <tr>
                 <td>Vanessa Tucker</td>
                 <td>864-348-0485</td>
@@ -304,7 +304,7 @@
         <div class="box__header">
           <h4 class="box__title">Borderless table</h4>
         </div>
-        <div class="box__body">
+        <div class="box__body p-0">
 
           <table class="table table_borderless">
             <thead>
@@ -352,7 +352,7 @@
         <div class="box__header">
           <h4 class="box__title">Small borderless table</h4>
         </div>
-        <div class="box__body">
+        <div class="box__body p-0">
 
           <table class="table table_sm table_borderless">
             <thead>
@@ -400,7 +400,7 @@
         <div class="box__header">
           <h5 class="box__title">Table responsive</h5>
         </div>
-        <div class="box__body">
+        <div class="box__body p-0">
           <div class="table-responsive">
             <table class="table mb-0">
               <thead>
@@ -419,7 +419,7 @@
                   <th scope="col">Heading</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody class="last-row-borderless">
                 <tr>
                   <th scope="row">1</th>
                   <td>Cell</td>

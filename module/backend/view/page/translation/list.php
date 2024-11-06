@@ -34,10 +34,10 @@ Page::breadcrumb('add', $title);
               </button>
 
               <div class="accordion__body">
-                <div class="accordion__content">
+                <div class="accordion__content p-0 pb-2">
 
                   <table class="table table_sm">
-                    <tbody>
+                    <tbody class="last-row-borderless">
                       <tr>
                         <td>
                           <a href="<?= routeLink('translation.add', null, ['module' => $module['name']]) ?>">

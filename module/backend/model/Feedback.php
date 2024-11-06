@@ -5,6 +5,7 @@ namespace module\backend\model;
 use engine\auth\User;
 use engine\database\Model;
 use engine\database\Query;
+use engine\util\Mail;
 use engine\util\Hash;
 
 class Feedback extends Model
@@ -45,7 +46,7 @@ class Feedback extends Model
     ]);
 
     $this->setColumn('message', [
-      'type' => 'text',
+      'type' => 'wysiwyg',
       'required' => true,
       'min' => 2,
       'max' => 1024
@@ -66,6 +67,52 @@ class Feedback extends Model
       'type' => 'boolean',
       'value' => false
     ]);
+  }
+
+  public function reply()
+  {
+    if (!$this->hasTable()) {
+      return false;
+    }
+
+    $this->modifyColumns();
+
+    $this->validate();
+    if ($this->hasError()) {
+      return false;
+    }
+
+    $subject = $this->getColumnValue('subject');
+    $message = $this->getColumnValue('message');
+
+    $feedbackId = $this->getItemId();
+    $feedback = $this->getFeedbackById($feedbackId);
+    if (empty($feedback)) {
+      return false;
+    }
+
+    $mailData = [
+      'subjectRe' => $feedback->subject,
+      'messageRe' => $feedback->message,
+      'subject' => $subject,
+      'message' => $message,
+    ];
+
+    $mailOptions = [
+      'to' => $feedback->email,
+      'isForced' => true
+    ];
+
+    $mail = new Mail('FeedbackReply', $mailData, $mailOptions);
+
+    $mailResult = $mail->send();
+    if (!$mailResult) {
+      return false;
+    }
+
+    $this->updateTable($this->getTable(), ['is_replied' => true], $this->getPrimaryKey(), $this->getItemId());
+
+    return true;
   }
 
   public function getFeedbacks()
@@ -90,6 +137,10 @@ class Feedback extends Model
     $sql = 'SELECT * FROM {feedback} WHERE id=:id';
     $query = new Query($sql);
     $feedback = $query->execute(['id' => $id])->fetch();
+
+    if (isset($feedback->user_id)) {
+      $feedback->user = User::getUserById($feedback->user_id);
+    }
 
     return $feedback;
   }

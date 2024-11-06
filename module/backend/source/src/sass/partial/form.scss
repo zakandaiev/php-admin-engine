@@ -131,16 +131,30 @@ label:not(.switch) {
 }
 
 .form__column_invalid > .form__input > label:not(.switch) {
-  & > input[type="checkbox"] + *,
-  & > input[type="radio"] + * {
-    color: var(--color-error);
+  & > input[type="checkbox"],
+  & > input[type="radio"] {
+    & + * {
+      color: var(--color-error);
+
+      &::before {
+        border-color: var(--color-error);
+      }
+    }
   }
 }
 
 .form__column_valid > .form__input > label:not(.switch) {
-  & > input[type="checkbox"] + *,
-  & > input[type="radio"] + * {
-    color: var(--color-success);
+  & > input[type="checkbox"],
+  & > input[type="radio"] {
+    & + * {
+      color: var(--color-success);
+
+      &::before {
+        color: var(--color-success-text);
+        background: var(--color-success);
+        border-color: var(--color-success);
+      }
+    }
   }
 }
 
@@ -475,7 +489,7 @@ input[type="range"] {
   &__error {
     display: none;
 
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: var(--font-medium);
     line-height: 1.2;
     color: var(--color-error);

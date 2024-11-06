@@ -18,23 +18,19 @@ $form = new BuilderForm([
   'columns' => [
     'module' => [
       'label' => t('translation.column.module.label'),
-      'placeholder' => t('translation.column.module.placeholder'),
-      'className' => 'col-xs-12 col-md-6 col-lg-3'
+      'placeholder' => t('translation.column.module.placeholder')
     ],
     'language' => [
       'label' => t('translation.column.language.label'),
-      'placeholder' => t('translation.column.language.placeholder'),
-      'className' => 'col-xs-12 col-md-6 col-lg-3'
+      'placeholder' => t('translation.column.language.placeholder')
     ],
     'region' => [
       'label' => t('translation.column.region.label'),
-      'placeholder' => t('translation.column.region.placeholder'),
-      'className' => 'col-xs-12 col-md-6 col-lg-3'
+      'placeholder' => t('translation.column.region.placeholder')
     ],
     'icon' => [
       'label' => t('translation.column.icon.label'),
-      'placeholder' => t('translation.column.icon.placeholder'),
-      'className' => 'col-xs-12 col-md-6 col-lg-3'
+      'placeholder' => t('translation.column.icon.placeholder')
     ]
   ],
   'submitButton' => t('translation.edit.submit_button'),

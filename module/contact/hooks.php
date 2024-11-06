@@ -24,13 +24,13 @@ Hook::run('setting.column.add', 'coordinate_x', [
   'type' => 'text',
   'min' => 4,
   'max' => 16,
-  'className' => 'col-xs-12 col-md-6 col-lg-3'
+  'className' => 'col-xs-12 col-md-6'
 ]);
 Hook::run('setting.column.add', 'coordinate_y', [
   'type' => 'text',
   'min' => 4,
   'max' => 16,
-  'className' => 'col-xs-12 col-md-6 col-lg-3'
+  'className' => 'col-xs-12 col-md-6'
 ]);
 Hook::run('setting.column.add', 'work_hours', [
   'type' => 'text',

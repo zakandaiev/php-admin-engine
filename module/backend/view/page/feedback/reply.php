@@ -1,61 +1,40 @@
 <?php
 
-$title = t('user.edit.title');
+use engine\Config;
+
+$ipChecker = Config::getProperty('ipChecker', 'service');
+
+$title = t('feedback.reply.title');
 
 Page::set('title', $title);
 
-Page::breadcrumb('add', t('user.list.title'), 'user.list');
+Page::breadcrumb('add', t('feedback.list.title'), 'feedback.list');
 Page::breadcrumb('add', $title);
 
 $form = new BuilderForm([
-  'action' => 'edit',
-  'modelName' => 'User',
-  'itemId' => $user->id,
-  'values' => $user,
+  'action' => 'reply',
+  'modelName' => 'Feedback',
+  'itemId' => $feedback->id,
+  'isMatchRequest' => true,
+  // 'values' => $feedback,
   'attributes' => [
-    // 'data-redirect="' . routeLink('user.list') . '"',
-    'data-validate'
+    // 'data-redirect="' . routeLink('feedback.list') . '"',
+    'data-validate',
+    'data-reset'
   ],
   'columns' => [
-    'group_id' => [
-      'label' => t('user.column.group_id.label'),
-      'placeholder' => t('user.column.group_id.placeholder')
+    'subject' => [
+      'label' => t('feedback.column.subject.label'),
+      'placeholder' => t('feedback.column.subject.placeholder')
     ],
-    'email' => [
-      'label' => t('user.column.email.label'),
-      'placeholder' => t('user.column.email.placeholder'),
-      'className' => 'col-xs-12 col-md-6 col-lg-3'
-    ],
-    'password' => [
-      'type' => 'text',
-      'required' => false,
-      'value' => '',
-      'label' => t('user.column.password.label'),
-      'placeholder' => t('user.column.password.placeholder'),
-      'className' => 'col-xs-12 col-md-6 col-lg-3'
-    ],
-    'name' => [
-      'label' => t('user.column.name.label'),
-      'placeholder' => t('user.column.name.placeholder'),
-      'className' => 'col-xs-12 col-md-6 col-lg-3'
-    ],
-    'avatar' => [
-      'label' => t('user.column.avatar.label'),
-      'placeholder' => t('user.column.avatar.placeholder'),
-      'className' => 'col-xs-12 col-md-6 col-lg-3'
-    ],
-    'setting' => [
-      'label' => t('user.column.setting.label'),
-      'placeholder' => t('user.column.setting.placeholder')
-    ],
-    'is_enabled' => [
-      'label' => t('user.column.is_enabled.label'),
-      'placeholder' => t('user.column.is_enabled.placeholder')
-    ],
+    'message' => [
+      'label' => t('feedback.column.message.label'),
+      'placeholder' => t('feedback.column.message.placeholder')
+    ]
   ],
-  'submitButton' => t('user.edit.submit_button'),
-  'submitError' => t('user.edit.submit_error'),
-  'submitSuccess' => t('user.edit.submit_success')
+  'submitButton' => t('feedback.reply.submit_button'),
+  'submitError' => t('feedback.reply.submit_error'),
+  'submitSuccess' => t('feedback.reply.submit_success')
 ]);
 ?>
 
@@ -72,7 +51,33 @@ $form = new BuilderForm([
 
       <?php Theme::breadcrumb(); ?>
 
-      <?= getFormBox('user', $title, $user, $form->renderHtml()) ?>
+      <div class="box mb-6">
+        <div class="box__header">
+          <h4 class="box__title d-block">
+            <span><?= t('feedback.reply.from') ?>:</span>
+
+            <a href="<?= $ipChecker($feedback->ip) ?>" target="_blank">
+              <?php if (isset($feedback->user->fullname)): ?>
+                <?= $feedback->user->fullname ?>
+              <?php else: ?>
+                <?= $feedback->email ?>
+              <?php endif; ?>
+            </a>
+          </h4>
+
+          <?php if (!empty($feedback->subject)): ?>
+            <h5 class="box__subtitle">
+              <span><?= t('feedback.column.subject.label') ?>:</span>
+
+              <span><?= textHtml($feedback->subject) ?></span>
+            </h5>
+          <?php endif; ?>
+        </div>
+
+        <div class="box__body"><?= textHtml($feedback->message) ?></div>
+      </div>
+
+      <?= getFormBox('feedback', $title, $feedback, $form->renderHtml()) ?>
 
     </div>
   </section>
