@@ -9,8 +9,17 @@
   "date": {
     "last_edited": "Last edit: {v}"
   },
+  "mail": {
+    "administration": "Administration",
+    "sincerely": "Sincerely"
+  },
   "pagination": {
     "total": "Total"
+  },
+  "upload": {
+    "error": {
+      "extension": "Extension .{v} is not acceptable"
+    }
   },
   "header": {},
   "navbar": {
@@ -128,28 +137,36 @@
     },
     "column": {
       "user_id": {
-        "label": "Author"
+        "label": "Author",
+        "placeholder": "Author"
       },
       "subject": {
-        "label": "Subject"
+        "label": "Subject",
+        "placeholder": "Subject"
       },
       "message": {
-        "label": "Message"
+        "label": "Message",
+        "placeholder": "Message"
       },
       "date_created": {
-        "label": "Date"
+        "label": "Date",
+        "placeholder": "Date"
       },
       "is_read": {
-        "label": "Read"
+        "label": "Read",
+        "placeholder": "Read"
       },
       "is_replied": {
-        "label": "Replied"
+        "label": "Replied",
+        "placeholder": "Replied"
       },
       "email": {
-        "label": "Email"
+        "label": "Email",
+        "placeholder": "Email"
       },
       "ip": {
-        "label": "IP"
+        "label": "IP",
+        "placeholder": "IP"
       }
     }
   },

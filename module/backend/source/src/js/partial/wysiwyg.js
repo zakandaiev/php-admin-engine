@@ -1,4 +1,6 @@
 import Quill from 'quill';
+import { request } from '@/js/util/request';
+import toast from '@/js/util/toast';
 
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('textarea[data-wysiwyg]').forEach((textarea) => {
@@ -41,79 +43,111 @@ document.addEventListener('DOMContentLoaded', () => {
       theme: 'snow',
     });
 
-    // POPULATE
+    // POPULATE OLD
     // editor.setContents(JSON.parse(textarea.value).ops);
 
     // UPDATE TEXTAREA VALUE
     editor.on('editor-change', () => {
+      // SET OLD
       // textarea.value = JSON.stringify(editor.getContents());
-      textarea.value = editor.root.innerHTML;
+      textarea.value = editor.root.innerHTML?.trim();
+
+      if (textarea.value === '<p><br></p>' || textarea.value === '<p></p>' || textarea.value === '<br>') {
+        textarea.value = '';
+      }
+
       textarea.dispatchEvent(new CustomEvent('change', { bubbles: true }));
     });
 
     // EXPAND
-    function handleExpand() {
+    editor.maximize = () => {
+      wysiwyg.classList.add('wysiwyg_fullscreen');
+
       const expand = wysiwyg.querySelector('.ql-expand');
-
-      function maximize() {
-        wysiwyg.classList.add('wysiwyg_fullscreen');
-        if (expand) expand.classList.add('active');
+      if (expand) {
+        expand.classList.add('active');
       }
+    };
+    editor.minimize = () => {
+      wysiwyg.classList.remove('wysiwyg_fullscreen');
 
-      function minimize() {
-        wysiwyg.classList.remove('wysiwyg_fullscreen');
-        if (expand) expand.classList.remove('active');
+      const expand = wysiwyg.querySelector('.ql-expand');
+      if (expand) {
+        expand.classList.remove('active');
       }
+    };
 
-      wysiwyg.classList.contains('wysiwyg_fullscreen') ? minimize() : maximize();
+    function handleExpand() {
+      if (wysiwyg.classList.contains('wysiwyg_fullscreen')) {
+        editor.minimize();
+      } else {
+        editor.maximize();
+      }
     }
 
-    // TODO IMAGE UPLOAD
-    // const Image = editor.import('formats/image');
-    // Image.className = 'image-fluid';
-    // editor.register(Image, true);
+    // TODO upload loader
+    function handleImage() {
+      const input = document.createElement('input');
+      input.setAttribute('type', 'file');
+      input.setAttribute('accept', 'image/*');
+      input.click();
 
-    // function handleImage() {
-    // 	const input = document.createElement('input');
-    // 	input.setAttribute('type', 'file');
-    // 	input.setAttribute('accept', 'image/*');
-    // 	input.click();
+      input.onchange = async () => {
+        const img = input.files[0];
 
-    // 	input.onchange = () => {
-    // 		const file = input.files[0];
+        if (!img) {
+          return false;
+        }
 
-    // 		if(file) {
-    // 			let formData = new FormData();
-    // 			formData.append('file', file);
-    // 			formData.append(SETTING.csrf.key, SETTING.csrf.token);
+        const formData = new FormData();
+        formData.append('image', img);
+        formData.append(window?.Engine?.csrf?.key, window?.Engine?.csrf?.token);
 
-    // 			editor.enable(false);
+        editor.enable(false);
 
-    // 			fetch(BASE_URL + '/upload/', {method: 'POST', body: formData})
-    // 			.then(response => response.text())
-    // 			.then(data => {
-    // 				const selection = editor.getSelection().index;
-    // 				const image_url = BASE_URL + '/' + data;
+        const data = await request(
+          `${window?.Engine?.site?.url}/backend/upload/wysiwyg`,
+          {
+            headers: {},
+            method: 'POST',
+            body: formData,
+          },
+          window?.Engine?.api?.timeoutMs,
+          window?.Engine?.api?.delayMs,
+        );
 
-    // 				editor.insertEmbed(selection, 'image', image_url);
-    // 				editor.setSelection(selection + 1);
-    // 			})
-    // 			.catch(error => {
-    // 				if (toast instanceof Function) {
-    // 					toast('error', error);
-    // 				}
-    // 				else {
-    // 					console.log(error);
-    // 				}
-    // 			})
-    // 			.finally(() => {
-    // 				editor.enable(true);
-    // 			});
-    // 		}
-    // 	};
-    // }
+        if (data.code === 200 && data.status === 'success') {
+          const selection = editor.getSelection().index;
+          const imageUrl = `${window?.Engine?.site?.url}/${data.data}`;
+
+          editor.insertEmbed(selection, 'image', imageUrl);
+          editor.setSelection(selection + 1);
+        } else {
+          toast(data.message, data.status);
+        }
+
+        editor.enable(true);
+      };
+    }
 
     wysiwyg.wysiwyg = editor;
     textarea.wysiwyg = editor;
+  });
+
+  // MINIMIZE BY ESC
+  document.addEventListener('keydown', (event) => {
+    let isEscape = false;
+
+    if ('key' in event) {
+      isEscape = (event.key === 'Escape' || event.key === 'Esc');
+    } else {
+      isEscape = (event.keyCode === 27);
+    }
+
+    if (!isEscape) {
+      return false;
+    }
+
+    document.querySelectorAll('.wysiwyg_fullscreen').forEach((el) => el.wysiwyg.minimize());
   });
 });

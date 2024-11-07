@@ -35,11 +35,11 @@ $table = new BuilderTable([
         $output = '';
 
         if (!empty($item->subject)) {
-          $output .= '<b>' . t('feedback.column.subject.label') . '</b>: ' . textHtml(textExcerpt($item->subject, 50)) . '<br>';
+          $output .= '<b>' . t('feedback.column.subject.label') . '</b>: ' . textWord(textExcerpt($item->subject, 50)) . '<br>';
           $output .= '<b>' . t('feedback.column.message.label') . '</b>: ';
         }
 
-        $output .= textHtml(textExcerpt($item->message, 50));
+        $output .= textWord(textExcerpt($item->message, 50));
 
         return $output;
       },

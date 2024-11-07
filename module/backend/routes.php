@@ -39,3 +39,6 @@ Router::register('get', '/backend/user/edit/$id', 'User@getEdit', 'user.edit');
 
 ############################# SETTING #############################
 Router::register('get', '/backend/setting/$section', 'Setting@getSection', 'setting.section');
+
+############################# UPLOAD #############################
+Router::register('post', '/backend/upload/$section', 'Upload@getSection', 'upload.section');

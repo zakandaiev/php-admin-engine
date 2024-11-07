@@ -5,6 +5,7 @@ namespace engine\util;
 use engine\Engine;
 use engine\database\Query;
 use engine\module\Setting;
+use engine\i18n\I18n;
 use engine\http\Request;
 use engine\util\Path;
 
@@ -47,10 +48,15 @@ class Mail
     //   }
     // }
 
+    $currentLanguage = I18n::getCurrent();
+    $siteLanguage = Setting::getProperty('language', 'engine');
+
     $siteName = Setting::getProperty('name', 'engine') ?? Engine::NAME;
-    // TODO
-    debug($siteName, $this->from);
-    exit;
+    if (is_object($siteName) && property_exists($siteName, $currentLanguage)) {
+      $siteName = $siteName->$currentLanguage;
+    } else if (is_object($siteName) && property_exists($siteName, $siteLanguage)) {
+      $siteName = $siteName->$siteLanguage;
+    }
     $headers = [
       'Content-type' => 'text/html',
       'charset' => 'utf-8',

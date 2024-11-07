@@ -405,7 +405,8 @@ Hook::run('sidebar.append', [
   'id' => 'backend.translation',
   'icon' => 'world',
   'text' => t('translation.sidebar'),
-  'name' => 'translation.list'
+  'name' => 'translation.list',
+  'activeRoutes' => ['translation.edit']
 ]);
 
 Hook::run('sidebar.append', [
@@ -422,7 +423,8 @@ Hook::run('sidebar.append', [
     return \module\backend\model\Feedback::getInstance()->countUnreadFeedback();
   },
   'text' => t('feedback.sidebar'),
-  'name' => 'feedback.list'
+  'name' => 'feedback.list',
+  'activeRoutes' => ['feedback.reply']
 ]);
 
 Hook::run('sidebar.append', [

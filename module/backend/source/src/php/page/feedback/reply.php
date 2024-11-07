@@ -69,12 +69,12 @@ $form = new BuilderForm([
             <h5 class="box__subtitle">
               <span><?= t('feedback.column.subject.label') ?>:</span>
 
-              <span><?= textHtml($feedback->subject) ?></span>
+              <span><?= textWord($feedback->subject) ?></span>
             </h5>
           <?php endif; ?>
         </div>
 
-        <div class="box__body"><?= textHtml($feedback->message) ?></div>
+        <div class="box__body"><?= textWord($feedback->message) ?></div>
       </div>
 
       <?= getFormBox('feedback', $title, $feedback, $form->renderHtml()) ?>
