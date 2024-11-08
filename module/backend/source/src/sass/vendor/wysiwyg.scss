@@ -256,6 +256,11 @@
     color: var(--color-link);
   }
 
+  .ql-snow .ql-editor img {
+    max-width: 100%;
+    max-height: 40vh;
+  }
+
   .ql-header svg,
   .ql-color svg,
   .ql-background svg,

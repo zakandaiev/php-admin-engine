@@ -85,19 +85,14 @@ a {
   text-decoration: none;
   transition: var(--transition);
 
-  &:hover,
-  &:focus,
-  &:active {
+  &:hover, &:focus, &:active {
     color: var(--color-link-hover);
   }
 
-  &[href^="tel:"],
-  &[href^="mailto:"] {
+  &[href^="tel:"], &[href^="mailto:"] {
     text-decoration: underline;
 
-    &:hover,
-    &:focus,
-    &:active {
+    &:hover, &:focus, &:active {
       text-decoration: none;
     }
   }

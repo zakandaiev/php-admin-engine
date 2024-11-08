@@ -17,17 +17,20 @@ $form = new Form([
   ],
   'columns' => [
     'email' => [
-      'label' => t('auth.column.email'),
-      'placeholder' => t('auth.column.email_placeholder')
+      'label' => t('auth.column.email.label'),
+      'placeholder' => t('auth.column.email.placeholder')
     ],
     'password' => [
-      'label' => t('auth.column.password'),
-      'placeholder' => t('auth.column.password_placeholder')
+      'label' => t('auth.column.password.label'),
+      'placeholder' => t('auth.column.password.placeholder')
     ],
   ],
-  'submitButton' => t('auth.login.submit'),
+  'submitButton' => t('auth.login.submit_button'),
+  'submitError' => t('auth.login.submit_error'),
+  'submitSuccess' => t('auth.login.submit_success'),
   'submitButtonClass' => 'btn btn_primary btn_fit'
 ]);
+
 ?>
 
 <?php Theme::header(); ?>
@@ -80,9 +83,9 @@ $form = new Form([
             </div>
           </div>
 
-          <div class="d-flex flex-column gap-1 text-center mt-4">
+          <div class="d-flex flex-column align-items-center gap-1 text-center mt-4">
             <a href="<?= routeLink('registration') ?>"><?= t('auth.login.registration') ?></a>
-            <a href="<?= routeLink('reset-password') ?>"><?= t('auth.login.reset_password') ?></a>
+            <a href="<?= routeLink('reset-password') ?>"><?= t('auth.login.restore') ?></a>
           </div>
 
         </div>

@@ -25,6 +25,59 @@
   "navbar": {
     "open_site": "Open site"
   },
+  "auth": {
+    "login": {
+      "cta": "Sign in to continue",
+      "registration": "Registration",
+      "restore": "Reset password",
+      "submit_error": "Error",
+      "submit_button": "Sign in",
+      "submit_success": "Sign in successful"
+    },
+    "registration": {
+      "cta": "Get started",
+      "login": "Sign in",
+      "submit_error": "Error",
+      "submit_button": "Register",
+      "submit_success": "Registration successful",
+      "success_title": "Registration successful",
+      "success_text": "Your account has been succesfully created. Now you can sign in"
+    },
+    "restore": {
+      "cta": "Reset your password",
+      "login": "Sign in",
+      "submit_error": "Error",
+      "submit_button": "Reset",
+      "submit_success": "Password reset successful",
+      "success_title": "Password reset successful",
+      "success_text": "An email message has been sent containing a new data to sign in"
+    },
+    "column": {
+      "name": {
+        "label": "Name",
+        "placeholder": "Name",
+        "required": "Name is required",
+        "min": "Name is too short",
+        "max": "Name is too long",
+        "regex": "Name should contain only words"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Email",
+        "required": "Email is required",
+        "min": "Email is too short",
+        "max": "Email is too long",
+        "email": "Email format is invalid"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Password",
+        "required": "Password is required",
+        "min": "Password is too short",
+        "max": "Password is too long"
+      }
+    }
+  },
   "dashboard": {
     "title": "Dashboard",
     "sidebar": "Dashboard"

@@ -123,9 +123,7 @@
       }
     }
 
-    &:hover,
-    &:focus,
-    &:active {
+    &:hover, &:focus, &:active {
       color: rgb(233 236 239 / 75%);
 
       &.active {
@@ -236,9 +234,7 @@
       color: #518be1;
     }
 
-    &:hover,
-    &:focus,
-    &:active {
+    &:hover, &:focus, &:active {
       color: #e9ecef;
 
       &::before {

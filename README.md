@@ -5,7 +5,6 @@
 * backend module: rewrite from scratch
 * frontend module: rewrite from scratch
 * install module: rewrite from scratch
-* dev module: refactor all uis
 * dev module: create interface that will generate I18n files for modules
 * dev module: create interface that will install/uninstall modules
 * all files: replace all tabs with spaces
@@ -15,25 +14,9 @@
 * **OLD todos below**:
 * engine: replace all strtok with explode
 * engine: modules install
-* engine: remake Form from static to non-static concept (static should be only token creation methods)
 * engine: cached queries would fail with pagination
-* admin: create form-behavior.js
-* admin: create foreign-form.js
-* admin: create collapse.js
-* admin: wysiwyg add image upload in js (but before handle /admin/upload routes for get, post, delete)
-* admin: dashboard
-* admin: profile
-* admin: pages interface
-* admin: comments interface
-* admin: menu interface
-* admin: translations interface
-* admin: messages interface
-* admin: logs interface
-* admin: handle login & access to routes due to group, registration, reset password
 * admin: change favicons, logos to branded
 * admin: fix data-copy from awesomecs + update gist
-* admin: quill add margin-bottom to every
-* admin: automatically set values to form input's in edit pages (setFieldValue)
 * admin: uploads interface (scan /upload directory)
 * admin: insert files from uploads interface to wysiwyg, forms etc.
 * dev: refactor charts initialization, add default double-theme colors etc.
@@ -51,14 +34,14 @@
 
 ## Server environment requirements
 * PHP 7.4+
-  * extenstion: fileinfo, mbstring, pdo, pdo_mysql, timezonedb
+  * extenstion: fileinfo, mbstring, pdo, pdo_mysql, tzinfo, timezonedb
 * MySQL 5.6+ or MariaDB 10.3+
 
 ## Installation
-1. Download/clone this repository to your web server
+1. Download this repository in .zip and extract to your web server
 2. Install dependencies with `composer upgrade` command
 3. Open the site and fill out the installation form
-4. Create your own modules & enjoy ;)
+4. Use as is or create your own modules & enjoy ;)
 
 ## Roadmap
 * create an api module:

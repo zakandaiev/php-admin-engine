@@ -17,19 +17,21 @@ $form = new Form([
   ],
   'columns' => [
     'name' => [
-      'label' => t('auth.column.name'),
-      'placeholder' => t('auth.column.name_placeholder')
+      'label' => t('auth.column.name.label'),
+      'placeholder' => t('auth.column.name.placeholder')
     ],
     'email' => [
-      'label' => t('auth.column.email'),
-      'placeholder' => t('auth.column.email_placeholder')
+      'label' => t('auth.column.email.label'),
+      'placeholder' => t('auth.column.email.placeholder')
     ],
     'password' => [
-      'label' => t('auth.column.password'),
-      'placeholder' => t('auth.column.password_placeholder')
+      'label' => t('auth.column.password.label'),
+      'placeholder' => t('auth.column.password.placeholder')
     ],
   ],
-  'submitButton' => t('auth.registration.submit'),
+  'submitButton' => t('auth.registration.submit_button'),
+  'submitError' => t('auth.registration.submit_error'),
+  'submitSuccess' => t('auth.registration.submit_success'),
   'submitButtonClass' => 'btn btn_primary btn_fit'
 ]);
 ?>
@@ -89,7 +91,7 @@ $form = new Form([
             </div>
           </div>
 
-          <div class="text-center mt-4">
+          <div class="d-flex flex-column align-items-center gap-1 text-center mt-4">
             <a href="<?= routeLink('login') ?>"><?= t('auth.registration.login') ?></a>
           </div>
 

@@ -17,11 +17,13 @@ $form = new Form([
   ],
   'columns' => [
     'email' => [
-      'label' => t('auth.column.email'),
-      'placeholder' => t('auth.column.email_placeholder')
+      'label' => t('auth.column.email.label'),
+      'placeholder' => t('auth.column.email.placeholder')
     ],
   ],
-  'submitButton' => t('auth.restore.submit'),
+  'submitButton' => t('auth.restore.submit_button'),
+  'submitError' => t('auth.restore.submit_error'),
+  'submitSuccess' => t('auth.restore.submit_success'),
   'submitButtonClass' => 'btn btn_primary btn_fit'
 ]);
 ?>
@@ -61,8 +63,8 @@ $form = new Form([
             </div>
           </div>
 
-          <div class="text-center mt-4">
-            <a href="<?= routeLink('login') ?>"><?= t('auth.restore.back_to_login') ?></a>
+          <div class="d-flex flex-column align-items-center gap-1 text-center mt-4">
+            <a href="<?= routeLink('login') ?>"><?= t('auth.restore.login') ?></a>
           </div>
 
         </div>

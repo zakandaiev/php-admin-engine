@@ -510,9 +510,7 @@ $wahem-step: 1;
   &_hover {
     transition: var(--transition);
 
-    &:hover,
-    &:focus,
-    &:active {
+    &:hover, &:focus, &:active {
       color: var(--color-link-hover) !important;
     }
   }
@@ -524,9 +522,7 @@ $wahem-step: 1;
   &_hover {
     transition: var(--transition);
 
-    &:hover,
-    &:focus,
-    &:active {
+    &:hover, &:focus, &:active {
       background: var(--color-border-hover) !important;
     }
   }
@@ -547,9 +543,7 @@ $wahem-step: 1;
     &_hover {
       transition: var(--transition);
 
-      &:hover,
-      &:focus,
-      &:active {
+      &:hover, &:focus, &:active {
         color: var(--color-#{$color}-hover) !important;
       }
     }
@@ -561,9 +555,7 @@ $wahem-step: 1;
     &_hover {
       transition: var(--transition);
 
-      &:hover,
-      &:focus,
-      &:active {
+      &:hover, &:focus, &:active {
         background: var(--color-#{$color}-hover) !important;
       }
     }

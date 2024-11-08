@@ -14,9 +14,20 @@ class Date
 
   public static function getUserTimezone()
   {
-    if (empty(self::$userTimezone) && Cookie::has(Config::getProperty('userTimezoneKey', 'cookie'))) {
-      self::$userTimezone = new DateTimeZone(timezone_name_from_abbr('', abs(intval(Cookie::get(Config::getProperty('userTimezoneKey', 'cookie')))) * 60, 0));
-    } else if (empty(self::$userTimezone)) {
+    if (!empty(self::$userTimezone)) {
+      return self::$userTimezone;
+    }
+
+    $userTimezoneKey = Config::getProperty('userTimezoneKey', 'cookie');
+
+    if (Cookie::has($userTimezoneKey)) {
+      $serverTimezoneOffset = (date('Z') / 60) ?? 0;
+      $userTimezoneOffset = intval(Cookie::get($userTimezoneKey)) ?? 0;
+
+      $nameTimezone = timezone_name_from_abbr('', ($serverTimezoneOffset - $userTimezoneOffset) * 60, 0);
+
+      self::$userTimezone = new DateTimeZone($nameTimezone);
+    } else {
       self::$userTimezone = new DateTimeZone(date_default_timezone_get());
     }
 

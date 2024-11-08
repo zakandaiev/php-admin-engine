@@ -97,9 +97,7 @@
 
     transition: var(--transition);
 
-    &:hover,
-    &:focus,
-    &:active {
+    &:hover, &:focus, &:active {
       color: var(--color-heading);
       text-decoration: none;
     }

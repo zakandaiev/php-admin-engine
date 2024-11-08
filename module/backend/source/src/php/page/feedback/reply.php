@@ -16,11 +16,9 @@ $form = new BuilderForm([
   'modelName' => 'Feedback',
   'itemId' => $feedback->id,
   'isMatchRequest' => true,
-  // 'values' => $feedback,
   'attributes' => [
-    // 'data-redirect="' . routeLink('feedback.list') . '"',
-    'data-validate',
-    'data-reset'
+    'data-redirect="' . routeLink('feedback.list') . '"',
+    'data-validate'
   ],
   'columns' => [
     'subject' => [

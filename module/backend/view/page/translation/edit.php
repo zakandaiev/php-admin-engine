@@ -27,6 +27,8 @@ $form = new BuilderForm([
   'submitError' => t('translation.edit.submit_error'),
   'submitSuccess' => t('translation.edit.submit_success')
 ]);
+
+$titleNice = '<img class="d-inline-block w-1em h-1em vertical-align-middle radius-round" src="' . pathResolveUrl(Asset::url(), lang('icon', $language)) . '" alt="' . $language . '">&nbsp;' . $language . '_' . $region . ' - ' . t('i18n.' . $language);
 ?>
 
 <?php Theme::header(); ?>
@@ -42,7 +44,7 @@ $form = new BuilderForm([
 
       <?php Theme::breadcrumb(); ?>
 
-      <?= getFormBox('translation', $title, null, $form->renderHtml()) ?>
+      <?= getFormBox('translation', $titleNice, null, $form->renderHtml()) ?>
 
     </div>
   </section>

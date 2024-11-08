@@ -1,13 +1,12 @@
 <?php
 
 $title = t('group.translation.title');
-$languageIcon = '<img class="d-inline-block w-1em h-1em vertical-align-middle radius-round" src="' . pathResolveUrl(Asset::url(), lang('icon', $group->language)) . '" alt="' . $group->language . '">&nbsp;';
 
 Page::set('title', $title);
 
 Page::breadcrumb('add', t('group.list.title'), 'group.list');
 Page::breadcrumb('add', t('group.edit.title'), 'group.edit', ['parameter' => ['id' => $group->id]]);
-Page::breadcrumb('add', $languageIcon . $title);
+Page::breadcrumb('add', $title);
 
 $form = new BuilderForm([
   'action' => 'edit',
@@ -32,6 +31,8 @@ $form = new BuilderForm([
   'submitError' => t('group.translation.submit_error'),
   'submitSuccess' => t('group.translation.submit_success')
 ]);
+
+$titleNice = '<img class="d-inline-block w-1em h-1em vertical-align-middle radius-round" src="' . pathResolveUrl(Asset::url(), lang('icon', $group->language)) . '" alt="' . $group->language . '">&nbsp;' . $title;
 ?>
 
 <?php Theme::header(); ?>
@@ -47,7 +48,7 @@ $form = new BuilderForm([
 
       <?php Theme::breadcrumb(); ?>
 
-      <?= getFormBox('group', $title, $group, $form->renderHtml()) ?>
+      <?= getFormBox('group', $titleNice, $group, $form->renderHtml()) ?>
 
     </div>
   </section>
