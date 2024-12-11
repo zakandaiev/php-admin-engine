@@ -7,9 +7,8 @@
 # Engine files
 /robots.txt
 /sitemap.xml
-/theme/**/_o*.css
-/theme/**/_o*.js
 
 # Misc
-node_modules/
+.osp/
 composer.lock
+node_modules/

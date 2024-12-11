@@ -18,7 +18,7 @@
         "max": "This ID is too long"
       },
       "google_tag_manager": {
-        "label": "Google Tag Maneger ID",
+        "label": "Google Tag Manager ID",
         "placeholder": "GTM-XXXXXXXX",
         "required": "This ID is required",
         "min": "This ID is too short",

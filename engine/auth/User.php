@@ -7,6 +7,7 @@ use engine\database\Query;
 use engine\http\Cookie;
 use engine\http\Request;
 use engine\util\Hash;
+use engine\util\Log;
 
 class User
 {
@@ -172,26 +173,24 @@ class User
 
     self::$data = self::format($user, true);
 
+    Log::write('authorize', 'user');
+    Hook::run('user.authorize', $user);
     // TODO
     // Notification::create('user_authorize', $user->id, ['ip' => $user->ip]);
-    // Log::write("User ID: {$user->id} logged in from IP: {$user->ip}", 'user');
-    // Hook::run('user.authorize', $user);
 
     return true;
   }
 
   public static function unauthorize()
   {
-    $userId = self::get('id');
-    $userIp = Request::ip();
+    $user = self::get();
     $cookieKey = self::getCookieKey();
+
+    Log::write('unauthorize', 'user');
+    Hook::run('user.unauthorize', $user);
 
     self::set();
     Cookie::flush($cookieKey);
-
-    // TODO
-    // Log::write("User ID: $userId logged out from IP: $userIp", 'user');
-    // Hook::run('user.unauthorize', self::$data);
 
     return true;
   }
@@ -202,6 +201,8 @@ class User
       return false;
     }
 
+    $id = Hash::token();
+
     $sql = '
     	INSERT INTO {user}
     		(id, name, email, password)
@@ -210,19 +211,16 @@ class User
     ';
 
     $query = new Query($sql);
-    $queryResult = $query->execute(['id' => Hash::token(), 'name' => $name, 'email' => $email, 'password' => Hash::password($password)]);
+    $queryResult = $query->execute(['id' => $id, 'name' => $name, 'email' => $email, 'password' => Hash::password($password)]);
     if ($queryResult->hasError()) {
       return false;
     }
 
+    Log::write("register $id $email", 'user');
+    Hook::run('user.register', $id, $email, $name);
     // TODO
     // Notification::create('user_register', $user->id, ['ip' => $user->ip]);
     // Mail::send('Register', $user->email, $user);
-
-    // $user_ip = Request::ip();
-    // Log::write("User ID: {$user->id} registered from IP: {$user->ip}", 'user');
-
-    // Hook::run('user.register', $user);
 
     return true;
   }
@@ -250,14 +248,11 @@ class User
 
     self::$data = self::format($user);
 
+    Log::write("restore {$user->id} {$user->email}", 'user');
+    Hook::run('user.restore', $user);
     // TODO
-    // Notification::create('user_restore', $user->id, ['ip' => Request::ip()]);
     // Mail::send('Restore', $email, $user);
-
-    // $user_ip = Request::ip();
-    // Log::write("User ID: {$user->id} restored password from IP: $user_ip", 'user');
-
-    // Hook::run('user.restore', $user);
+    // Notification::create('user_restore', $user->id, ['ip' => Request::ip()]);
 
     return true;
   }

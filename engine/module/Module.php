@@ -2,6 +2,7 @@
 
 namespace engine\module;
 
+use engine\util\Log;
 use engine\util\Path;
 
 class Module

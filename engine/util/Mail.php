@@ -7,10 +7,12 @@ use engine\database\Query;
 use engine\module\Setting;
 use engine\i18n\I18n;
 use engine\http\Request;
+use engine\util\Log;
 use engine\util\Path;
 
 class Mail
 {
+  protected $fileName;
   protected $from;
   protected $to;
   protected $subject;
@@ -24,6 +26,7 @@ class Mail
       return $this;
     }
 
+    $this->fileName = $fileName;
     $this->from = $options['from'] ?? $mailData['from'] ?? Setting::getProperty('email', 'contact');
     $this->to = $options['to'] ?? $mailData['to'] ?? null;
     $this->subject = $options['subject'] ?? $mailData['subject'] ?? null;
@@ -33,12 +36,12 @@ class Mail
 
   public function send()
   {
-    if (empty($this->from) || empty($this->to) || empty($this->subject) || empty($this->message)) {
+    if (empty($this->fileName) || empty($this->from) || empty($this->to) || empty($this->subject) || empty($this->message)) {
       return false;
     }
 
     // TODO
-    // if (!$this->forced) {
+    // if (!$this->isForced) {
     //   $sql = 'SELECT * FROM {user} WHERE email = :email ORDER BY date_created DESC LIMIT 1';
     //   $user = new Query($sql);
     //   $user = $user->execute(['email' => $recepient])->fetch();
@@ -65,9 +68,8 @@ class Mail
       'Reply-To' => $this->from
     ];
 
-    // TODO
-    // Log::write($subject .  ' sent to ' . $recepient . ' from IP: ' . Request::ip(), 'mail');
-    // Hook::run('mail.send', $data);
+    Log::write("{$this->fileName} to {$this->to}", 'mail');
+    Hook::run('mail.send', $this);
 
     return mail($this->to, $this->subject, $this->message, $headers);
   }

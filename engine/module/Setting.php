@@ -4,6 +4,7 @@ namespace engine\module;
 
 use engine\module\Module;
 use engine\database\Query;
+use engine\util\Log;
 
 class Setting
 {
@@ -91,10 +92,7 @@ class Setting
 
     $statement->execute($params);
 
-    // TODO
-    // $user_id = @User::get()->id ?? 'unlogged';
-    // $user_ip = Request::ip();
-    // Log::write("Setting: $name changed by user ID: $user_id from IP: $user_ip", 'setting');
+    Log::write("update $name from $module", 'setting');
 
     // Hook::run('setting.update', $params);
     // Hook::run('setting.update.' . $name, $params);

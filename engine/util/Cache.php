@@ -3,6 +3,7 @@
 namespace engine\util;
 
 use engine\Config;
+use engine\module\Hook;
 use engine\util\Log;
 use engine\util\File;
 
@@ -27,10 +28,8 @@ class Cache
 
     File::createFile($path, $content);
 
-    // TODO
-    // $user_id = @User::get()->id ?? 'unlogged';
-    // $user_ip = Request::ip();
-    // Log::write("Cache key: $name created by user ID: $user_id from IP: $user_ip", 'cache');
+    Log::write("add $name", 'cache');
+    Hook::run('cache.add', $name);
 
     return true;
   }
@@ -65,10 +64,8 @@ class Cache
 
     File::delete($path);
 
-    $user_id = @User::get()->id ?? 'unlogged';
-    $user_ip = Request::ip();
-    // TODO
-    // Log::write("Cache key: $key deleted by user ID: $user_id from IP: $user_ip", 'cache');
+    Log::write("delete $name", 'cache');
+    Hook::run('cache.delete', $name);
 
     return true;
   }
@@ -89,11 +86,7 @@ class Cache
       unlink($path . '/' . $file);
     }
 
-    $user_id = @User::get()->id ?? 'unlogged';
-    $user_ip = Request::ip();
-    // TODO
-    // Log::write("Cache: flushed by user ID: $user_id from IP: $user_ip", 'cache');
-
+    Log::write('flush', 'cache');
     Hook::run('cache.flush');
 
     return true;

@@ -5,7 +5,6 @@ namespace engine\database;
 use engine\Config;
 use engine\database\Validation;
 use engine\http\Request;
-use engine\module\Module;
 use engine\util\Upload;
 
 abstract class Model extends Validation

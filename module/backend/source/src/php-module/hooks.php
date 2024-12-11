@@ -2,6 +2,7 @@
 
 use engine\module\Hook;
 use engine\module\Module;
+use engine\util\Log;
 
 ############################# EXTEND PAGE META #############################
 Hook::setData('page.meta', []);
@@ -107,6 +108,29 @@ function formatSidebarRoute($route = [])
   return $route;
 }
 
+// TODO - form execute post -> group model use post & call hook
+// ############################# GROUP #############################
+Hook::register('group.add', function ($data) {
+  Log::write('add ' . $data->id, 'group');
+});
+Hook::register('group.edit', function ($data) {
+  Log::write('edit ' . $data->id, 'group');
+});
+Hook::register('group.delete', function ($data) {
+  Log::write('delete ' . $data->id, 'group');
+});
+
+// ############################# USER #############################
+Hook::register('user.add', function ($data) {
+  Log::write('add ' . $data->id, 'user');
+});
+Hook::register('user.edit', function ($data) {
+  Log::write('edit ' . $data->id, 'user');
+});
+Hook::register('user.delete', function ($data) {
+  Log::write('delete ' . $data->id, 'user');
+});
+
 // ############################# NOTIFICATION #############################
 // $GLOBALS['notification'] = [];
 
@@ -131,28 +155,6 @@ function formatSidebarRoute($route = [])
 // });
 // Hook::register('translation_edit', function($data) {
 // 	Log::write('Translation: ' . $data['file'] . ' edited for ' . $data['module'] . ' module by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'translation');
-// });
-
-// ############################# GROUP #############################
-// Hook::register('group_add', function($data) {
-// 	Log::write('Group ID: ' . $data->form_data['item_id'] . ' added by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'group');
-// });
-// Hook::register('group_edit', function($data) {
-// 	Log::write('Group ID: ' . $data->form_data['item_id'] . ' edited by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'group');
-// });
-// Hook::register('group_delete', function($data) {
-// 	Log::write('Group ID: ' . $data->form_data['item_id'] . ' deleted by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'group');
-// });
-
-// ############################# USER #############################
-// Hook::register('user_add', function($data) {
-// 	Log::write('User ID: ' . $data->form_data['item_id'] . ' added by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'user');
-// });
-// Hook::register('user_edit', function($data) {
-// 	Log::write('User ID: ' . $data->form_data['item_id'] . ' edited by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'user');
-// });
-// Hook::register('user_delete', function($data) {
-// 	Log::write('User ID: ' . $data->form_data['item_id'] . ' deleted by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'user');
 // });
 
 // ############################# COMMENT #############################

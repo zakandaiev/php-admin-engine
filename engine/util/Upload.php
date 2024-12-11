@@ -4,8 +4,10 @@ namespace engine\util;
 
 use engine\Config;
 use engine\auth\User;
+use engine\module\Hook;
 use engine\util\File;
 use engine\util\Hash;
+use engine\util\Log;
 use engine\util\Path;
 
 class Upload
@@ -60,8 +62,8 @@ class Upload
 
   public function execute()
   {
-    $this->uploadFiles();
-    $this->logFiles();
+    $this->uploadFile();
+    $this->logFile();
 
     return $this;
   }
@@ -116,13 +118,16 @@ class Upload
     $name = time() . '-' . (User::get('isAuthorized') ? User::get('id') : 'uu') . '-' . Hash::token(4) . '.' . $extension;
     $path = Path::resolve($this->folder, $name);
     $pathFull = Path::resolve(ROOT_DIR, $path);
-
+    $url = Path::resolveUrl(null, $path);
+    $userId = User::get('isAuthorized') ? User::get('id') : 'unlogged';
 
     $this->file = [
       'extension' => $extension,
       'name' => $name,
       'path' => $path,
       'pathFull' => $pathFull,
+      'url' => $url,
+      'userId' => $userId,
       'nameOriginal' => $data['name'],
       'size' => $data['size'],
       'tmp_name' => $data['tmp_name'],
@@ -133,7 +138,7 @@ class Upload
     return true;
   }
 
-  protected function uploadFiles()
+  protected function uploadFile()
   {
     if (empty($this->file)) {
       return false;
@@ -155,20 +160,20 @@ class Upload
     return true;
   }
 
-  protected function logFiles()
+  protected function logFile()
   {
-    // TODO
-    // if (empty($this->result['files']) || !$this->result['status']) {
-    //   return false;
-    // }
+    if (empty($this->file)) {
+      return false;
+    }
 
-    // $user_id = @User::get()->id ?? 'unlogged';
-    // $user_ip = Request::ip();
+    $text = "error {$this->file['nameOriginal']}";
 
-    // foreach ($this->result['files'] as $file) {
-    //   Log::write(Path::url() . "/$file uploaded by user ID: $user_id from IP: $user_ip", 'upload');
-    //   Hook::run('upload', $file);
-    // }
+    if ($this->file['status']) {
+      $text = "success {$this->file['url']}";
+    }
+
+    Log::write($text, 'upload');
+    Hook::run('upload', $this->file);
 
     return true;
   }
