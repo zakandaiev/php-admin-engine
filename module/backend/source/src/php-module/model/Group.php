@@ -5,6 +5,7 @@ namespace module\backend\model;
 use engine\auth\User;
 use engine\database\Model;
 use engine\database\Query;
+use engine\module\Hook;
 use engine\module\Module;
 use engine\util\Hash;
 
@@ -71,6 +72,13 @@ class Group extends Model
       'type' => 'boolean',
       'value' => false
     ]);
+
+    $this->setSubmitOption('execute.post', function ($result, $formInstance) {
+      $action = $formInstance->getAction();
+      $column = $formInstance->getModel()->getColumn();
+
+      Hook::run("group.$action", $result, $column);
+    });
   }
 
   public function getGroups()

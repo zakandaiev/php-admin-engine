@@ -31,7 +31,7 @@ Hook::run('sidebar.prepend', [
   'id' => 'dev.ui-separator',
   'text' => '',
   'isSeparator' => true,
-  'name' => 'log'
+  'name' => 'log.list'
 ]);
 
 Hook::run('sidebar.prepend', [
@@ -45,7 +45,7 @@ Hook::run('sidebar.prepend', [
   'id' => 'dev.log',
   'icon' => 'activity',
   'text' => 'Logs',
-  'name' => 'log'
+  'name' => 'log.list'
 ]);
 
 Hook::run('sidebar.prepend', [
@@ -59,5 +59,5 @@ Hook::run('sidebar.prepend', [
   'id' => 'dev.log-separator',
   'text' => 'Dev',
   'isSeparator' => true,
-  'name' => 'log'
+  'name' => 'log.list'
 ]);

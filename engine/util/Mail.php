@@ -4,9 +4,10 @@ namespace engine\util;
 
 use engine\Engine;
 use engine\database\Query;
-use engine\module\Setting;
-use engine\i18n\I18n;
 use engine\http\Request;
+use engine\i18n\I18n;
+use engine\module\Hook;
+use engine\module\Setting;
 use engine\util\Log;
 use engine\util\Path;
 

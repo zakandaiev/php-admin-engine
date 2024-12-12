@@ -7,9 +7,17 @@
   display: flex;
   flex-direction: column;
   background: var(--color-box);
+  border-bottom: var(--border);
 
-  &:not(:last-child) {
-    border-bottom: var(--border);
+  &:first-child {
+    border-top-left-radius: var(--radius-xs);
+    border-top-right-radius: var(--radius-xs);
+  }
+
+  &:last-child {
+    border-bottom-width: 0;
+    border-bottom-right-radius: var(--radius-xs);
+    border-bottom-left-radius: var(--radius-xs);
   }
 
   // .accordion__header
@@ -26,6 +34,10 @@
     font-size: 1.6rem;
     font-weight: var(--font-medium);
     color: var(--color-text);
+
+    &:hover, &:focus, &:active {
+      color: var(--color-text);
+    }
 
     & > span {
       flex: 1 1 auto;

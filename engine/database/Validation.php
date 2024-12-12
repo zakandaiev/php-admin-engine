@@ -230,7 +230,7 @@ abstract class Validation
     return true;
   }
 
-  public function setError($columnName = null, $validation = null, $columnValue = null)
+  public function setError($columnName = null, $validationMessage = null, $columnValue = null)
   {
     if (is_array($columnName)) {
       $this->error[] = $columnName;
@@ -244,7 +244,7 @@ abstract class Validation
 
     $this->error[] = [
       'column' => $columnName,
-      'validation' => $validation,
+      'validationMessage' => $validationMessage,
       'value' => $columnValue
     ];
 
@@ -312,7 +312,7 @@ abstract class Validation
           'column' => $columnName,
           'validationName' => $validationName,
           'validationMessage' => $columnDefinition['message'][$validationName] ?? I18n::translate("$validationPrefix.column.$columnName.$validationName", $columnDefinition),
-          'value' => $columnDefinition
+          'value' => $columnValue
         ];
 
         $isColumnValidated = true;

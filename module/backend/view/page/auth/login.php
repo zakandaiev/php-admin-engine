@@ -71,7 +71,7 @@ $form = new Form([
                     <hr>
                   </div>
 
-                  <div class="col text-uppercase d-flex align-items-center"><?= t('auth.registration.or') ?></div>
+                  <div class="col text-uppercase d-flex align-items-center"><?= t('auth.register.or') ?></div>
 
                   <div class="col fill">
                     <hr>
@@ -84,7 +84,7 @@ $form = new Form([
           </div>
 
           <div class="d-flex flex-column align-items-center gap-1 text-center mt-4">
-            <a href="<?= routeLink('registration') ?>"><?= t('auth.login.registration') ?></a>
+            <a href="<?= routeLink('registration') ?>"><?= t('auth.login.register') ?></a>
             <a href="<?= routeLink('reset-password') ?>"><?= t('auth.login.restore') ?></a>
           </div>
 

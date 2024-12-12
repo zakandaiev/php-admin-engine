@@ -2,7 +2,7 @@
 
 use module\backend\builder\Form;
 
-$title = t('auth.registration.title');
+$title = t('auth.register.title');
 Page::set('title', $title);
 
 $logoImage = site('logo') ?? site('logo_alt');
@@ -29,9 +29,9 @@ $form = new Form([
       'placeholder' => t('auth.column.password.placeholder')
     ],
   ],
-  'submitButton' => t('auth.registration.submit_button'),
-  'submitError' => t('auth.registration.submit_error'),
-  'submitSuccess' => t('auth.registration.submit_success'),
+  'submitButton' => t('auth.register.submit_button'),
+  'submitError' => t('auth.register.submit_error'),
+  'submitSuccess' => t('auth.register.submit_success'),
   'submitButtonClass' => 'btn btn_primary btn_fit'
 ]);
 ?>
@@ -53,7 +53,7 @@ $form = new Form([
               <h1 class="font-size-32 mb-2"><?= site('name') ?></h1>
             <?php endif; ?>
 
-            <h4 class="color-text"><?= t('auth.registration.cta') ?></h4>
+            <h4 class="color-text"><?= t('auth.register.cta') ?></h4>
 
             <?php Theme::template('widget/lang-inline'); ?>
           </div>
@@ -62,8 +62,8 @@ $form = new Form([
             <div class="box__body">
 
               <?php if (requestHas('success')): ?>
-                <h4 class="text-center"><?= t('auth.registration.success_title') ?></h4>
-                <p class="text-center"><?= t('auth.registration.success_text') ?></p>
+                <h4 class="text-center"><?= t('auth.register.success_title') ?></h4>
+                <p class="text-center"><?= t('auth.register.success_text') ?></p>
               <?php else: ?>
                 <?php /* <div class="d-flex flex-column gap-2 mb-3">
                   <button class="btn btn_google"><i class="ti ti-brand-google"></i> <?= t('auth.login_with_google') ?></button>
@@ -78,7 +78,7 @@ $form = new Form([
                     <hr>
                   </div>
 
-                  <div class="col text-uppercase d-flex align-items-center"><?= t('auth.registration.or') ?></div>
+                  <div class="col text-uppercase d-flex align-items-center"><?= t('auth.register.or') ?></div>
 
                   <div class="col fill">
                     <hr>
@@ -92,7 +92,7 @@ $form = new Form([
           </div>
 
           <div class="d-flex flex-column align-items-center gap-1 text-center mt-4">
-            <a href="<?= routeLink('login') ?>"><?= t('auth.registration.login') ?></a>
+            <a href="<?= routeLink('login') ?>"><?= t('auth.register.login') ?></a>
           </div>
 
         </div>

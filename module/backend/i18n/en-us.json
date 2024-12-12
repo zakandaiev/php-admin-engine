@@ -28,20 +28,23 @@
   "auth": {
     "login": {
       "cta": "Sign in to continue",
-      "registration": "Registration",
+      "register": "Registration",
       "restore": "Reset password",
       "submit_error": "Error",
       "submit_button": "Sign in",
-      "submit_success": "Sign in successful"
+      "submit_success": "Sign in successful",
+      "invalid_login_or_password": "Invalid login or password",
+      "account_is_disabled": "This account is disabled"
     },
-    "registration": {
+    "register": {
       "cta": "Get started",
       "login": "Sign in",
       "submit_error": "Error",
       "submit_button": "Register",
       "submit_success": "Registration successful",
       "success_title": "Registration successful",
-      "success_text": "Your account has been succesfully created. Now you can sign in"
+      "success_text": "Your account has been succesfully created. Now you can sign in",
+      "email_already_exists": "This email already exists"
     },
     "restore": {
       "cta": "Reset your password",
@@ -50,7 +53,9 @@
       "submit_button": "Reset",
       "submit_success": "Password reset successful",
       "success_title": "Password reset successful",
-      "success_text": "An email message has been sent containing a new data to sign in"
+      "success_text": "An email message has been sent containing a new data to sign in",
+      "invalid_email": "This email not found",
+      "account_is_disabled": "This account is disabled"
     },
     "column": {
       "name": {

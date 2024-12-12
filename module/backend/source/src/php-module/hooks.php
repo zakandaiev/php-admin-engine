@@ -108,30 +108,54 @@ function formatSidebarRoute($route = [])
   return $route;
 }
 
-// TODO - form execute post -> group model use post & call hook
-// ############################# GROUP #############################
-Hook::register('group.add', function ($data) {
-  Log::write('add ' . $data->id, 'group');
+// ############################# HOOK GROUP #############################
+Hook::register('group.add', function ($result) {
+  Log::write('add ' . @$result, 'group');
 });
-Hook::register('group.edit', function ($data) {
-  Log::write('edit ' . $data->id, 'group');
+Hook::register('group.edit', function ($result) {
+  Log::write('edit ' . @$result, 'group');
 });
-Hook::register('group.delete', function ($data) {
-  Log::write('delete ' . $data->id, 'group');
-});
-
-// ############################# USER #############################
-Hook::register('user.add', function ($data) {
-  Log::write('add ' . $data->id, 'user');
-});
-Hook::register('user.edit', function ($data) {
-  Log::write('edit ' . $data->id, 'user');
-});
-Hook::register('user.delete', function ($data) {
-  Log::write('delete ' . $data->id, 'user');
+Hook::register('group.delete', function ($result) {
+  Log::write('delete ' . @$result, 'group');
 });
 
-// ############################# NOTIFICATION #############################
+// ############################# HOOK USER #############################
+Hook::register('user.add', function ($result) {
+  Log::write('add ' . @$result, 'user');
+});
+Hook::register('user.edit', function ($result) {
+  Log::write('edit ' . @$result, 'user');
+});
+Hook::register('user.delete', function ($result) {
+  Log::write('delete ' . @$result, 'user');
+});
+
+// ############################# HOOK FEEDBACK #############################
+Hook::register('feedback.add', function ($result) {
+  Log::write('add ' . @$result, 'feedback');
+});
+Hook::register('feedback.edit', function ($result) {
+  Log::write('edit ' . @$result, 'feedback');
+});
+Hook::register('feedback.delete', function ($result) {
+  Log::write('delete ' . @$result, 'feedback');
+});
+Hook::register('feedback.reply', function ($result) {
+  Log::write('reply ' . @$result, 'feedback');
+});
+
+// ############################# HOOK TRANSLATION #############################
+Hook::register('translation.add', function ($file, $module) {
+  Log::write("add $file to $module module", 'translation');
+});
+Hook::register('translation.edit', function ($file, $module) {
+  Log::write("edit $file in $module module", 'translation');
+});
+Hook::register('translation.delete', function ($file, $module) {
+  Log::write("delete $file from $module module", 'translation');
+});
+
+// ############################# HOOK NOTIFICATION #############################
 // $GLOBALS['notification'] = [];
 
 // Hook::register('notification_add', function($type, $data) {
@@ -149,15 +173,7 @@ Hook::register('user.delete', function ($data) {
 // 	$GLOBALS['notification'][$type] = $data;
 // });
 
-// ############################# TRANSLATION #############################
-// Hook::register('translation_add', function($data) {
-// 	Log::write('Translation: ' . $data['file'] . ' added for ' . $data['module'] . ' module by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'translation');
-// });
-// Hook::register('translation_edit', function($data) {
-// 	Log::write('Translation: ' . $data['file'] . ' edited for ' . $data['module'] . ' module by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'translation');
-// });
-
-// ############################# COMMENT #############################
+// ############################# HOOK COMMENT #############################
 // Hook::register('comment_add', function($data) {
 // 	$page = \Module\Admin\Model\Page::getInstance()->getPage($data->fields['page_id']);
 // 	$parent = null;
@@ -196,7 +212,7 @@ Hook::register('user.delete', function ($data) {
 // 	Log::write('Comment ID: ' . $data->form_data['item_id'] . ' ' . $type . ' by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'comment');
 // });
 
-// ############################# MENU #############################
+// ############################# HOOK MENU #############################
 // Hook::register('menu_add', function($data) {
 // 	Log::write('Menu ID: ' . $data->form_data['item_id'] . ' added by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'menu');
 // });
@@ -210,7 +226,7 @@ Hook::register('user.delete', function ($data) {
 // 	Log::write('Menu ID: ' . $data->form_data['item_id'] . ' changed items by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'menu');
 // });
 
-// ############################# PAGE #############################
+// ############################# HOOK PAGE #############################
 // Hook::register('page_add', function($data) {
 // 	Sitemap::update();
 
@@ -244,7 +260,7 @@ Hook::register('user.delete', function ($data) {
 // 	Log::write('Page ID: ' . $data->form_data['item_id'] . ' deleted by user ID: ' . User::get()->id . ' from IP: ' . Request::ip(), 'page');
 // });
 
-// ############################# PROFILE #############################
+// ############################# HOOK PROFILE #############################
 // Hook::register('user_change_login', function($data) {
 // 	Mail::send('ChangeLogin', $data->email, $data);
 
@@ -363,7 +379,7 @@ Hook::run('sidebar.append', [
 
 Hook::run('sidebar.append', [
   'id' => 'backend.profile',
-  'icon' => 'user-circle',
+  'icon' => 'user',
   // 'label' => function () {
   //   return User::get()->notifications_count;
   // },
@@ -381,14 +397,14 @@ Hook::run('sidebar.append', [
 
 Hook::run('sidebar.append', [
   'id' => 'backend.page',
-  'icon' => 'file-text',
+  'icon' => 'folder',
   'text' => t('page.sidebar'),
   'name' => 'page'
 ]);
 
 Hook::run('sidebar.append', [
   'id' => 'backend.comment',
-  'icon' => 'message',
+  'icon' => 'message-circle',
   // 'label' => function () {
   //   return \module\backend\model\Comment::getInstance()->countUnapprovedComments();
   // },
@@ -398,14 +414,14 @@ Hook::run('sidebar.append', [
 
 Hook::run('sidebar.append', [
   'id' => 'backend.menu',
-  'icon' => 'menu-2',
+  'icon' => 'menu-deep',
   'text' => t('menu.sidebar'),
   'name' => 'menu'
 ]);
 
 Hook::run('sidebar.append', [
   'id' => 'backend.translation',
-  'icon' => 'world',
+  'icon' => 'language',
   'text' => t('translation.sidebar'),
   'name' => 'translation.list',
   'activeRoutes' => ['translation.edit']
@@ -420,7 +436,7 @@ Hook::run('sidebar.append', [
 
 Hook::run('sidebar.append', [
   'id' => 'backend.feedback',
-  'icon' => 'message-circle',
+  'icon' => 'messages',
   'label' => function () {
     return \module\backend\model\Feedback::getInstance()->countUnreadFeedback();
   },
@@ -451,7 +467,7 @@ Hook::run('sidebar.append', [
 
 Hook::run('sidebar.append', [
   'id' => 'backend.setting',
-  'icon' => 'settings',
+  'icon' => 'settings-2',
   'text' => t('setting.sidebar.setting'),
   'name' => [
     [

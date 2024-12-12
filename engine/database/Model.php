@@ -11,6 +11,7 @@ abstract class Model extends Validation
 {
   protected $columnForeign = [];
   protected $submitMessage = [];
+  protected $submitOption = [];
 
   protected static $instances = [];
 
@@ -45,6 +46,23 @@ abstract class Model extends Validation
   public function getSubmitMessage($key = null)
   {
     return isset($key) ? @$this->submitMessage[$key] : $this->submitMessage;
+  }
+
+  public function setSubmitOption($key, $value = null)
+  {
+    $this->submitOption[$key] = $value;
+
+    return true;
+  }
+
+  public function hasSubmitOption($key)
+  {
+    return isset($this->submitOption[$key]);
+  }
+
+  public function getSubmitOption($key = null)
+  {
+    return isset($key) ? @$this->submitOption[$key] : $this->submitOption;
   }
 
   public function setData($columnData = null, $columnKeysToValidate = null)

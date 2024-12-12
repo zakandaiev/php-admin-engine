@@ -45,6 +45,7 @@ class Backend extends Controller
 
     // if(!$is_user_enabled) {
     // 	$this->view->error('404');
+    //  return false;
     // }
 
     // // GET USER NOTIFICATIONS

@@ -5,6 +5,7 @@ namespace module\backend\model;
 use engine\database\Model;
 use engine\http\Request;
 use engine\i18n\I18n;
+use engine\module\Hook;
 use engine\module\Module;
 use engine\util\File;
 use engine\util\Path;
@@ -91,6 +92,8 @@ class Translation extends Model
 
     File::createFile($translationPath, $translationContent);
 
+    Hook::run('translation.add', $translationFile, $module);
+
     return ['module' => $module, 'language' => $language];
   }
 
@@ -115,6 +118,8 @@ class Translation extends Model
 
     File::createFile($translationPath, trim($translationContent ?? ''));
 
+    Hook::run('translation.edit', $translationFile, $module);
+
     return true;
   }
 
@@ -137,6 +142,8 @@ class Translation extends Model
     $translationPath = Path::resolve($translationFolder, $translationFile);
 
     File::delete($translationPath);
+
+    Hook::run('translation.delete', $translationFile, $module);
 
     return true;
   }

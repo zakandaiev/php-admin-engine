@@ -100,6 +100,36 @@ class Form
     return $this->isTokenExists && $this->isTokenAllowedIp && $this->isTokenActive && $this->isModelActive;
   }
 
+  public function isMatchRequest()
+  {
+    return $this->isMatchRequest;
+  }
+
+  public function getModule()
+  {
+    return $this->module;
+  }
+
+  public function getAction()
+  {
+    return $this->action;
+  }
+
+  public function getModelName()
+  {
+    return $this->modelName;
+  }
+
+  public function getItemId()
+  {
+    return $this->itemId;
+  }
+
+  public function getModel()
+  {
+    return $this->model;
+  }
+
   public function execute()
   {
     if (!$this->isFormActiveAndValid()) {
@@ -108,7 +138,15 @@ class Form
 
     $this->clearExpired();
 
-    $result = $this->model->{$this->action}();
+    if ($this->model->hasSubmitOption('execute.pre')) {
+      $this->model->getSubmitOption('execute.pre')($this);
+    }
+
+    if ($this->model->hasSubmitOption('execute')) {
+      $result = $this->model->getSubmitOption('execute')($this);
+    } else {
+      $result = $this->model->{$this->action}();
+    }
 
     $submitMessageSuccess = $this->model->hasSubmitMessage('success') ? $this->model->getSubmitMessage('success') : I18n::translate('form.success');
     $submitMessageError = $this->model->hasSubmitMessage('error') ? $this->model->getSubmitMessage('error') : I18n::translate('form.error');
@@ -125,11 +163,13 @@ class Form
       $answer['code'] = 400;
     }
 
-    // TODO
-    // executePost
-    // forceNoAnswer
+    if ($this->model->hasSubmitOption('execute.post')) {
+      $this->model->getSubmitOption('execute.post')($result, $this);
+    }
 
-    Response::answer(@$answer['status'], @$answer['message'], @$answer['data'], @$answer['code']);
+    if (!$this->model->hasSubmitOption('forceNoAnswer')) {
+      Response::answer(@$answer['status'], @$answer['message'], @$answer['data'], @$answer['code']);
+    }
 
     return $this;
   }

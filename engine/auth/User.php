@@ -6,6 +6,7 @@ use engine\Config;
 use engine\database\Query;
 use engine\http\Cookie;
 use engine\http\Request;
+use engine\module\Hook;
 use engine\util\Hash;
 use engine\util\Log;
 

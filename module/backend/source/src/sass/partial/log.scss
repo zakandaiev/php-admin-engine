@@ -1,0 +1,50 @@
+.log {
+  counter-reset: linenumber;
+
+  overflow: auto;
+  display: block;
+
+  width: 100%;
+  padding: 1rem 1.25rem;
+
+  font-family: SFMono-Regular, Consolas, Liberation, Mono, Menlo, monospace;
+  font-size: 1.4rem;
+  font-weight: var(--font-regular);
+  line-height: 1.5;
+  hyphens: none;
+  color: var(--color-text);
+  text-align: left;
+  word-break: normal;
+  word-spacing: normal;
+  word-wrap: normal;
+  tab-size: 2;
+  white-space: pre;
+
+  background: var(--color-body);
+  border-radius: var(--radius-xs);
+
+  // .log__bracket
+  &__bracket {
+    color: var(--color-text-muted);
+  }
+
+  // .log__date
+  &__date {
+    color: var(--color-success);
+  }
+
+  // .log__ip
+  &__ip {
+    color: var(--color-info);
+  }
+
+  // .log__user-id
+  &__user-id {
+    color: var(--color-warning);
+  }
+
+  // .log__hyphen
+  &__hyphen {
+    color: var(--color-error);
+  }
+}

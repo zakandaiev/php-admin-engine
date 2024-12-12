@@ -5,6 +5,7 @@ namespace module\backend\model;
 use engine\auth\User as AuthUser;
 use engine\database\Model;
 use engine\database\Query;
+use engine\module\Hook;
 use engine\util\Hash;
 
 class User extends Model
@@ -73,6 +74,13 @@ class User extends Model
     $this->setColumn('setting', [
       'type' => 'text'
     ]);
+
+    $this->setSubmitOption('execute.post', function ($result, $formInstance) {
+      $action = $formInstance->getAction();
+      $column = $formInstance->getModel()->getColumn();
+
+      Hook::run("user.$action", $result, $column);
+    });
   }
 
   public function getUsers()

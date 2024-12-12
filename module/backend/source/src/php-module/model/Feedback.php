@@ -5,6 +5,7 @@ namespace module\backend\model;
 use engine\auth\User;
 use engine\database\Model;
 use engine\database\Query;
+use engine\module\Hook;
 use engine\util\Mail;
 use engine\util\Hash;
 
@@ -67,6 +68,13 @@ class Feedback extends Model
       'type' => 'boolean',
       'value' => false
     ]);
+
+    $this->setSubmitOption('execute.post', function ($result, $formInstance) {
+      $action = $formInstance->getAction();
+      $column = $formInstance->getModel()->getColumn();
+
+      Hook::run("feedback.$action", $result, $column);
+    });
   }
 
   public function reply()
@@ -112,7 +120,7 @@ class Feedback extends Model
 
     $this->updateTable($this->getTable(), ['is_replied' => true], $this->getPrimaryKey(), $this->getItemId());
 
-    return true;
+    return $feedbackId;
   }
 
   public function getFeedbacks()

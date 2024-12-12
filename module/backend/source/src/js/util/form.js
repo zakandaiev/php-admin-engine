@@ -290,7 +290,7 @@ class Form {
     }
 
     data.forEach((validation) => {
-      if (!validation.column || !validation.validationName || !validation.validationMessage) {
+      if (!validation.column) {
         return false;
       }
 

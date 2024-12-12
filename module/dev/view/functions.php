@@ -1,6 +1,6 @@
 <?php
 
-############################# DEV #############################
+############################# UI #############################
 function getButtonColors()
 {
   return array_merge(['default', 'cancel'], getButtonAccentColors());
@@ -42,4 +42,19 @@ function getUiSectionFiles($isFormatName = false)
   }
 
   return $uiSectionsFormatted;
+}
+
+############################# LOG #############################
+function formatLog($content)
+{
+  $date = '<span class="log__bracket">[</span><span class="log__date cursor-pointer" data-copy data-toast="Date copied">$1</span><span class="log__bracket">]</span>';
+  $ip = '<span class="log__bracket">[</span><span class="log__ip cursor-pointer" data-copy data-toast="IP copied">$2</span><span class="log__bracket">]</span>';
+  $userId = '<span class="log__bracket">[</span><span class="log__user-id cursor-pointer" data-copy data-toast="User ID copied">$3</span><span class="log__bracket">]</span>';
+  $hyphen = '<span class="log__hyphen">$4</span>';
+  $message = '<span class="log__message cursor-pointer" data-copy data-toast="Message copied">$5</span>';
+
+  $pattern = '/\[(.*)\] \[(.*)\] \[(.*)\] (-) (.*)/miu';
+  $replacement = "$date $ip $userId $hyphen $message";
+
+  return preg_replace($pattern, $replacement, trim($content ?? ''));
 }
