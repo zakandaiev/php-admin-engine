@@ -4,18 +4,27 @@ use engine\Config;
 use engine\Engine;
 use engine\http\Request;
 use engine\i18n\I18n;
+use engine\module\Hook;
 use engine\module\Module;
 use engine\module\Setting;
 use engine\router\Route;
 use engine\router\Router;
 use engine\router\View;
 use engine\theme\Asset;
+use engine\theme\Form;
+use engine\theme\Menu;
+use engine\theme\Page;
+use engine\theme\Template;
+use engine\theme\Theme;
+use engine\util\Cache;
 use engine\util\Date;
 use engine\util\Debug;
 use engine\util\File;
 use engine\util\Hash;
+use engine\util\Log;
 use engine\util\Path;
 use engine\util\Text;
+use engine\util\Upload;
 
 ############################# PHP POLYFILL #############################
 if (!function_exists('str_contains')) {
@@ -32,6 +41,27 @@ if (!function_exists('str_starts_with')) {
 
     return substr($haystack, 0, $length) === $needle;
   }
+}
+
+############################# CACHE #############################
+function cacheSet($key, $data = null, $lifetime = null)
+{
+  return Cache::set($key, $data, $lifetime);
+}
+
+function cacheGet($key)
+{
+  return Cache::get($key);
+}
+
+function cacheDelete($key)
+{
+  return Cache::delete($key);
+}
+
+function cacheFlush()
+{
+  return Cache::flush();
 }
 
 ############################# DATE #############################
@@ -136,6 +166,43 @@ function hashPassword($password)
 function hashPasswordVerify($password, $hash)
 {
   return Hash::passwordVerify($password, $hash);
+}
+
+############################# LOG #############################
+function logExists($file, $folder = null)
+{
+  return Log::exists($file, $folder);
+}
+
+function logList()
+{
+  return Log::list();
+}
+
+function logGet($file, $folder = null)
+{
+  return Log::get($file, $folder);
+}
+
+function logWrite($file, $folder = null)
+{
+  return Log::write($file, $folder);
+}
+
+############################# UPLOAD #############################
+function uploadGetFolder()
+{
+  return Upload::getFolder();
+}
+
+function uploadGetMaxSize()
+{
+  return Upload::getMaxSize();
+}
+
+function uploadGetExtensions()
+{
+  return Upload::getExtensions();
 }
 
 ############################# PATH #############################
@@ -328,6 +395,37 @@ function lang($key = null, $language = null, $mixed = null)
   return $value;
 }
 
+############################# HOOK #############################
+function hookRegister($name, $function)
+{
+  return Hook::register($name, $function);
+}
+
+function hookHas($name)
+{
+  return Hook::has($name);
+}
+
+function hookRun(...$args)
+{
+  return Hook::run(...$args);
+}
+
+function hookSetData($key, $data = null)
+{
+  return Hook::setData($key, $data);
+}
+
+function hookHasData($key)
+{
+  return Hook::hasData($key);
+}
+
+function hookGetData($key = null)
+{
+  return Hook::getData($key);
+}
+
 ############################# MODULE #############################
 function moduleExists($moduleName)
 {
@@ -455,6 +553,167 @@ function viewHasData($key)
 function viewGetData($key = null)
 {
   return View::getData($key);
+}
+
+############################# ASSET #############################
+function assetCss($asset, $attributes = [], $routes = [], $module = null)
+{
+  return Asset::css($asset, $attributes, $routes, $module);
+}
+
+function assetJs($asset, $attributes = [], $routes = [], $module = null)
+{
+  return Asset::js($asset, $attributes, $routes, $module);
+}
+
+function assetRender($extension = null)
+{
+  return Asset::render($extension);
+}
+
+function assetSetContainer($key, $data = null)
+{
+  return Asset::setContainer($key, $data);
+}
+
+function assetHasContainer($key)
+{
+  return Asset::hasContainer($key);
+}
+
+function assetGetContainer($key = null)
+{
+  return Asset::getContainer($key);
+}
+
+function assetUrl($module = null)
+{
+  return Asset::url($module);
+}
+
+function assetGetContent($fileName, $module = null)
+{
+  return Asset::getContent($fileName, $module);
+}
+
+############################# FORM #############################
+function formAdd($modelName, $isMatchRequest = null)
+{
+  return Form::add($modelName, $isMatchRequest);
+}
+
+function formEdit($modelName, $itemId, $isMatchRequest = null)
+{
+  return Form::edit($modelName, $itemId, $isMatchRequest);
+}
+
+function formDelete($modelName, $itemId, $isMatchRequest = null)
+{
+  return Form::delete($modelName, $itemId, $isMatchRequest);
+}
+
+function formIsModelExists($modelName, $moduleName = null)
+{
+  return Form::isModelExists($modelName, $moduleName);
+}
+
+function formGenerateToken($action, $modelName, $itemId = null, $isMatchRequest = null, $moduleName = null)
+{
+  return Form::generateToken($action, $modelName, $itemId, $isMatchRequest, $moduleName);
+}
+
+############################# MENU #############################
+function menuGetList()
+{
+  return Menu::getList();
+}
+
+function menuUpdate($name, $items = [])
+{
+  return Menu::update($name, $items);
+}
+
+function menuHas($name)
+{
+  return Menu::has($name);
+}
+
+function menuGet($nameOrId, $isMenuId = false)
+{
+  return Menu::get($nameOrId, $isMenuId);
+}
+
+############################# PAGE #############################
+function pageHas($key)
+{
+  return Page::has($key);
+}
+
+function pageSet($key, $data = null)
+{
+  return Page::set($key, $data);
+}
+
+function pageGet($key = null)
+{
+  return Page::get($key);
+}
+
+function pageBreadcrumb(...$args)
+{
+  return Page::breadcrumb(...$args);
+}
+
+function pageMeta($key = null)
+{
+  return Page::meta($key);
+}
+
+############################# TEMPLATE #############################
+function templateLoad($template, $isRequired = true, $module = null)
+{
+  return Template::load($template, $isRequired, $module);
+}
+
+function templateHas($template, $module = null)
+{
+  return Template::has($template, $module);
+}
+
+############################# THEME #############################
+function themeBreadcrumb($name = '', $data = [])
+{
+  return Theme::breadcrumb($name, $data);
+}
+
+function themeFooter($name = '', $data = [])
+{
+  return Theme::footer($name, $data);
+}
+
+function themeHeader($name = '', $data = [])
+{
+  return Theme::header($name, $data);
+}
+
+function themeMenu($name, $data = [])
+{
+  return Theme::menu($name, $data);
+}
+
+function themePagination($name = '', $data = [])
+{
+  return Theme::pagination($name, $data);
+}
+
+function themeTemplate($name, $data = [])
+{
+  return Theme::template($name, $data);
+}
+
+function themeGetPageTemplates()
+{
+  return Theme::getPageTemplates();
 }
 
 ############################# ENGINE & SITE DATA #############################
